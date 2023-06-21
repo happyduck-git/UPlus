@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
-        textField.text = "testEmail@email.com"
+        textField.text = "rkrudtls@gmail.com"
         return textField
     }()
 
@@ -36,7 +36,7 @@ class LoginViewController: UIViewController {
     private let passwordTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
-        textField.text = "password1234"
+        textField.text = "Pass1234"
         return textField
     }()
 

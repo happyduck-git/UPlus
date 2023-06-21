@@ -34,8 +34,8 @@ final class SignUpViewController: UIViewController {
     
     private let emailTextField: UITextField = {
         let txtField = UITextField()
-        txtField.text = "test@gmail.com"
-        txtField.textColor = .black
+        txtField.text = "rkrudtls@gmail.com"
+        txtField.textColor = .label
         txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -61,6 +61,7 @@ final class SignUpViewController: UIViewController {
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
         txtField.isUserInteractionEnabled = false
+        txtField.text = "Pass1234"
         txtField.backgroundColor = .systemGray3
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -116,9 +117,10 @@ final class SignUpViewController: UIViewController {
         return txtField
     }()
     
-    private let registerButton: UIButton = {
+    private lazy var registerButton: UIButton = {
         let button = UIButton()
         button.setTitle(SignUpConstants.register, for: .normal)
+        button.addTarget(self, action: #selector(registerButtonDidTapped), for: .touchUpInside)
         button.backgroundColor = .systemGray2
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -126,11 +128,12 @@ final class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setUI()
         setLayout()
         
         bind()
+        
+        
     }
     
     // MARK: - Init
@@ -317,6 +320,16 @@ final class SignUpViewController: UIViewController {
                     }
                 }
                 .store(in: &bindings)
+            
+            viewModel.isUserCreated
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] valid in
+                    guard let `self` = self else { return }
+                    if valid {
+                        navigationController?.popViewController(animated: true)
+                    }
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -324,12 +337,11 @@ final class SignUpViewController: UIViewController {
     }
     
     @objc private func authButtonDidTap() {
-//        viewModel.sendEmailValification()
-        guard let email = self.emailTextField.text else { return }
-        viewModel.validateEmail(email)
+        viewModel.sendEmailValification()
     }
     
     @objc private func registerButtonDidTapped() {
-        
+        // TODO: 이메일,pw register
+        viewModel.createNewUser()
     }
 }

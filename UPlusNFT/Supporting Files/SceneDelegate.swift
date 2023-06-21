@@ -59,6 +59,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let link = webpageURL.absoluteString
         if Auth.auth().isSignIn(withEmailLink: link) {
             UserDefaults.standard.set(link, forKey: FirebaseConstants.firebaseAuthLinkKey)
+            NotificationCenter.default.post(name: NSNotification.Name.signIn, object: nil)
         }
         
     }

@@ -22,6 +22,8 @@
 		930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96CA2A4194E50007801A /* SignUpViewViewModel.swift */; };
 		930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96CD2A4198020007801A /* UIView+Extension.swift */; };
 		930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96CF2A428D6E0007801A /* UITextField+Extension.swift */; };
+		930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */; };
+		930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D42A42DC110007801A /* LoginViewViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,9 @@
 		930D96CA2A4194E50007801A /* SignUpViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewViewModel.swift; sourceTree = "<group>"; };
 		930D96CD2A4198020007801A /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		930D96CF2A428D6E0007801A /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
+		930D96D12A42D0900007801A /* UPlusNFT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UPlusNFT.entitlements; sourceTree = "<group>"; };
+		930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotificationName+Extension.swift"; sourceTree = "<group>"; };
+		930D96D42A42DC110007801A /* LoginViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,11 +80,10 @@
 		930D96A02A416AC30007801A /* UPlusNFT */ = {
 			isa = PBXGroup;
 			children = (
+				930D96D12A42D0900007801A /* UPlusNFT.entitlements */,
 				930D96C42A41834C0007801A /* Constants */,
 				930D96B52A416AE10007801A /* Supporting Files */,
 				930D96B72A416E7C0007801A /* ViewControllers */,
-				930D96AA2A416AC40007801A /* Assets.xcassets */,
-				930D96AC2A416AC40007801A /* LaunchScreen.storyboard */,
 				930D96AF2A416AC40007801A /* Info.plist */,
 				930D96B92A41824A0007801A /* GoogleService-Info.plist */,
 			);
@@ -91,6 +95,8 @@
 			children = (
 				930D96A12A416AC30007801A /* AppDelegate.swift */,
 				930D96A32A416AC30007801A /* SceneDelegate.swift */,
+				930D96AA2A416AC40007801A /* Assets.xcassets */,
+				930D96AC2A416AC40007801A /* LaunchScreen.storyboard */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -108,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				930D96A52A416AC30007801A /* LoginViewController.swift */,
+				930D96D42A42DC110007801A /* LoginViewViewModel.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -134,6 +141,7 @@
 			children = (
 				930D96CD2A4198020007801A /* UIView+Extension.swift */,
 				930D96CF2A428D6E0007801A /* UITextField+Extension.swift */,
+				930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -222,6 +230,8 @@
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
+				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
+				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
@@ -362,6 +372,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = UPlusNFT/UPlusNFT.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W287BT4V38;
@@ -390,6 +401,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = UPlusNFT/UPlusNFT.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W287BT4V38;
