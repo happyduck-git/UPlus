@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1006250346280-sjbonbo1egsk3kjp1fc6g0gu2ph9g4vm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1006250346280-sjbonbo1egsk3kjp1fc6g0gu2ph9g4vm</string>
+	<key>API_KEY</key>
+	<string>AIzaSyADZdNtuPBNw8QwCZAagiDdGbUOSl0X7mY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1006250346280</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>net.platfarm.UPlusNFT</string>
+	<key>PROJECT_ID</key>
+	<string>aftermint-popcat-demo</string>
+	<key>STORAGE_BUCKET</key>
+	<string>aftermint-popcat-demo.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1006250346280:ios:4fe821d59450733d2e721d</string>
+</dict>
+</plist>
