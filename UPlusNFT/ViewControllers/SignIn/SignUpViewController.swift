@@ -44,6 +44,7 @@ final class SignUpViewController: UIViewController {
     private let emailValidationText: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .thin)
+        label.textColor = .systemRed
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -71,6 +72,7 @@ final class SignUpViewController: UIViewController {
     private let passwordValidationText: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .thin)
+        label.textColor = .systemRed
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -97,6 +99,7 @@ final class SignUpViewController: UIViewController {
     private let passwordCheckValidationText: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .thin)
+        label.textColor = .systemRed
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -212,28 +215,51 @@ final class SignUpViewController: UIViewController {
     private func bind() {
         func bindViewToViewModel() {
             self.emailTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
                 .assign(to: \.email, on: viewModel)
                 .store(in: &bindings)
             
             self.passwordTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
                 .assign(to: \.password, on: viewModel)
                 .store(in: &bindings)
             
             self.passwordCheckTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
                 .assign(to: \.passwordCheck, on: viewModel)
                 .store(in: &bindings)
             
             self.nicknameTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
                 .assign(to: \.nickname, on: viewModel)
                 .store(in: &bindings)
         }
         
         func bindViewModelToView() {
+            
+            viewModel.isEmailSent
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isSent in
+                    guard let `self` = self else { return }
+                   
+                    let alert: String = isSent ? "이메일이 전송되었습니다." : "이메일 전송에 실패하였습니다."
+                    let color: UIColor = isSent ? .systemGreen : .systemRed
+                    
+                    self.emailValidationText.textColor = color
+                    self.emailValidationText.text = alert
+                }
+                .store(in: &bindings)
+            
             viewModel.isAuthenticated
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
                     if value {
+                        self.emailValidationText.text = ""
                         self.emailAuthButton.setTitle(SignUpConstants.authCompleted, for: .normal)
                         self.emailAuthButton.backgroundColor = .systemGray4
                         self.emailAuthButton.isUserInteractionEnabled = false
@@ -247,7 +273,7 @@ final class SignUpViewController: UIViewController {
                     }
                 }
                 .store(in: &bindings)
-            
+
             viewModel.isEmailValid
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] valid in
@@ -255,7 +281,6 @@ final class SignUpViewController: UIViewController {
                     let emailText = self.emailTextField.text ?? ""
                    
                     if valid {
-                        
                         self.emailAuthButton.backgroundColor = .systemTeal
                         self.emailValidationText.text = ""
                         self.emailAuthButton.isUserInteractionEnabled = true
@@ -276,7 +301,7 @@ final class SignUpViewController: UIViewController {
                 .sink { [weak self] valid in
                     guard let `self` = self else { return }
                     let passwordText = self.passwordTextField.text ?? ""
-                    print("passwordText: \(passwordText)")
+                    
                     if valid {
                         self.passwordValidationText.text = ""
                     } else if passwordText.isEmpty {
@@ -321,6 +346,8 @@ final class SignUpViewController: UIViewController {
                     guard let `self` = self else { return }
                     if valid {
                         navigationController?.popViewController(animated: true)
+                    } else {
+                        self.emailValidationText.text = self.viewModel.errorDescription
                     }
                 }
                 .store(in: &bindings)

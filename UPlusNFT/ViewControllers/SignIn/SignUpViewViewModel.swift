@@ -9,16 +9,21 @@ import Foundation
 import Combine
 import RegexBuilder
 import FirebaseAuth
+import OSLog
 
 class SignUpViewViewModel {
+    
+    let logger = Logger()
     
     @Published var email = ""
     @Published var password = ""
     @Published var passwordCheck = ""
     @Published var nickname = ""
+    @Published var errorDescription = ""
     
     var isAuthenticated = PassthroughSubject<Bool, Never>()
     var isUserCreated = PassthroughSubject<Bool, Never>()
+    var isEmailSent = PassthroughSubject<Bool, Never>()
     
     private(set) lazy var isEmailValid = $email.map {
         $0.hasSuffix(SignUpConstants.emailSuffix)
@@ -33,10 +38,11 @@ class SignUpViewViewModel {
         }
     }.eraseToAnyPublisher()
     
-    private(set) lazy var isPasswordSame = $passwordCheck.map { [weak self] in
-        return $0 == self?.password
-    }.eraseToAnyPublisher()
-    
+    private(set) lazy var isPasswordSame = Publishers.CombineLatest($password, $passwordCheck)
+        .map {
+            $0 == $1
+        }.eraseToAnyPublisher()
+
     private(set) lazy var isAllInfoChecked = Publishers.CombineLatest4(isEmailValid, isPasswordValid, isPasswordSame, $nickname)
         .map {
             return $0 && $1 && $2 && !$3.isEmpty
@@ -68,49 +74,53 @@ class SignUpViewViewModel {
                         actionCodeSettings: actionCodeSettings
                     )
                 print("Successfully sent email sign in link to \(email).")
+                self.isEmailSent.send(true)
             }
             catch {
                 print("Error sending sign in link: \(error.localizedDescription).")
+                self.isEmailSent.send(false)
             }
         }
     }
     
     func createNewUser() {
         Task {
-            await withThrowingTaskGroup(of: Void.self, body: { [weak self] group in
-                guard let `self` = self else { return }
+            do {
+                try await Auth.auth()
+                    .createUser(
+                        withEmail: self.email,
+                        password: self.password
+                    )
+                self.logger.info("User created.")
                 
-                /// Create a new user.
-                group.addTask {
-                    do {
-                        try await Auth.auth()
-                            .createUser(
-                                withEmail: self.email,
-                                password: self.password
-                            )
-                    }
-                    catch {
-                        print("Error creating new user \(error.localizedDescription)")
-                        self.isUserCreated.send(false)
-                    }
-                }
+                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                changeRequest?.displayName = self.nickname
+                try await changeRequest?.commitChanges()
+                self.logger.info("Changed nickname.")
                 
-                /// Update user nickname.
-                group.addTask {
-                    do {
-                        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                        changeRequest?.displayName = self.nickname
-                        try await changeRequest?.commitChanges()
-                    }
-                    catch {
-                        print("Error updating user displayName \(error.localizedDescription)")
-                        self.isUserCreated.send(false)
-                    }
-                }
                 isUserCreated.send(true)
-            })
+            }
+            catch (let error) {
+                let err = error as? AuthErrorCode
+                switch err {
+                case .none:
+                    break
+                case .some(let wrapped):
+                    // TODO: error 내용을 vc에 전달
+                    self.logger.error("Error creating new user \(wrapped.localizedDescription)")
+                    switch wrapped.code {
+                    case .emailAlreadyInUse:
+                        self.errorDescription = "이미 등록된 이메일입니다."
+                    default:
+                        self.errorDescription = "\(wrapped.code)"
+                    }
+                    self.isUserCreated.send(false)
+                }
+                return
+            }
         }
     }
+    
 }
 
 

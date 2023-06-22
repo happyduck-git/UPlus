@@ -30,6 +30,7 @@ struct SignUpConstants {
     static let emailSuffix: String = "@gmail.com"
     static let deeplinkDomain: String = "https://aftermint-popcat-demo.firebaseapp.com"
     static let emailRegex: String = "(?=.*\\d)(?=.*[a-z]).{8,}"
+    static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.3
 }
 
 struct ResetPasswordConstants {

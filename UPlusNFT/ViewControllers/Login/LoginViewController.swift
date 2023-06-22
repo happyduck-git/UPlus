@@ -63,6 +63,15 @@ class LoginViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
+    
+    private let credentialValidationText: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 10, weight: .thin)
+        label.text = " "
+        label.textColor = .systemRed
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     private lazy var loginButton: UIButton = {
         let button = UIButton()
@@ -119,6 +128,8 @@ class LoginViewController: UIViewController {
         setUI()
         setLayout()
         bind()
+        
+        hideKeyboardWhenTappedAround()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -152,6 +163,7 @@ class LoginViewController: UIViewController {
         view.addSubview(textFieldStackView)
         textFieldStackView.addArrangedSubview(emailTextField)
         textFieldStackView.addArrangedSubview(passwordTextField)
+        view.addSubview(credentialValidationText)
         view.addSubview(loginButton)
         view.addSubview(logoutButton)
         view.addSubview(changePasswordButton)
@@ -166,7 +178,9 @@ class LoginViewController: UIViewController {
             textFieldStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: labelStackView.trailingAnchor, multiplier: 2),
             textFieldStackView.centerYAnchor.constraint(equalTo: labelStackView.centerYAnchor),
             view.trailingAnchor.constraint(equalToSystemSpacingAfter: textFieldStackView.trailingAnchor, multiplier: 2),
-            loginButton.topAnchor.constraint(equalToSystemSpacingBelow: textFieldStackView.bottomAnchor, multiplier: 2),
+            credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: textFieldStackView.bottomAnchor, multiplier: 1),
+            credentialValidationText.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor),
+            loginButton.topAnchor.constraint(equalToSystemSpacingBelow: credentialValidationText.bottomAnchor, multiplier: 1),
             loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.topAnchor.constraint(equalTo: loginButton.topAnchor),
             logoutButton.leadingAnchor.constraint(equalToSystemSpacingAfter: loginButton.trailingAnchor, multiplier: 2),
@@ -247,7 +261,7 @@ class LoginViewController: UIViewController {
                         self.show(vc, sender: self)
                     } else {
                         // TODO: Show UIAlert indicating login failed.
-                        
+                        self.credentialValidationText.text = viewModel.errorDescription
                     }
                 }
                 .store(in: &bindings)

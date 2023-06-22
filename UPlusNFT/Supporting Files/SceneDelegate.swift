@@ -7,11 +7,13 @@
 
 import UIKit
 import FirebaseAuth
+import OSLog
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    let logger = Logger()
+    
     var window: UIWindow?
-
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -19,10 +21,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
-        let vm = LoginViewViewModel()
-        let viewController = LoginViewController(vm: vm)
+        if Auth.auth().currentUser != nil {
+            logger.info("User is logged in.")
+            let postVC = PostViewController()
+            window?.rootViewController = UINavigationController(rootViewController: postVC)
+        } else {
+            logger.info("User is not logged in.")
+            let loginVM = LoginViewViewModel()
+            let loginVC = LoginViewController(vm: loginVM)
+            window?.rootViewController = UINavigationController(rootViewController: loginVC)
+        }
         
-        window?.rootViewController = UINavigationController(rootViewController: viewController)
         window?.makeKeyAndVisible()
         
     }

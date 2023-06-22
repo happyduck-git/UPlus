@@ -27,6 +27,7 @@
 		930D96D82A43E5870007801A /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D72A43E5870007801A /* PostViewController.swift */; };
 		930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D92A44057C0007801A /* ResetPasswordViewController.swift */; };
 		930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DC2A4406BA0007801A /* ResetPasswordViewViewModel.swift */; };
+		930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		930D96D72A43E5870007801A /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		930D96D92A44057C0007801A /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		930D96DC2A4406BA0007801A /* ResetPasswordViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewViewModel.swift; sourceTree = "<group>"; };
+		930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				930D96CD2A4198020007801A /* UIView+Extension.swift */,
 				930D96CF2A428D6E0007801A /* UITextField+Extension.swift */,
 				930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */,
+				930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,
+				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
