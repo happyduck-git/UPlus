@@ -24,6 +24,9 @@
 		930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96CF2A428D6E0007801A /* UITextField+Extension.swift */; };
 		930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */; };
 		930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D42A42DC110007801A /* LoginViewViewModel.swift */; };
+		930D96D82A43E5870007801A /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D72A43E5870007801A /* PostViewController.swift */; };
+		930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D92A44057C0007801A /* ResetPasswordViewController.swift */; };
+		930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DC2A4406BA0007801A /* ResetPasswordViewViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +46,9 @@
 		930D96D12A42D0900007801A /* UPlusNFT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UPlusNFT.entitlements; sourceTree = "<group>"; };
 		930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotificationName+Extension.swift"; sourceTree = "<group>"; };
 		930D96D42A42DC110007801A /* LoginViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewViewModel.swift; sourceTree = "<group>"; };
+		930D96D72A43E5870007801A /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		930D96D92A44057C0007801A /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		930D96DC2A4406BA0007801A /* ResetPasswordViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,8 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				930D96DB2A4406660007801A /* ResetPassword */,
+				930D96D62A43E5770007801A /* Post */,
 				930D96C72A41938B0007801A /* SignIn */,
 				930D96B82A417EDC0007801A /* Login */,
 			);
@@ -144,6 +152,23 @@
 				930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		930D96D62A43E5770007801A /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				930D96D72A43E5870007801A /* PostViewController.swift */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
+		930D96DB2A4406660007801A /* ResetPassword */ = {
+			isa = PBXGroup;
+			children = (
+				930D96D92A44057C0007801A /* ResetPasswordViewController.swift */,
+				930D96DC2A4406BA0007801A /* ResetPasswordViewViewModel.swift */,
+			);
+			path = ResetPassword;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,13 +254,16 @@
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
+				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
+				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
+				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

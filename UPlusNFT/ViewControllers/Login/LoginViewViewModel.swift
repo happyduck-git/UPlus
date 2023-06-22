@@ -6,20 +6,36 @@
 //
 
 import Foundation
+import Combine
 import FirebaseAuth
 
 final class LoginViewViewModel {
     
-    private func login(email: String, password: String) async throws -> Bool {
-        do {
-            try await Auth.auth().signIn(withEmail: email, password: password)
-            print("Signed in.")
-            return true
+    @Published var email: String = ""
+    @Published var password: String = ""
+    
+    let isLoginSuccess = PassthroughSubject<Bool, Never>()
+    
+    private(set) lazy var isCredentialNotEmpty = Publishers.CombineLatest($email, $password)
+        .map {
+            return !$0.isEmpty && !$1.isEmpty ? true : false
+        }.eraseToAnyPublisher()
+    
+    
+    func login() {
+        
+        Task {
+            do {
+                try await Auth.auth().signIn(withEmail: self.email, password: self.password)
+                print("Signed in.")
+                self.isLoginSuccess.send(true)
+            }
+            catch (let error) {
+                print("Error loging in user: \(error.localizedDescription)")
+                self.isLoginSuccess.send(false)
+            }
         }
-        catch (let error) {
-            print("Error loging in user: \(error.localizedDescription)")
-            return false
-        }
+        
     }
     
 }

@@ -61,6 +61,7 @@ final class SignUpViewController: UIViewController {
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
         txtField.isUserInteractionEnabled = false
+        txtField.isSecureTextEntry = true
         txtField.text = "Pass1234"
         txtField.backgroundColor = .systemGray3
         txtField.translatesAutoresizingMaskIntoConstraints = false
@@ -87,6 +88,7 @@ final class SignUpViewController: UIViewController {
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
         txtField.isUserInteractionEnabled = false
+        txtField.isSecureTextEntry = true
         txtField.backgroundColor = .systemGray3
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -196,7 +198,7 @@ final class SignUpViewController: UIViewController {
             passwordCheckValidationText.topAnchor.constraint(equalToSystemSpacingBelow: passwordCheckTextField.bottomAnchor, multiplier: 1),
             passwordCheckValidationText.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
             
-            nicknameTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: passwordCheckTextField.bottomAnchor, multiplier: 2),
+            nicknameTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: passwordCheckValidationText.bottomAnchor, multiplier: 1),
             nicknameTitleLabel.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
             nicknameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nicknameTitleLabel.bottomAnchor, multiplier: 1),
             nicknameTextField.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
@@ -246,20 +248,12 @@ final class SignUpViewController: UIViewController {
                 }
                 .store(in: &bindings)
             
-            
-            viewModel.isValidated
-                .receive(on: DispatchQueue.main)
-                .sink { result in
-                    print("Is validated? \(result)")
-                }
-                .store(in: &bindings)
-            
             viewModel.isEmailValid
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] valid in
                     guard let `self` = self else { return }
                     let emailText = self.emailTextField.text ?? ""
-                   print("Emailtext: \(emailText)")
+                   
                     if valid {
                         
                         self.emailAuthButton.backgroundColor = .systemTeal
@@ -341,7 +335,6 @@ final class SignUpViewController: UIViewController {
     }
     
     @objc private func registerButtonDidTapped() {
-        // TODO: 이메일,pw register
         viewModel.createNewUser()
     }
 }

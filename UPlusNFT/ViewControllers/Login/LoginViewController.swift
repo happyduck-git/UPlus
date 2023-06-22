@@ -7,11 +7,18 @@
 
 import UIKit
 import FirebaseAuth
+import Combine
 
 class LoginViewController: UIViewController {
 
+    // MARK: - Dependency
+    private var viewModel: LoginViewViewModel
+    
+    // MARK: - Handlers
     private var authStateHandler: AuthStateDidChangeListenerHandle?
-
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - UI Elements
     private let emailLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.emailLabel
@@ -22,7 +29,7 @@ class LoginViewController: UIViewController {
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
-        textField.text = "rkrudtls@gmail.com"
+//        textField.text = "rkrudtls@gmail.com" // for debug
         return textField
     }()
 
@@ -36,7 +43,8 @@ class LoginViewController: UIViewController {
     private let passwordTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
-        textField.text = "Pass1234"
+        textField.isSecureTextEntry = true
+//        textField.text = "Pass1234" // for debug
         return textField
     }()
 
@@ -60,29 +68,49 @@ class LoginViewController: UIViewController {
         let button = UIButton()
         button.setTitle(LoginConstants.loginButtonTitle, for: .normal)
         button.addTarget(self, action: #selector(loginUser), for: .touchUpInside)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .systemGray
+        button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
+    /// for debug
     private lazy var logoutButton: UIButton = {
         let button = UIButton()
         button.setTitle(LoginConstants.logoutButtonTitle, for: .normal)
         button.addTarget(self, action: #selector(logoutUser), for: .touchUpInside)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .systemGray
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
+    private lazy var changePasswordButton: UIButton = {
+       let button = UIButton()
+        button.setTitle(LoginConstants.changePassword, for: .normal)
+        button.backgroundColor = .systemGray2
+        button.addTarget(self, action: #selector(changePassword), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private lazy var createAccountButton: UIButton = {
         let button = UIButton()
         button.setTitle(LoginConstants.singInButtonTitle, for: .normal)
         button.backgroundColor = .systemOrange
-        button.layer.borderWidth = 0.0
         button.addTarget(self, action: #selector(openSignUpVC), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    // MARK: - Init
+    init(vm: LoginViewViewModel) {
+        self.viewModel = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -90,6 +118,7 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .tertiarySystemBackground
         setUI()
         setLayout()
+        bind()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -125,6 +154,7 @@ class LoginViewController: UIViewController {
         textFieldStackView.addArrangedSubview(passwordTextField)
         view.addSubview(loginButton)
         view.addSubview(logoutButton)
+        view.addSubview(changePasswordButton)
         view.addSubview(createAccountButton)
     }
 
@@ -140,8 +170,10 @@ class LoginViewController: UIViewController {
             loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.topAnchor.constraint(equalTo: loginButton.topAnchor),
             logoutButton.leadingAnchor.constraint(equalToSystemSpacingAfter: loginButton.trailingAnchor, multiplier: 2),
+            changePasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            changePasswordButton.topAnchor.constraint(equalToSystemSpacingBelow: loginButton.bottomAnchor, multiplier: 3),
             createAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: loginButton.bottomAnchor, multiplier: 3)
+            createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: changePasswordButton.bottomAnchor, multiplier: 3)
         ])
 
         labelStackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -159,41 +191,18 @@ class LoginViewController: UIViewController {
         navigationController?.modalPresentationStyle = .fullScreen
         show(vc, sender: self)
     }
-    
-    @objc private func updateUserPhoto() {
-        guard let user = Auth.auth().currentUser else { return }
-        let changeRequest = user.createProfileChangeRequest()
-        changeRequest.photoURL = URL(string: "https://i.seadn.io/gae/cB8JeJwP76w_GGSvQe-WpwfzA31aQZF2fVLA0FmvcsrISfe9e7HDQ_DE9QhilMaCW88vFo_EfBA6ItrNrUOxmbWlbq6suY0v8Sln?auto=format&w=256")
-        changeRequest.commitChanges { error in
-            print("Error commiting user info changes: \(String(describing: error))")
-        }
-        print("SAVED PHOTO URL: " + (user.photoURL?.absoluteString ?? "no photo url"))
-
-    }
-
-    private func login(email: String, password: String) async throws {
-        do {
-            try await Auth.auth().signIn(withEmail: email, password: password)
-            print("Signed in.")
-        }
-        catch (let error) {
-            print("Error loging in user: \(error)")
-        }
-    }
 
     @objc private func loginUser() {
-        Task {
-            guard let email = emailTextField.text,
-                  let password = passwordTextField.text else {
-                print("Email or Password found to be nil.")
-                return
-            }
-            try await login(email: email, password: password)
-               
-            
-        }
+        self.viewModel.login()
     }
 
+    @objc private func changePassword() {
+        let vm = ResetPasswordViewViewModel()
+        let vc = ResetPasswordViewController(vm: vm)
+        show(vc, sender: self)
+    }
+    
+    /// for debug
     @objc private func logoutUser() {
         do {
             try Auth.auth().signOut()
@@ -203,29 +212,54 @@ class LoginViewController: UIViewController {
         }
     }
 
-    private func createNewUser(email: String, password: String) async throws {
-        try await Auth.auth().createUser(withEmail: email, password: password)
-    }
-
-    @objc private func createUser() {
-        Task {
-            guard let email = emailTextField.text,
-                  let password = passwordTextField.text else {
-                print("Email or Password found to be nil.")
-                return
-            }
-
-            do {
-                try await createNewUser(email: email, password: password)
-            } catch {
-                print("Error creating new user \(error)")
-            }
+    private func bind() {
+        func bindViewToViewModel() {
+            self.emailTextField.textPublisher
+                .assign(to: \.email, on: viewModel)
+                .store(in: &bindings)
+            
+            self.passwordTextField.textPublisher
+                .assign(to: \.password, on: viewModel)
+                .store(in: &bindings)
         }
+        
+        func bindViewModelToView() {
+            viewModel.isCredentialNotEmpty
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] value in
+                    guard let `self` = self else { return }
+                    if value {
+                        self.loginButton.backgroundColor = .systemBlue
+                        self.loginButton.isUserInteractionEnabled = true
+                    } else {
+                        self.loginButton.backgroundColor = .systemGray
+                        self.loginButton.isUserInteractionEnabled = false
+                    }
+                }
+                .store(in: &bindings)
+            
+            viewModel.isLoginSuccess
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] value in
+                    guard let `self` = self else { return }
+                    if value {
+                        let vc = PostViewController()
+                        self.show(vc, sender: self)
+                    } else {
+                        // TODO: Show UIAlert indicating login failed.
+                        
+                    }
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
-
 
 }
 
+// MARK: - UITextFieldDelegate
 extension LoginViewController: UITextFieldDelegate {
     
 }

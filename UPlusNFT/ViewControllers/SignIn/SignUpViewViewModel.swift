@@ -17,7 +17,6 @@ class SignUpViewViewModel {
     @Published var passwordCheck = ""
     @Published var nickname = ""
     
-    var isValidated = PassthroughSubject<Bool, Never>()
     var isAuthenticated = PassthroughSubject<Bool, Never>()
     var isUserCreated = PassthroughSubject<Bool, Never>()
     
@@ -26,7 +25,7 @@ class SignUpViewViewModel {
     }.eraseToAnyPublisher()
     
     private(set) lazy var isPasswordValid = $password.map {
-        let regex = "(?=.*\\d)(?=.*[a-z]).{8,}"
+        let regex = SignUpConstants.emailRegex
         if let range = $0.range(of: regex, options: .regularExpression) {
             return true
         } else {
