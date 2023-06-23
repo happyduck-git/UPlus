@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
+        /*
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
             let loginVM = LoginViewViewModel()
@@ -34,11 +35,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
-        
-//        let loginVM = LoginViewViewModel()
-//        let loginVC = LoginViewController(vm: loginVM)
-//        window?.rootViewController = UINavigationController(rootViewController: loginVC)
-      
+ */
+        // Check PostVC
+        let vc = PostViewController()
+        window?.rootViewController = UINavigationController(rootViewController: vc)
         window?.makeKeyAndVisible()
         
     }
@@ -76,7 +76,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let webpageURL = userActivity.webpageURL else { return }
         let link = webpageURL.absoluteString
         if Auth.auth().isSignIn(withEmailLink: link) {
-            UserDefaults.standard.set(link, forKey: FirebaseConstants.firebaseAuthLinkKey)
+            UserDefaults.standard.set(link, forKey: FirebaseAuthConstants.firebaseAuthLinkKey)
             NotificationCenter.default.post(name: NSNotification.Name.signIn, object: nil)
         }
         

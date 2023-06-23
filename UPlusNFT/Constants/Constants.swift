@@ -39,6 +39,41 @@ struct ResetPasswordConstants {
     static let backToLoginButton: String = "로그인하기"
 }
 
-struct FirebaseConstants {
+struct FirebaseAuthConstants {
     static let firebaseAuthLinkKey: String = "Link"
+}
+
+struct FirestoreConstants {
+    static let threadSetCollection = "thread_set"
+    
+    /* Post */
+    static let id = "id"
+    static let authorUid = "author_uid"
+    static let noUserUid = "no_user_uid"
+    static let cachedBestCommentIdList = "cached_best_comment_id_list"
+    static let cachedType = "cached_type"
+    static let contentText = "content_text"
+    static let createdTime = "created_time"
+    static let likedUserIdList = "liked_user_id_list"
+    static let title = "title"
+    static let url = "url"
+    static let contentImagePathList = "content_image_path_list"
+    static let campaignMetadataBundle = "campaign_metadata_bundle"
+
+    /* Comment */
+    static let commentSet = "comment_set"
+    static let commentAuthorUid = "comment_author_uid"
+    static let commentContentImagePath = "comment_content_image_path"
+    static let commentContentText = "comment_content_text"
+    static let commentCreatedTime = "comment_created_time"
+    static let commentId = "comment_id"
+    static let commentLikedUserUidList = "comment_liked_user_uid_list"
+
+    /* Recomment */
+    static let recommentSet = "recomment_set"
+    static let recommentAuthorUid = "recomment_author_uid"
+    static let recommentContentText = "recomment_content_text"
+    static let recommentCreatedTime = "recomment_created_time"
+    static let recommentId = "recomment_id"
+    
 }

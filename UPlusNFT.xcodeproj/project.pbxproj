@@ -12,7 +12,6 @@
 		930D96A62A416AC30007801A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A52A416AC30007801A /* LoginViewController.swift */; };
 		930D96AB2A416AC40007801A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 930D96AA2A416AC40007801A /* Assets.xcassets */; };
 		930D96AE2A416AC40007801A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 930D96AC2A416AC40007801A /* LaunchScreen.storyboard */; };
-		930D96BA2A41824A0007801A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 930D96B92A41824A0007801A /* GoogleService-Info.plist */; };
 		930D96BD2A41828E0007801A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 930D96BC2A41828E0007801A /* FirebaseAnalytics */; };
 		930D96BF2A41828E0007801A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 930D96BE2A41828E0007801A /* FirebaseAuth */; };
 		930D96C12A41828E0007801A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 930D96C02A41828E0007801A /* FirebaseFirestore */; };
@@ -30,6 +29,10 @@
 		930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */; };
 		930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E02A4516630007801A /* UIButton+Extension.swift */; };
 		930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E22A453D8D0007801A /* BackToLoginViewController.swift */; };
+		937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C764E2A457B2E001024D0 /* FirestoreManager.swift */; };
+		937C76522A457F0A001024D0 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76512A457F0A001024D0 /* Post.swift */; };
+		937C76542A4586E5001024D0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76532A4586E5001024D0 /* Comment.swift */; };
+		937C76562A4586F6001024D0 /* Recomment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76552A4586F6001024D0 /* Recomment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +58,11 @@
 		930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		930D96E02A4516630007801A /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		930D96E22A453D8D0007801A /* BackToLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackToLoginViewController.swift; sourceTree = "<group>"; };
+		930D96E82A4578550007801A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../UPlusNFT-Firestore/dev-lguplus-nft-platfarm/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		937C764E2A457B2E001024D0 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		937C76512A457F0A001024D0 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		937C76532A4586E5001024D0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		937C76552A4586F6001024D0 /* Recomment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recomment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +83,6 @@
 		930D96952A416AC30007801A = {
 			isa = PBXGroup;
 			children = (
-				930D96CC2A4197E90007801A /* Extensions */,
 				930D96A02A416AC30007801A /* UPlusNFT */,
 				930D969F2A416AC30007801A /* Products */,
 			);
@@ -92,12 +99,15 @@
 		930D96A02A416AC30007801A /* UPlusNFT */ = {
 			isa = PBXGroup;
 			children = (
+				937C76502A457EF4001024D0 /* Models */,
+				937C764D2A457B1F001024D0 /* Utilities */,
+				930D96E52A45739A0007801A /* Firebase */,
+				930D96CC2A4197E90007801A /* Extensions */,
 				930D96D12A42D0900007801A /* UPlusNFT.entitlements */,
 				930D96C42A41834C0007801A /* Constants */,
-				930D96B52A416AE10007801A /* Supporting Files */,
 				930D96B72A416E7C0007801A /* ViewControllers */,
+				930D96B52A416AE10007801A /* Supporting Files */,
 				930D96AF2A416AC40007801A /* Info.plist */,
-				930D96B92A41824A0007801A /* GoogleService-Info.plist */,
 			);
 			path = UPlusNFT;
 			sourceTree = "<group>";
@@ -180,6 +190,49 @@
 			path = ResetPassword;
 			sourceTree = "<group>";
 		};
+		930D96E52A45739A0007801A /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				930D96E72A4573C00007801A /* PROD */,
+				930D96E62A4573B50007801A /* DEV */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
+		930D96E62A4573B50007801A /* DEV */ = {
+			isa = PBXGroup;
+			children = (
+				930D96B92A41824A0007801A /* GoogleService-Info.plist */,
+			);
+			path = DEV;
+			sourceTree = "<group>";
+		};
+		930D96E72A4573C00007801A /* PROD */ = {
+			isa = PBXGroup;
+			children = (
+				930D96E82A4578550007801A /* GoogleService-Info.plist */,
+			);
+			path = PROD;
+			sourceTree = "<group>";
+		};
+		937C764D2A457B1F001024D0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				937C764E2A457B2E001024D0 /* FirestoreManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		937C76502A457EF4001024D0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				937C76512A457F0A001024D0 /* Post.swift */,
+				937C76532A4586E5001024D0 /* Comment.swift */,
+				937C76552A4586F6001024D0 /* Recomment.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -189,6 +242,7 @@
 			buildPhases = (
 				930D969A2A416AC30007801A /* Sources */,
 				930D969B2A416AC30007801A /* Frameworks */,
+				930D96E42A45731C0007801A /* Setup Firebase Environment GoogleService-Info.plist */,
 				930D969C2A416AC30007801A /* Resources */,
 			);
 			buildRules = (
@@ -248,12 +302,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				930D96AE2A416AC40007801A /* LaunchScreen.storyboard in Resources */,
-				930D96BA2A41824A0007801A /* GoogleService-Info.plist in Resources */,
 				930D96AB2A416AC40007801A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		930D96E42A45731C0007801A /* Setup Firebase Environment GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Firebase Environment GoogleService-Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Name of the resource we're selectively copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\n\n# Get references to dev and prod versions of the GoogleService-Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nGOOGLESERVICE_INFO_DEV=${PROJECT_DIR}/${TARGET_NAME}/Firebase/DEV/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Firebase/PROD/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure the dev version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_DEV}\"\nif [ ! -f $GOOGLESERVICE_INFO_DEV ]\nthen\n    echo \"No Development GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Make sure the prod version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_PROD}\"\nif [ ! -f $GOOGLESERVICE_INFO_PROD ]\nthen\n    echo \"No Production GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\nif [ \"${CONFIGURATION}\" == \"Release\" ]\nthen\n    echo \"Using ${GOOGLESERVICE_INFO_PROD}\"\n    cp \"${GOOGLESERVICE_INFO_PROD}\" \"${PLIST_DESTINATION}\"\nelse\n    echo \"Using ${GOOGLESERVICE_INFO_DEV}\"\n    cp \"${GOOGLESERVICE_INFO_DEV}\" \"${PLIST_DESTINATION}\"\nfi\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		930D969A2A416AC30007801A /* Sources */ = {
@@ -268,6 +343,7 @@
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
+				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
@@ -275,6 +351,9 @@
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
+				937C76522A457F0A001024D0 /* Post.swift in Sources */,
+				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
+				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,
 				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

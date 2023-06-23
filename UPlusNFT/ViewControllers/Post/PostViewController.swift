@@ -36,6 +36,16 @@ final class PostViewController: UIViewController {
         
         let username = Auth.auth().currentUser?.displayName ?? "no username"
         greetings(to: username)
+        
+        Task {
+            do {
+                try await FirestoreManager.shared.getAllPosts()
+            }
+            catch {
+                print("Error getting all posts from Firestore -- \(error)")
+            }
+        }
+        
     }
     
     // MARK: - Private
