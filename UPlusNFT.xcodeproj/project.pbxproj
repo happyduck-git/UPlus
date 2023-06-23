@@ -28,6 +28,8 @@
 		930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96D92A44057C0007801A /* ResetPasswordViewController.swift */; };
 		930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DC2A4406BA0007801A /* ResetPasswordViewViewModel.swift */; };
 		930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */; };
+		930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E02A4516630007801A /* UIButton+Extension.swift */; };
+		930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E22A453D8D0007801A /* BackToLoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		930D96D92A44057C0007801A /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		930D96DC2A4406BA0007801A /* ResetPasswordViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewViewModel.swift; sourceTree = "<group>"; };
 		930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		930D96E02A4516630007801A /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
+		930D96E22A453D8D0007801A /* BackToLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackToLoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +118,7 @@
 			children = (
 				930D96DB2A4406660007801A /* ResetPassword */,
 				930D96D62A43E5770007801A /* Post */,
-				930D96C72A41938B0007801A /* SignIn */,
+				930D96C72A41938B0007801A /* SignUp */,
 				930D96B82A417EDC0007801A /* Login */,
 			);
 			path = ViewControllers;
@@ -125,6 +129,7 @@
 			children = (
 				930D96A52A416AC30007801A /* LoginViewController.swift */,
 				930D96D42A42DC110007801A /* LoginViewViewModel.swift */,
+				930D96E22A453D8D0007801A /* BackToLoginViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -137,13 +142,13 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
-		930D96C72A41938B0007801A /* SignIn */ = {
+		930D96C72A41938B0007801A /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
 				930D96C82A4193A40007801A /* SignUpViewController.swift */,
 				930D96CA2A4194E50007801A /* SignUpViewViewModel.swift */,
 			);
-			path = SignIn;
+			path = SignUp;
 			sourceTree = "<group>";
 		};
 		930D96CC2A4197E90007801A /* Extensions */ = {
@@ -153,6 +158,7 @@
 				930D96CF2A428D6E0007801A /* UITextField+Extension.swift */,
 				930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */,
 				930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */,
+				930D96E02A4516630007801A /* UIButton+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -260,8 +266,10 @@
 				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
+				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
+				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
@@ -412,8 +420,8 @@
 				INFOPLIST_FILE = UPlusNFT/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -441,8 +449,8 @@
 				INFOPLIST_FILE = UPlusNFT/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

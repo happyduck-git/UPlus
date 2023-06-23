@@ -15,7 +15,7 @@ struct LoginConstants {
     static let photoButtonTitle:String = "Photo"
     static let singInButtonTitle: String = "가입하기"
     static let changePassword: String = "비밀번호 변경하기"
-    static let emailSentLabel: String = "이메일을 확인하여 비밀번호를 변경 후 로그인해주세요."
+    static let emailSentLabel: String = "이메일을 확인하여 비밀번호를 변경해주세요."
     static let stackSpacing: CGFloat = 1.0
 }
 
@@ -29,8 +29,9 @@ struct SignUpConstants {
     static let authCompleted: String = "인증완료"
     static let emailSuffix: String = "@gmail.com"
     static let deeplinkDomain: String = "https://aftermint-popcat-demo.firebaseapp.com"
-    static let emailRegex: String = "(?=.*\\d)(?=.*[a-z]).{8,}"
+    static let emailRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
     static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.3
+    static let sinUpSuccessLabel: String = "회원가입이 완료되었습다."
 }
 
 struct ResetPasswordConstants {

@@ -22,13 +22,14 @@ class LoginViewController: UIViewController {
     private let emailLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.emailLabel
-        label.textColor = .black
         return label
     }()
 
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
+        textField.textContentType = .username
+        textField.keyboardType = .emailAddress
 //        textField.text = "rkrudtls@gmail.com" // for debug
         return textField
     }()
@@ -36,7 +37,6 @@ class LoginViewController: UIViewController {
     private let passwordLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.passwordLabel
-        label.textColor = .black
         return label
     }()
 
@@ -44,6 +44,7 @@ class LoginViewController: UIViewController {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.isSecureTextEntry = true
+        textField.textContentType = .password
 //        textField.text = "Pass1234" // for debug
         return textField
     }()
@@ -88,6 +89,7 @@ class LoginViewController: UIViewController {
         let button = UIButton()
         button.setTitle(LoginConstants.logoutButtonTitle, for: .normal)
         button.addTarget(self, action: #selector(logoutUser), for: .touchUpInside)
+        button.isHidden = true
         button.backgroundColor = .systemGray
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -96,18 +98,22 @@ class LoginViewController: UIViewController {
     private lazy var changePasswordButton: UIButton = {
        let button = UIButton()
         button.setTitle(LoginConstants.changePassword, for: .normal)
-        button.backgroundColor = .systemGray2
         button.addTarget(self, action: #selector(changePassword), for: .touchUpInside)
+        button.setTitleColor(.systemGray, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 12.0)
+        button.setUnderline(1.0)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var createAccountButton: UIButton = {
         let button = UIButton()
-        button.setTitle(LoginConstants.singInButtonTitle, for: .normal)
-        button.backgroundColor = .systemOrange
         button.addTarget(self, action: #selector(openSignUpVC), for: .touchUpInside)
+        button.setTitle(LoginConstants.singInButtonTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(.systemPink, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 12.0)
+        button.setUnderline(1.0)
         return button
     }()
     
@@ -124,7 +130,8 @@ class LoginViewController: UIViewController {
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .tertiarySystemBackground
+        title = "로그인"
+        view.backgroundColor = .secondarySystemBackground
         setUI()
         setLayout()
         bind()
@@ -181,13 +188,15 @@ class LoginViewController: UIViewController {
             credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: textFieldStackView.bottomAnchor, multiplier: 1),
             credentialValidationText.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor),
             loginButton.topAnchor.constraint(equalToSystemSpacingBelow: credentialValidationText.bottomAnchor, multiplier: 1),
-            loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loginButton.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
+            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: loginButton.trailingAnchor, multiplier: 5),
             logoutButton.topAnchor.constraint(equalTo: loginButton.topAnchor),
             logoutButton.leadingAnchor.constraint(equalToSystemSpacingAfter: loginButton.trailingAnchor, multiplier: 2),
             changePasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             changePasswordButton.topAnchor.constraint(equalToSystemSpacingBelow: loginButton.bottomAnchor, multiplier: 3),
             createAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: changePasswordButton.bottomAnchor, multiplier: 3)
+            createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: changePasswordButton.bottomAnchor, multiplier: 1)
         ])
 
         labelStackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -249,6 +258,7 @@ class LoginViewController: UIViewController {
                         self.loginButton.backgroundColor = .systemGray
                         self.loginButton.isUserInteractionEnabled = false
                     }
+                    self.credentialValidationText.text = ""
                 }
                 .store(in: &bindings)
             
@@ -257,6 +267,8 @@ class LoginViewController: UIViewController {
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
                     if value {
+                        emailTextField.text = ""
+                        passwordTextField.text = ""
                         let vc = PostViewController()
                         self.show(vc, sender: self)
                     } else {

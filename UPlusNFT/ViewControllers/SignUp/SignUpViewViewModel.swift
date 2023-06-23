@@ -106,7 +106,6 @@ class SignUpViewViewModel {
                 case .none:
                     break
                 case .some(let wrapped):
-                    // TODO: error 내용을 vc에 전달
                     self.logger.error("Error creating new user \(wrapped.localizedDescription)")
                     switch wrapped.code {
                     case .emailAlreadyInUse:

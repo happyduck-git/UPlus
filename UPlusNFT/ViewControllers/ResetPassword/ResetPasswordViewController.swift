@@ -19,11 +19,18 @@ final class ResetPasswordViewController: UIViewController {
         let label = UILabel()
         label.text = LoginConstants.emailLabel
         label.font = .systemFont(ofSize: 17, weight: .bold)
-        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
+    private let emailValidationText: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 10, weight: .thin)
+        label.textColor = .systemRed
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
@@ -47,7 +54,6 @@ final class ResetPasswordViewController: UIViewController {
         label.numberOfLines = 2
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -65,6 +71,7 @@ final class ResetPasswordViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "비밀번호 변경"
         view.backgroundColor = .tertiarySystemBackground
         
         setUI()
@@ -88,6 +95,7 @@ final class ResetPasswordViewController: UIViewController {
     private func setUI() {
         view.addSubviews(
             emailLabel,
+            emailValidationText,
             emailTextField,
             sendButton,
             emailSentLabel,
@@ -99,6 +107,8 @@ final class ResetPasswordViewController: UIViewController {
         NSLayoutConstraint.activate([
             emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 5),
             emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
+            emailValidationText.centerYAnchor.constraint(equalTo: emailLabel.centerYAnchor),
+            emailValidationText.leadingAnchor.constraint(equalToSystemSpacingAfter: emailLabel.trailingAnchor, multiplier: 1),
             emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailLabel.bottomAnchor, multiplier: 2),
             emailTextField.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
             view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: emailTextField.trailingAnchor, multiplier: 3),
@@ -120,6 +130,7 @@ final class ResetPasswordViewController: UIViewController {
     private func bind() {
         func bindViewToViewModel() {
             self.emailTextField.textPublisher
+                .removeDuplicates()
                 .debounce(for: 0.5, scheduler: RunLoop.main)
                 .assign(to: \.email, on: viewModel)
                 .store(in: &bindings)
@@ -131,14 +142,20 @@ final class ResetPasswordViewController: UIViewController {
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
                     if value {
-                        emailSentLabel.isHidden = false
-                        backToLoginButton.isHidden = false
-                        emailLabel.isHidden = true
-                        emailTextField.isHidden = true
-                        sendButton.isHidden = true
+                        let vc = BackToLoginViewController(desc: LoginConstants.emailSentLabel)
+                        navigationController?.pushViewController(vc, animated: true)
+                    } else {
+                        self.emailValidationText.text = viewModel.errorDescription
                     }
                 }
                 .store(in: &bindings)
+            
+            viewModel.$email.sink { value in
+                if value.isEmpty {
+                    self.emailValidationText.text = ""
+                }
+            }
+            .store(in: &bindings)
         }
         
         bindViewToViewModel()

@@ -23,7 +23,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
+            let loginVM = LoginViewViewModel()
+            let loginVC = LoginViewController(vm: loginVM)
             let postVC = PostViewController()
+            loginVC.navigationController?.addChild(postVC)
             window?.rootViewController = UINavigationController(rootViewController: postVC)
         } else {
             logger.info("User is not logged in.")
@@ -32,6 +35,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
         
+//        let loginVM = LoginViewViewModel()
+//        let loginVC = LoginViewController(vm: loginVM)
+//        window?.rootViewController = UINavigationController(rootViewController: loginVC)
+      
         window?.makeKeyAndVisible()
         
     }

@@ -34,9 +34,10 @@ final class SignUpViewController: UIViewController {
     
     private let emailTextField: UITextField = {
         let txtField = UITextField()
-        txtField.text = "rkrudtls@gmail.com"
+//        txtField.text = "rkrudtls@gmail.com"
         txtField.textColor = .label
         txtField.borderStyle = .roundedRect
+        txtField.placeholder = " @gmail.com"
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
@@ -57,13 +58,23 @@ final class SignUpViewController: UIViewController {
         return label
     }()
     
+    private let passwordRuleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "8자리 이상 영대소문자와 숫자를 포함해야 합니다."
+        label.textColor = .systemGray
+        label.font = .systemFont(ofSize: 11, weight: .thin)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let passwordTextField: UITextField = {
         let txtField = UITextField()
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
         txtField.isUserInteractionEnabled = false
         txtField.isSecureTextEntry = true
-        txtField.text = "Pass1234"
+        txtField.textContentType = .newPassword
+//        txtField.text = "Pass1234"
         txtField.backgroundColor = .systemGray3
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -90,6 +101,7 @@ final class SignUpViewController: UIViewController {
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
         txtField.isUserInteractionEnabled = false
+        txtField.textContentType = .newPassword
         txtField.isSecureTextEntry = true
         txtField.backgroundColor = .systemGray3
         txtField.translatesAutoresizingMaskIntoConstraints = false
@@ -133,11 +145,12 @@ final class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "회원가입"
+        view.backgroundColor = .secondarySystemBackground
         setUI()
         setLayout()
         
         bind()
-        
         
     }
     
@@ -159,6 +172,7 @@ final class SignUpViewController: UIViewController {
             emailTextField,
             emailValidationText,
             passwordTitleLabel,
+            passwordRuleLabel,
             passwordTextField,
             passwordValidationText,
             passwordCheckTitleLabel,
@@ -185,6 +199,10 @@ final class SignUpViewController: UIViewController {
             
             passwordTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: emailValidationText.bottomAnchor, multiplier: 2),
             passwordTitleLabel.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
+            
+            passwordRuleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: passwordTitleLabel.trailingAnchor, multiplier: 1),
+            passwordRuleLabel.bottomAnchor.constraint(equalTo: passwordTitleLabel.bottomAnchor),
+            
             passwordTextField.topAnchor.constraint(equalToSystemSpacingBelow: passwordTitleLabel.bottomAnchor, multiplier: 1),
             passwordTextField.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
             passwordTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
@@ -345,7 +363,12 @@ final class SignUpViewController: UIViewController {
                 .sink { [weak self] valid in
                     guard let `self` = self else { return }
                     if valid {
+                       /*
                         navigationController?.popViewController(animated: true)
+                        */
+                        let vc = BackToLoginViewController(desc: SignUpConstants.sinUpSuccessLabel)
+                        navigationController?.pushViewController(vc, animated: true)
+                        
                     } else {
                         self.emailValidationText.text = self.viewModel.errorDescription
                     }
