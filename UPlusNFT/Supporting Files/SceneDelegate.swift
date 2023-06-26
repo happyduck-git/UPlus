@@ -37,7 +37,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
  */
         // Check PostVC
-        let vc = PostViewController()
+        let vm = PostViewViewModel()
+        let vc = PostViewController(vm: vm)
         window?.rootViewController = UINavigationController(rootViewController: vc)
         window?.makeKeyAndVisible()
         

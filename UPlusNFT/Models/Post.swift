@@ -19,3 +19,14 @@ struct Post {
     let likedUserIdList: [String]?
     let cachedBestCommentIdList: [String]? //사용자 댓글 전체에 대하여 추천 수로 내림차순, 작성 시간 순으로 오름차순 정렬하여 5개를 나열
 }
+
+struct PostContent {
+    let post: Post
+//    let comments: [CommnetContent]?
+    let comments: [Comment]?
+}
+
+struct CommentContent {
+    let comment: Comment
+    let recomments: [Recomment]?
+}

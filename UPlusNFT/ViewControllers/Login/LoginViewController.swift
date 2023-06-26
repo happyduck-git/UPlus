@@ -269,7 +269,8 @@ class LoginViewController: UIViewController {
                     if value {
                         emailTextField.text = ""
                         passwordTextField.text = ""
-                        let vc = PostViewController()
+                        let vm = PostViewViewModel()
+                        let vc = PostViewController(vm: vm)
                         self.show(vc, sender: self)
                     } else {
                         // TODO: Show UIAlert indicating login failed.

@@ -33,6 +33,13 @@
 		937C76522A457F0A001024D0 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76512A457F0A001024D0 /* Post.swift */; };
 		937C76542A4586E5001024D0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76532A4586E5001024D0 /* Comment.swift */; };
 		937C76562A4586F6001024D0 /* Recomment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76552A4586F6001024D0 /* Recomment.swift */; };
+		937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76582A492C9D001024D0 /* UITableViewCell+Extension.swift */; };
+		937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C765A2A492DE7001024D0 /* UICollectionReusableView+Extension.swift */; };
+		937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C765C2A492EBB001024D0 /* PostTableViewCell.swift */; };
+		937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C765F2A492EED001024D0 /* PostTableViewCellModel.swift */; };
+		937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76612A494F85001024D0 /* PostViewViewModel.swift */; };
+		937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76632A496106001024D0 /* PostDetailViewController.swift */; };
+		937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76652A497EBE001024D0 /* CampaignMetaData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +70,13 @@
 		937C76512A457F0A001024D0 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		937C76532A4586E5001024D0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		937C76552A4586F6001024D0 /* Recomment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recomment.swift; sourceTree = "<group>"; };
+		937C76582A492C9D001024D0 /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
+		937C765A2A492DE7001024D0 /* UICollectionReusableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionReusableView+Extension.swift"; sourceTree = "<group>"; };
+		937C765C2A492EBB001024D0 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		937C765F2A492EED001024D0 /* PostTableViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCellModel.swift; sourceTree = "<group>"; };
+		937C76612A494F85001024D0 /* PostViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewViewModel.swift; sourceTree = "<group>"; };
+		937C76632A496106001024D0 /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
+		937C76652A497EBE001024D0 /* CampaignMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMetaData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +113,7 @@
 		930D96A02A416AC30007801A /* UPlusNFT */ = {
 			isa = PBXGroup;
 			children = (
+				937C76572A492B8F001024D0 /* Views */,
 				937C76502A457EF4001024D0 /* Models */,
 				937C764D2A457B1F001024D0 /* Utilities */,
 				930D96E52A45739A0007801A /* Firebase */,
@@ -169,6 +184,8 @@
 				930D96D22A42D8280007801A /* NSNotificationName+Extension.swift */,
 				930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */,
 				930D96E02A4516630007801A /* UIButton+Extension.swift */,
+				937C76582A492C9D001024D0 /* UITableViewCell+Extension.swift */,
+				937C765A2A492DE7001024D0 /* UICollectionReusableView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -177,6 +194,8 @@
 			isa = PBXGroup;
 			children = (
 				930D96D72A43E5870007801A /* PostViewController.swift */,
+				937C76612A494F85001024D0 /* PostViewViewModel.swift */,
+				937C76632A496106001024D0 /* PostDetailViewController.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -229,8 +248,26 @@
 				937C76512A457F0A001024D0 /* Post.swift */,
 				937C76532A4586E5001024D0 /* Comment.swift */,
 				937C76552A4586F6001024D0 /* Recomment.swift */,
+				937C76652A497EBE001024D0 /* CampaignMetaData.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		937C76572A492B8F001024D0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				937C765E2A492EDE001024D0 /* PostTableView */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		937C765E2A492EDE001024D0 /* PostTableView */ = {
+			isa = PBXGroup;
+			children = (
+				937C765C2A492EBB001024D0 /* PostTableViewCell.swift */,
+				937C765F2A492EED001024D0 /* PostTableViewCellModel.swift */,
+			);
+			path = PostTableView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -336,22 +373,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
+				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
+				937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */,
 				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
+				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
+				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
+				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
+				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
+				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,
 				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,

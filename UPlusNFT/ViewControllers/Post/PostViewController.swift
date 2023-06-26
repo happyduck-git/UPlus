@@ -7,8 +7,19 @@
 
 import UIKit
 import FirebaseAuth
+import Combine
 
 final class PostViewController: UIViewController {
+    
+    private let vm: PostViewViewModel
+    private var bindings = Set<AnyCancellable>()
+    
+    private let postsTableView: UITableView = {
+        let table = UITableView()
+        table.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
+    }()
     
     private let titleLabel: UILabel = {
        let label = UILabel()
@@ -18,6 +29,8 @@ final class PostViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    // MARK: - Life Cycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -30,45 +43,64 @@ final class PostViewController: UIViewController {
         super.viewDidLoad()
         title = "메인화면"
         view.backgroundColor = .tertiarySystemBackground
+        vm.fetchAllPosts()
         
         setUI()
         setLayout()
+        setDelegate()
+        bind()
         
         let username = Auth.auth().currentUser?.displayName ?? "no username"
-        greetings(to: username)
-        
-        Task {
-            do {
-                try await FirestoreManager.shared.getAllPosts()
-            }
-            catch {
-                print("Error getting all posts from Firestore -- \(error)")
-            }
-        }
-        
+ 
+    }
+    
+    // MARK: - Init
+    init(vm: PostViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Private
     private func setUI() {
-        view.addSubviews(titleLabel)
+        view.addSubviews(postsTableView)
         
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            self.postsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            self.postsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            self.postsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            self.postsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
-    private func greetings(to username: String) {
-        let fullText = "Welcome \(username)!\nEntry View Controller"
-        let range = (fullText as NSString).range(of: username)
-        let color = UIColor.systemPink
+    private func setDelegate() {
+        postsTableView.delegate = self
+        postsTableView.dataSource = self
+    }
+    
+    private func bind() {
+        func bindViewToViewModel() {
+            
+        }
+        func bindViewModelToView() {
+            
+            vm.$tableDataSource
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.postsTableView.reloadData()
+            }
+            .store(in: &bindings)
+        }
         
-        let attributedString = NSMutableAttributedString(string: fullText)
-        attributedString.addAttribute(.foregroundColor, value: color, range: range)
-        titleLabel.attributedText = attributedString
+        bindViewToViewModel()
+        bindViewModelToView()
     }
     
     @objc
@@ -82,4 +114,30 @@ final class PostViewController: UIViewController {
         }
     }
     
+}
+
+extension PostViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return vm.numberOfRows
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifier, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
+        let vm = vm.cellForRow(at: indexPath.row)
+        cell.configure(with: vm)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vm = vm.cellForRow(at: indexPath.row)
+        
+        let vc = PostDetailViewController(vm: vm)
+        navigationController?.modalPresentationStyle = .fullScreen
+        self.show(vc, sender: self)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
 }

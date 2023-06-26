@@ -44,6 +44,8 @@ struct FirebaseAuthConstants {
 }
 
 struct FirestoreConstants {
+    static let devThreads = "dev_threads"
+    static let threads = "threads"
     static let threadSetCollection = "thread_set"
     
     /* Post */

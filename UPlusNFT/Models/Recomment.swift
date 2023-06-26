@@ -8,6 +8,7 @@
 import Foundation
 
 struct Recomment {
+    let commentId: String
     let recommentAuthorUid: String
     let recommentContentText: String
     let recommentCreatedTime: Date
