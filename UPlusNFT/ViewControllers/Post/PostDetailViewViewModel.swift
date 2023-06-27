@@ -1,14 +1,14 @@
 //
-//  PostTableViewCellModel.swift
+//  PostDetailViewViewModel.swift
 //  UPlusNFT
 //
-//  Created by Platfarm on 2023/06/26.
+//  Created by Platfarm on 2023/06/27.
 //
 
 import Foundation
 import Combine
 
-final class PostTableViewCellModel {
+final class PostDetailViewViewModel {
     
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
@@ -21,6 +21,7 @@ final class PostTableViewCellModel {
     let likeUserCount: Int
     let comments: [Comment]?
     
+    @Published var tableDataSource: [CommentTableViewCellModel] = []
     @Published var metaData: CampaignMetaData?
     
     // MARK: - Init
@@ -33,15 +34,34 @@ final class PostTableViewCellModel {
         self.comments = comments
     }
     
-    // MARK: - Internal
+}
+
+extension PostDetailViewViewModel {
+    
+    func viewModelForRow(at row: Int) -> CommentTableViewCellModel {
+        return self.tableDataSource[row]
+    }
+    
+}
+
+// MARK: - Fetch Data from Firestore
+extension PostDetailViewViewModel {
+    
+    // TODO: Get recomments and map it to CommentTableViewCellModel
+    func fetchRecomment(of commentId: String) {
+        
+    }
+    
     func fetchPostMetaData(_ postId: String) {
         Task {
             do {
-                metaData = try await firestoreManager.getMetadata(of: postId)
+                metaData = try await FirestoreManager.shared.getMetadata(of: postId)
             }
             catch {
                 print("Error fetching metadata - \(error)")
             }
         }
     }
+    
+    
 }

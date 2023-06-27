@@ -6,24 +6,46 @@
 //
 
 import UIKit
+import Combine
 
 final class PostDetailViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: PostTableViewCellModel
+    private let vm: PostDetailViewViewModel
+    
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
     private let postImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.isHidden = true
-        imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(systemName: "camera")
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
+    }()
+    
+    private let postImageLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.backgroundColor = .white
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let metadataLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.backgroundColor = .systemGray6
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let postTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.backgroundColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -31,6 +53,7 @@ final class PostDetailViewController: UIViewController {
     private let commentTable: UITableView = {
         let table = UITableView()
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        table.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
@@ -43,10 +66,14 @@ final class PostDetailViewController: UIViewController {
         setUI()
         setLayout()
         setDelegate()
+        
+        vm.fetchPostMetaData(vm.postId)
+        bind()
+        
     }
     
     // MARK: - Init
-    init(vm: PostTableViewCellModel) {
+    init(vm: PostDetailViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.configure(with: vm)
@@ -60,6 +87,8 @@ final class PostDetailViewController: UIViewController {
     private func setUI() {
         view.addSubviews(
             postImage,
+            postImageLabel,
+            metadataLabel,
             postTitle,
             commentTable
         )
@@ -67,15 +96,24 @@ final class PostDetailViewController: UIViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-//            self.postImage.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-//            self.postImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-//            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImage.trailingAnchor, multiplier: 2),
-            
-            self.postTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
+            /*
+            self.postImage.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
+            self.postImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImage.trailingAnchor, multiplier: 2),
+            self.postImage.heightAnchor.constraint(equalToConstant: 200),
+            */
+            self.postImageLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
+            self.postImageLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageLabel.trailingAnchor, multiplier: 2),
+            self.postTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageLabel.bottomAnchor, multiplier: 2),
             self.postTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postTitle.trailingAnchor, multiplier: 3),
             
-            self.commentTable.topAnchor.constraint(equalToSystemSpacingBelow: self.postTitle.bottomAnchor, multiplier: 2),
+            self.metadataLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postTitle.bottomAnchor, multiplier: 2),
+            self.metadataLabel.leadingAnchor.constraint(equalTo: self.postTitle.leadingAnchor),
+            self.metadataLabel.trailingAnchor.constraint(equalTo: self.postTitle.trailingAnchor),
+            
+            self.commentTable.topAnchor.constraint(equalToSystemSpacingBelow: self.metadataLabel.bottomAnchor, multiplier: 2),
             self.commentTable.leadingAnchor.constraint(equalTo: self.postTitle.leadingAnchor),
             self.commentTable.trailingAnchor.constraint(equalTo: self.postTitle.trailingAnchor),
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.commentTable.bottomAnchor, multiplier: 2)
@@ -89,24 +127,74 @@ final class PostDetailViewController: UIViewController {
         self.commentTable.dataSource = self
     }
     
-    private func configure(with vm: PostTableViewCellModel) {
-        self.postTitle.text = vm.postContent
+    private func bind() {
+        
+        func bindViewToViewModel() {
+            
+        }
+        
+        func bindViewModelToView() {
+            vm.$metaData
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] metadata in
+                guard let data = metadata else {
+                    self?.metadataLabel.text = "Meta data found to be NIL."
+
+                    return
+                }
+                    self?.metadataLabel.text = "\(data.configuration.beginTime)"
+            }
+            .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+    
+    private func configure(with vm: PostDetailViewViewModel) {
+        self.postTitle.text = "Text Content: " + vm.postContent
+        guard let imageList = vm.imageList,
+           !imageList.isEmpty else {
+            self.postImageLabel.isHidden = true
+            return
+        }
+        
+        self.postImageLabel.text = "Images: " + String(describing: imageList)
     }
 }
 
 extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return vm.comments?.count ?? 0
+        guard let rows = vm.comments,
+              !rows.isEmpty
+        else {
+            return 1
+        }
+        return rows.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
+//            return UITableViewCell()
+//        }
+//
+//        cell.configure(with: <#T##CommentTableViewCellModel#>)
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-        guard let comment = vm.comments?[indexPath.row] else {
+        var config = cell.defaultContentConfiguration()
+        
+        guard let comments = vm.comments,
+              !comments.isEmpty
+        else {
+            config.text = "아직 댓글이 없습니다!"
+            cell.contentConfiguration = config
             return cell
         }
-        var config = cell.defaultContentConfiguration()
-        config.text = comment.commentContentText
+        
+        config.text = comments[indexPath.row].commentContentText
+        
         cell.contentConfiguration = config
         return cell
     }
@@ -119,7 +207,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
         Task {
             do {
                 try await FirestoreManager.shared.getRecomments(
-                    postId: comment.postId,
+                    postId: vm.postId,
                     commentId: commentId
                 )
             }

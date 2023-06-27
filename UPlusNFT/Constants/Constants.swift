@@ -78,4 +78,28 @@ struct FirestoreConstants {
     static let recommentCreatedTime = "recomment_created_time"
     static let recommentId = "recomment_id"
     
+    /* Campaign Metadata */
+    static let campaginConfiguration = "campaign_configuration"
+    static let campaignBestCommentItems = "campaign_best_comment_items"
+    static let campaignBestCommentItemSet = "campaign_best_comment_item_set"
+    static let campaignItems = "campaign_items"
+    static let campaignItemSet = "campaign_item_set"
+    static let campaignUsers = "campaign_users"
+    static let campaignUserSet = "campaign_user_set"
+    static let cachedItemUserCount = "cached_item_user_count"
+    static let isRightItem = "is_right_item"
+    static let itemCaption = "item_caption"
+    static let itemId = "item_id"
+    static let itemRewardCategoryId = "item_reward_category_id"
+    static let beginTime = "begin_time"
+    static let endTime = "end_time"
+    static let hasUserReward = "has_user_reward"
+    static let isUserSendRightAnswer = "is_user_send_right_answer"
+    static let userAnsweredText = "user_answered_text"
+    static let userSelectedItemId = "user_selected_item_id"
+    static let userUid = "user_uid"
+    static let bestCommentOrder = "best_comment_order"
+    static let bestCommentRewardedUserUid = "best_comment_rewarded_user_uid"
+    static let bestCommentRewardCategoryId = "best_comment_reward_category_id"
+
 }

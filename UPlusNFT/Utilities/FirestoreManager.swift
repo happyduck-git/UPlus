@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 final class FirestoreManager {
     
@@ -75,7 +76,7 @@ final class FirestoreManager {
             let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
             
             return Comment(
-                postId: postId,
+//                postId: postId,
                 commentAuthorUid: commentAuthorUid,
                 commentContentImagePath: commentContentImagePath,
                 commentContentText: commentContentText,
@@ -116,9 +117,7 @@ final class FirestoreManager {
     
     /// Fetch all the comments of a certain post
     func getComments(of postId: String) async throws -> [Comment] {
-        let snapshots = try await db.collection(FirestoreConstants.devThreads)
-            .document(FirestoreConstants.threads)
-            .collection("\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
+        let snapshots = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
             .getDocuments()
             .documents
      
@@ -134,7 +133,7 @@ final class FirestoreManager {
             let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
             
             return Comment(
-                postId: postId,
+//                postId: postId,
                 commentAuthorUid: commentAuthorUid,
                 commentContentImagePath: commentContentImagePath,
                 commentContentText: commentContentText,
@@ -148,9 +147,7 @@ final class FirestoreManager {
     
     /// Fetch all the recommnets of a certain comment
     func getRecomments(postId: String, commentId: String) async throws -> [Recomment] {
-        let snapshots = try await db.collection(FirestoreConstants.devThreads)
-            .document(FirestoreConstants.threads)
-            .collection("\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)/\(commentId)/\(FirestoreConstants.recommentSet)")
+        let snapshots = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)/\(commentId)/\(FirestoreConstants.recommentSet)")
             .getDocuments()
             .documents
         
@@ -177,23 +174,138 @@ final class FirestoreManager {
     }
     
     func getAllPostContent() async throws -> [PostContent] {
-        
         var contents: [PostContent] = []
         let posts = try await self.getAllPosts()
         
         for post in posts {
-            
             let comments = try await self.getComments(of: post.id)
             
             let content = PostContent(
                 post: post,
                 comments: comments
             )
-            
             contents.append(content)
-            
+        }
+        return contents
+    }
+}
+
+// MARK: - MetaData
+extension FirestoreManager {
+    
+    func getMetadata(of postId: String) async throws -> CampaignMetaData? {
+        let snapshots =  try await self.db.collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.campaignMetadataBundle)")
+            .getDocuments()
+            .documents
+        
+        var config: CampaignConfiguration?
+        var items: [CampaignItem] = []
+        var users: [CampaignUser] = []
+        var bestComments: [BestComment] = []
+        
+        for snapshot in snapshots {
+            let docRef = snapshot.reference
+    
+            // 1. configuration -> doc fields
+            if snapshot.documentID == FirestoreConstants.campaginConfiguration {
+                let data = snapshot.data()
+                let beginTime = data[FirestoreConstants.beginTime] as? Date ?? Date()
+                let endTime = data[FirestoreConstants.endTime] as? Date ?? Date()
+                config = CampaignConfiguration(
+                    beginTime: beginTime,
+                    endTime: endTime
+                )
+                
+            } else if snapshot.documentID == FirestoreConstants.campaignItems {
+                // 2. campaign items
+                let itemSnapshots = try await docRef.collection(FirestoreConstants.campaignItemSet)
+                    .getDocuments()
+                    .documents
+                for itemSnapshot in itemSnapshots {
+                    let data = itemSnapshot.data()
+                    let id = data[FirestoreConstants.itemId] as? Int64 ?? 0
+                    let caption = data[FirestoreConstants.itemCaption] as? String ?? ""
+                    let isRight = data[FirestoreConstants.isRightItem] as? Bool ?? false
+                    let rewardCategoryId = data[FirestoreConstants.itemRewardCategoryId] as? String ?? ""
+                    let participantsCount = data[FirestoreConstants.cachedItemUserCount] as? Int64 ?? 0
+   
+                    let item = CampaignItem(
+                        id: id,
+                        caption: caption,
+                        isRight: isRight,
+                        rewardCategoryId: rewardCategoryId,
+                        participantsCount: participantsCount
+                    )
+                    items.append(item)
+                }
+            } else if snapshot.documentID == FirestoreConstants.campaignUsers {
+                // 3. campaign users
+                let userSnapshots = try await docRef.collection(FirestoreConstants.campaignUserSet)
+                    .getDocuments()
+                    .documents
+                
+                for userSnapshot in userSnapshots {
+                    let data = userSnapshot.data()
+                    let id = data[FirestoreConstants.userUid] as? String ?? FirestoreConstants.noUserUid
+                    let selectedItemId = data[FirestoreConstants.userSelectedItemId] as? Int64 ?? 0
+                    let answerSubmitted = data[FirestoreConstants.userAnsweredText] as? String
+                    let isRightAnswer = data[FirestoreConstants.isUserSendRightAnswer] as? Bool ?? false
+                    let isRewared = data[FirestoreConstants.hasUserReward] as? Bool ?? false
+   
+                    let user = CampaignUser(
+                        id: id,
+                        selectedItemId: selectedItemId,
+                        answerSubmitted: answerSubmitted,
+                        isRightAnswer: isRightAnswer,
+                        isRewared: isRewared
+                    )
+                    users.append(user)
+                }
+            } else if snapshot.documentID == FirestoreConstants.campaignBestCommentItems {
+                // 4. best comments
+                let itemSnapshots = try await docRef.collection(FirestoreConstants.campaignBestCommentItemSet)
+                    .getDocuments()
+                    .documents
+                
+                for itemSnapshot in itemSnapshots {
+                    let data = itemSnapshot.data()
+                    
+                    let order = data[FirestoreConstants.bestCommentOrder] as? Int64 ?? 0
+                    let rewardCategory = data[FirestoreConstants.bestCommentRewardCategoryId] as? String
+                    let rewaredUser = data[FirestoreConstants.bestCommentRewardedUserUid] as? String
+   
+                    let item = BestComment(
+                        order: order,
+                        rewardCategory: rewardCategory,
+                        rewaredUser: rewaredUser
+                    )
+                    
+                    bestComments.append(item)
+                }
+            } else {
+                
+            }
+
         }
         
-        return contents
+        guard let config = config else {
+            return nil
+        }
+        
+        let metaData = CampaignMetaData(
+            configuration: config,
+            items: items,
+            users: users,
+            bestComments: bestComments
+        )
+//        print("Meta data: \(metaData)")
+        return metaData
+    }
+    
+}
+
+extension FirestoreManager {
+    enum FirestoreErorr: Error {
+        case documentNotFound
     }
 }

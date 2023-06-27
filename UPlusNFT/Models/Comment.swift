@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Comment {
-    let postId: String
+struct Comment: Decodable {
+//    let postId: String
     let commentAuthorUid: String
     let commentContentImagePath: String?
     let commentContentText: String

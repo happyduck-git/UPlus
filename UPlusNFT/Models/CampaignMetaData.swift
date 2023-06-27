@@ -9,9 +9,9 @@ import Foundation
 
 struct CampaignMetaData {
     let configuration: CampaignConfiguration
-    let items: [CampaignItem]
-    let users: [CampaignUser]
-    let bestComments: [BestComment]
+    let items: [CampaignItem]? // {campaign_items}/campaign_item_set/{0} => fields
+    let users: [CampaignUser]? //{campaign_users}/campaign_user_set/{doc-id} => fields
+    let bestComments: [BestComment]? // {campaign_best_comment_items}/campaign_best_comment_item_set/{0} => fields
 }
 
 struct CampaignConfiguration {
@@ -20,7 +20,7 @@ struct CampaignConfiguration {
 }
 
 struct CampaignItem {
-    let id: String
+    let id: Int64
     let caption: String
     let isRight: Bool
     let rewardCategoryId: String?
@@ -37,6 +37,6 @@ struct CampaignUser {
 
 struct BestComment {
     let order: Int64
-    let rewardCategory: String // Reward enum 처리 고려.
-    let rewaredUser: String
+    let rewardCategory: String? // Reward enum 처리 고려.
+    let rewaredUser: String?
 }

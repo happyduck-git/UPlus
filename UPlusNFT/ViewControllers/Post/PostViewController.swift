@@ -49,8 +49,6 @@ final class PostViewController: UIViewController {
         setLayout()
         setDelegate()
         bind()
-        
-        let username = Auth.auth().currentUser?.displayName ?? "no username"
  
     }
     
@@ -130,9 +128,9 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vm = vm.cellForRow(at: indexPath.row)
-        
+        let vm = vm.postDetailViewModel(at: indexPath.row)
         let vc = PostDetailViewController(vm: vm)
+        
         navigationController?.modalPresentationStyle = .fullScreen
         self.show(vc, sender: self)
     }

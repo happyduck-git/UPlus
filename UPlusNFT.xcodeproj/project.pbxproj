@@ -29,6 +29,10 @@
 		930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */; };
 		930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E02A4516630007801A /* UIButton+Extension.swift */; };
 		930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E22A453D8D0007801A /* BackToLoginViewController.swift */; };
+		936F88232A4AB6ED0062E759 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 936F88222A4AB6ED0062E759 /* Nuke */; };
+		936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */; };
+		936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88272A4AC8860062E759 /* CommentTableViewCell.swift */; };
+		936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88292A4AC8B50062E759 /* CommentTableViewCellModel.swift */; };
 		937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C764E2A457B2E001024D0 /* FirestoreManager.swift */; };
 		937C76522A457F0A001024D0 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76512A457F0A001024D0 /* Post.swift */; };
 		937C76542A4586E5001024D0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76532A4586E5001024D0 /* Comment.swift */; };
@@ -66,6 +70,9 @@
 		930D96E02A4516630007801A /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		930D96E22A453D8D0007801A /* BackToLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackToLoginViewController.swift; sourceTree = "<group>"; };
 		930D96E82A4578550007801A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../UPlusNFT-Firestore/dev-lguplus-nft-platfarm/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewViewModel.swift; sourceTree = "<group>"; };
+		936F88272A4AC8860062E759 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
+		936F88292A4AC8B50062E759 /* CommentTableViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCellModel.swift; sourceTree = "<group>"; };
 		937C764E2A457B2E001024D0 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		937C76512A457F0A001024D0 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		937C76532A4586E5001024D0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
@@ -88,6 +95,7 @@
 				930D96BF2A41828E0007801A /* FirebaseAuth in Frameworks */,
 				930D96C12A41828E0007801A /* FirebaseFirestore in Frameworks */,
 				930D96C32A41828E0007801A /* FirebaseFirestoreSwift in Frameworks */,
+				936F88232A4AB6ED0062E759 /* Nuke in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +204,7 @@
 				930D96D72A43E5870007801A /* PostViewController.swift */,
 				937C76612A494F85001024D0 /* PostViewViewModel.swift */,
 				937C76632A496106001024D0 /* PostDetailViewController.swift */,
+				936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -234,6 +243,15 @@
 			path = PROD;
 			sourceTree = "<group>";
 		};
+		936F88262A4AC8700062E759 /* CommentTableView */ = {
+			isa = PBXGroup;
+			children = (
+				936F88272A4AC8860062E759 /* CommentTableViewCell.swift */,
+				936F88292A4AC8B50062E759 /* CommentTableViewCellModel.swift */,
+			);
+			path = CommentTableView;
+			sourceTree = "<group>";
+		};
 		937C764D2A457B1F001024D0 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +274,7 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				936F88262A4AC8700062E759 /* CommentTableView */,
 				937C765E2A492EDE001024D0 /* PostTableView */,
 			);
 			path = Views;
@@ -292,6 +311,7 @@
 				930D96BE2A41828E0007801A /* FirebaseAuth */,
 				930D96C02A41828E0007801A /* FirebaseFirestore */,
 				930D96C22A41828E0007801A /* FirebaseFirestoreSwift */,
+				936F88222A4AB6ED0062E759 /* Nuke */,
 			);
 			productName = UPlusNFT;
 			productReference = 930D969E2A416AC30007801A /* UPlusNFT.app */;
@@ -323,6 +343,7 @@
 			mainGroup = 930D96952A416AC30007801A;
 			packageReferences = (
 				930D96BB2A41828E0007801A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				936F88212A4AB6EC0062E759 /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = 930D969F2A416AC30007801A /* Products */;
 			projectDirPath = "";
@@ -392,10 +413,13 @@
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
+				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
+				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
+				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,
 				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,
@@ -620,6 +644,14 @@
 				minimumVersion = 10.0.0;
 			};
 		};
+		936F88212A4AB6EC0062E759 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -642,6 +674,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 930D96BB2A41828E0007801A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestoreSwift;
+		};
+		936F88222A4AB6ED0062E759 /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 936F88212A4AB6EC0062E759 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
