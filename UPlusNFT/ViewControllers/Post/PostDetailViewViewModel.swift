@@ -23,6 +23,7 @@ final class PostDetailViewViewModel {
     
     @Published var tableDataSource: [CommentTableViewCellModel] = []
     @Published var metaData: CampaignMetaData?
+    @Published var recomments: [Int: [Recomment]] = [:]
     
     // MARK: - Init
     init(postId: String, postTitle: String, postContent: String, imageList: [String]?, likeUserCount: Int, comments: [Comment]?) {
@@ -35,6 +36,7 @@ final class PostDetailViewViewModel {
         
         self.tableDataSource = comments?.map({ comment in
             return CommentTableViewCellModel(
+                id: comment.commentId,
                 comment: comment.commentContentText,
                 imagePath: comment.commentContentImagePath,
                 likeUserCount: comment.commentLikedUserUidList?.count,
@@ -54,7 +56,7 @@ extension PostDetailViewViewModel {
         return self.tableDataSource[row]
     }
     
-    func numberOfRows() -> Int {
+    func numberOfSections() -> Int {
         return self.tableDataSource.count
     }
     
@@ -64,10 +66,12 @@ extension PostDetailViewViewModel {
 extension PostDetailViewViewModel {
     
     // TODO: Get recomments and map it to CommentTableViewCellModel
-    func fetchRecomment(of commentId: String) {
+    func fetchRecomment(at section: Int, of commentId: String) {
+//        return try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
         Task {
             do {
-                let recomment = try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
+                let comments = try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
+                recomments[section] = comments
             }
             catch {
                 print("Error fetching recomments - \(error.localizedDescription)")

@@ -152,6 +152,14 @@ final class PostDetailViewController: UIViewController {
                     self?.commentTable.reloadData()
                 }
                 .store(in: &bindings)
+            
+            vm.$recomments
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] recomment in
+                    print("Recomment -- \(recomment)")
+                    self?.commentTable.reloadData()
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -172,10 +180,26 @@ final class PostDetailViewController: UIViewController {
 
 extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let count = vm.numberOfRows()
+    func numberOfSections(in tableView: UITableView) -> Int {
+        let count = vm.numberOfSections()
         return count == 0 ? 1 : count
-
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //        let count = vm.numberOfRows()
+        //        return count == 0 ? 1 : count
+        
+        // TODO: Recomment count에 따라 변동.
+        guard let cellVM = vm.viewModelForRow(at: section)
+        else { return 1 }
+        
+        if cellVM.isOpened {
+            print("Number of rows in section #\(section) --- \((self.vm.recomments[section]?.count ?? 0) + 1)")
+            return (self.vm.recomments[section]?.count ?? 0) + 1
+        }
+        else {
+            return 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -185,35 +209,56 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
             return UITableViewCell()
         }
-
-        guard let vm = vm.viewModelForRow(at: indexPath.row)
-        else {
-            var config = defaultCell.defaultContentConfiguration()
-            config.text = "아직 댓글이 없습니다!"
-            defaultCell.contentConfiguration = config
-            return defaultCell
-        }
+        cell.resetCell()
         
-        cell.configure(with: vm)
-       
-        return cell
+        if indexPath.row == 0 {
+            guard let cellVM = vm.viewModelForRow(at: indexPath.section)
+            else {
+                var config = defaultCell.defaultContentConfiguration()
+                config.text = "아직 댓글이 없습니다!"
+                defaultCell.contentConfiguration = config
+                return defaultCell
+            }
+            
+            cell.configure(with: cellVM)
+           
+            return cell
+        }
+        else {
+            guard let recomments = self.vm.recomments[indexPath.section],
+                  !recomments.isEmpty
+            else {
+                // recomment == nil || recomment is empty
+                var config = defaultCell.defaultContentConfiguration()
+                config.text = "아직 대댓글이 없습니다!"
+                defaultCell.contentConfiguration = config
+                defaultCell.backgroundColor = .systemGray4
+                return defaultCell
+            }
+            // recomment != nil nor empty
+            let recomment = recomments[indexPath.row - 1]
+            let cellVM = CommentTableViewCellModel(
+                id: recomment.recommentId,
+                comment: recomment.recommentContentText,
+                imagePath: nil,
+                likeUserCount: nil,
+                recomments: nil
+            )
+            cell.contentView.backgroundColor = .systemGray4
+            cell.configure(with: cellVM)
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: show recomments per comment
-        guard let comment = vm.comments?[indexPath.row] else { return }
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        let commentId = comment.commentId
-        Task {
-            do {
-                try await FirestoreManager.shared.getRecomments(
-                    postId: vm.postId,
-                    commentId: commentId
-                )
-            }
-            catch {
-                print("Error getting comments -- \(error.localizedDescription)")
-            }
+        if indexPath.row == 0 {
+            guard let cellVM = vm.viewModelForRow(at: indexPath.section) else { return }
+            cellVM.isOpened = !cellVM.isOpened
+            
+            self.vm.fetchRecomment(at: indexPath.section, of: cellVM.id)
         }
     }
+
 }

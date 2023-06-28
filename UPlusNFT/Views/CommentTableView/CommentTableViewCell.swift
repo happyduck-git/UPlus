@@ -77,4 +77,8 @@ final class CommentTableViewCell: UITableViewCell {
         self.commentButton.setTitle(String(describing: vm.recomments?.count ?? 0), for: .normal)
     }
     
+    func resetCell() {
+        contentView.backgroundColor = .white
+    }
+    
 }
