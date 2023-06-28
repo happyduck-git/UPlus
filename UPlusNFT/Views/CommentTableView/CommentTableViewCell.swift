@@ -72,9 +72,9 @@ final class CommentTableViewCell: UITableViewCell {
     // MARK: - Internal
     func configure(with vm: CommentTableViewCellModel) {
         self.title.text = vm.comment
-        self.likeButton.setTitle(String(describing: vm.likeUserCount), for: .normal)
+        self.likeButton.setTitle(String(describing: vm.likeUserCount ?? 0), for: .normal)
         // TODO: Recomment 개수 필요
-        
+        self.commentButton.setTitle(String(describing: vm.recomments?.count ?? 0), for: .normal)
     }
     
 }

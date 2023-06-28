@@ -145,6 +145,13 @@ final class PostDetailViewController: UIViewController {
                     self?.metadataLabel.text = "\(data.configuration.beginTime)"
             }
             .store(in: &bindings)
+            
+            vm.$tableDataSource
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] data in
+                    self?.commentTable.reloadData()
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -166,36 +173,29 @@ final class PostDetailViewController: UIViewController {
 extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let rows = vm.comments,
-              !rows.isEmpty
-        else {
-            return 1
-        }
-        return rows.count
+        let count = vm.numberOfRows()
+        return count == 0 ? 1 : count
+
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
-//            return UITableViewCell()
-//        }
-//
-//        cell.configure(with: <#T##CommentTableViewCellModel#>)
+        let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-        var config = cell.defaultContentConfiguration()
-        
-        guard let comments = vm.comments,
-              !comments.isEmpty
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
+            return UITableViewCell()
+        }
+
+        guard let vm = vm.viewModelForRow(at: indexPath.row)
         else {
+            var config = defaultCell.defaultContentConfiguration()
             config.text = "아직 댓글이 없습니다!"
-            cell.contentConfiguration = config
-            return cell
+            defaultCell.contentConfiguration = config
+            return defaultCell
         }
         
-        config.text = comments[indexPath.row].commentContentText
-        
-        cell.contentConfiguration = config
+        cell.configure(with: vm)
+       
         return cell
     }
     

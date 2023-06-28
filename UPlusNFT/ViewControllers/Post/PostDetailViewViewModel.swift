@@ -19,7 +19,7 @@ final class PostDetailViewViewModel {
     let postContent: String
     let imageList: [String]?
     let likeUserCount: Int
-    let comments: [Comment]?
+    var comments: [Comment]?
     
     @Published var tableDataSource: [CommentTableViewCellModel] = []
     @Published var metaData: CampaignMetaData?
@@ -32,14 +32,30 @@ final class PostDetailViewViewModel {
         self.imageList = imageList
         self.likeUserCount = likeUserCount
         self.comments = comments
+        
+        self.tableDataSource = comments?.map({ comment in
+            return CommentTableViewCellModel(
+                comment: comment.commentContentText,
+                imagePath: comment.commentContentImagePath,
+                likeUserCount: comment.commentLikedUserUidList?.count,
+                recomments: nil
+            )
+        }) ?? []
     }
     
 }
 
 extension PostDetailViewViewModel {
     
-    func viewModelForRow(at row: Int) -> CommentTableViewCellModel {
+    func viewModelForRow(at row: Int) -> CommentTableViewCellModel? {
+        if self.tableDataSource.isEmpty {
+            return nil
+        }
         return self.tableDataSource[row]
+    }
+    
+    func numberOfRows() -> Int {
+        return self.tableDataSource.count
     }
     
 }
@@ -49,7 +65,14 @@ extension PostDetailViewViewModel {
     
     // TODO: Get recomments and map it to CommentTableViewCellModel
     func fetchRecomment(of commentId: String) {
-        
+        Task {
+            do {
+                let recomment = try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
+            }
+            catch {
+                print("Error fetching recomments - \(error.localizedDescription)")
+            }
+        }
     }
     
     func fetchPostMetaData(_ postId: String) {

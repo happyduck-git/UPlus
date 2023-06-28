@@ -9,8 +9,9 @@ import Foundation
 import Combine
 
 struct CommentTableViewCellModel {
+    var isOpened: Bool = false
     let comment: String
-    let imageList: [String]?
+    let imagePath: String?
     let likeUserCount: Int?
     let recomments: [Recomment]? 
 }
