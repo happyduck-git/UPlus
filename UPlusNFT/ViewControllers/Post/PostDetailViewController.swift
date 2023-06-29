@@ -136,7 +136,7 @@ final class PostDetailViewController: UIViewController {
 //                    self.showEditVC()
                 }),
                 UIAction(title: "삭제하기", attributes: .destructive, handler: { action in
-//                    self.showDeleteUIAlert()
+                    self.showDeleteUIAlert()
                 }),
             ])
             
@@ -198,6 +198,22 @@ final class PostDetailViewController: UIViewController {
         
         self.postImageLabel.text = "Images: " + String(describing: imageList)
     }
+    
+    private func showDeleteUIAlert() {
+        let alert = UIAlertController(title: "게시글 삭제", message: "삭제하시겠습니까?", preferredStyle: .alert)
+        let confirm = UIAlertAction(title: "삭제", style: .default) { _ in
+
+            // TODO: Add Delete Post logic (also delete images inside Storage)
+            
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(confirm)
+        alert.addAction(cancel)
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
+        }
+    }
+    
 }
 
 extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
