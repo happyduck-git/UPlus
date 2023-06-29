@@ -14,6 +14,7 @@ final class PostTableViewCellModel {
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - Properties
+    let userId: String
     let postId: String
     let postTitle: String
     let postContent: String
@@ -24,7 +25,8 @@ final class PostTableViewCellModel {
     @Published var metaData: CampaignMetaData?
     
     // MARK: - Init
-    init(postId: String, postTitle: String, postContent: String, imageList: [String]?, likeUserCount: Int, comments: [Comment]?) {
+    init(userId: String, postId: String, postTitle: String, postContent: String, imageList: [String]?, likeUserCount: Int, comments: [Comment]?) {
+        self.userId = userId
         self.postId = postId
         self.postTitle = postTitle
         self.postContent = postContent

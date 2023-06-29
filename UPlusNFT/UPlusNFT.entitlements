@@ -5,6 +5,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:aftermint.page.link</string>
+		<string>applinks:devuplusnft.page.link</string>
 	</array>
 </dict>
 </plist>

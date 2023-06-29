@@ -35,8 +35,10 @@ final class PostViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.hidesBackButton = true
-        let rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .done, target: self, action: #selector(logOutDidTap))
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+        let writePostBarButtomItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .done, target: self, action: #selector(showWritePostVC))
+        let logoutBarButtonItem = UIBarButtonItem(title: "Logout", style: .done, target: self, action: #selector(logOutDidTap))
+        navigationItem.rightBarButtonItems = [writePostBarButtomItem, logoutBarButtonItem]
+
     }
     
     override func viewDidLoad() {
@@ -99,6 +101,15 @@ final class PostViewController: UIViewController {
         
         bindViewToViewModel()
         bindViewModelToView()
+    }
+    
+    @objc
+    private func showWritePostVC() {
+        let vm = WritePostViewViewModel()
+        let vc = WritePostViewController(type: .newPost, vm: vm)
+        
+        navigationController?.modalPresentationStyle = .fullScreen
+        self.show(vc, sender: self)
     }
     
     @objc

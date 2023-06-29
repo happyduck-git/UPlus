@@ -78,7 +78,7 @@ final class CommentTableViewCell: UITableViewCell {
     }
     
     func resetCell() {
-        contentView.backgroundColor = .white
+        self.backgroundColor = .white
     }
     
 }

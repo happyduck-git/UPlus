@@ -66,6 +66,7 @@ final class PostDetailViewController: UIViewController {
         setUI()
         setLayout()
         setDelegate()
+        setNavigationBar()
         
         vm.fetchPostMetaData(vm.postId)
         bind()
@@ -86,7 +87,7 @@ final class PostDetailViewController: UIViewController {
     // MARK: - Private
     private func setUI() {
         view.addSubviews(
-            postImage,
+//            postImage,
             postImageLabel,
             metadataLabel,
             postTitle,
@@ -125,6 +126,27 @@ final class PostDetailViewController: UIViewController {
     private func setDelegate() {
         self.commentTable.delegate = self
         self.commentTable.dataSource = self
+    }
+    
+    private func setNavigationBar() {
+        if vm.isPostOfCurrentUser {
+            let menu = UIMenu(children: [
+                UIAction(title: "수정하기", handler: { action in
+                    print(action.title)
+//                    self.showEditVC()
+                }),
+                UIAction(title: "삭제하기", attributes: .destructive, handler: { action in
+//                    self.showDeleteUIAlert()
+                }),
+            ])
+            
+            let btn = UIButton()
+            btn.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
+            btn.showsMenuAsPrimaryAction = true
+            btn.menu = menu
+            let barbutton = UIBarButtonItem(customView: btn)
+            navigationItem.rightBarButtonItem = barbutton
+        }
     }
     
     private func bind() {
@@ -244,7 +266,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                 likeUserCount: nil,
                 recomments: nil
             )
-            cell.contentView.backgroundColor = .systemGray4
+            cell.backgroundColor = .systemGray4
             cell.configure(with: cellVM)
             return cell
         }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 import Combine
 
 final class PostDetailViewViewModel {
@@ -14,19 +15,25 @@ final class PostDetailViewViewModel {
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - Properties
+    let userId: String
     let postId: String
     let postTitle: String
     let postContent: String
     let imageList: [String]?
     let likeUserCount: Int
     var comments: [Comment]?
+    var isPostOfCurrentUser: Bool {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return false }
+        return self.userId == currentUserId ? true : false
+    }
     
     @Published var tableDataSource: [CommentTableViewCellModel] = []
     @Published var metaData: CampaignMetaData?
     @Published var recomments: [Int: [Recomment]] = [:]
     
     // MARK: - Init
-    init(postId: String, postTitle: String, postContent: String, imageList: [String]?, likeUserCount: Int, comments: [Comment]?) {
+    init(userId: String, postId: String, postTitle: String, postContent: String, imageList: [String]?, likeUserCount: Int, comments: [Comment]?) {
+        self.userId = userId
         self.postId = postId
         self.postTitle = postTitle
         self.postContent = postContent

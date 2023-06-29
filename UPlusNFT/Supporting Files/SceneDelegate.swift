@@ -21,12 +21,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
-        /*
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
             let loginVM = LoginViewViewModel()
             let loginVC = LoginViewController(vm: loginVM)
-            let postVC = PostViewController()
+            
+            let postVM = PostViewViewModel()
+            let postVC = PostViewController(vm: postVM)
             loginVC.navigationController?.addChild(postVC)
             window?.rootViewController = UINavigationController(rootViewController: postVC)
         } else {
@@ -35,11 +36,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
- */
+ 
         // Check PostVC
-        let vm = PostViewViewModel()
-        let vc = PostViewController(vm: vm)
-        window?.rootViewController = UINavigationController(rootViewController: vc)
+//        let vm = PostViewViewModel()
+//        let vc = PostViewController(vm: vm)
+//        window?.rootViewController = UINavigationController(rootViewController: vc)
         window?.makeKeyAndVisible()
         
     }

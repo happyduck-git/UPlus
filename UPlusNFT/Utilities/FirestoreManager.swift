@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import FirebaseStorage
 
 final class FirestoreManager {
     
@@ -16,6 +17,11 @@ final class FirestoreManager {
     
     private let db = Firestore.firestore()
     
+}
+
+// MARK: - Getters
+extension FirestoreManager {
+
     /// Fetch all the posts
     func getAllPosts() async throws -> [Post] {
         let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
@@ -188,10 +194,8 @@ final class FirestoreManager {
         }
         return contents
     }
-}
-
-// MARK: - MetaData
-extension FirestoreManager {
+    
+    // MARK: - MetaData
     
     func getMetadata(of postId: String) async throws -> CampaignMetaData? {
         let snapshots =  try await self.db.collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.campaignMetadataBundle)")
@@ -300,6 +304,69 @@ extension FirestoreManager {
         )
 //        print("Meta data: \(metaData)")
         return metaData
+    }
+    
+}
+
+// MARK: - Setters
+extension FirestoreManager {
+    
+    func saveImage(postId: String, images: [Data], completion: @escaping ([String]) -> Void) {
+        
+        let group = DispatchGroup()
+        var imageUrls: [String] = []
+        
+        for image in images {
+            
+            let imageId = UUID().uuidString
+            let uploadRef = Storage.storage().reference(withPath: "dev_threads/threads/thread_set/\(postId)/\(imageId).jpg")
+            
+            let uploadMetadata = StorageMetadata()
+            uploadMetadata.contentType = "image/jpeg"
+            
+            group.enter()
+            uploadRef.putData(image, metadata: uploadMetadata) { metadata, error in
+                group.leave()
+                guard error == nil else {
+                    print("Error uploading image to Firebase Storage. --- " + String(describing: error?.localizedDescription))
+                    return
+                }
+                guard let metadata = metadata else {
+                    print("Metadata found to be nil.")
+                    return
+                }
+//                print("Uploading Image is completed; \(metadata)")
+                
+                group.enter()
+                uploadRef.downloadURL { result in
+                    group.leave()
+                    switch result {
+                    case .success(let url):
+                        imageUrls.append(url.absoluteString)
+                    case .failure(let error):
+                        print("Error dowloading image URL: \(error)")
+                    }
+                }
+            }
+        }
+        
+        group.notify(queue: .main) {
+            completion(imageUrls)
+        }
+    }
+    
+    func savePost(_ post: Post) throws {
+        let threadSet = self.db
+            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)")
+            .document(post.id)
+        
+        try threadSet.setData(
+            from: post,
+            merge: true
+        ) { _ in
+            print("Post sucessfully save!")
+        }
+        
     }
     
 }

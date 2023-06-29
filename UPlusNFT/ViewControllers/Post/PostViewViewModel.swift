@@ -28,6 +28,7 @@ final class PostViewViewModel {
         let vm = self.tableDataSource[row]
         
         return PostDetailViewViewModel(
+            userId: vm.userId,
             postId: vm.postId,
             postTitle: vm.postTitle,
             postContent: vm.postContent,
@@ -43,6 +44,7 @@ final class PostViewViewModel {
                 let posts = try await FirestoreManager.shared.getAllPostContent()
                 let vms = posts.map { post in
                     return PostTableViewCellModel(
+                        userId: post.post.authorUid,
                         postId: post.post.id,
                         postTitle: post.post.title,
                         postContent: post.post.contentText,

@@ -28,7 +28,7 @@ struct SignUpConstants {
     static let authenticate: String = "인증하기"
     static let authCompleted: String = "인증완료"
     static let emailSuffix: String = "@gmail.com"
-    static let deeplinkDomain: String = "https://aftermint-popcat-demo.firebaseapp.com"
+    static let deeplinkDomain: String = "https://DEV-LGUplus-NFT-Platfarm.firebaseapp.com"
     static let emailRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
     static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.3
     static let sinUpSuccessLabel: String = "회원가입이 완료되었습다."
@@ -38,6 +38,13 @@ struct ResetPasswordConstants {
     static let sendButton: String = "비밀번호 재설정"
     static let backToLoginButton: String = "로그인하기"
 }
+
+struct WritePostConstants {
+    static let submitButtonTitle:String = "SUBMIT"
+}
+
+
+// MARK: - Firebase
 
 struct FirebaseAuthConstants {
     static let firebaseAuthLinkKey: String = "Link"
