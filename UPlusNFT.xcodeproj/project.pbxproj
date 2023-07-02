@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
+		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
 		930D96A22A416AC30007801A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A12A416AC30007801A /* AppDelegate.swift */; };
 		930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A32A416AC30007801A /* SceneDelegate.swift */; };
 		930D96A62A416AC30007801A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A52A416AC30007801A /* LoginViewController.swift */; };
@@ -51,6 +53,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		930D969E2A416AC30007801A /* UPlusNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPlusNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		930D96A12A416AC30007801A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		930D96A32A416AC30007801A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -110,6 +114,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		249F59ED2A4EF3F3008CF6BE /* PhotoCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */,
+			);
+			path = PhotoCollectionView;
+			sourceTree = "<group>";
+		};
 		930D96952A416AC30007801A = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +217,7 @@
 				937C76582A492C9D001024D0 /* UITableViewCell+Extension.swift */,
 				937C765A2A492DE7001024D0 /* UICollectionReusableView+Extension.swift */,
 				9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */,
+				249F59F02A500874008CF6BE /* UILabel+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -301,6 +314,7 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				249F59ED2A4EF3F3008CF6BE /* PhotoCollectionView */,
 				936F88262A4AC8700062E759 /* CommentTableView */,
 				937C765E2A492EDE001024D0 /* PostTableView */,
 			);
@@ -438,10 +452,12 @@
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
+				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
+				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,

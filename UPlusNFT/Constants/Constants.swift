@@ -8,30 +8,33 @@
 import Foundation
 
 struct LoginConstants {
-    static let emailLabel:String = "Email"
-    static let passwordLabel:String = "Password"
-    static let loginButtonTitle:String = "Log In"
-    static let logoutButtonTitle:String = "Log Out"
-    static let photoButtonTitle:String = "Photo"
-    static let singInButtonTitle: String = "가입하기"
-    static let changePassword: String = "비밀번호 변경하기"
+    static let emailLabel: String = "사내 이메일"
+    static let passwordLabel: String = "비밀번호"
+    static let keepLoggedIn: String = "로그인 상태 유지"
+    static let loginButtonTitle: String = "로그인하기"
+    static let logoutButtonTitle: String = "Log Out"
+    static let photoButtonTitle: String = "Photo"
+    static let singInButtonTitle: String = "회원가입하기"
+    static let changePassword: String = "비밀번호 찾기"
     static let emailSentLabel: String = "이메일을 확인하여 비밀번호를 변경해주세요."
     static let stackSpacing: CGFloat = 1.0
 }
 
 struct SignUpConstants {
-    static let emailLabel:String = "사내 이메일"
-    static let passwordLabel:String = "비밀번호"
-    static let passwordCheckLabel:String = "비밀번호 재확인"
+    static let emailLabel: String = "사내 이메일 인증"
+    static let passwordLabel: String = "비밀번호"
+    static let passwordCheckLabel: String = "비밀번호 확인"
     static let nicknameLabel: String = "닉네임"
-    static let register: String = "가입하기"
-    static let authenticate: String = "인증하기"
-    static let authCompleted: String = "인증완료"
-    static let emailSuffix: String = "@gmail.com"
+    static let register: String = "가입 완료하기"
+    static let authenticate: String = "이메일 인증하기"
+    static let authCompleted: String = "이메일 인증이 완료되었습니다."
+    static let emailSuffix: String = "@gmail.com" //"@uplus.net"
     static let deeplinkDomain: String = "https://DEV-LGUplus-NFT-Platfarm.firebaseapp.com"
     static let emailRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
-    static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.3
+    static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.2
     static let sinUpSuccessLabel: String = "회원가입이 완료되었습다."
+    static let passwordValidation: String = "비밀번호에 기호, 숫자를 포함해주세요."
+    static let passwordCheckValidation: String = "비밀번호가 일치하지 않습니다."
 }
 
 struct ResetPasswordConstants {
@@ -40,7 +43,11 @@ struct ResetPasswordConstants {
 }
 
 struct WritePostConstants {
-    static let submitButtonTitle:String = "SUBMIT"
+    static let submitButtonTitle: String = "작성하기"
+    static let title: String = "제목"
+    static let content: String = "내용"
+    static let titlePlaceholder: String = "제목"
+    static let contentPlaceholder: String = "게시물 내 텍스트"
 }
 
 

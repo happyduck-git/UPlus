@@ -22,21 +22,38 @@ class LoginViewController: UIViewController {
     private let emailLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.emailLabel
+        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
+    private let placeHolderView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private let placeHolderLabel: UILabel = {
+        let label = UILabel()
+        label.text = "@uplus.net"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.textContentType = .username
         textField.keyboardType = .emailAddress
 //        textField.text = "rkrudtls@gmail.com" // for debug
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
 
     private let passwordLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.passwordLabel
+        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
@@ -46,23 +63,16 @@ class LoginViewController: UIViewController {
         textField.isSecureTextEntry = true
         textField.textContentType = .password
 //        textField.text = "Pass1234" // for debug
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
 
-    private let labelStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = LoginConstants.stackSpacing
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-
-    private let textFieldStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = LoginConstants.stackSpacing
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
+    private let keepLogInButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
+        button.setTitle(LoginConstants.keepLoggedIn, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let credentialValidationText: UILabel = {
@@ -78,8 +88,11 @@ class LoginViewController: UIViewController {
         let button = UIButton()
         button.setTitle(LoginConstants.loginButtonTitle, for: .normal)
         button.addTarget(self, action: #selector(loginUser), for: .touchUpInside)
-        button.backgroundColor = .systemGray
+        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+        button.setTitleColor(.white, for: .normal)
         button.isUserInteractionEnabled = false
+        button.layer.cornerRadius = 3
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -111,7 +124,7 @@ class LoginViewController: UIViewController {
         button.addTarget(self, action: #selector(openSignUpVC), for: .touchUpInside)
         button.setTitle(LoginConstants.singInButtonTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(.systemPink, for: .normal)
+        button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12.0)
         button.setUnderline(1.0)
         return button
@@ -134,8 +147,9 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .secondarySystemBackground
         setUI()
         setLayout()
+        setNavigationBar()
         bind()
-        
+
         hideKeyboardWhenTappedAround()
     }
 
@@ -164,49 +178,75 @@ class LoginViewController: UIViewController {
 
     //MARK: - Set UI & Layout
     private func setUI() {
-        view.addSubview(labelStackView)
-        labelStackView.addArrangedSubview(emailLabel)
-        labelStackView.addArrangedSubview(passwordLabel)
-        view.addSubview(textFieldStackView)
-        textFieldStackView.addArrangedSubview(emailTextField)
-        textFieldStackView.addArrangedSubview(passwordTextField)
-        view.addSubview(credentialValidationText)
-        view.addSubview(loginButton)
-        view.addSubview(logoutButton)
-        view.addSubview(changePasswordButton)
-        view.addSubview(createAccountButton)
+        
+        // Views
+        view.addSubviews(
+            emailLabel,
+            passwordLabel,
+            emailTextField,
+            passwordTextField,
+            credentialValidationText,
+            keepLogInButton,
+            changePasswordButton,
+            loginButton,
+            createAccountButton
+        )
+
+        // Adding a PlaceHolderView
+        placeHolderView.addSubview(placeHolderLabel)
+        self.emailTextField.rightView = placeHolderView
+        self.emailTextField.rightViewMode = .always
     }
 
     private func setLayout() {
         NSLayoutConstraint.activate([
-            labelStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 2),
-            labelStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            labelStackView.widthAnchor.constraint(equalToConstant: 100),
-            textFieldStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: labelStackView.trailingAnchor, multiplier: 2),
-            textFieldStackView.centerYAnchor.constraint(equalTo: labelStackView.centerYAnchor),
-            view.trailingAnchor.constraint(equalToSystemSpacingAfter: textFieldStackView.trailingAnchor, multiplier: 2),
-            credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: textFieldStackView.bottomAnchor, multiplier: 1),
-            credentialValidationText.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor),
+            
+            emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
+            emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
+            emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailLabel.bottomAnchor, multiplier: 1),
+            emailTextField.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
+            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: emailTextField.trailingAnchor, multiplier: 3),
+            
+            passwordLabel.topAnchor.constraint(equalToSystemSpacingBelow: emailTextField.bottomAnchor, multiplier: 2),
+            passwordLabel.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
+            passwordTextField.topAnchor.constraint(equalToSystemSpacingBelow: passwordLabel.bottomAnchor, multiplier: 1),
+            passwordTextField.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
+            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: passwordTextField.trailingAnchor, multiplier: 2),
+            
+            credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: passwordTextField.bottomAnchor, multiplier: 1),
+            credentialValidationText.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
+            
+            keepLogInButton.topAnchor.constraint(equalToSystemSpacingBelow: credentialValidationText.bottomAnchor, multiplier: 1),
+            keepLogInButton.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
+            changePasswordButton.topAnchor.constraint(equalTo: keepLogInButton.topAnchor),
+            changePasswordButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            
             loginButton.topAnchor.constraint(equalToSystemSpacingBelow: credentialValidationText.bottomAnchor, multiplier: 1),
-//            loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loginButton.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
-            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: loginButton.trailingAnchor, multiplier: 5),
-            logoutButton.topAnchor.constraint(equalTo: loginButton.topAnchor),
-            logoutButton.leadingAnchor.constraint(equalToSystemSpacingAfter: loginButton.trailingAnchor, multiplier: 2),
-            changePasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            changePasswordButton.topAnchor.constraint(equalToSystemSpacingBelow: loginButton.bottomAnchor, multiplier: 3),
+            loginButton.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
+            loginButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            
             createAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: changePasswordButton.bottomAnchor, multiplier: 1)
+            createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: loginButton.bottomAnchor, multiplier: 2),
+            
+            placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: placeHolderView.topAnchor, multiplier: 1),
+            placeHolderLabel.leadingAnchor.constraint(equalTo: placeHolderView.leadingAnchor),
+            placeHolderView.trailingAnchor.constraint(equalToSystemSpacingAfter: placeHolderLabel.trailingAnchor, multiplier: 1),
+            placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: placeHolderLabel.bottomAnchor, multiplier: 1)
         ])
 
-        labelStackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        keepLogInButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
 
     private func setDelegate() {
         emailTextField.delegate = self
         passwordTextField.delegate = self
     }
-
+    
+    private func setNavigationBar() {
+        self.navigationItem.backButtonTitle = ""
+        self.navigationController?.navigationBar.tintColor = .systemGray
+    }
+    
     //MARK: - Private
     @objc private func openSignUpVC() {
         let vm = SignUpViewViewModel()
@@ -252,7 +292,7 @@ class LoginViewController: UIViewController {
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
                     if value {
-                        self.loginButton.backgroundColor = .systemBlue
+                        self.loginButton.backgroundColor = .black
                         self.loginButton.isUserInteractionEnabled = true
                     } else {
                         self.loginButton.backgroundColor = .systemGray

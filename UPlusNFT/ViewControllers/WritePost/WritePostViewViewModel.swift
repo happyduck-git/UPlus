@@ -21,7 +21,7 @@ final class WritePostViewViewModel {
     @Published var titleText: String = ""
     @Published var postText: String = ""
     
-    var selectedImages: [UIImage?] = []
+    @Published var selectedImages: [UIImage?] = []
     var userId: String = ""
     
     /*
@@ -42,6 +42,20 @@ final class WritePostViewViewModel {
     
 }
 
+//MARK: - CollectionView
+extension WritePostViewViewModel {
+    
+    func numberOfItems(at section: Int) -> Int {
+        if section == 0 {
+            return 1
+        } else {
+            return selectedImages.count
+        }
+    }
+    
+}
+
+//MARK: - Save Post
 extension WritePostViewViewModel {
     
     func saveImages(_ imageData: [Data]) async -> [String] {

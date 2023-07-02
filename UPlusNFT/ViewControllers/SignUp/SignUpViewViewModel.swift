@@ -15,10 +15,15 @@ class SignUpViewViewModel {
     
     let logger = Logger()
     
-    @Published var email = ""
+    var fullEmail = ""
+    @Published var email = "" {
+        didSet {
+            fullEmail = self.email + "@gmail.com"
+        }
+    }
     @Published var password = ""
     @Published var passwordCheck = ""
-    @Published var nickname = ""
+//    @Published var nickname = ""
     @Published var errorDescription = ""
     
     var isAuthenticated = PassthroughSubject<Bool, Never>()
@@ -26,7 +31,8 @@ class SignUpViewViewModel {
     var isEmailSent = PassthroughSubject<Bool, Never>()
     
     private(set) lazy var isEmailValid = $email.map {
-        $0.hasSuffix(SignUpConstants.emailSuffix)
+//        $0.hasSuffix(SignUpConstants.emailSuffix)
+        $0.count > 5 //TODO: 유효한 이메일 규칙 필요
     }.eraseToAnyPublisher()
     
     private(set) lazy var isPasswordValid = $password.map {
@@ -43,9 +49,9 @@ class SignUpViewViewModel {
             $0 == $1
         }.eraseToAnyPublisher()
 
-    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest4(isEmailValid, isPasswordValid, isPasswordSame, $nickname)
+    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest3(isEmailValid, isPasswordValid, isPasswordSame)
         .map {
-            return $0 && $1 && $2 && !$3.isEmpty
+            return $0 && $1 && $2
         }.eraseToAnyPublisher()
     
     // MARK: - Init
@@ -60,6 +66,8 @@ class SignUpViewViewModel {
     // MARK: - Internal
     
     func sendEmailValification() {
+        self.isEmailSent.send(true)
+        /*
         let actionCodeSettings = ActionCodeSettings()
         actionCodeSettings.url = URL(string: SignUpConstants.deeplinkDomain)
         actionCodeSettings.handleCodeInApp = true
@@ -70,17 +78,18 @@ class SignUpViewViewModel {
             do {
                 try await Auth.auth()
                     .sendSignInLink(
-                        toEmail: email,
+                        toEmail: self.fullEmail,
                         actionCodeSettings: actionCodeSettings
                     )
-                print("Successfully sent email sign in link to \(email).")
+                self.logger.info("Successfully sent email sign in link to \(self.fullEmail).")
                 self.isEmailSent.send(true)
             }
             catch {
-                print("Error sending sign in link: \(error.localizedDescription).")
+                self.logger.error("Error sending sign in link: \(error.localizedDescription).")
                 self.isEmailSent.send(false)
             }
         }
+         */
     }
     
     func createNewUser() {
@@ -88,15 +97,17 @@ class SignUpViewViewModel {
             do {
                 try await Auth.auth()
                     .createUser(
-                        withEmail: self.email,
+                        withEmail: self.fullEmail,
                         password: self.password
                     )
                 self.logger.info("User created.")
                 
+                /*
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
                 changeRequest?.displayName = self.nickname
                 try await changeRequest?.commitChanges()
                 self.logger.info("Changed nickname.")
+                */
                 
                 isUserCreated.send(true)
             }

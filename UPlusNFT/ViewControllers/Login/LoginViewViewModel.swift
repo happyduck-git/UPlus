@@ -11,9 +11,15 @@ import FirebaseAuth
 
 final class LoginViewViewModel {
     
-    @Published var email: String = ""
+    var fullEmail: String = ""
+    @Published var email: String = "" {
+        didSet {
+            self.fullEmail = self.email + SignUpConstants.emailSuffix
+        }
+    }
     @Published var password: String = ""
     @Published var errorDescription: String = ""
+    
     
     let isLoginSuccess = PassthroughSubject<Bool, Never>()
     
@@ -27,7 +33,7 @@ final class LoginViewViewModel {
         
         Task {
             do {
-                try await Auth.auth().signIn(withEmail: self.email, password: self.password)
+                try await Auth.auth().signIn(withEmail: self.fullEmail, password: self.password)
                 print("Signed in.")
                 self.isLoginSuccess.send(true)
             }
