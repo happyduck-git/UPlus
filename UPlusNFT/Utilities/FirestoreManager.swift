@@ -12,50 +12,33 @@ import FirebaseStorage
 
 final class FirestoreManager {
     
+    //MARK: - Init
     static let shared = FirestoreManager()
     private init() {}
     
+    //MARK: - Property
+    
+    // Database
     private let db = Firestore.firestore()
     
+    // Pagination
+    var isPagenating: Bool = false
+    var queryDocumentSnapshot: QueryDocumentSnapshot?
 }
 
 // MARK: - Getters
 extension FirestoreManager {
 
+    //MARK: - Get Posts
     /// Fetch all the posts
     func getAllPosts() async throws -> [Post] {
         let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
             .getDocuments()
             .documents
         
+        // Convert document snapshot to `Post`.
         let posts = snapshots.map { snapshot in
-            
-            /// Post
-            let data = snapshot.data()
-            
-            let id = data[FirestoreConstants.id] as? String ?? FirestoreConstants.noUserUid
-            let url = data[FirestoreConstants.url] as? String ?? FirestoreConstants.noUserUid
-            let cachedType = data[FirestoreConstants.cachedType] as? String ?? FirestoreConstants.noUserUid
-            let title = data[FirestoreConstants.title] as? String ?? FirestoreConstants.noUserUid
-            let contentText = data[FirestoreConstants.contentText] as? String ?? FirestoreConstants.noUserUid
-            let contentImagePathList = data[FirestoreConstants.contentImagePathList] as? [String]
-            let authorUid = data[FirestoreConstants.authorUid] as? String ?? FirestoreConstants.noUserUid
-            let createdTime = data[FirestoreConstants.createdTime] as? Date ?? Date()
-            let likedUserIdList = data[FirestoreConstants.likedUserIdList] as? [String]
-            let cachedBestCommentIdList = data[FirestoreConstants.cachedBestCommentIdList] as? [String]
-            
-            return Post(
-                id: id,
-                url: url,
-                cachedType: cachedType,
-                title: title,
-                contentText: contentText,
-                contentImagePathList: contentImagePathList,
-                authorUid: authorUid,
-                createdTime: createdTime,
-                likedUserIdList: likedUserIdList,
-                cachedBestCommentIdList: cachedBestCommentIdList
-            )
+            return self.convertQueryDocumentToPost(snapshot)
             
         }
 //        print("Posts: \(posts)")
@@ -63,6 +46,47 @@ extension FirestoreManager {
         return posts
     }
     
+    func getPaginatedPosts() async throws -> (posts: [Post], lastDoc: QueryDocumentSnapshot?) {
+        let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
+            .limit(to: FirestoreConstants.documentLimt)
+            .getDocuments()
+            .documents
+        
+        let posts = snapshots.map { snapshot in
+            return self.convertQueryDocumentToPost(snapshot)
+        }
+
+        let lastDoc = snapshots.last
+        
+        return (posts: posts, lastDoc: lastDoc)
+    }
+    
+    func getAdditionalPaginatedPosts(
+        after lastDocumentSnapshot: QueryDocumentSnapshot?
+    ) async throws -> (posts: [Post], lastDoc: QueryDocumentSnapshot?) {
+        
+        guard let lastSnapshot = lastDocumentSnapshot
+        else {
+            print("Last document found to be nil.")
+            throw FirestoreErorr.documentFoundToBeNil
+        }
+        
+        let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
+            .start(afterDocument: lastSnapshot)
+            .limit(to: FirestoreConstants.documentLimt)
+            .getDocuments()
+            .documents
+        
+        let posts = snapshots.map { snapshot in
+            return self.convertQueryDocumentToPost(snapshot)
+        }
+
+        let lastDoc = snapshots.last
+        
+        return (posts: posts, lastDoc: lastDoc)
+    }
+
+    //MARK: - Get Comments
     /// Fetch all the comments
     func getAllComments() async throws {
         // comment_set parent document id & Post id
@@ -179,11 +203,11 @@ extension FirestoreManager {
         return recomments
     }
     
-    func getAllPostContent() async throws -> [PostContent] {
+    func getAllInitialPostContent() async throws -> (posts: [PostContent], lastDoc: QueryDocumentSnapshot?) {
         var contents: [PostContent] = []
-        let posts = try await self.getAllPosts()
+        let results = try await self.getPaginatedPosts()
         
-        for post in posts {
+        for post in results.posts {
             let comments = try await self.getComments(of: post.id)
             
             let content = PostContent(
@@ -192,7 +216,23 @@ extension FirestoreManager {
             )
             contents.append(content)
         }
-        return contents
+        return (posts: contents, lastDoc: results.lastDoc)
+    }
+    
+    func getAllAdditionalPostContent(after lastDoc: QueryDocumentSnapshot?) async throws -> (posts: [PostContent], lastDoc: QueryDocumentSnapshot?) {
+        var contents: [PostContent] = []
+        let results = try await self.getAdditionalPaginatedPosts(after: lastDoc)
+        
+        for post in results.posts {
+            let comments = try await self.getComments(of: post.id)
+            
+            let content = PostContent(
+                post: post,
+                comments: comments
+            )
+            contents.append(content)
+        }
+        return (posts: contents, lastDoc: results.lastDoc)
     }
     
     // MARK: - MetaData
@@ -371,8 +411,42 @@ extension FirestoreManager {
     
 }
 
+//MARK: - Convert `Query Document` to `Post`
+extension FirestoreManager {
+    
+    private func convertQueryDocumentToPost(_ queryDocument: QueryDocumentSnapshot) -> Post {
+        let data = queryDocument.data()
+        
+        let id = data[FirestoreConstants.id] as? String ?? FirestoreConstants.noUserUid
+        let url = data[FirestoreConstants.url] as? String ?? FirestoreConstants.noUserUid
+        let cachedType = data[FirestoreConstants.cachedType] as? String ?? FirestoreConstants.noUserUid
+        let title = data[FirestoreConstants.title] as? String ?? FirestoreConstants.noUserUid
+        let contentText = data[FirestoreConstants.contentText] as? String ?? FirestoreConstants.noUserUid
+        let contentImagePathList = data[FirestoreConstants.contentImagePathList] as? [String]
+        let authorUid = data[FirestoreConstants.authorUid] as? String ?? FirestoreConstants.noUserUid
+        let createdTime = data[FirestoreConstants.createdTime] as? Date ?? Date()
+        let likedUserIdList = data[FirestoreConstants.likedUserIdList] as? [String]
+        let cachedBestCommentIdList = data[FirestoreConstants.cachedBestCommentIdList] as? [String]
+        
+        return Post(
+            id: id,
+            url: url,
+            cachedType: cachedType,
+            title: title,
+            contentText: contentText,
+            contentImagePathList: contentImagePathList,
+            authorUid: authorUid,
+            createdTime: createdTime,
+            likedUserIdList: likedUserIdList,
+            cachedBestCommentIdList: cachedBestCommentIdList
+        )
+        
+    }
+}
+
 extension FirestoreManager {
     enum FirestoreErorr: Error {
         case documentNotFound
+        case documentFoundToBeNil
     }
 }

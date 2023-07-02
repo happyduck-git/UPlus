@@ -39,8 +39,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 */
         // Check PostVC
-//        let vm = WritePostViewViewModel()
-//        let vc = WritePostViewController(type: .newPost, vm: vm)
+//        let vm = PostViewViewModel()
+//        let vc = PostViewController(vm: vm)
 //        window?.rootViewController = UINavigationController(rootViewController: vc)
         
         // Check PostDetailVC
@@ -59,7 +59,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 commentCreatedTime: Date(),
                 commentId: "Comment ID",
                 commentLikedUserUidList: ["UserID#1"]),
-                
+
                 Comment(
                 commentAuthorUid: "Author ID",
                 commentContentImagePath: "image path",
@@ -74,7 +74,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 commentCreatedTime: Date(),
                 commentId: "Comment ID",
                 commentLikedUserUidList: ["UserID#1"]),
-                
+
                 Comment(
                 commentAuthorUid: "Author ID",
                 commentContentImagePath: "image path",
@@ -89,7 +89,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 commentCreatedTime: Date(),
                 commentId: "Comment ID",
                 commentLikedUserUidList: ["UserID#1"]),
-                
+
                 Comment(
                 commentAuthorUid: "Author ID",
                 commentContentImagePath: "image path",
@@ -111,7 +111,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 commentCreatedTime: Date(),
                 commentId: "Comment ID",
                 commentLikedUserUidList: ["UserID#1"]),
-                
+
                 Comment(
                 commentAuthorUid: "Author ID",
                 commentContentImagePath: "image path",
@@ -121,7 +121,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 commentLikedUserUidList: ["UserID#1"])
             ]
         )
-        
+
         let vc = PostDetailViewController(vm: vm)
         window?.rootViewController = UINavigationController(rootViewController: vc)
         window?.makeKeyAndVisible()

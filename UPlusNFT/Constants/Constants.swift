@@ -75,6 +75,7 @@ struct FirestoreConstants {
     static let url = "url"
     static let contentImagePathList = "content_image_path_list"
     static let campaignMetadataBundle = "campaign_metadata_bundle"
+    static let documentLimt: Int = 6
 
     /* Comment */
     static let commentSet = "comment_set"

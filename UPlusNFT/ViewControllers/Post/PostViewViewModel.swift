@@ -7,13 +7,17 @@
 
 import Foundation
 import Combine
+import FirebaseFirestore
 
 final class PostViewViewModel {
     
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
+    var queryDocumentSnapshot: QueryDocumentSnapshot?
+    var isLoading: Bool = false
     
     @Published var tableDataSource: [PostTableViewCellModel] = []
+    @Published var didLoadAdditionalPosts: Bool = false
     
     var numberOfRows: Int {
         print("\(#function) -- \(self.tableDataSource.count)")
@@ -38,27 +42,49 @@ final class PostViewViewModel {
         )
     }
     
-    func fetchAllPosts() {
+    func fetchAllInitialPosts() {
         Task {
             do {
-                let posts = try await FirestoreManager.shared.getAllPostContent()
-                let vms = posts.map { post in
-                    return PostTableViewCellModel(
-                        userId: post.post.authorUid,
-                        postId: post.post.id,
-                        postTitle: post.post.title,
-                        postContent: post.post.contentText,
-                        imageList: post.post.contentImagePathList,
-                        likeUserCount: post.post.likedUserIdList?.count ?? 0,
-                        comments: post.comments
-                    )
+                let results = try await firestoreManager.getAllInitialPostContent()
+                let vms = results.posts.map { post in
+                    return self.convertToCellViewModel(post: post)
                 }
                 self.tableDataSource = vms
+                self.queryDocumentSnapshot = results.lastDoc
             }
             catch {
                 print("Error getting all posts from Firestore -- \(error)")
             }
         }
+    }
+    
+    func fetchAdditionalPosts() {
+        Task {
+            self.isLoading = true
+            
+            let results = try await firestoreManager.getAllAdditionalPostContent(after: self.queryDocumentSnapshot)
+            let vms = results.posts.map { post in
+                return self.convertToCellViewModel(post: post)
+            }
+            
+            self.didLoadAdditionalPosts = true
+            self.isLoading = false
+            
+            self.tableDataSource.append(contentsOf: vms)
+            self.queryDocumentSnapshot = results.lastDoc
+        }
+    }
+    
+    private func convertToCellViewModel(post: PostContent) -> PostTableViewCellModel {
+        return PostTableViewCellModel(
+            userId: post.post.authorUid,
+            postId: post.post.id,
+            postTitle: post.post.title,
+            postContent: post.post.contentText,
+            imageList: post.post.contentImagePathList,
+            likeUserCount: post.post.likedUserIdList?.count ?? 0,
+            comments: post.comments
+        )
     }
     
 }

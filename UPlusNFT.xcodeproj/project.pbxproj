@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
 		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
+		249F59F42A51939D008CF6BE /* PostDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F32A51939D008CF6BE /* PostDetailTableViewCell.swift */; };
 		930D96A22A416AC30007801A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A12A416AC30007801A /* AppDelegate.swift */; };
 		930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A32A416AC30007801A /* SceneDelegate.swift */; };
 		930D96A62A416AC30007801A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A52A416AC30007801A /* LoginViewController.swift */; };
@@ -55,6 +56,7 @@
 /* Begin PBXFileReference section */
 		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
+		249F59F32A51939D008CF6BE /* PostDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewCell.swift; sourceTree = "<group>"; };
 		930D969E2A416AC30007801A /* UPlusNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPlusNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		930D96A12A416AC30007801A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		930D96A32A416AC30007801A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -120,6 +122,14 @@
 				249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */,
 			);
 			path = PhotoCollectionView;
+			sourceTree = "<group>";
+		};
+		249F59F22A51937C008CF6BE /* PostDetailTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				249F59F32A51939D008CF6BE /* PostDetailTableViewCell.swift */,
+			);
+			path = PostDetailTableViewCell;
 			sourceTree = "<group>";
 		};
 		930D96952A416AC30007801A = {
@@ -314,6 +324,7 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				249F59F22A51937C008CF6BE /* PostDetailTableViewCell */,
 				249F59ED2A4EF3F3008CF6BE /* PhotoCollectionView */,
 				936F88262A4AC8700062E759 /* CommentTableView */,
 				937C765E2A492EDE001024D0 /* PostTableView */,
@@ -439,6 +450,7 @@
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
+				249F59F42A51939D008CF6BE /* PostDetailTableViewCell.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */,
 				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,

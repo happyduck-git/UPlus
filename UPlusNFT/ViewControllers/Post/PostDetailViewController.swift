@@ -22,21 +22,7 @@ final class PostDetailViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private let scrollView: UIScrollView = {
-        let view = UIScrollView()
-        view.backgroundColor = .blue
-        view.bounces = false
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
 
-    private let scrollContentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .brown
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     private let postIdLabel: UILabel = {
         let label = UILabel()
         label.text = "123194"
@@ -150,6 +136,7 @@ final class PostDetailViewController: UIViewController {
         let table = UITableView()
         table.backgroundColor = .systemGray4
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        table.register(PostDetailTableViewCell.self, forCellReuseIdentifier: PostDetailTableViewCell.identifier)
         table.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -182,118 +169,25 @@ final class PostDetailViewController: UIViewController {
     
     // MARK: - Private
     private func setUI() {
-        self.view.addSubview(scrollView)
-        scrollView.addSubview(scrollContentView)
-        
-        scrollContentView.addSubviews(
-            postIdLabel,
-            postUrlLabel,
-            postTypeLabel,
-            postTitleLabel,
-            horizontalLineView,
-            postContentTextView,
-            postImageView,
-            profileImageView,
-            nicknameLabel,
-            likeButton,
-            createdAtLabel,
-            commentTable
-        )
+        view.addSubview(commentTable)
     }
     
     private func setLayout() {
         let viewHeight = view.frame.height
         let viewWidth = view.frame.width
-        
-        NSLayoutConstraint.activate([
-            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-
-            self.scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            self.scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            self.scrollContentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            self.scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            self.scrollContentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-            
-        ])
 
         NSLayoutConstraint.activate([
-            self.postIdLabel.topAnchor.constraint(equalToSystemSpacingBelow: scrollContentView.topAnchor, multiplier: 1),
-            self.postIdLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: scrollContentView.leadingAnchor, multiplier: 3),
-            self.postUrlLabel.topAnchor.constraint(equalTo: self.postIdLabel.topAnchor),
-            scrollContentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postUrlLabel.trailingAnchor, multiplier: 3),
-
-            self.postTypeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postIdLabel.bottomAnchor, multiplier: 2),
-            self.postTypeLabel.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
-
-            self.postTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postTypeLabel.bottomAnchor, multiplier: 1),
-            self.postTitleLabel.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
-
-            self.horizontalLineView.topAnchor.constraint(equalToSystemSpacingBelow: self.postTitleLabel.bottomAnchor, multiplier: 3),
-            self.horizontalLineView.heightAnchor.constraint(equalToConstant: 2),
-            self.horizontalLineView.leadingAnchor.constraint(equalToSystemSpacingAfter: scrollContentView.leadingAnchor, multiplier: 4),
-            scrollContentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.horizontalLineView.trailingAnchor, multiplier: 3),
-
-            self.postContentTextView.topAnchor.constraint(equalToSystemSpacingBelow: self.horizontalLineView.bottomAnchor, multiplier: 2),
-            self.postContentTextView.leadingAnchor.constraint(equalTo: self.horizontalLineView.leadingAnchor),
-            self.postContentTextView.trailingAnchor.constraint(equalTo: self.horizontalLineView.trailingAnchor),
-            self.postContentTextView.heightAnchor.constraint(equalToConstant: viewHeight / 5),
-
-            self.postImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 2),
-            self.postImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: scrollContentView.leadingAnchor, multiplier: 3),
-            self.postImageView.heightAnchor.constraint(equalToConstant: viewHeight / 4),
-            scrollContentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageView.trailingAnchor, multiplier: 3),
-
-            self.profileImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
-            self.profileImageView.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
-            self.profileImageView.heightAnchor.constraint(equalToConstant: viewWidth / 16),
-            self.profileImageView.widthAnchor.constraint(equalTo: self.profileImageView.heightAnchor),
-
-            self.nicknameLabel.topAnchor.constraint(equalTo: self.profileImageView.topAnchor),
-            self.nicknameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImageView.trailingAnchor, multiplier: 1),
-
-            self.createdAtLabel.topAnchor.constraint(equalTo: self.profileImageView.topAnchor),
-            self.createdAtLabel.trailingAnchor.constraint(equalTo: self.horizontalLineView.trailingAnchor),
-            self.createdAtLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.likeButton.trailingAnchor, multiplier: 1),
-            self.likeButton.topAnchor.constraint(equalTo: self.profileImageView.topAnchor),
-
-            self.commentTable.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 2),
-            self.commentTable.leadingAnchor.constraint(equalTo: self.scrollContentView.leadingAnchor),
-            self.commentTable.trailingAnchor.constraint(equalTo: self.scrollContentView.trailingAnchor),
-            self.commentTable.heightAnchor.constraint(equalToConstant: viewHeight / 2),
-            
-            self.scrollContentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.commentTable.bottomAnchor, multiplier: 2)
-
-
-            /*
-             self.postImage.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-             self.postImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImage.trailingAnchor, multiplier: 2),
-             self.postImage.heightAnchor.constraint(equalToConstant: 200),
-
-             self.postImageLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-             self.postImageLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageLabel.trailingAnchor, multiplier: 2),
-             self.postTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageLabel.bottomAnchor, multiplier: 2),
-             self.postTitleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
-             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postTitleLabel.trailingAnchor, multiplier: 3),
-
-             self.metadataLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postTitleLabel.bottomAnchor, multiplier: 2),
-             self.metadataLabel.leadingAnchor.constraint(equalTo: self.postTitleLabel.leadingAnchor),
-             self.metadataLabel.trailingAnchor.constraint(equalTo: self.postTitleLabel.trailingAnchor),
-            */
-
+            self.commentTable.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.commentTable.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.commentTable.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.commentTable.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
-//        self.postTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
     
     private func setDelegate() {
         self.commentTable.delegate = self
         self.commentTable.dataSource = self
-        self.scrollView.delegate = self
     }
     
     private func setNavigationBar() {
@@ -389,129 +283,107 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         let count = vm.numberOfSections()
-        return count == 0 ? 1 : count
+        return count == 1 ? 2 : count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //        let count = vm.numberOfRows()
-        //        return count == 0 ? 1 : count
-        
-        // TODO: Recomment count에 따라 변동.
-        guard let cellVM = vm.viewModelForRow(at: section)
-        else { return 1 }
-        
-        if cellVM.isOpened {
-            print("Number of rows in section #\(section) --- \((self.vm.recomments[section]?.count ?? 0) + 1)")
-            return (self.vm.recomments[section]?.count ?? 0) + 1
-        }
-        else {
+     
+        if section == 0 {
             return 1
+        } else {
+            // TODO: Recomment count에 따라 변동.
+            print("Section showing: \(section)")
+            guard let cellVM = vm.viewModelForRow(at: section - 1)
+            else { return 1 }
+            
+            if cellVM.isOpened {
+                print("Number of rows in section #\(section) --- \((self.vm.recomments[section]?.count ?? 0) + 1)")
+                return (self.vm.recomments[section]?.count ?? 0) + 1
+            }
+            else {
+                return 1
+            }
         }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
-            return UITableViewCell()
-        }
-        cell.resetCell()
-        
-        if indexPath.row == 0 {
-            guard let cellVM = vm.viewModelForRow(at: indexPath.section)
-            else {
-                var config = defaultCell.defaultContentConfiguration()
-                config.text = "아직 댓글이 없습니다!"
-                defaultCell.contentConfiguration = config
-                return defaultCell
-            }
+        if indexPath.section == 0 {
+            guard let firstSectionCell = tableView.dequeueReusableCell(withIdentifier: PostDetailTableViewCell.identifier, for: indexPath) as? PostDetailTableViewCell else { return UITableViewCell() }
             
-            cell.configure(with: cellVM)
+            firstSectionCell.configure(with: vm)
+            return firstSectionCell
             
-            return cell
-        }
-        else {
-            guard let recomments = self.vm.recomments[indexPath.section],
-                  !recomments.isEmpty
-            else {
-                // recomment == nil || recomment is empty
-                var config = defaultCell.defaultContentConfiguration()
-                config.text = "아직 대댓글이 없습니다!"
-                defaultCell.contentConfiguration = config
-                defaultCell.backgroundColor = .systemGray4
-                return defaultCell
+        } else {
+            
+            
+            guard let otherSectionCell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
+                return UITableViewCell()
             }
-            // recomment != nil nor empty
-            let recomment = recomments[indexPath.row - 1]
-            let cellVM = CommentTableViewCellModel(
-                id: recomment.recommentId,
-                comment: recomment.recommentContentText,
-                imagePath: nil,
-                likeUserCount: nil,
-                recomments: nil
-            )
-            cell.backgroundColor = .systemGray4
-            cell.configure(with: cellVM)
-            return cell
+            otherSectionCell.resetCell()
+            
+            if indexPath.row == 0 {
+                guard let cellVM = vm.viewModelForRow(at: indexPath.section - 1)
+                else {
+                    let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+                    var config = defaultCell.defaultContentConfiguration()
+                    config.text = "아직 댓글이 없습니다!"
+                    defaultCell.contentConfiguration = config
+                    return defaultCell
+                }
+                
+                otherSectionCell.configure(with: cellVM)
+                
+                return otherSectionCell
+            }
+            else {
+                guard let recomments = self.vm.recomments[indexPath.section],
+                      !recomments.isEmpty
+                else {
+                    let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+                    // recomment == nil || recomment is empty
+                    var config = defaultCell.defaultContentConfiguration()
+                    config.text = "아직 대댓글이 없습니다!"
+                    defaultCell.contentConfiguration = config
+                    defaultCell.backgroundColor = .systemGray4
+                    return defaultCell
+                }
+                // recomment != nil nor empty
+                let recomment = recomments[indexPath.row - 1]
+                let cellVM = CommentTableViewCellModel(
+                    id: recomment.recommentId,
+                    comment: recomment.recommentContentText,
+                    imagePath: nil,
+                    likeUserCount: nil,
+                    recomments: nil
+                )
+                otherSectionCell.backgroundColor = .systemGray4
+                otherSectionCell.configure(with: cellVM)
+                return otherSectionCell
+            }
         }
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        if indexPath.row == 0 {
-            guard let cellVM = vm.viewModelForRow(at: indexPath.section) else { return }
+        print("Section tapped \(indexPath.section)")
+        if indexPath.section != 0 && indexPath.row == 0 {
+            guard let cellVM = vm.viewModelForRow(at: indexPath.section - 1) else { return }
             cellVM.isOpened = !cellVM.isOpened
             
             self.vm.fetchRecomment(at: indexPath.section, of: cellVM.id)
         }
     }
     
-}
-
-extension PostDetailViewController: UIScrollViewDelegate {
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let yOffset = scrollView.contentOffset.y
-//
-//        if scrollView == self.scrollView {
-//            let navHeight = navigationController?.navigationBar.frame.height ?? 0.0
-//            if yOffset >= 0.0 && yOffset == (commentTable.frame.minY - navHeight*2) {
-//                print("Yoffset: \(yOffset)")
-//                scrollView.isScrollEnabled = false
-//            }
-//        }
-//
-//        if scrollView == self.commentTable && self.commentTable.contentOffset.y <= 0.0 {
-//            print("Triggered")
-//            commentTable.isScrollEnabled = false
-//            scrollView.isScrollEnabled = true
-//        }
-        
-        if scrollView == self.scrollView {
-                    let yOffset = scrollView.contentOffset.y
-            print("MaxY: \(scrollView.frame.maxY)")
-        }
-        if scrollView == self.commentTable {
-            print("Comment table")
-        }
-        
-        let bottomEdge = self.scrollView.contentOffset.y + self.scrollView.frame.size.height
-        let tableViewBottom = commentTable.frame.origin.y + commentTable.frame.size.height
-        
-        if bottomEdge > tableViewBottom {
-            // Scroll view reached the bottom of the table view
-            commentTable.isScrollEnabled = true
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return view.frame.height / 2
         } else {
-            // Scroll view is not at the bottom of the table view
-            commentTable.isScrollEnabled = false
-        }
-        
-        if commentTable.contentOffset.y < 0 {
-            print("Commenttalbe ; \(commentTable.contentOffset.y)")
-            commentTable.isScrollEnabled = false
+            return view.frame.height / 10
         }
     }
     
 }
+

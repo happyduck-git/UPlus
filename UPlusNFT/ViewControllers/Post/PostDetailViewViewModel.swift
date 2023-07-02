@@ -64,7 +64,7 @@ extension PostDetailViewViewModel {
     }
     
     func numberOfSections() -> Int {
-        return self.tableDataSource.count
+        return self.tableDataSource.count + 1
     }
     
 }

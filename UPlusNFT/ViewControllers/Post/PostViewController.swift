@@ -45,7 +45,7 @@ final class PostViewController: UIViewController {
         super.viewDidLoad()
         title = "메인화면"
         view.backgroundColor = .tertiarySystemBackground
-        vm.fetchAllPosts()
+        vm.fetchAllInitialPosts()
         
         setUI()
         setLayout()
@@ -97,6 +97,14 @@ final class PostViewController: UIViewController {
                     self.postsTableView.reloadData()
             }
             .store(in: &bindings)
+            
+            vm.$didLoadAdditionalPosts
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.postsTableView.reloadData()
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -149,5 +157,20 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+}
+
+extension PostViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset.y
+        let totalContentHeight = scrollView.contentSize.height
+        let totalScrollViewFixedHeight = scrollView.frame.size.height
+//        print("Offset: \(offset), ContentHeight: \(totalContentHeight), FixedHeight: \(totalScrollViewFixedHeight)")
+        if offset >= (totalContentHeight - totalScrollViewFixedHeight) &&
+            vm.queryDocumentSnapshot != nil &&
+            !vm.isLoading
+        {
+            vm.fetchAdditionalPosts()
+        }
     }
 }
