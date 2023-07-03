@@ -22,12 +22,16 @@ final class PostDetailViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-
-    private let commentTable: UITableView = {
+    private let tableHeader: PostDetailTableViewHeader = {
+        let header = PostDetailTableViewHeader()
+        header.translatesAutoresizingMaskIntoConstraints = false
+        return header
+    }()
+    
+    private let postDetailTable: UITableView = {
         let table = UITableView()
         table.backgroundColor = .systemGray4
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
-        table.register(PostDetailTableViewCell.self, forCellReuseIdentifier: PostDetailTableViewCell.identifier)
         table.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -51,7 +55,6 @@ final class PostDetailViewController: UIViewController {
     init(vm: PostDetailViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
-//        self.configure(with: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -60,22 +63,27 @@ final class PostDetailViewController: UIViewController {
     
     // MARK: - Private
     private func setUI() {
-        view.addSubview(commentTable)
+        view.addSubview(postDetailTable)
+        postDetailTable.tableHeaderView = tableHeader
+        tableHeader.configure(with: vm)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.commentTable.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.commentTable.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.commentTable.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.commentTable.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+            self.tableHeader.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            self.tableHeader.heightAnchor.constraint(equalToConstant: self.view.frame.height / 2),
+            
+            self.postDetailTable.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.postDetailTable.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.postDetailTable.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.postDetailTable.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
     }
     
     private func setDelegate() {
-        self.commentTable.delegate = self
-        self.commentTable.dataSource = self
+        self.postDetailTable.delegate = self
+        self.postDetailTable.dataSource = self
     }
     
     private func setNavigationBar() {
@@ -106,23 +114,11 @@ final class PostDetailViewController: UIViewController {
         }
         
         func bindViewModelToView() {
-//            vm.$metaData
-//                .receive(on: DispatchQueue.main)
-//                .sink { [weak self] metadata in
-//                    guard let data = metadata else {
-//                        self?.metadataLabel.text = "Meta data found to be NIL."
-//
-//                        return
-//                    }
-//                    self?.metadataLabel.text = "\(data.configuration.beginTime)"
-//
-//                }
-//                .store(in: &bindings)
-            
+
             vm.$tableDataSource
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
-                    self?.commentTable.reloadData()
+                    self?.postDetailTable.reloadData()
                 }
                 .store(in: &bindings)
             
@@ -130,7 +126,7 @@ final class PostDetailViewController: UIViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] recomment in
                     print("Recomment -- \(recomment)")
-                    self?.commentTable.reloadData()
+                    self?.postDetailTable.reloadData()
                 }
                 .store(in: &bindings)
         }
@@ -138,18 +134,6 @@ final class PostDetailViewController: UIViewController {
         bindViewToViewModel()
         bindViewModelToView()
     }
-    
-//    private func configure(with vm: PostDetailViewViewModel) {
-//        self.postContentTextView.text = "게시글 본문: " + vm.postContent
-//        guard let imageList = vm.imageList,
-//              !imageList.isEmpty else {
-//            //            self.postImageLabel.isHidden = true
-//            self.postImageLabel.text = "Images: 이미지가 없는 게시글입니다."
-//            return
-//        }
-//
-//        self.postImageLabel.text = "Images: " + String(describing: imageList)
-//    }
     
     private func showDeleteUIAlert() {
         let alert = UIAlertController(title: "게시글 삭제", message: "삭제하시겠습니까?", preferredStyle: .alert)
@@ -172,11 +156,11 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         let count = vm.numberOfSections()
-        return count == 1 ? 2 : count
+        return count == 0 ? 1 : count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 1 {
+        if section == 0 {
             return "댓글"
         }
         return nil
@@ -184,11 +168,8 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
      
-        if section == 0 {
-            return 1
-        } else {
             // TODO: Recomment count에 따라 변동.
-            guard let cellVM = vm.viewModelForRow(at: section - 1)
+            guard let cellVM = vm.viewModelForRow(at: section)
             else { return 1 }
             
             if cellVM.isOpened {
@@ -198,27 +179,18 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 return 1
             }
-        }
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == 0 {
-            guard let firstSectionCell = tableView.dequeueReusableCell(withIdentifier: PostDetailTableViewCell.identifier, for: indexPath) as? PostDetailTableViewCell else { return UITableViewCell() }
-            
-            firstSectionCell.configure(with: vm)
-            return firstSectionCell
-            
-        } else {
-
-            guard let otherSectionCell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
                 return UITableViewCell()
             }
-            otherSectionCell.resetCell()
+            cell.resetCell()
             
             if indexPath.row == 0 {
-                guard let cellVM = vm.viewModelForRow(at: indexPath.section - 1)
+                guard let cellVM = vm.viewModelForRow(at: indexPath.section)
                 else {
 //                    let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
 //                    var config = defaultCell.defaultContentConfiguration()
@@ -228,9 +200,9 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                     return UITableViewCell()
                 }
                 
-                otherSectionCell.configure(with: cellVM)
+                cell.configure(with: cellVM)
                 
-                return otherSectionCell
+                return cell
             }
             else {
                 guard let recomments = self.vm.recomments[indexPath.section],
@@ -245,7 +217,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                     return defaultCell
                 }
                 // recomment != nil nor empty
-                let recomment = recomments[indexPath.row - 1]
+                let recomment = recomments[indexPath.row]
                 let cellVM = CommentTableViewCellModel(
                     type: .normal,
                     id: recomment.recommentId,
@@ -256,19 +228,19 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                     recomments: nil,
                     createdAt: recomment.recommentCreatedTime
                 )
-                otherSectionCell.backgroundColor = .systemGray4
-                otherSectionCell.configure(with: cellVM)
-                return otherSectionCell
+                cell.backgroundColor = .systemGray4
+                cell.configure(with: cellVM)
+                return cell
             }
-        }
+        
         
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         print("Section tapped \(indexPath.section)")
-        if indexPath.section != 0 && indexPath.row == 0 {
-            guard let cellVM = vm.viewModelForRow(at: indexPath.section - 1) else { return }
+        if indexPath.row == 0 {
+            guard let cellVM = vm.viewModelForRow(at: indexPath.section) else { return }
             cellVM.isOpened = !cellVM.isOpened
             
             self.vm.fetchRecomment(at: indexPath.section, of: cellVM.id)
@@ -276,11 +248,9 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return view.frame.height / 2
-        } else {
-            return view.frame.height / 6
-        }
+        
+        return view.frame.height / 6
+        
     }
     
 }

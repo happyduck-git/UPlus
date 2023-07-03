@@ -78,7 +78,7 @@ extension PostDetailViewViewModel {
     }
     
     func numberOfSections() -> Int {
-        return self.tableDataSource.count + 1
+        return self.tableDataSource.count
     }
     
 }
@@ -90,7 +90,9 @@ extension PostDetailViewViewModel {
         Task {
             do {
                 let comments = try await firestoreManager.getBestComments(of: postId)
-                tableDataSource = comments.map({ comment in
+                
+                var dataSource: [CommentTableViewCellModel] = []
+                dataSource = comments.map({ comment in
                     return CommentTableViewCellModel(
                         type: .best,
                         id: comment.commentId,
@@ -102,7 +104,7 @@ extension PostDetailViewViewModel {
                         createdAt: comment.commentCreatedTime
                     )
                 })
-                
+     
                 let normalComments = self.comments?.map({ comment in
                     return CommentTableViewCellModel(
                         type: .normal,
@@ -115,7 +117,10 @@ extension PostDetailViewViewModel {
                         createdAt: comment.commentCreatedTime
                     )
                 }) ?? []
-                tableDataSource.append(contentsOf: normalComments)
+            
+                dataSource.append(contentsOf: normalComments)
+                
+                self.tableDataSource = dataSource
             }
             catch {
                 print("Error fetching best 5 comments - \(error.localizedDescription)")

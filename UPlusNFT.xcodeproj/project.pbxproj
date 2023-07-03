@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
 		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
-		249F59F42A51939D008CF6BE /* PostDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F32A51939D008CF6BE /* PostDetailTableViewCell.swift */; };
+		249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */; };
+		249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F92A530B59008CF6BE /* CampaignView.swift */; };
+		249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */; };
 		930D96A22A416AC30007801A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A12A416AC30007801A /* AppDelegate.swift */; };
 		930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A32A416AC30007801A /* SceneDelegate.swift */; };
 		930D96A62A416AC30007801A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A52A416AC30007801A /* LoginViewController.swift */; };
@@ -59,7 +61,9 @@
 /* Begin PBXFileReference section */
 		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
-		249F59F32A51939D008CF6BE /* PostDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewCell.swift; sourceTree = "<group>"; };
+		249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewHeader.swift; sourceTree = "<group>"; };
+		249F59F92A530B59008CF6BE /* CampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignView.swift; sourceTree = "<group>"; };
+		249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignPostViewController.swift; sourceTree = "<group>"; };
 		930D969E2A416AC30007801A /* UPlusNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPlusNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		930D96A12A416AC30007801A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		930D96A32A416AC30007801A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -130,12 +134,28 @@
 			path = PhotoCollectionView;
 			sourceTree = "<group>";
 		};
-		249F59F22A51937C008CF6BE /* PostDetailTableViewCell */ = {
+		249F59F52A52F3FB008CF6BE /* PostDetailTableViewHeader */ = {
 			isa = PBXGroup;
 			children = (
-				249F59F32A51939D008CF6BE /* PostDetailTableViewCell.swift */,
+				249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */,
 			);
-			path = PostDetailTableViewCell;
+			path = PostDetailTableViewHeader;
+			sourceTree = "<group>";
+		};
+		249F59F82A530A71008CF6BE /* CampaignView */ = {
+			isa = PBXGroup;
+			children = (
+				249F59F92A530B59008CF6BE /* CampaignView.swift */,
+			);
+			path = CampaignView;
+			sourceTree = "<group>";
+		};
+		249F59FB2A531744008CF6BE /* CampaignPost */ = {
+			isa = PBXGroup;
+			children = (
+				249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */,
+			);
+			path = CampaignPost;
 			sourceTree = "<group>";
 		};
 		930D96952A416AC30007801A = {
@@ -186,6 +206,7 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				249F59FB2A531744008CF6BE /* CampaignPost */,
 				936F882B2A4D0C590062E759 /* WritePost */,
 				930D96DB2A4406660007801A /* ResetPassword */,
 				930D96D62A43E5770007801A /* Post */,
@@ -333,7 +354,8 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				249F59F22A51937C008CF6BE /* PostDetailTableViewCell */,
+				249F59F82A530A71008CF6BE /* CampaignView */,
+				249F59F52A52F3FB008CF6BE /* PostDetailTableViewHeader */,
 				249F59ED2A4EF3F3008CF6BE /* PhotoCollectionView */,
 				936F88262A4AC8700062E759 /* CommentTableView */,
 				937C765E2A492EDE001024D0 /* PostTableView */,
@@ -460,7 +482,6 @@
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
-				249F59F42A51939D008CF6BE /* PostDetailTableViewCell.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */,
 				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,
@@ -474,12 +495,14 @@
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				932C34CD2A5260410032192A /* User.swift in Sources */,
+				249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */,
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
+				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
@@ -494,6 +517,7 @@
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,
 				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,
 				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,
+				249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

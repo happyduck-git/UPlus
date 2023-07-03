@@ -1,18 +1,19 @@
 //
-//  PostDetailTableViewCell.swift
+//  PostDetailTableViewHeader.swift
 //  UPlusNFT
 //
-//  Created by HappyDuck on 2023/07/02.
+//  Created by HappyDuck on 2023/07/03.
 //
 
 import UIKit
 import Combine
 import Nuke
 
-final class PostDetailTableViewCell: UITableViewCell {
+final class PostDetailTableViewHeader: UIView {
     
     private var bindings = Set<AnyCancellable>()
     
+    //MARK: - Property
     private let postIdLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
@@ -101,10 +102,9 @@ final class PostDetailTableViewCell: UITableViewCell {
     }()
     
     //MARK: - Init
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        contentView.backgroundColor = .white
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .white
         setUI()
         setLayout()
     }
@@ -130,7 +130,7 @@ final class PostDetailTableViewCell: UITableViewCell {
     //MARK: - Private
 
     private func setUI() {
-        contentView.addSubviews(
+        self.addSubviews(
             postIdLabel,
             postUrlLabel,
             postTypeLabel,
@@ -146,14 +146,12 @@ final class PostDetailTableViewCell: UITableViewCell {
     }
     
     private func setLayout() {
-        let viewHeight = contentView.frame.height
-        let viewWidth = contentView.frame.width
-        
+        let height = self.frame.height
         NSLayoutConstraint.activate([
-            self.postIdLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.topAnchor, multiplier: 1),
-            self.postIdLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 3),
+            self.postIdLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
+            self.postIdLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
             self.postUrlLabel.topAnchor.constraint(equalTo: self.postIdLabel.topAnchor),
-            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postUrlLabel.trailingAnchor, multiplier: 3),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postUrlLabel.trailingAnchor, multiplier: 3),
             
             self.postTypeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postIdLabel.bottomAnchor, multiplier: 2),
             self.postTypeLabel.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
@@ -163,22 +161,22 @@ final class PostDetailTableViewCell: UITableViewCell {
             
             self.horizontalLineView.topAnchor.constraint(equalToSystemSpacingBelow: self.postTitleLabel.bottomAnchor, multiplier: 1),
             self.horizontalLineView.heightAnchor.constraint(equalToConstant: 2),
-            self.horizontalLineView.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 3),
-            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.horizontalLineView.trailingAnchor, multiplier: 3),
+            self.horizontalLineView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.horizontalLineView.trailingAnchor, multiplier: 3),
             
             self.postContentTextView.topAnchor.constraint(equalToSystemSpacingBelow: self.horizontalLineView.bottomAnchor, multiplier: 1),
             self.postContentTextView.leadingAnchor.constraint(equalTo: self.horizontalLineView.leadingAnchor),
             self.postContentTextView.trailingAnchor.constraint(equalTo: self.horizontalLineView.trailingAnchor),
-            self.postContentTextView.heightAnchor.constraint(equalToConstant: viewHeight * 2),
+            self.postContentTextView.heightAnchor.constraint(equalToConstant: height * 2),
             
             self.postImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 2),
-            self.postImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 3),
-            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageView.trailingAnchor, multiplier: 3),
+            self.postImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageView.trailingAnchor, multiplier: 3),
             self.nicknameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
             
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
+            self.self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.profileImageView.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
-            self.profileImageView.heightAnchor.constraint(equalToConstant: viewWidth / 16),
+            self.profileImageView.heightAnchor.constraint(equalToConstant: height / 16),
             self.profileImageView.widthAnchor.constraint(equalTo: self.profileImageView.heightAnchor),
             
             self.nicknameLabel.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
@@ -217,5 +215,6 @@ final class PostDetailTableViewCell: UITableViewCell {
             }
             .store(in: &bindings)
     }
+    
     
 }
