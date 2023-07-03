@@ -7,6 +7,26 @@
 
 import Foundation
 
+enum PostType: String {
+    case article
+    case multipleChoice = "campaign_quiz_choice"
+    case shortForm = "campaign_quiz_answer"
+    case bestComment = "campaign_best_comment"
+    
+    var displayName: String {
+        switch self {
+        case .article:
+            return "일반 게시물"
+        case .multipleChoice:
+            return "객관식 퀴즈"
+        case .shortForm:
+            return "주관식 퀴즈"
+        case .bestComment:
+            return "댓글 캠페인"
+        }
+    }
+}
+
 struct Post: Codable {
     let id: String
     let url: String

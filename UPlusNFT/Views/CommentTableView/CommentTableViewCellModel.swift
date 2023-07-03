@@ -9,18 +9,52 @@ import Foundation
 import Combine
 
 final class CommentTableViewCellModel {
+    // MARK: - Dependency
+    private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Property
+    let type: CommentCellType
     let id: String
+    let userId: String
     var isOpened: Bool = false
     let comment: String
     let imagePath: String?
     let likeUserCount: Int?
     let recomments: [Recomment]?
+    let createdAt: Date
     
-    init(id: String, comment: String, imagePath: String?, likeUserCount: Int?, recomments: [Recomment]?) {
+    @Published var user: User?
+    
+    init(
+        type: CommentCellType,
+        id: String,
+        userId: String,
+        comment: String,
+        imagePath: String?,
+        likeUserCount: Int?,
+        recomments: [Recomment]?,
+        createdAt: Date
+    ) {
+        self.type = type
         self.id = id
+        self.userId = userId
         self.comment = comment
         self.imagePath = imagePath
         self.likeUserCount = likeUserCount
         self.recomments = recomments
+        self.createdAt = createdAt
+        
+        self.fetchUser(userId)
+    }
+    
+    func fetchUser(_ userId: String) {
+        Task {
+            do {
+                user = try await firestoreManager.getUser(userId)
+            }
+            catch {
+                print("Error fetching user - \(error)")
+            }
+        }
     }
 }

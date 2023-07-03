@@ -21,7 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
       
-        /*
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
             let loginVM = LoginViewViewModel()
@@ -37,93 +36,118 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
-*/
+
         // Check PostVC
 //        let vm = PostViewViewModel()
 //        let vc = PostViewController(vm: vm)
 //        window?.rootViewController = UINavigationController(rootViewController: vc)
         
         // Check PostDetailVC
-        let vm = PostDetailViewViewModel(
-            userId: "User ID",
-            postId: "Post ID",
-            postTitle: "Test Title",
-            postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum./nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            imageList: ["image1", "Image2"],
-            likeUserCount: 98,
-            comments: [
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"]),
-
-                Comment(
-                commentAuthorUid: "Author ID",
-                commentContentImagePath: "image path",
-                commentContentText: "Test Comment Text",
-                commentCreatedTime: Date(),
-                commentId: "Comment ID",
-                commentLikedUserUidList: ["UserID#1"])
-            ]
-        )
-
-        let vc = PostDetailViewController(vm: vm)
-        window?.rootViewController = UINavigationController(rootViewController: vc)
+//        let vm = PostDetailViewViewModel(
+//            userId: "gg",
+//            postId: "Post IDasdfasdfadfs",
+//            postUrl: "https://platfarm.net/92",
+//            postType: "article",
+//            postTitle: "Test Title",
+//            postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum./nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+//            imageList: ["image1", "Image2"],
+//            likeUserCount: 98,
+//            createdTime: Date(),
+//            comments: [
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"]),
+//
+//                Comment(
+//                commentAuthorUid: "Author ID",
+//                commentContentImagePath: "image path",
+//                commentContentText: "Test Comment Text",
+//                commentCreatedTime: Date(),
+//                commentId: "Comment ID",
+//                commentLikedUserUidList: ["UserID#1"])
+//            ]
+//        )
+//
+//        let vc = PostDetailViewController(vm: vm)
+//        window?.rootViewController = UINavigationController(rootViewController: vc)
         window?.makeKeyAndVisible()
         
     }

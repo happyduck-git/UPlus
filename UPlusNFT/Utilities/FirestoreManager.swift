@@ -97,7 +97,6 @@ extension FirestoreManager {
         let comments = snapshot.map { snapshot in
             let data = snapshot.data()
             
-            let postId = snapshot.reference.documentID
             let commentAuthorUid = data[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
             let commentContentImagePath = data[FirestoreConstants.commentContentImagePath] as? String
             let commentContentText = data[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
@@ -106,7 +105,6 @@ extension FirestoreManager {
             let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
             
             return Comment(
-//                postId: postId,
                 commentAuthorUid: commentAuthorUid,
                 commentContentImagePath: commentContentImagePath,
                 commentContentText: commentContentText,
@@ -154,7 +152,6 @@ extension FirestoreManager {
         let comments = snapshots.map { snapshot in
             let data = snapshot.data()
             
-            let postId = snapshot.reference.parent.parent?.documentID ?? "no-document-id"
             let commentAuthorUid = data[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
             let commentContentImagePath = data[FirestoreConstants.commentContentImagePath] as? String
             let commentContentText = data[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
@@ -163,7 +160,6 @@ extension FirestoreManager {
             let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
             
             return Comment(
-//                postId: postId,
                 commentAuthorUid: commentAuthorUid,
                 commentContentImagePath: commentContentImagePath,
                 commentContentText: commentContentText,
@@ -172,6 +168,44 @@ extension FirestoreManager {
                 commentLikedUserUidList: commentLikedUserUidList
             )
         }
+        return comments
+    }
+    
+    func getBestComments(of postId: String) async throws -> [Comment] {
+        guard let postData = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)")
+            .document(postId)
+            .getDocument()
+            .data() else {
+            return []
+        }
+        
+        let commentIds = postData[FirestoreConstants.cachedBestCommentIdList] as? [String] ?? []
+        var comments: [Comment] = []
+        print("Comments ids: \(commentIds)")
+        for id in commentIds {
+            let data = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
+                .document(id)
+                .getDocument()
+                .data()
+            
+            let commentAuthorUid = data?[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
+            let commentContentImagePath = data?[FirestoreConstants.commentContentImagePath] as? String
+            let commentContentText = data?[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
+            let commentCreatedTime = data?[FirestoreConstants.commentCreatedTime] as? Date ?? Date()
+            let commentId = data?[FirestoreConstants.commentId] as? String ?? FirestoreConstants.noUserUid
+            let commentLikedUserUidList = data?[FirestoreConstants.commentLikedUserUidList] as? [String]
+            
+            let comment = Comment(
+                commentAuthorUid: commentAuthorUid,
+                commentContentImagePath: commentContentImagePath,
+                commentContentText: commentContentText,
+                commentCreatedTime: commentCreatedTime,
+                commentId: commentId,
+                commentLikedUserUidList: commentLikedUserUidList
+            )
+            comments.append(comment)
+        }
+        
         return comments
     }
     
@@ -346,10 +380,31 @@ extension FirestoreManager {
         return metaData
     }
     
+    // MARK: - Get user
+    func getUser(_ userId: String) async throws -> User {
+        return try await self.db
+            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.users)/\(FirestoreConstants.userSetCollection)")
+            .document(userId)
+            .getDocument(as: User.self)
+    }
+    
 }
 
 // MARK: - Setters
 extension FirestoreManager {
+    
+    func saveUser(_ user: User) throws {
+        let userSet = self.db
+            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.users)/\(FirestoreConstants.userSetCollection)")
+            .document(user.id)
+        
+        try userSet.setData(
+            from: user,
+            merge: true
+        ) { _ in
+            print("User sucessfully saved!")
+        }
+    }
     
     func saveImage(postId: String, images: [Data], completion: @escaping ([String]) -> Void) {
         
@@ -406,6 +461,12 @@ extension FirestoreManager {
         ) { _ in
             print("Post sucessfully save!")
         }
+    }
+    
+    // Like button tap
+    func updateLike() {
+        
+        // Need to include a logic that updates cached_best_comment_id_list
         
     }
     
@@ -417,11 +478,11 @@ extension FirestoreManager {
     private func convertQueryDocumentToPost(_ queryDocument: QueryDocumentSnapshot) -> Post {
         let data = queryDocument.data()
         
-        let id = data[FirestoreConstants.id] as? String ?? FirestoreConstants.noUserUid
-        let url = data[FirestoreConstants.url] as? String ?? FirestoreConstants.noUserUid
+        let id = data[FirestoreConstants.id] as? String ?? FirestoreConstants.noPostId
+        let url = data[FirestoreConstants.url] as? String ?? FirestoreConstants.noUrl
         let cachedType = data[FirestoreConstants.cachedType] as? String ?? FirestoreConstants.noUserUid
-        let title = data[FirestoreConstants.title] as? String ?? FirestoreConstants.noUserUid
-        let contentText = data[FirestoreConstants.contentText] as? String ?? FirestoreConstants.noUserUid
+        let title = data[FirestoreConstants.title] as? String ?? FirestoreConstants.noTitle
+        let contentText = data[FirestoreConstants.contentText] as? String ?? FirestoreConstants.noContent
         let contentImagePathList = data[FirestoreConstants.contentImagePathList] as? [String]
         let authorUid = data[FirestoreConstants.authorUid] as? String ?? FirestoreConstants.noUserUid
         let createdTime = data[FirestoreConstants.createdTime] as? Date ?? Date()

@@ -6,26 +6,23 @@
 //
 
 import UIKit
+import Combine
+import Nuke
 
 final class PostDetailTableViewCell: UITableViewCell {
     
-    enum PostType: String {
-        case article = "일반 게시물"
-        case multipleChoice = "객관식"
-        case bestComment = "베스트 댓글"
-    }
+    private var bindings = Set<AnyCancellable>()
     
     private let postIdLabel: UILabel = {
         let label = UILabel()
-        label.text = "123194"
         label.textColor = .black
+        label.limitTextLength(maxLength: 5)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let postUrlLabel: UILabel = {
         let label = UILabel()
-        label.text = "http://platfarm.net/post/92"
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -35,14 +32,15 @@ final class PostDetailTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = PostType.article.rawValue
         label.textColor = .white
-        label.backgroundColor = .systemPink
+        label.layer.cornerRadius = 8
+        label.clipsToBounds = true
+        label.backgroundColor = UIColor.init(hex: 0xF79DD1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let postTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "게시글 타이틀입니다."
         label.textColor = .black
         label.backgroundColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -75,14 +73,13 @@ final class PostDetailTableViewCell: UITableViewCell {
 
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.circle.fill")
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private let nicknameLabel: UILabel = {
         let label = UILabel()
-        label.text = "nickname"
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -91,7 +88,7 @@ final class PostDetailTableViewCell: UITableViewCell {
     private let likeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart"), for: .normal)
-        button.setTitle("99", for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -99,7 +96,6 @@ final class PostDetailTableViewCell: UITableViewCell {
     private let createdAtLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.text = "2023/07/01"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -119,10 +115,20 @@ final class PostDetailTableViewCell: UITableViewCell {
     
     //MARK: - Internal
     func configure(with vm: PostDetailViewViewModel) {
-        self.postContentTextView.text = "게시글 본문: " + vm.postContent
+        self.postIdLabel.text = String(vm.postId.prefix(5))
+        self.postUrlLabel.text = String(vm.postUrl.prefix(20))
+        self.postTypeLabel.text = vm.postType.displayName
+        self.postTitleLabel.text = vm.postTitle
+        self.postContentTextView.text = vm.postContent
+        self.nicknameLabel.text = String(vm.userId.prefix(5))
+        self.likeButton.setTitle(String(describing: vm.likeUserCount), for: .normal)
+        self.createdAtLabel.text = String(describing: vm.createdTime.monthDayTimeFormat)
+        
+        bind(with: vm)
     }
-    
+
     //MARK: - Private
+
     private func setUI() {
         contentView.addSubviews(
             postIdLabel,
@@ -142,7 +148,7 @@ final class PostDetailTableViewCell: UITableViewCell {
     private func setLayout() {
         let viewHeight = contentView.frame.height
         let viewWidth = contentView.frame.width
-        print("Viewheight: \(viewHeight)")
+        
         NSLayoutConstraint.activate([
             self.postIdLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.topAnchor, multiplier: 1),
             self.postIdLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 3),
@@ -168,7 +174,7 @@ final class PostDetailTableViewCell: UITableViewCell {
             self.postImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 2),
             self.postImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 3),
             contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageView.trailingAnchor, multiplier: 3),
-            self.postImageView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.topAnchor, multiplier: -2),
+            self.nicknameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
             
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.profileImageView.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
@@ -189,6 +195,27 @@ final class PostDetailTableViewCell: UITableViewCell {
         postTypeLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         postTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         
-//        postContentTextView.setContentHuggingPriority(.defaultLow, for: .vertical)
     }
+    
+    private func bind(with vm: PostDetailViewViewModel) {
+        vm.$user
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] user in
+                guard let `self` = self else { return }
+                Task {
+                    do {
+                        guard let url = URL(string: user?.profileImagePath ?? FirestoreConstants.defaultUserProfile) else {
+                            return
+                        }
+                        self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+                    }
+                    catch {
+                        print("Error converting profile image -- \(error.localizedDescription)")
+                    }
+                }
+               
+            }
+            .store(in: &bindings)
+    }
+    
 }

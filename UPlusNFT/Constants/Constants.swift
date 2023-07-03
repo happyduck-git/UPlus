@@ -7,6 +7,12 @@
 
 import Foundation
 
+struct UserDefaultsConstants {
+    static let userId: String = "userId"
+    static let username: String = "username"
+    static let profileImage: String = "profileImage"
+}
+
 struct LoginConstants {
     static let emailLabel: String = "사내 이메일"
     static let passwordLabel: String = "비밀번호"
@@ -61,11 +67,22 @@ struct FirestoreConstants {
     static let devThreads = "dev_threads"
     static let threads = "threads"
     static let threadSetCollection = "thread_set"
+    static let users = "users"
+    static let userSetCollection = "user_set"
     
+    /* User */
+    static let urlPrefix = "https://platfarm.net/"
+    static let defaultUserProfile =  "https://i.seadn.io/gcs/files/45d4a23d5b8d448561cdb14257e044ad.png?auto=format&dpr=1&w=300"
     /* Post */
     static let id = "id"
     static let authorUid = "author_uid"
+    static let noPostId = "no_post_uid"
     static let noUserUid = "no_user_uid"
+    static let noUsername = "no_username"
+    static let noUrl = "no_url"
+    static let noTitle = "no_title"
+    static let noContent = "no_content"
+    static let noCachedType = "no_cached_type"
     static let cachedBestCommentIdList = "cached_best_comment_id_list"
     static let cachedType = "cached_type"
     static let contentText = "content_text"

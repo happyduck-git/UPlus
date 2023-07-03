@@ -17,10 +17,13 @@ final class PostDetailViewViewModel {
     // MARK: - Properties
     let userId: String
     let postId: String
+    let postUrl: String
+    let postType: PostType
     let postTitle: String
     let postContent: String
     let imageList: [String]?
     let likeUserCount: Int
+    let createdTime: Date
     var comments: [Comment]?
     var isPostOfCurrentUser: Bool {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return false }
@@ -30,26 +33,37 @@ final class PostDetailViewViewModel {
     @Published var tableDataSource: [CommentTableViewCellModel] = []
     @Published var metaData: CampaignMetaData?
     @Published var recomments: [Int: [Recomment]] = [:]
+    @Published var user: User?
     
     // MARK: - Init
-    init(userId: String, postId: String, postTitle: String, postContent: String, imageList: [String]?, likeUserCount: Int, comments: [Comment]?) {
+    init(
+        userId: String,
+        postId: String,
+        postUrl: String,
+        postType: PostType,
+        postTitle: String,
+        postContent: String,
+        imageList: [String]?,
+        likeUserCount: Int,
+        createdTime: Date,
+        comments: [Comment]?
+    ) {
         self.userId = userId
         self.postId = postId
+        self.postUrl = postUrl
+        self.postType = postType
         self.postTitle = postTitle
         self.postContent = postContent
         self.imageList = imageList
         self.likeUserCount = likeUserCount
+        self.createdTime = createdTime
         self.comments = comments
         
-        self.tableDataSource = comments?.map({ comment in
-            return CommentTableViewCellModel(
-                id: comment.commentId,
-                comment: comment.commentContentText,
-                imagePath: comment.commentContentImagePath,
-                likeUserCount: comment.commentLikedUserUidList?.count,
-                recomments: nil
-            )
-        }) ?? []
+        // TODO: Fetch Best comment and then append normal comments at the end.
+        
+        self.fetchComments(of: postId)
+
+        self.fetchUser(userId)
     }
     
 }
@@ -72,6 +86,43 @@ extension PostDetailViewViewModel {
 // MARK: - Fetch Data from Firestore
 extension PostDetailViewViewModel {
     
+    func fetchComments(of postId: String) {
+        Task {
+            do {
+                let comments = try await firestoreManager.getBestComments(of: postId)
+                tableDataSource = comments.map({ comment in
+                    return CommentTableViewCellModel(
+                        type: .best,
+                        id: comment.commentId,
+                        userId: comment.commentAuthorUid,
+                        comment: comment.commentContentText,
+                        imagePath: comment.commentContentImagePath,
+                        likeUserCount: comment.commentLikedUserUidList?.count,
+                        recomments: nil,
+                        createdAt: comment.commentCreatedTime
+                    )
+                })
+                
+                let normalComments = self.comments?.map({ comment in
+                    return CommentTableViewCellModel(
+                        type: .normal,
+                        id: comment.commentId,
+                        userId: comment.commentAuthorUid,
+                        comment: comment.commentContentText,
+                        imagePath: comment.commentContentImagePath,
+                        likeUserCount: comment.commentLikedUserUidList?.count,
+                        recomments: nil,
+                        createdAt: comment.commentCreatedTime
+                    )
+                }) ?? []
+                tableDataSource.append(contentsOf: normalComments)
+            }
+            catch {
+                print("Error fetching best 5 comments - \(error.localizedDescription)")
+            }
+        }
+    }
+    
     // TODO: Get recomments and map it to CommentTableViewCellModel
     func fetchRecomment(at section: Int, of commentId: String) {
 //        return try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
@@ -89,7 +140,7 @@ extension PostDetailViewViewModel {
     func fetchPostMetaData(_ postId: String) {
         Task {
             do {
-                metaData = try await FirestoreManager.shared.getMetadata(of: postId)
+                metaData = try await firestoreManager.getMetadata(of: postId)
             }
             catch {
                 print("Error fetching metadata - \(error)")
@@ -97,5 +148,15 @@ extension PostDetailViewViewModel {
         }
     }
     
+    func fetchUser(_ userId: String) {
+        Task {
+            do {
+                user = try await firestoreManager.getUser(userId)
+            }
+            catch {
+                print("Error fetching user - \(error)")
+            }
+        }
+    }
     
 }

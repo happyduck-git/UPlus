@@ -34,10 +34,13 @@ final class PostViewViewModel {
         return PostDetailViewViewModel(
             userId: vm.userId,
             postId: vm.postId,
+            postUrl: vm.postUrl,
+            postType: vm.postType,
             postTitle: vm.postTitle,
             postContent: vm.postContent,
             imageList: vm.imageList,
             likeUserCount: vm.likeUserCount,
+            createdTime: vm.createdTime,
             comments: vm.comments
         )
     }
@@ -79,10 +82,13 @@ final class PostViewViewModel {
         return PostTableViewCellModel(
             userId: post.post.authorUid,
             postId: post.post.id,
+            postUrl: post.post.url,
+            postType: PostType(rawValue: post.post.cachedType) ?? .article,
             postTitle: post.post.title,
             postContent: post.post.contentText,
             imageList: post.post.contentImagePathList,
             likeUserCount: post.post.likedUserIdList?.count ?? 0,
+            createdTime: post.post.createdTime,
             comments: post.comments
         )
     }

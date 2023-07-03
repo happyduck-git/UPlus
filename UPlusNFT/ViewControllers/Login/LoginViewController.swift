@@ -307,6 +307,9 @@ class LoginViewController: UIViewController {
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
                     if value {
+                        // Save user information when login success.
+                        viewModel.saveUser()
+                        
                         emailTextField.text = ""
                         passwordTextField.text = ""
                         let vm = PostViewViewModel()

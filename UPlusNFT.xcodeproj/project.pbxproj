@@ -32,6 +32,9 @@
 		930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */; };
 		930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E02A4516630007801A /* UIButton+Extension.swift */; };
 		930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96E22A453D8D0007801A /* BackToLoginViewController.swift */; };
+		932C34CB2A5254A70032192A /* Date+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34CA2A5254A70032192A /* Date+Extention.swift */; };
+		932C34CD2A5260410032192A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34CC2A5260410032192A /* User.swift */; };
+		932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34CE2A52B7520032192A /* UIColor+Extension.swift */; };
 		9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */; };
 		936F88232A4AB6ED0062E759 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 936F88222A4AB6ED0062E759 /* Nuke */; };
 		936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */; };
@@ -80,6 +83,9 @@
 		930D96E02A4516630007801A /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		930D96E22A453D8D0007801A /* BackToLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackToLoginViewController.swift; sourceTree = "<group>"; };
 		930D96E82A4578550007801A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../UPlusNFT-Firestore/dev-lguplus-nft-platfarm/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		932C34CA2A5254A70032192A /* Date+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extention.swift"; sourceTree = "<group>"; };
+		932C34CC2A5260410032192A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		932C34CE2A52B7520032192A /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
 		936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewViewModel.swift; sourceTree = "<group>"; };
 		936F88272A4AC8860062E759 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
@@ -228,6 +234,8 @@
 				937C765A2A492DE7001024D0 /* UICollectionReusableView+Extension.swift */,
 				9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */,
 				249F59F02A500874008CF6BE /* UILabel+Extension.swift */,
+				932C34CA2A5254A70032192A /* Date+Extention.swift */,
+				932C34CE2A52B7520032192A /* UIColor+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -317,6 +325,7 @@
 				937C76532A4586E5001024D0 /* Comment.swift */,
 				937C76552A4586F6001024D0 /* Recomment.swift */,
 				937C76652A497EBE001024D0 /* CampaignMetaData.swift */,
+				932C34CC2A5260410032192A /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -446,6 +455,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				932C34CB2A5254A70032192A /* Date+Extention.swift in Sources */,
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
@@ -463,6 +473,7 @@
 				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
+				932C34CD2A5260410032192A /* User.swift in Sources */,
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
@@ -480,6 +491,7 @@
 				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
+				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,
 				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,
 				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,
 			);
