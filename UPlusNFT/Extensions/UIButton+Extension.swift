@@ -6,7 +6,9 @@
 //
 
 import UIKit
+import Combine
 
+// MARK: - Set Underline
 extension UIButton {
     
     func setUnderline(_ width: Double) {
@@ -20,4 +22,13 @@ extension UIButton {
         self.setAttributedTitle(attributedString, for: .normal)
     }
     
+    
+}
+// MARK: - Combine Publisher
+extension UIButton {
+    var tapPublisher: AnyPublisher<Void, Never> {
+        controlPublisher(for: .touchUpInside)
+            .map { _ in }
+            .eraseToAnyPublisher()
+    }
 }

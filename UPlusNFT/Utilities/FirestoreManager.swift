@@ -287,8 +287,8 @@ extension FirestoreManager {
             // 1. configuration -> doc fields
             if snapshot.documentID == FirestoreConstants.campaginConfiguration {
                 let data = snapshot.data()
-                let beginTime = data[FirestoreConstants.beginTime] as? Date ?? Date()
-                let endTime = data[FirestoreConstants.endTime] as? Date ?? Date()
+                let beginTime = data[FirestoreConstants.beginTime] as? Timestamp ?? Timestamp(date: Date())
+                let endTime = data[FirestoreConstants.endTime] as? Timestamp ?? Timestamp(date: Date())
                 config = CampaignConfiguration(
                     beginTime: beginTime,
                     endTime: endTime

@@ -39,13 +39,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 */
         // Check PostVC
-//        let vm = PostViewViewModel()
-//        let vc = PostViewController(vm: vm)
-//        window?.rootViewController = UINavigationController(rootViewController: vc)
-       
-        // Check CampaignVC
-        let vc = CampaignPostViewController()
+        let vm = PostViewViewModel()
+        let vc = PostViewController(vm: vm)
         window?.rootViewController = UINavigationController(rootViewController: vc)
+
         window?.makeKeyAndVisible()
         
     }

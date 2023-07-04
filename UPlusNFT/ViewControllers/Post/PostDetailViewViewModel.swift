@@ -31,7 +31,7 @@ final class PostDetailViewViewModel {
     }
     
     @Published var tableDataSource: [CommentTableViewCellModel] = []
-    @Published var metaData: CampaignMetaData?
+    
     @Published var recomments: [Int: [Recomment]] = [:]
     @Published var user: User?
     
@@ -141,18 +141,7 @@ extension PostDetailViewViewModel {
             }
         }
     }
-    
-    func fetchPostMetaData(_ postId: String) {
-        Task {
-            do {
-                metaData = try await firestoreManager.getMetadata(of: postId)
-            }
-            catch {
-                print("Error fetching metadata - \(error)")
-            }
-        }
-    }
-    
+
     func fetchUser(_ userId: String) {
         Task {
             do {

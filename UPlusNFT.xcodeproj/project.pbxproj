@@ -37,6 +37,13 @@
 		932C34CB2A5254A70032192A /* Date+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34CA2A5254A70032192A /* Date+Extention.swift */; };
 		932C34CD2A5260410032192A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34CC2A5260410032192A /* User.swift */; };
 		932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34CE2A52B7520032192A /* UIColor+Extension.swift */; };
+		932C34D22A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D12A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift */; };
+		932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D32A53AF300032192A /* CampaignCollectionViewCellViewModel.swift */; };
+		932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D52A53E2120032192A /* ShortQuizCollectionViewCell.swift */; };
+		932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D72A53F5330032192A /* UIControl+Combine.swift */; };
+		932C34DA2A53F7960032192A /* CommentCampaignViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D92A53F7960032192A /* CommentCampaignViewCell.swift */; };
+		932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DB2A5401B80032192A /* CampaignPostViewViewModel.swift */; };
+		932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DD2A540D2B0032192A /* PostDetailCollectionViewHeader.swift */; };
 		9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */; };
 		936F88232A4AB6ED0062E759 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 936F88222A4AB6ED0062E759 /* Nuke */; };
 		936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */; };
@@ -90,6 +97,13 @@
 		932C34CA2A5254A70032192A /* Date+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extention.swift"; sourceTree = "<group>"; };
 		932C34CC2A5260410032192A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		932C34CE2A52B7520032192A /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		932C34D12A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleQuizCollectionViewCell.swift; sourceTree = "<group>"; };
+		932C34D32A53AF300032192A /* CampaignCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
+		932C34D52A53E2120032192A /* ShortQuizCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortQuizCollectionViewCell.swift; sourceTree = "<group>"; };
+		932C34D72A53F5330032192A /* UIControl+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+Combine.swift"; sourceTree = "<group>"; };
+		932C34D92A53F7960032192A /* CommentCampaignViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCampaignViewCell.swift; sourceTree = "<group>"; };
+		932C34DB2A5401B80032192A /* CampaignPostViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignPostViewViewModel.swift; sourceTree = "<group>"; };
+		932C34DD2A540D2B0032192A /* PostDetailCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailCollectionViewHeader.swift; sourceTree = "<group>"; };
 		9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
 		936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewViewModel.swift; sourceTree = "<group>"; };
 		936F88272A4AC8860062E759 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
@@ -138,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */,
+				932C34DD2A540D2B0032192A /* PostDetailCollectionViewHeader.swift */,
 			);
 			path = PostDetailTableViewHeader;
 			sourceTree = "<group>";
@@ -154,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */,
+				932C34DB2A5401B80032192A /* CampaignPostViewViewModel.swift */,
 			);
 			path = CampaignPost;
 			sourceTree = "<group>";
@@ -257,6 +273,7 @@
 				249F59F02A500874008CF6BE /* UILabel+Extension.swift */,
 				932C34CA2A5254A70032192A /* Date+Extention.swift */,
 				932C34CE2A52B7520032192A /* UIColor+Extension.swift */,
+				932C34D72A53F5330032192A /* UIControl+Combine.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -304,6 +321,17 @@
 				930D96E82A4578550007801A /* GoogleService-Info.plist */,
 			);
 			path = PROD;
+			sourceTree = "<group>";
+		};
+		932C34D02A53ADBA0032192A /* CampaignCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				932C34D12A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift */,
+				932C34D32A53AF300032192A /* CampaignCollectionViewCellViewModel.swift */,
+				932C34D52A53E2120032192A /* ShortQuizCollectionViewCell.swift */,
+				932C34D92A53F7960032192A /* CommentCampaignViewCell.swift */,
+			);
+			path = CampaignCollectionViewCell;
 			sourceTree = "<group>";
 		};
 		936F88262A4AC8700062E759 /* CommentTableView */ = {
@@ -354,6 +382,7 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				932C34D02A53ADBA0032192A /* CampaignCollectionViewCell */,
 				249F59F82A530A71008CF6BE /* CampaignView */,
 				249F59F52A52F3FB008CF6BE /* PostDetailTableViewHeader */,
 				249F59ED2A4EF3F3008CF6BE /* PhotoCollectionView */,
@@ -499,14 +528,21 @@
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
+				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
+				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
+				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
+				932C34D22A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift in Sources */,
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
+				932C34DA2A53F7960032192A /* CommentCampaignViewCell.swift in Sources */,
+				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
+				932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,

@@ -9,13 +9,7 @@ import UIKit
 import Combine
 
 final class PostDetailViewController: UIViewController {
-    
-    enum PostType: String {
-        case article = "일반 게시물"
-        case multipleChoice = "객관식"
-        case bestComment = "베스트 댓글"
-    }
-    
+
     // MARK: - Dependency
     private let vm: PostDetailViewViewModel
     
@@ -45,8 +39,7 @@ final class PostDetailViewController: UIViewController {
         setLayout()
         setDelegate()
         setNavigationBar()
-        
-        vm.fetchPostMetaData(vm.postId)
+  
         bind()
         
     }

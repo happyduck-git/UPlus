@@ -27,7 +27,6 @@ final class CampaignView: UIView {
     private let statusLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.text = "캠페인 진행 중"
         label.font = .systemFont(ofSize: 13, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -42,32 +41,30 @@ final class CampaignView: UIView {
     
     private let campaignPeriodLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray2
-        label.text = "캠페인 참여기간: 06/27. 10am - 07/02. 10am"
+        label.textColor = .systemGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let numberOfParticipantsLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray2
-        label.text = "캠페인 참여자 수: 23명"
+        label.textColor = .systemGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let isApplicableLabel: UILabel = {
+    private let isEligibleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray
-        label.text = "보상 대상"
+        label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 13, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let isRedeemedLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray
-        label.text = "보상 획득 완료"
+        label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 13, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -93,7 +90,7 @@ final class CampaignView: UIView {
             joinLabel,
             campaignPeriodLabel,
             numberOfParticipantsLabel,
-            isApplicableLabel,
+            isEligibleLabel,
             isRedeemedLabel
         )
     }
@@ -116,15 +113,30 @@ final class CampaignView: UIView {
             numberOfParticipantsLabel.topAnchor.constraint(equalToSystemSpacingBelow: campaignPeriodLabel.bottomAnchor, multiplier: 1),
             numberOfParticipantsLabel.leadingAnchor.constraint(equalTo: labelContent.leadingAnchor),
             
-            isApplicableLabel.topAnchor.constraint(equalToSystemSpacingBelow: numberOfParticipantsLabel.bottomAnchor, multiplier: 1),
-            isApplicableLabel.leadingAnchor.constraint(equalTo: labelContent.leadingAnchor),
+            isEligibleLabel.topAnchor.constraint(equalToSystemSpacingBelow: numberOfParticipantsLabel.bottomAnchor, multiplier: 1),
+            isEligibleLabel.leadingAnchor.constraint(equalTo: labelContent.leadingAnchor),
             
-            isRedeemedLabel.topAnchor.constraint(equalTo: isApplicableLabel.topAnchor),
+            isRedeemedLabel.topAnchor.constraint(equalTo: isEligibleLabel.topAnchor),
             isRedeemedLabel.trailingAnchor.constraint(equalTo: joinLabel.trailingAnchor)
         ])
     }
     
     //MARK: - Internal
+    
+    func configure(with vm: CampaignCollectionViewCellViewModel) {
+        self.campaignPeriodLabel.text = "캠페인 참여 기간: " + vm.campaignPeriod
+        self.numberOfParticipantsLabel.text = "캠페인 참여자 수: " + vm.numberOfParticipants
+        let eligible = vm.isEligable ? "보상 대상" : "보상 비대상"
+        let redeem = vm.isRewarded ? "보상 획득 완료" : "보상 미획득"
+        self.isEligibleLabel.text = eligible
+        self.isRedeemedLabel.text = redeem
+        
+        let join: CampainJoin = vm.hasJoined ? .joined : .notJoined
+        self.markJoin(join)
+        
+        let campaignStatus = vm.isExpired ? "캠페인 종료" : "캠페인 진행 중"
+        self.statusLabel.text = campaignStatus
+    }
     
     /// Mark if the user has participated the campaign or not.
     /// - Parameter status: Participation status.

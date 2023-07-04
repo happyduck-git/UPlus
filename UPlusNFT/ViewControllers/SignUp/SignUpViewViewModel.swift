@@ -102,6 +102,7 @@ class SignUpViewViewModel {
                     )
                 self.logger.info("User created.")
                 
+                // NOTE: Nickname related logic.
                 /*
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
                 changeRequest?.displayName = self.nickname

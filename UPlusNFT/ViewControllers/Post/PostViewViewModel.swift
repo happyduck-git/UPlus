@@ -45,6 +45,15 @@ final class PostViewViewModel {
         )
     }
     
+    func multipleChoiceViewModel(postId: String) -> CampaignCollectionViewCellViewModel {
+        return CampaignCollectionViewCellViewModel(postId: postId)
+    }
+    
+}
+
+// MARK: - Fetch data
+
+extension PostViewViewModel {
     func fetchAllInitialPosts() {
         Task {
             do {
@@ -92,5 +101,4 @@ final class PostViewViewModel {
             comments: post.comments
         )
     }
-    
 }

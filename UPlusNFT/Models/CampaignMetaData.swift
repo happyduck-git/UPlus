@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct CampaignMetaData {
     let configuration: CampaignConfiguration
@@ -15,8 +16,8 @@ struct CampaignMetaData {
 }
 
 struct CampaignConfiguration {
-    let beginTime: Date
-    let endTime: Date
+    let beginTime: Timestamp
+    let endTime: Timestamp
 }
 
 struct CampaignItem {

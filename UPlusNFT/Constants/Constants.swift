@@ -56,6 +56,11 @@ struct WritePostConstants {
     static let contentPlaceholder: String = "게시물 내 텍스트"
 }
 
+struct PostConstants {
+    static let tempMissionSentence: String = "미션 문구"
+    static let submitButton: String = "제출하기"
+    static let inputAnswer: String = "답변을 입력해주세요."
+}
 
 // MARK: - Firebase
 

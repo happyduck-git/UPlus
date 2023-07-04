@@ -148,11 +148,31 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vm = vm.postDetailViewModel(at: indexPath.row)
-        let vc = PostDetailViewController(vm: vm)
-        
         navigationController?.modalPresentationStyle = .fullScreen
-        self.show(vc, sender: self)
+        
+        let vm = vm.postDetailViewModel(at: indexPath.row)
+        
+        switch vm.postType {
+        case .article:
+            let vc = PostDetailViewController(vm: vm)
+            self.show(vc, sender: self)
+        case .multipleChoice:
+            let vm = self.vm.multipleChoiceViewModel(postId: vm.postId)
+            let vc = CampaignPostViewController(postType: .multipleChoice,
+                                                vm: vm)
+            self.show(vc, sender: self)
+        case .shortForm:
+            let vm = self.vm.multipleChoiceViewModel(postId: vm.postId)
+            let vc = CampaignPostViewController(postType: .shortForm,
+                                                vm: vm)
+            self.show(vc, sender: self)
+        case .bestComment:
+            let vm = self.vm.multipleChoiceViewModel(postId: vm.postId)
+            let vc = CampaignPostViewController(postType: .bestComment,
+                                                vm: vm)
+            self.show(vc, sender: self)
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
