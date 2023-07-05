@@ -60,7 +60,7 @@ extension WritePostViewViewModel {
     
     func saveImages(_ imageData: [Data]) async -> [String] {
         await withCheckedContinuation({ continuation in
-            firestoreRepository.saveImage(
+            firestoreRepository.savePostImage(
                 postId: UUID().uuidString,
                 images: imageData) { urls in
                     continuation.resume(returning: urls)
@@ -92,15 +92,5 @@ extension WritePostViewViewModel {
             print("Error saving post --- \(error)")
         }
         
-    }
-}
-
-// MARK: - Enums
-extension WritePostViewViewModel {
-    enum PostType: String {
-        case article
-        case campaignQuizChoice = "campaign_quiz_choice"
-        case campaignQuizAnswer = "campaign_quiz_answer"
-        case campaignBestComment = "campaign_best_comment"
     }
 }

@@ -393,6 +393,7 @@ extension FirestoreManager {
 // MARK: - Setters
 extension FirestoreManager {
     
+    //MARK: - Save User Info
     func saveUser(_ user: User) throws {
         let userSet = self.db
             .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.users)/\(FirestoreConstants.userSetCollection)")
@@ -406,7 +407,8 @@ extension FirestoreManager {
         }
     }
     
-    func saveImage(postId: String, images: [Data], completion: @escaping ([String]) -> Void) {
+    //MARK: - Save Post
+    func savePostImage(postId: String, images: [Data], completion: @escaping ([String]) -> Void) {
         
         let group = DispatchGroup()
         var imageUrls: [String] = []
@@ -463,6 +465,45 @@ extension FirestoreManager {
         }
     }
     
+    //MARK: - Save Comment
+    func saveComment(to postId: String, _ comment: Comment) async throws {
+        let commentSet = self.db
+            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
+            .document()
+        
+        try commentSet.setData(
+            from: comment,
+            merge: true
+        ) { _ in
+            print("Comment sucessfully save!")
+        }
+    }
+    
+    func saveCommentImage(to postId: String, image: Data?) async throws -> String? {
+        
+        guard let image = image else {
+            return nil
+        }
+        
+        let imageId = UUID().uuidString
+        let path = "dev_threads/threads/thread_set/\(postId)/comment_set/\(imageId).jpg"
+        let uploadRef = Storage.storage().reference(withPath: path)
+        
+        let uploadMetadata = StorageMetadata()
+        uploadMetadata.contentType = "image/jpeg"
+        
+        // When using url
+        /*
+        let metadata = try await uploadRef.putDataAsync(image)
+        let url = try await uploadRef.downloadURL()
+        return url.absoluteString
+        */
+        
+        // When using reference path
+        return path
+    }
+    
+    //MARK: - Update Like
     // Like button tap
     func updateLike() {
         

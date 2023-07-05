@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */; };
 		244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */; };
+		244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */; };
+		244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */; };
 		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
 		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
 		249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */; };
@@ -70,6 +72,8 @@
 /* Begin PBXFileReference section */
 		244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCollectionViewCell.swift; sourceTree = "<group>"; };
+		244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
+		244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCollectionVeiwCellViewModel.swift; sourceTree = "<group>"; };
 		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewHeader.swift; sourceTree = "<group>"; };
@@ -336,6 +340,8 @@
 				932C34D92A53F7960032192A /* CommentCampaignCollectionViewCell.swift */,
 				244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */,
 				244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */,
+				244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */,
+				244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */,
 			);
 			path = CampaignCollectionViewCell;
 			sourceTree = "<group>";
@@ -525,8 +531,10 @@
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				936F882D2A4D0C710062E759 /* WritePostViewController.swift in Sources */,
+				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
+				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
 				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,

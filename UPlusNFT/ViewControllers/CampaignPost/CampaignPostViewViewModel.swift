@@ -18,7 +18,8 @@ final class CampaignPostViewViewModel {
     private(set) var postType: PostType
     let post: PostDetailViewViewModel
     var campaign: CampaignCollectionViewCellViewModel?
-
+    var textInput: TextFieldCollectionVeiwCellViewModel?
+    
     // MARK: - Init
     init(
         postId: String,
@@ -31,9 +32,11 @@ final class CampaignPostViewViewModel {
         self.post = post
         self.campaign = campaign
         
+        self.textInputCellViewModel()
+        
+        // Fetch data
         self.fetchComments(of: postId)
         self.fetchUser(post.userId)
-        
         if campaign != nil {
             self.fetchPostMetaData(postId)
         }
@@ -43,27 +46,43 @@ final class CampaignPostViewViewModel {
 
 extension CampaignPostViewViewModel {
     
+    func textInputCellViewModel() -> TextFieldCollectionVeiwCellViewModel {
+        let vm = TextFieldCollectionVeiwCellViewModel(postId: postId)
+        self.textInput = vm
+        return vm
+    }
+    
     func campaignCellViewModel() -> CampaignCollectionViewCellViewModel {
         return CampaignCollectionViewCellViewModel(postId: postId)
     }
     
-    func postCellViewModel(at item: Int) -> CommentTableViewCellModel? {
+    func postCellViewModel(at section: Int) -> CommentTableViewCellModel? {
         if post.tableDataSource.isEmpty {
             return nil
         }
         
-        if campaign != nil {
-            return post.tableDataSource[item - 1]
-        } else {
-            return post.tableDataSource[item]
+        switch self.postType {
+        case .article:
+            return post.tableDataSource[section - 1]
+        default:
+            return post.tableDataSource[section - 2]
         }
     }
     
     func numberOfSections() -> Int {
+        var defaultSections: Int = 0
+        
+        switch self.postType {
+        case .article:
+            defaultSections = 1
+        default:
+            defaultSections = 2
+        }
+        
         if  post.tableDataSource.isEmpty {
-            return 1
+            return defaultSections
         } else {
-            return post.tableDataSource.count
+            return post.tableDataSource.count + defaultSections
         }
     }
     

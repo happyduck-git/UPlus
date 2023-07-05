@@ -194,13 +194,13 @@ final class WritePostViewController: UIViewController {
     
     private func setNavItem() {
         let libraryButton = UIBarButtonItem(
-            image: UIImage(systemName: "photo.on.rectangle.angled"),
+            image: UIImage(systemName: SFSymbol.photoLibrary),
             style: .done,
             target: self,
             action: #selector(openPhotoLibrary)
         )
         let photoButton = UIBarButtonItem(
-            image: UIImage(systemName: "camera.viewfinder"),
+            image: UIImage(systemName: SFSymbol.cameraViewFinder),
             style: .done,
             target: self,
             action: #selector(openCamera)
@@ -347,7 +347,7 @@ extension WritePostViewController: UICollectionViewDelegate, UICollectionViewDat
         
         if indexPath.section == 0 {
             cell.setCellType(.camera)
-            cell.configure(with: UIImage(systemName: "camera.circle.fill"))
+            cell.configure(with: UIImage(systemName: SFSymbol.cameraFill))
         } else {
             cell.setCellType(.photo)
             let photo = vm.selectedImages[indexPath.row]

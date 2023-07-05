@@ -60,6 +60,15 @@ struct PostConstants {
     static let tempMissionSentence: String = "미션 문구"
     static let submitButton: String = "제출하기"
     static let inputAnswer: String = "답변을 입력해주세요."
+    static let inputComment: String = "댓글을 입력해주세요."
+    static let writeButton: String = "작성하기"
+}
+
+struct SFSymbol {
+    static let camera: String = "camera.fill"
+    static let cameraViewFinder: String = "camera.viewfinder"
+    static let cameraFill: String = "camera.circle.fill"
+    static let photoLibrary: String = "photo.on.rectangle.angled"
 }
 
 // MARK: - Firebase

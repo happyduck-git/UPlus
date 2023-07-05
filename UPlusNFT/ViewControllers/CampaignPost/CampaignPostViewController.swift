@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import PhotosUI
 
 final class CampaignPostViewController: UIViewController {
     
@@ -18,6 +19,14 @@ final class CampaignPostViewController: UIViewController {
     //MARK: - Property
     private var collectionView: UICollectionView?
     private let postType: PostType
+    
+    private let photoPicker: PHPickerViewController = {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .any(of: [.images, .livePhotos])
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        return picker
+    }()
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -31,6 +40,7 @@ final class CampaignPostViewController: UIViewController {
         bind()
     }
  
+    //MARK: - Init
     init(
         postType: PostType,
         campaignPostVM: CampaignPostViewViewModel
@@ -64,6 +74,7 @@ final class CampaignPostViewController: UIViewController {
     private func setDelegate() {
         collectionView?.delegate = self
         collectionView?.dataSource = self
+        photoPicker.delegate = self
     }
     
     private func bind() {
@@ -76,7 +87,6 @@ final class CampaignPostViewController: UIViewController {
             campaignPostVM.post.$tableDataSource
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
-                    print("Comment reload")
                     self?.collectionView?.reloadData()
                 }
                 .store(in: &bindings)
@@ -84,7 +94,6 @@ final class CampaignPostViewController: UIViewController {
             campaignPostVM.post.$recomments
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] recomment in
-                    print("Recomment count -- \(recomment.count)")
                     self?.collectionView?.reloadData()
                 }
                 .store(in: &bindings)
@@ -134,6 +143,11 @@ final class CampaignPostViewController: UIViewController {
             forCellWithReuseIdentifier: PostCommentCollectionViewCell.identifier
         )
         
+        collectionView.register(
+            TextFieldCollectionViewCell.self,
+            forCellWithReuseIdentifier: TextFieldCollectionViewCell.identifier
+        )
+        
         switch self.postType {
         case .article:
             break
@@ -161,12 +175,21 @@ final class CampaignPostViewController: UIViewController {
     private func createSection(for section: Int) -> NSCollectionLayoutSection {
         switch campaignPostVM.postType {
         case .article:
-            return createPostSectionLayout(at: section)
+            switch section {
+            case 0:
+                return createCommentInputSectionLayout()
+            default:
+                return createPostSectionLayout()
+            }
+            
         default:
-            if section == 0 {
+            switch section {
+            case 0:
                 return createCampaignSectionLayout()
-            } else {
-                return createPostSectionLayout(at: section)
+            case 1:
+                return createCommentInputSectionLayout()
+            default:
+                return createPostSectionLayout()
             }
         }
     }
@@ -194,7 +217,43 @@ final class CampaignPostViewController: UIViewController {
         return section
     }
     
-    private func createPostSectionLayout(at indexSection: Int) -> NSCollectionLayoutSection {
+    private func createCommentInputSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0,
+                                                     leading: 0,
+                                                     bottom: 10,
+                                                     trailing: 0)
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.4)
+            ),
+            subitems: [item]
+        )
+        let section = NSCollectionLayoutSection(group: group)
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.5)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
+        section.boundarySupplementaryItems = [header]
+        
+        return section
+    }
+    
+    
+    private func createPostSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -214,27 +273,6 @@ final class CampaignPostViewController: UIViewController {
         )
         let section = NSCollectionLayoutSection(group: group)
         
-        var sectionNum: Int = 0
-        switch campaignPostVM.postType {
-        case .article:
-            sectionNum = 0
-        default:
-            sectionNum = 1
-        }
-        
-        if indexSection == sectionNum {
-            let headerSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.5)
-            )
-            let header = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerSize,
-                elementKind: UICollectionView.elementKindSectionHeader,
-                alignment: .top
-            )
-            
-            section.boundarySupplementaryItems = [header]
-        }
         return section
     }
 }
@@ -249,32 +287,76 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             
             switch self.postType {
             case .article:
-                return self.postCell(collectionView, viewModelAt: indexPath)
+                switch indexPath.section {
+                case 0:
+                    print("Indexpath: \(indexPath)")
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextFieldCollectionViewCell.identifier, for: indexPath) as? TextFieldCollectionViewCell,
+                          let textInputVM = campaignPostVM.textInput
+                    else {
+                        return UICollectionViewCell()
+                    }
+                    
+                    cell.cameraButtonHandler = { [weak self] in
+                        guard let `self` = self else { return }
+                        self.present(self.photoPicker, animated: true)
+                    }
+                    
+                    cell.configure(with: textInputVM)
+                    return cell
+                default:
+                    return self.postCell(collectionView, viewModelAt: indexPath)
+                }
                 
             case .multipleChoice:
-                if indexPath.section == 0 {
+                switch indexPath.section {
+                case 0:
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MultipleQuizCollectionViewCell.identifier, for: indexPath) as? MultipleQuizCollectionViewCell else {
                         return UICollectionViewCell()
                     }
                     cell.bind(with: campaignPostVM.campaignCellViewModel())
                     return cell
-                } else {
+                case 1:
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextFieldCollectionViewCell.identifier, for: indexPath) as? TextFieldCollectionViewCell,
+                          let textInputVM = campaignPostVM.textInput else {
+                        return UICollectionViewCell()
+                    }
+                    cell.cameraButtonHandler = { [weak self] in
+                        guard let `self` = self else { return }
+                        self.present(self.photoPicker, animated: true)
+                    }
+                    
+                    cell.configure(with: textInputVM)
+                    return cell
+                default:
                     return self.postCell(collectionView, viewModelAt: indexPath)
                 }
-                
+          
             case .shortForm:
-                if indexPath.section == 0 {
+                switch indexPath.section {
+                case 0:
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShortQuizCollectionViewCell.identifier, for: indexPath) as? ShortQuizCollectionViewCell else {
                         return UICollectionViewCell()
                     }
                     cell.bind(with: campaignPostVM.campaignCellViewModel())
                     return cell
-                } else {
+                case 1:
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextFieldCollectionViewCell.identifier, for: indexPath) as? TextFieldCollectionViewCell,
+                          let textInputVM = campaignPostVM.textInput else {
+                        return UICollectionViewCell()
+                    }
+                    cell.cameraButtonHandler = { [weak self] in
+                        guard let `self` = self else { return }
+                        self.present(self.photoPicker, animated: true)
+                    }
+                    cell.configure(with: textInputVM)
+                    return cell
+                default:
                     return self.postCell(collectionView, viewModelAt: indexPath)
                 }
-                
+         
             case .bestComment:
-                if indexPath.section == 0 {
+                switch indexPath.section {
+                case 0:
                     guard let cell = collectionView.dequeueReusableCell(
                         withReuseIdentifier: CommentCampaignCollectionViewCell.identifier,
                         for: indexPath
@@ -283,22 +365,26 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                     }
                     cell.bind(with: campaignPostVM.campaignCellViewModel())
                     return cell
-                } else {
+                case 1:
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextFieldCollectionViewCell.identifier, for: indexPath) as? TextFieldCollectionViewCell,
+                          let textInputVM = campaignPostVM.textInput else {
+                        return UICollectionViewCell()
+                    }
+                    cell.cameraButtonHandler = { [weak self] in
+                        guard let `self` = self else { return }
+                        self.present(self.photoPicker, animated: true)
+                    }
+                    cell.configure(with: textInputVM)
+                    return cell
+                default:
                     return self.postCell(collectionView, viewModelAt: indexPath)
                 }
             }
-        
     }
     
     func postCell(_ collectionView: UICollectionView, viewModelAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: PostCommentCollectionViewCell.identifier,
-            for: indexPath
-        ) as? PostCommentCollectionViewCell,
-              let defaultCell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: DefaultCollectionViewCell.identifier,
-                for: indexPath
-              ) as? DefaultCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCommentCollectionViewCell.identifier, for: indexPath) as? PostCommentCollectionViewCell,
+              let defaultCell = collectionView.dequeueReusableCell(withReuseIdentifier: DefaultCollectionViewCell.identifier, for: indexPath) as? DefaultCollectionViewCell
         else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
             return cell
@@ -344,31 +430,30 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch campaignPostVM.postType {
         case .article:
-            guard let cellVM = campaignPostVM.postCellViewModel(at: section)
-            else { return 1 }
-            
-            if cellVM.isOpened {
-//                print("Number of rows in section #\(section) --- \((campaignPostVM.post.recomments[section]?.count ?? 0) + 1)")
-                return (campaignPostVM.post.recomments[section]?.count ?? 0) + 1
-            }
-            else {
-                return 1
-            }
-        default:
             switch section {
             case 0:
                 return 1
             default:
-                guard let cellVM = campaignPostVM.postCellViewModel(at: section)
+                guard let cellVM = campaignPostVM.postCellViewModel(at: section),
+                      cellVM.isOpened
                 else { return 1 }
+                return (campaignPostVM.post.recomments[section]?.count ?? 0) + 1
+            }
+            
+        default:
+            switch section {
+            case 0:
+                return 1
                 
-                if cellVM.isOpened {
-//                    print("Number of rows in section #\(section) --- \((campaignPostVM.post.recomments[section - 1]?.count ?? 0) + 1)")
-                    return campaignPostVM.post.recomments[section - 1]?.count ?? 0
-                }
-                else {
-                    return 1
-                }
+            case 1:
+                return 1
+                
+            default:
+                guard let cellVM = campaignPostVM.postCellViewModel(at: section),
+                      cellVM.isOpened
+                else { return 1 }
+                //                    print("Number of rows in section #\(section) --- \((campaignPostVM.post.recomments[section - 1]?.count ?? 0) + 1)")
+                return campaignPostVM.post.recomments[section - 1]?.count ?? 0
             }
         }
         
@@ -378,17 +463,16 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         print("Item tapped at : Section #\(indexPath.section) Item #\(indexPath.item)")
         switch campaignPostVM.postType {
         case .article:
-            if indexPath.row == 0 {
-                guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
-                cellVM.isOpened = !cellVM.isOpened
-                campaignPostVM.fetchRecomment(at: indexPath.section, of: cellVM.id)
-            }
-        default:
             if indexPath.section > 0 && indexPath.row == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
                 campaignPostVM.fetchRecomment(at: indexPath.section - 1, of: cellVM.id)
-                
+            }
+        default:
+            if indexPath.section > 1 && indexPath.row == 0 {
+                guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
+                cellVM.isOpened = !cellVM.isOpened
+                campaignPostVM.fetchRecomment(at: indexPath.section - 2, of: cellVM.id)
             }
         }
         
@@ -404,5 +488,43 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         }
         header.configure(with: campaignPostVM.post)
         return header
+    }
+}
+
+extension CampaignPostViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+ 
+        guard let vm = campaignPostVM.textInput,
+              let result = results.first
+        else { return }
+        
+        self.loadImageFromItemProvider(itemProvider: result.itemProvider) { [weak self] image in
+            guard let `self` = self else { return }
+            vm.selectedImage = image
+        }
+        
+        vm.isButtonTapped = false
+        picker.dismiss(animated: true)
+    }
+    
+    /// Change itemProvider to UIImage
+    /// - Parameters:
+    ///   - itemProvider: item provider instance to convert
+    ///   - completion: callback
+    private func loadImageFromItemProvider(itemProvider: NSItemProvider, completion: @escaping (UIImage?) -> Void) {
+        if itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                guard error == nil else {
+                    print("Error loading object from itemProvider: " + String(describing: error?.localizedDescription))
+                    return
+                }
+                guard let image = image as? UIImage else {
+                    return
+                }
+                completion(image)
+            }
+        } else {
+            completion(nil)
+        }
     }
 }
