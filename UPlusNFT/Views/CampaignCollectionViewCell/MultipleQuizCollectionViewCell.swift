@@ -11,6 +11,7 @@ import Combine
 final class MultipleQuizCollectionViewCell: UICollectionViewCell {
     
     private var bindings = Set<AnyCancellable>()
+    private var isButtonCreated: Bool = false
     
     // MARK: - UI Elements
     private let campaignView: CampaignView = {
@@ -109,9 +110,12 @@ final class MultipleQuizCollectionViewCell: UICollectionViewCell {
                     
                     // Create buttons
                     let choices = metadata?.items ?? []
-                    let buttons = self.createChoiceButtons(choices)
-                    for button in buttons {
-                        self.buttonStack.addArrangedSubview(button)
+                    if !choices.isEmpty && !self.isButtonCreated {
+                        let buttons = self.createChoiceButtons(choices)
+                        for button in buttons {
+                            self.buttonStack.addArrangedSubview(button)
+                        }
+                        self.isButtonCreated = true
                     }
                     
                     // Bind other data

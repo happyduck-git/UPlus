@@ -156,20 +156,13 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
         case .article:
             let vc = PostDetailViewController(vm: vm)
             self.show(vc, sender: self)
-        case .multipleChoice:
-            let vm = self.vm.multipleChoiceViewModel(postId: vm.postId)
-            let vc = CampaignPostViewController(postType: .multipleChoice,
-                                                vm: vm)
-            self.show(vc, sender: self)
-        case .shortForm:
-            let vm = self.vm.multipleChoiceViewModel(postId: vm.postId)
-            let vc = CampaignPostViewController(postType: .shortForm,
-                                                vm: vm)
-            self.show(vc, sender: self)
-        case .bestComment:
-            let vm = self.vm.multipleChoiceViewModel(postId: vm.postId)
-            let vc = CampaignPostViewController(postType: .bestComment,
-                                                vm: vm)
+        case .multipleChoice, .shortForm, .bestComment:
+            let campaignCellVM = self.vm.campaignCellViewModel(postId: vm.postId)
+            let vc = CampaignPostViewController(
+                postType: vm.postType,
+                campaignCellVM: campaignCellVM,
+                postCellVM: vm
+            )
             self.show(vc, sender: self)
         }
         

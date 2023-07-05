@@ -56,11 +56,22 @@ struct Post: Codable {
 
 struct PostContent {
     let post: Post
-//    let comments: [CommnetContent]?
     let comments: [Comment]?
 }
 
 struct CommentContent {
+    
     let comment: Comment
     let recomments: [Recomment]?
+
+}
+
+extension CommentContent: Hashable {
+    static func == (lhs: CommentContent, rhs: CommentContent) -> Bool {
+        return lhs.comment.commentId == rhs.comment.commentId
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(comment)
+        hasher.combine(recomments)
+    }
 }

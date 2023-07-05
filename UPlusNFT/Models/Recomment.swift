@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Recomment {
+struct Recomment: Hashable {
     let commentId: String
     let recommentAuthorUid: String
     let recommentContentText: String

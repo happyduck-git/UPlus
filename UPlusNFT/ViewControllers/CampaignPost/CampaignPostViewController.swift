@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 final class CampaignPostViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: CampaignCollectionViewCellViewModel
+    private let campaignCellVM: CampaignCollectionViewCellViewModel
+    private let postCellVM: PostDetailViewViewModel
+
+    private var bindings = Set<AnyCancellable>()
     
     //MARK: - Property
     private var collectionView: UICollectionView?
@@ -19,21 +23,26 @@ final class CampaignPostViewController: UIViewController {
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         
         setUI()
         setLayout()
         setDelegate()
         
-        vm.fetchPostMetaData(vm.postId)
+        campaignCellVM.fetchPostMetaData(campaignCellVM.postId)
+        bind()
     }
  
     init(
         postType: PostType,
-        vm: CampaignCollectionViewCellViewModel
+        campaignCellVM: CampaignCollectionViewCellViewModel,
+        postCellVM: PostDetailViewViewModel
     ) {
         self.postType = postType
-        self.vm = vm
+        self.campaignCellVM = campaignCellVM
+        self.postCellVM = postCellVM
         super.init(nibName: nil, bundle: nil)
+
     }
     
     required init?(coder: NSCoder) {
@@ -62,30 +71,83 @@ final class CampaignPostViewController: UIViewController {
         collectionView?.dataSource = self
     }
     
-    // MARK: -  Create CollectionView
+    private func bind() {
+        
+        func bindViewToViewModel() {
+            
+        }
+        
+        func bindViewModelToView() {
+
+            postCellVM.$tableDataSource
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    self?.collectionView?.reloadData()
+                }
+                .store(in: &bindings)
+            
+            postCellVM.$recomments
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] recomment in
+                    print("Recomment -- \(recomment)")
+                    self?.collectionView?.reloadData()
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
     
+    // MARK: -  Create CollectionView
+
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewCompositionalLayout {  sectionIndex, _ in
             return self.createSection(for: sectionIndex)
-
         }
         
         let collectionView = UICollectionView(
             frame: .zero,
             collectionViewLayout: layout
         )
+        
+        // Register section header
         collectionView.register(
-            MultipleQuizCollectionViewCell.self,
-            forCellWithReuseIdentifier: MultipleQuizCollectionViewCell.identifier
+            PostDetailCollectionViewHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: PostDetailCollectionViewHeader.identifier
+        )
+        
+        // Register cell
+        collectionView.register(
+            UICollectionViewCell.self,
+            forCellWithReuseIdentifier: UICollectionViewCell.identifier
         )
         collectionView.register(
-            ShortQuizCollectionViewCell.self,
-            forCellWithReuseIdentifier: ShortQuizCollectionViewCell.identifier
+            PostCommentCollectionViewCell.self,
+            forCellWithReuseIdentifier: PostCommentCollectionViewCell.identifier
         )
-        collectionView.register(
-            CommentCampaignViewCell.self,
-            forCellWithReuseIdentifier: CommentCampaignViewCell.identifier
-        )
+        
+        switch self.postType {
+        case .article:
+            break
+        case .multipleChoice:
+            collectionView.register(
+                MultipleQuizCollectionViewCell.self,
+                forCellWithReuseIdentifier: MultipleQuizCollectionViewCell.identifier
+            )
+        case .shortForm:
+            collectionView.register(
+                ShortQuizCollectionViewCell.self,
+                forCellWithReuseIdentifier: ShortQuizCollectionViewCell.identifier
+            )
+        case .bestComment:
+            collectionView.register(
+                CommentCampaignCollectionViewCell.self,
+                forCellWithReuseIdentifier: CommentCampaignCollectionViewCell.identifier
+            )
+        }
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
@@ -135,17 +197,33 @@ final class CampaignPostViewController: UIViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.5)
+                heightDimension: .fractionalHeight(0.2)
             ),
             subitems: [item]
         )
         let section = NSCollectionLayoutSection(group: group)
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.5)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
+        section.boundarySupplementaryItems = [header]
         
         return section
     }
 }
 
 extension CampaignPostViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
@@ -156,50 +234,59 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MultipleQuizCollectionViewCell.identifier, for: indexPath) as? MultipleQuizCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.bind(with: vm)
+                cell.bind(with: campaignCellVM)
                 return cell
             case .shortForm:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShortQuizCollectionViewCell.identifier, for: indexPath) as? ShortQuizCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.bind(with: vm)
+                cell.bind(with: campaignCellVM)
                 return cell
             case .bestComment:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CommentCampaignViewCell.identifier, for: indexPath) as? CommentCampaignViewCell else {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CommentCampaignCollectionViewCell.identifier, for: indexPath) as? CommentCampaignCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.bind(with: vm)
+                cell.bind(with: campaignCellVM)
                 return cell
             }
         } else {
-            switch self.postType {
-            case .article:
+            
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCommentCollectionViewCell.identifier, for: indexPath) as? PostCommentCollectionViewCell,
+                  let commentCellVM = postCellVM.viewModelForRow(at: indexPath.row)
+            else {
                 return UICollectionViewCell()
-            case .multipleChoice:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MultipleQuizCollectionViewCell.identifier, for: indexPath) as? MultipleQuizCollectionViewCell else {
-                    return UICollectionViewCell()
-                }
-                cell.bind(with: vm)
-                return cell
-            case .shortForm:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShortQuizCollectionViewCell.identifier, for: indexPath) as? ShortQuizCollectionViewCell else {
-                    return UICollectionViewCell()
-                }
-                cell.bind(with: vm)
-                return cell
-            case .bestComment:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CommentCampaignViewCell.identifier, for: indexPath) as? CommentCampaignViewCell else {
-                    return UICollectionViewCell()
-                }
-                cell.bind(with: vm)
-                return cell
             }
+            cell.configure(with: commentCellVM)
+            cell.bind(with: commentCellVM)
+            return cell
         }
 
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        switch section {
+        case 0:
+            return 1
+        default:
+            return postCellVM.numberOfSections()
+        }
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch indexPath.section {
+        case 1:
+            guard let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: PostDetailCollectionViewHeader.identifier,
+                for: indexPath
+            ) as? PostDetailCollectionViewHeader else {
+                return UICollectionReusableView()
+            }
+            header.configure(with: postCellVM)
+            return header
+            
+        default:
+            return UICollectionReusableView()
+        }
+    }
 }

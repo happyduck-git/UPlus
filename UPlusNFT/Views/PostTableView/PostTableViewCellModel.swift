@@ -25,8 +25,6 @@ final class PostTableViewCellModel {
     let createdTime: Date
     let comments: [Comment]?
     
-    @Published var metaData: CampaignMetaData?
-    
     // MARK: - Init
     init(
         userId: String,
@@ -51,16 +49,5 @@ final class PostTableViewCellModel {
         self.createdTime = createdTime
         self.comments = comments
     }
-    
-    // MARK: - Internal
-    func fetchPostMetaData(_ postId: String) {
-        Task {
-            do {
-                metaData = try await firestoreManager.getMetadata(of: postId)
-            }
-            catch {
-                print("Error fetching metadata - \(error)")
-            }
-        }
-    }
+
 }

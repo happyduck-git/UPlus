@@ -130,7 +130,6 @@ extension PostDetailViewViewModel {
     
     // TODO: Get recomments and map it to CommentTableViewCellModel
     func fetchRecomment(at section: Int, of commentId: String) {
-//        return try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
         Task {
             do {
                 let comments = try await firestoreManager.getRecomments(postId: postId, commentId: commentId)

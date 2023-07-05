@@ -45,7 +45,7 @@ final class PostViewViewModel {
         )
     }
     
-    func multipleChoiceViewModel(postId: String) -> CampaignCollectionViewCellViewModel {
+    func campaignCellViewModel(postId: String) -> CampaignCollectionViewCellViewModel {
         return CampaignCollectionViewCellViewModel(postId: postId)
     }
     

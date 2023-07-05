@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */; };
 		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
 		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
 		249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */; };
@@ -41,7 +42,7 @@
 		932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D32A53AF300032192A /* CampaignCollectionViewCellViewModel.swift */; };
 		932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D52A53E2120032192A /* ShortQuizCollectionViewCell.swift */; };
 		932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D72A53F5330032192A /* UIControl+Combine.swift */; };
-		932C34DA2A53F7960032192A /* CommentCampaignViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D92A53F7960032192A /* CommentCampaignViewCell.swift */; };
+		932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D92A53F7960032192A /* CommentCampaignCollectionViewCell.swift */; };
 		932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DB2A5401B80032192A /* CampaignPostViewViewModel.swift */; };
 		932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DD2A540D2B0032192A /* PostDetailCollectionViewHeader.swift */; };
 		9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */; };
@@ -66,6 +67,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewHeader.swift; sourceTree = "<group>"; };
@@ -101,7 +103,7 @@
 		932C34D32A53AF300032192A /* CampaignCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		932C34D52A53E2120032192A /* ShortQuizCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortQuizCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C34D72A53F5330032192A /* UIControl+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+Combine.swift"; sourceTree = "<group>"; };
-		932C34D92A53F7960032192A /* CommentCampaignViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCampaignViewCell.swift; sourceTree = "<group>"; };
+		932C34D92A53F7960032192A /* CommentCampaignCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCampaignCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C34DB2A5401B80032192A /* CampaignPostViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignPostViewViewModel.swift; sourceTree = "<group>"; };
 		932C34DD2A540D2B0032192A /* PostDetailCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailCollectionViewHeader.swift; sourceTree = "<group>"; };
 		9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
@@ -329,7 +331,8 @@
 				932C34D12A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift */,
 				932C34D32A53AF300032192A /* CampaignCollectionViewCellViewModel.swift */,
 				932C34D52A53E2120032192A /* ShortQuizCollectionViewCell.swift */,
-				932C34D92A53F7960032192A /* CommentCampaignViewCell.swift */,
+				932C34D92A53F7960032192A /* CommentCampaignCollectionViewCell.swift */,
+				244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */,
 			);
 			path = CampaignCollectionViewCell;
 			sourceTree = "<group>";
@@ -536,13 +539,14 @@
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
-				932C34DA2A53F7960032192A /* CommentCampaignViewCell.swift in Sources */,
+				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
 				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
 				932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */,
+				244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,

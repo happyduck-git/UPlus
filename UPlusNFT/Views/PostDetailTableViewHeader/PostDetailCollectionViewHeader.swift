@@ -167,9 +167,8 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             self.postContentTextView.topAnchor.constraint(equalToSystemSpacingBelow: self.horizontalLineView.bottomAnchor, multiplier: 1),
             self.postContentTextView.leadingAnchor.constraint(equalTo: self.horizontalLineView.leadingAnchor),
             self.postContentTextView.trailingAnchor.constraint(equalTo: self.horizontalLineView.trailingAnchor),
-            self.postContentTextView.heightAnchor.constraint(equalToConstant: height * 2),
             
-            self.postImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 2),
+            self.postImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 1),
             self.postImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageView.trailingAnchor, multiplier: 3),
             self.nicknameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
@@ -187,12 +186,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             self.createdAtLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.likeButton.trailingAnchor, multiplier: 1),
             self.likeButton.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
         ])
-        
-        postIdLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        postUrlLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        postTypeLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        postTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        
+      
     }
     
     private func bind(with vm: PostDetailViewViewModel) {
