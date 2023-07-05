@@ -151,20 +151,57 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.modalPresentationStyle = .fullScreen
         
         let vm = vm.postDetailViewModel(at: indexPath.row)
+        let campaignCellVM = self.vm.campaignCellViewModel(postId: vm.postId)
         
         switch vm.postType {
         case .article:
-            let vc = PostDetailViewController(vm: vm)
-            self.show(vc, sender: self)
-        case .multipleChoice, .shortForm, .bestComment:
-            let campaignCellVM = self.vm.campaignCellViewModel(postId: vm.postId)
+            let campaignPostVM = CampaignPostViewViewModel(
+                postId: vm.postId,
+                postType: vm.postType,
+                post: vm,
+                campaign: nil
+            )
             let vc = CampaignPostViewController(
                 postType: vm.postType,
-                campaignCellVM: campaignCellVM,
-                postCellVM: vm
+                campaignPostVM: campaignPostVM
+            )
+            self.show(vc, sender: self)
+        default:
+            let campaignPostVM = CampaignPostViewViewModel(
+                postId: vm.postId,
+                postType: vm.postType,
+                post: vm,
+                campaign: campaignCellVM
+            )
+            let vc = CampaignPostViewController(
+                postType: vm.postType,
+                campaignPostVM: campaignPostVM
             )
             self.show(vc, sender: self)
         }
+        
+        
+//        switch vm.postType {
+//        case .article:
+//            let vc = PostDetailViewController(vm: vm)
+//            self.show(vc, sender: self)
+//        case .multipleChoice, .shortForm, .bestComment:
+//
+//            let campaignCellVM = self.vm.campaignCellViewModel(postId: vm.postId)
+//
+//            let campaignPostVM = CampaignPostViewViewModel(
+//                postId: vm.postId,
+//                postType: vm.postType,
+//                post: vm,
+//                campaign: campaignCellVM
+//            )
+//
+//            let vc = CampaignPostViewController(
+//                postType: vm.postType,
+//                campaignPostVM: campaignPostVM
+//            )
+//            self.show(vc, sender: self)
+//        }
         
     }
     

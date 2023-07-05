@@ -16,7 +16,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     //MARK: - Property
     private let postIdLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .systemGray
         label.limitTextLength(maxLength: 5)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -24,18 +24,25 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     
     private let postUrlLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .systemGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private let postTypeView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 8
+        view.clipsToBounds = true
+        view.backgroundColor = UIColor.init(hex: 0xF79DD1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let postTypeLabel: UILabel = {
         let label = UILabel()
         label.text = PostType.article.rawValue
+        label.font = .systemFont(ofSize: 13, weight: .bold)
         label.textColor = .white
-        label.layer.cornerRadius = 8
-        label.clipsToBounds = true
-        label.backgroundColor = UIColor.init(hex: 0xF79DD1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -43,7 +50,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     private let postTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.backgroundColor = .white
+        label.font = .systemFont(ofSize: 17, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -74,6 +81,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
 
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "person.circle")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -104,7 +112,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .white
+        self.backgroundColor = .systemGray6
         setUI()
         setLayout()
     }
@@ -133,7 +141,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         self.addSubviews(
             postIdLabel,
             postUrlLabel,
-            postTypeLabel,
+            postTypeView,
             postTitleLabel,
             horizontalLineView,
             postContentTextView,
@@ -143,6 +151,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             likeButton,
             createdAtLabel
         )
+        postTypeView.addSubview(postTypeLabel)
     }
     
     private func setLayout() {
@@ -153,10 +162,15 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             self.postUrlLabel.topAnchor.constraint(equalTo: self.postIdLabel.topAnchor),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postUrlLabel.trailingAnchor, multiplier: 3),
             
-            self.postTypeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postIdLabel.bottomAnchor, multiplier: 2),
-            self.postTypeLabel.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
+            self.postTypeView.topAnchor.constraint(equalToSystemSpacingBelow: self.postIdLabel.bottomAnchor, multiplier: 2),
+            self.postTypeView.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
             
-            self.postTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postTypeLabel.bottomAnchor, multiplier: 1),
+            self.postTypeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postTypeView.topAnchor, multiplier: 1),
+            self.postTypeLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.postTypeView.leadingAnchor, multiplier: 1),
+            self.postTypeView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postTypeLabel.trailingAnchor, multiplier: 1),
+            self.postTypeView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.postTypeLabel.bottomAnchor, multiplier: 1),
+            
+            self.postTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postTypeView.bottomAnchor, multiplier: 1),
             self.postTitleLabel.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
             
             self.horizontalLineView.topAnchor.constraint(equalToSystemSpacingBelow: self.postTitleLabel.bottomAnchor, multiplier: 1),
@@ -181,7 +195,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             self.nicknameLabel.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
             self.nicknameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImageView.trailingAnchor, multiplier: 1),
             
-            self.createdAtLabel.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
+            self.createdAtLabel.centerYAnchor.constraint(equalTo: self.likeButton.centerYAnchor),
             self.createdAtLabel.trailingAnchor.constraint(equalTo: self.horizontalLineView.trailingAnchor),
             self.createdAtLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.likeButton.trailingAnchor, multiplier: 1),
             self.likeButton.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),

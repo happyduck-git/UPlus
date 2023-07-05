@@ -20,7 +20,6 @@ final class PostViewViewModel {
     @Published var didLoadAdditionalPosts: Bool = false
     
     var numberOfRows: Int {
-        print("\(#function) -- \(self.tableDataSource.count)")
         return self.tableDataSource.count
     }
     

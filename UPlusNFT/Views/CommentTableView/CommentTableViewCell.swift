@@ -158,7 +158,7 @@ final class CommentTableViewCell: UITableViewCell {
         self.likeButton.setTitle(String(describing: vm.likeUserCount ?? 0), for: .normal)
         // TODO: Recomment 개수 필요
         self.commentButton.setTitle(String(describing: vm.recomments?.count ?? 0), for: .normal)
-        self.createdAtLabel.text = String(describing: vm.createdAt.monthDayTimeFormat)
+        self.createdAtLabel.text = String(describing: vm.createdAt.dateValue().monthDayTimeFormat)
         
         Task {
             guard let image = vm.imagePath,

@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Recomment: Hashable {
     let commentId: String
     let recommentAuthorUid: String
     let recommentContentText: String
-    let recommentCreatedTime: Date
+    let recommentCreatedTime: Timestamp
     let recommentId: String
 }

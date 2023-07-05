@@ -100,7 +100,7 @@ extension FirestoreManager {
             let commentAuthorUid = data[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
             let commentContentImagePath = data[FirestoreConstants.commentContentImagePath] as? String
             let commentContentText = data[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
-            let commentCreatedTime = data[FirestoreConstants.commentCreatedTime] as? Date ?? Date()
+            let commentCreatedTime = data[FirestoreConstants.commentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
             let commentId = data[FirestoreConstants.commentId] as? String ?? FirestoreConstants.noUserUid
             let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
             
@@ -129,7 +129,7 @@ extension FirestoreManager {
             let commentId = snapshot.reference.documentID
             let recommentAuthorUid = data[FirestoreConstants.recommentAuthorUid] as? String ?? FirestoreConstants.noUserUid
             let recommentContentText = data[FirestoreConstants.recommentContentText] as? String ?? FirestoreConstants.noUserUid
-            let recommentCreatedTime = data[FirestoreConstants.recommentCreatedTime] as? Date ?? Date()
+            let recommentCreatedTime = data[FirestoreConstants.recommentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
             let recommentId = data[FirestoreConstants.recommentId] as? String ?? FirestoreConstants.noUserUid
             
             return Recomment(
@@ -155,7 +155,7 @@ extension FirestoreManager {
             let commentAuthorUid = data[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
             let commentContentImagePath = data[FirestoreConstants.commentContentImagePath] as? String
             let commentContentText = data[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
-            let commentCreatedTime = data[FirestoreConstants.commentCreatedTime] as? Date ?? Date()
+            let commentCreatedTime = data[FirestoreConstants.commentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
             let commentId = data[FirestoreConstants.commentId] as? String ?? FirestoreConstants.noUserUid
             let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
             
@@ -191,7 +191,7 @@ extension FirestoreManager {
             let commentAuthorUid = data?[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
             let commentContentImagePath = data?[FirestoreConstants.commentContentImagePath] as? String
             let commentContentText = data?[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
-            let commentCreatedTime = data?[FirestoreConstants.commentCreatedTime] as? Date ?? Date()
+            let commentCreatedTime = data?[FirestoreConstants.commentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
             let commentId = data?[FirestoreConstants.commentId] as? String ?? FirestoreConstants.noUserUid
             let commentLikedUserUidList = data?[FirestoreConstants.commentLikedUserUidList] as? [String]
             
@@ -221,7 +221,7 @@ extension FirestoreManager {
             let commentId = snapshot.reference.documentID
             let recommentAuthorUid = data[FirestoreConstants.recommentAuthorUid] as? String ?? FirestoreConstants.noUserUid
             let recommentContentText = data[FirestoreConstants.recommentContentText] as? String ?? FirestoreConstants.noUserUid
-            let recommentCreatedTime = data[FirestoreConstants.recommentCreatedTime] as? Date ?? Date()
+            let recommentCreatedTime = data[FirestoreConstants.recommentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
             let recommentId = data[FirestoreConstants.recommentId] as? String ?? FirestoreConstants.noUserUid
             
             return Recomment(
@@ -233,7 +233,7 @@ extension FirestoreManager {
             )
         }
         
-        print("Recomments counts: \(recomments)")
+        print("Recomments counts: \(recomments.count)")
         return recomments
     }
     

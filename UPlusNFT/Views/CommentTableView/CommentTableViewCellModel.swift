@@ -7,12 +7,9 @@
 
 import Foundation
 import Combine
+import FirebaseFirestore
 
-protocol PostProtocol {
-    
-}
-
-final class CommentTableViewCellModel: PostProtocol {
+final class CommentTableViewCellModel {
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
     
@@ -25,7 +22,7 @@ final class CommentTableViewCellModel: PostProtocol {
     let imagePath: String?
     let likeUserCount: Int?
     let recomments: [Recomment]?
-    let createdAt: Date
+    let createdAt: Timestamp
     
     @Published var user: User?
     
@@ -37,7 +34,7 @@ final class CommentTableViewCellModel: PostProtocol {
         imagePath: String?,
         likeUserCount: Int?,
         recomments: [Recomment]?,
-        createdAt: Date
+        createdAt: Timestamp
     ) {
         self.type = type
         self.id = id

@@ -15,24 +15,16 @@ final class CampaignPostViewViewModel {
     
     //MARK: - Property
     private let postId: String
-    private let postType: PostType
-    let post: CampaignPostViewViewModel.Post
-    var campaign: CampaignPostViewViewModel.Campaign?
-    
-    enum SectionType: CaseIterable {
-        case campaignBoard
-        case post
-        case comment
-    }
-    
-    var sections: [SectionType] = SectionType.allCases
-   
+    private(set) var postType: PostType
+    let post: PostDetailViewViewModel
+    var campaign: CampaignCollectionViewCellViewModel?
+
     // MARK: - Init
     init(
         postId: String,
         postType: PostType,
-        post: CampaignPostViewViewModel.Post,
-        campaign: CampaignPostViewViewModel.Campaign?
+        post: PostDetailViewViewModel,
+        campaign: CampaignCollectionViewCellViewModel?
     ) {
         self.postId = postId
         self.postType = postType
@@ -51,7 +43,7 @@ final class CampaignPostViewViewModel {
 
 extension CampaignPostViewViewModel {
     
-    func campaingCellViewModel(at item: Int) -> CampaignCollectionViewCellViewModel {
+    func campaignCellViewModel() -> CampaignCollectionViewCellViewModel {
         return CampaignCollectionViewCellViewModel(postId: postId)
     }
     
@@ -59,83 +51,22 @@ extension CampaignPostViewViewModel {
         if post.tableDataSource.isEmpty {
             return nil
         }
-        return post.tableDataSource[item]
+        
+        if campaign != nil {
+            return post.tableDataSource[item - 1]
+        } else {
+            return post.tableDataSource[item]
+        }
     }
     
     func numberOfSections() -> Int {
-        if campaign != nil {
-            return post.tableDataSource.count + 1
+        if  post.tableDataSource.isEmpty {
+            return 1
         } else {
             return post.tableDataSource.count
         }
     }
     
-}
-
-extension CampaignPostViewViewModel {
-    
-    class Post {
-        let userId: String
-        let postId: String
-        let postUrl: String
-        let postType: PostType
-        let postTitle: String
-        let postContent: String
-        let imageList: [String]?
-        let likeUserCount: Int
-        let createdTime: Date
-        var comments: [Comment]?
-        var isPostOfCurrentUser: Bool {
-            guard let currentUserId = Auth.auth().currentUser?.uid else { return false }
-            return self.userId == currentUserId ? true : false
-        }
-        
-        @Published var tableDataSource: [CommentTableViewCellModel] = []
-        
-        @Published var recomments: [Int: [Recomment]] = [:]
-        @Published var user: User?
-        
-        init(
-            userId: String,
-            postId: String,
-            postUrl: String,
-            postType: PostType,
-            postTitle: String,
-            postContent: String,
-            imageList: [String]?,
-            likeUserCount: Int,
-            createdTime: Date,
-            comments: [Comment]?
-        ) {
-            self.userId = userId
-            self.postId = postId
-            self.postUrl = postUrl
-            self.postType = postType
-            self.postTitle = postTitle
-            self.postContent = postContent
-            self.imageList = imageList
-            self.likeUserCount = likeUserCount
-            self.createdTime = createdTime
-            self.comments = comments
-           
-            
-        }
-    }
-    
-    class Campaign {
-        @Published var campaignMetadata: CampaignMetaData?
-        var campaignPeriod: String = ""
-        var numberOfParticipants: String = ""
-        var hasJoined: Bool = false
-        var isRewarded: Bool = false
-        var isEligable: Bool = false
-        var isExpired: Bool = false
-        
-        // UI interaction related.
-        @Published var isTextFieldEmpty: Bool = true
-        
-        
-    }
 }
 
 //MARK: - Fetch Post related data

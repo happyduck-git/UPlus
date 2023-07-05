@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class CampaignCollectionViewCellViewModel: PostProtocol {
+final class CampaignCollectionViewCellViewModel {
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
     

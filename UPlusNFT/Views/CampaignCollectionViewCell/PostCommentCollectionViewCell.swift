@@ -122,10 +122,10 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             self.profileImageView.widthAnchor.constraint(equalToConstant: viewWidth / 16),
             self.profileImageView.heightAnchor.constraint(equalTo: self.profileImageView.widthAnchor),
             
-            self.nicknameLabel.topAnchor.constraint(equalTo: self.profileImageView.topAnchor),
+            self.nicknameLabel.centerYAnchor.constraint(equalTo: self.profileImageView.centerYAnchor),
             self.nicknameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImageView.trailingAnchor, multiplier: 1),
             
-            self.commentTexts.topAnchor.constraint(equalToSystemSpacingBelow: self.nicknameLabel.bottomAnchor, multiplier: 1),
+            self.commentTexts.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.commentTexts.leadingAnchor.constraint(equalTo: self.bestLabel.leadingAnchor),
             
             self.commentImage.topAnchor.constraint(equalToSystemSpacingBelow: self.commentTexts.bottomAnchor, multiplier: 1),
@@ -159,7 +159,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         self.likeButton.setTitle(String(describing: vm.likeUserCount ?? 0), for: .normal)
         // TODO: Recomment 개수 필요
         self.commentButton.setTitle(String(describing: vm.recomments?.count ?? 0), for: .normal)
-        self.createdAtLabel.text = String(describing: vm.createdAt.monthDayTimeFormat)
+        self.createdAtLabel.text = String(describing: vm.createdAt.dateValue().monthDayTimeFormat)
         
         Task {
             guard let image = vm.imagePath,
@@ -188,6 +188,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
                         guard let imagePath = user.profileImagePath,
                               let url = URL(string: imagePath)
                         else { return }
+                        print("Image url: \(url.absoluteString)")
                         self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
                     }
                     catch {
