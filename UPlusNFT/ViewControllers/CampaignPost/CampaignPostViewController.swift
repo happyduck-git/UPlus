@@ -89,7 +89,7 @@ final class CampaignPostViewController: UIViewController {
             postCellVM.$recomments
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] recomment in
-                    print("Recomment -- \(recomment)")
+                    print("Recomment count -- \(recomment.count)")
                     self?.collectionView?.reloadData()
                 }
                 .store(in: &bindings)
@@ -117,7 +117,7 @@ final class CampaignPostViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: PostDetailCollectionViewHeader.identifier
         )
-        
+
         // Register cell
         collectionView.register(
             UICollectionViewCell.self,
@@ -156,7 +156,7 @@ final class CampaignPostViewController: UIViewController {
         if section == 0 {
             return createCampaignSectionLayout()
         } else {
-            return createPostSectionLayout()
+            return createPostSectionLayout(at: section)
         }
     }
     
@@ -183,7 +183,7 @@ final class CampaignPostViewController: UIViewController {
         return section
     }
     
-    private func createPostSectionLayout() -> NSCollectionLayoutSection {
+    private func createPostSectionLayout(at indexSection: Int) -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -203,18 +203,19 @@ final class CampaignPostViewController: UIViewController {
         )
         let section = NSCollectionLayoutSection(group: group)
         
-        let headerSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.5)
-        )
-        let header = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        
-        section.boundarySupplementaryItems = [header]
-        
+        if indexSection == 1 {
+            let headerSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.5)
+            )
+            let header = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerSize,
+                elementKind: UICollectionView.elementKindSectionHeader,
+                alignment: .top
+            )
+            
+            section.boundarySupplementaryItems = [header]
+        }
         return section
     }
 }
@@ -222,7 +223,8 @@ final class CampaignPostViewController: UIViewController {
 extension CampaignPostViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        let count = postCellVM.numberOfSections()
+        return count == 1 ? 2 : count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -252,13 +254,45 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         } else {
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCommentCollectionViewCell.identifier, for: indexPath) as? PostCommentCollectionViewCell,
-                  let commentCellVM = postCellVM.viewModelForRow(at: indexPath.row)
+                  let commentCellVM = postCellVM.viewModelForRow(at: indexPath.section - 1)
             else {
                 return UICollectionViewCell()
             }
-            cell.configure(with: commentCellVM)
-            cell.bind(with: commentCellVM)
-            return cell
+            cell.resetCell()
+            
+            if indexPath.item == 0 {
+                cell.configure(with: commentCellVM)
+                cell.bind(with: commentCellVM)
+                return cell
+            } else {
+                guard let recomments = self.postCellVM.recomments[indexPath.section],
+                      !recomments.isEmpty
+                else {
+                    let defaultCell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
+                    // recomment == nil || recomment is empty
+//                    var config = defaultCell.defaultContentConfiguration()
+//                    config.text = "아직 대댓글이 없습니다!"
+//                    defaultCell.contentConfiguration = config
+                    defaultCell.backgroundColor = .systemGray4
+                    return defaultCell
+                }
+                // recomment != nil nor empty
+                let recomment = recomments[indexPath.row - 1]
+                let cellVM = CommentTableViewCellModel(
+                    type: .normal,
+                    id: recomment.recommentId,
+                    userId: recomment.recommentAuthorUid,
+                    comment: recomment.recommentContentText,
+                    imagePath: nil,
+                    likeUserCount: nil,
+                    recomments: nil,
+                    createdAt: recomment.recommentCreatedTime
+                )
+                cell.contentView.backgroundColor = .systemGray5
+                cell.configure(with: cellVM)
+                return cell
+            }
+            
         }
 
     }
@@ -268,7 +302,26 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         case 0:
             return 1
         default:
-            return postCellVM.numberOfSections()
+            guard let cellVM = postCellVM.viewModelForRow(at: section - 1)
+            else { return 1 }
+            
+            if cellVM.isOpened {
+                print("Number of rows in section #\(section) --- \((self.postCellVM.recomments[section]?.count ?? 0) + 1)")
+                return (self.postCellVM.recomments[section]?.count ?? 0) + 1
+            }
+            else {
+                return 1
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("Item tapped at : Section #\(indexPath.section) Item #\(indexPath.item)")
+        if indexPath.section > 0 && indexPath.row == 0 {
+            guard let cellVM = postCellVM.viewModelForRow(at: indexPath.section - 1) else { return }
+            cellVM.isOpened = !cellVM.isOpened
+            
+            self.postCellVM.fetchRecomment(at: indexPath.section, of: cellVM.id)
         }
     }
     
@@ -286,7 +339,38 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             return header
             
         default:
-            return UICollectionReusableView()
+            let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: UICollectionReusableView.identifier,
+                for: indexPath
+            )
+            return header
         }
     }
+}
+
+extension CampaignPostViewController {
+    
+    //MARK: - Data Source
+    enum Section {
+        case post
+    }
+    
+    enum ListItem: Hashable {
+        case comment(CommentContent)
+        case recomment(Recomment)
+    }
+    
+    private func createDatasourceSnapshot() {
+        guard let collection = collectionView else { return }
+        var dataSource = UICollectionViewDiffableDataSource<Section, ListItem>(collectionView: collection) { collectionView, indexPath, listItem in
+            return nil
+        }
+        var dataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, ListItem>()
+        dataSourceSnapshot.appendSections([.post])
+        dataSource.apply(dataSourceSnapshot)
+    }
+    
+    
+    
 }

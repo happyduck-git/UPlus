@@ -210,7 +210,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                     return defaultCell
                 }
                 // recomment != nil nor empty
-                let recomment = recomments[indexPath.row]
+                let recomment = recomments[indexPath.row - 1]
                 let cellVM = CommentTableViewCellModel(
                     type: .normal,
                     id: recomment.recommentId,

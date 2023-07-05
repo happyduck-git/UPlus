@@ -200,7 +200,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     }
     
     func resetCell() {
-        self.backgroundColor = .white
+        self.contentView.backgroundColor = .white
         self.profileImageView.image = nil
         self.nicknameLabel.text = nil
         self.commentTexts.text = nil

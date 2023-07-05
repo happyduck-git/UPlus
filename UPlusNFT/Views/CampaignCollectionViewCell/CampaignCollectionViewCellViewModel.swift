@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class CampaignCollectionViewCellViewModel {
+final class CampaignCollectionViewCellViewModel: PostProtocol {
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
     
@@ -50,7 +50,6 @@ extension CampaignCollectionViewCellViewModel {
     }
 }
 
-// MARK: - Private
 extension CampaignCollectionViewCellViewModel {
     func createData() {
         
