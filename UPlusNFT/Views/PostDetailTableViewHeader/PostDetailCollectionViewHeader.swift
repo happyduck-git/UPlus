@@ -74,7 +74,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "camera")
+        imageView.backgroundColor = .systemGray6
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

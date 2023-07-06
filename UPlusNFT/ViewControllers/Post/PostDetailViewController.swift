@@ -108,7 +108,7 @@ final class PostDetailViewController: UIViewController {
         
         func bindViewModelToView() {
 
-            vm.$tableDataSource
+            vm.$commentsTableDatasource
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     self?.postDetailTable.reloadData()

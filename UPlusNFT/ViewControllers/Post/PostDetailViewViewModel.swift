@@ -31,7 +31,7 @@ final class PostDetailViewViewModel {
         return self.userId == currentUserId ? true : false
     }
     
-    @Published var tableDataSource: [CommentTableViewCellModel] = []
+    @Published var commentsTableDatasource: [CommentTableViewCellModel] = []
     
     @Published var recomments: [Int: [Recomment]] = [:]
     @Published var user: User?
@@ -64,7 +64,7 @@ final class PostDetailViewViewModel {
         self.createdTime = createdTime
         self.comments = comments
         
-        self.fetchComments(of: postId)
+        self.fetchInitialPaginatedComments(of: postId)
 
         self.fetchUser(userId)
     }
@@ -74,14 +74,14 @@ final class PostDetailViewViewModel {
 extension PostDetailViewViewModel {
     
     func viewModelForRow(at row: Int) -> CommentTableViewCellModel? {
-        if self.tableDataSource.isEmpty {
+        if self.commentsTableDatasource.isEmpty {
             return nil
         }
-        return self.tableDataSource[row]
+        return self.commentsTableDatasource[row]
     }
     
     func numberOfSections() -> Int {
-        return self.tableDataSource.count
+        return self.commentsTableDatasource.count
     }
     
 }
@@ -89,48 +89,56 @@ extension PostDetailViewViewModel {
 // MARK: - Fetch Data from Firestore
 extension PostDetailViewViewModel {
     
-    func fetchComments(of postId: String) {
+    func fetchInitialPaginatedComments(of postId: String) {
         Task {
             do {
+                // Get Best Comments
                 let bestComments = try await firestoreManager.getBestComments(of: postId)
-                
                 var dataSource: [CommentTableViewCellModel] = []
-                dataSource = bestComments.map({ comment in
-                    return CommentTableViewCellModel(
-                        type: .best,
-                        id: comment.commentId,
-                        userId: comment.commentAuthorUid,
-                        comment: comment.commentContentText,
-                        imagePath: comment.commentContentImagePath,
-                        likeUserCount: comment.commentLikedUserUidList?.count,
-                        recomments: nil,
-                        createdAt: comment.commentCreatedTime
-                    )
-                })
-     
+           
+                for bestComment in bestComments {
+                    dataSource.append(try await convertToViewModel(from: bestComment, commentType: .best))
+                }
+
+                // Get Normal Paginated Comments
                 let normalCommentData = try await firestoreManager.getPaginatedComments(of: postId)
                 
+                for comment in normalCommentData.comments {
+                    dataSource.append(try await convertToViewModel(from: comment, commentType: .normal))
+                }
+
+                self.commentsTableDatasource = dataSource
+                print("Datasource initial: \n\(dataSource)")
                 self.queryDocumentSnapshot = normalCommentData.lastDoc
-                
-                let normalComments = normalCommentData.comments.map({ comment in
-                    return CommentTableViewCellModel(
-                        type: .normal,
-                        id: comment.commentId,
-                        userId: comment.commentAuthorUid,
-                        comment: comment.commentContentText,
-                        imagePath: comment.commentContentImagePath,
-                        likeUserCount: comment.commentLikedUserUidList?.count,
-                        recomments: nil,
-                        createdAt: comment.commentCreatedTime
-                    )
-                })
-            
-                dataSource.append(contentsOf: normalComments)
-                
-                self.tableDataSource = dataSource
             }
             catch {
                 print("Error fetching comments of Post ID \(postId) - \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func fetchAdditionalPaginatedComments(of postId: String) {
+        Task {
+            do {
+                self.isLoading = true
+                
+                var comments: [CommentTableViewCellModel] = []
+                let commentsData = try await firestoreManager.getAdditionalPaginatedComments(
+                    of: postId,
+                    after: self.queryDocumentSnapshot
+                )
+                
+                for comment in commentsData.comments {
+                    comments.append(try await convertToViewModel(from: comment, commentType: .normal))
+                }
+                
+                self.commentsTableDatasource.append(contentsOf: comments)
+                self.queryDocumentSnapshot = commentsData.lastDoc
+                
+                self.isLoading = false
+            }
+            catch {
+                print("Error fetching additional comments of Post ID \(postId) - \(error.localizedDescription)")
             }
         }
     }
@@ -147,6 +155,10 @@ extension PostDetailViewViewModel {
             }
         }
     }
+    
+    func fetchRecomment2(of commentId: String) async throws -> [Recomment] {
+        return try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
+    }
 
     func fetchUser(_ userId: String) {
         Task {
@@ -159,4 +171,20 @@ extension PostDetailViewViewModel {
         }
     }
     
+}
+
+extension PostDetailViewViewModel {
+    private func convertToViewModel(from comment: Comment, commentType: CommentCellType) async throws -> CommentTableViewCellModel {
+        let recomments = try await fetchRecomment2(of: comment.commentId)
+        return CommentTableViewCellModel(
+            type: commentType,
+            id: comment.commentId,
+            userId: comment.commentAuthorUid,
+            comment: comment.commentContentText,
+            imagePath: comment.commentContentImagePath,
+            likeUserCount: comment.commentLikedUserUidList?.count,
+            recomments: recomments,
+            createdAt: comment.commentCreatedTime
+        )
+    }
 }

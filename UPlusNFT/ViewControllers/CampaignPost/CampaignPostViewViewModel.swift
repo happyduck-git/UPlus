@@ -65,15 +65,15 @@ extension CampaignPostViewViewModel {
     }
     
     func postCellViewModel(at section: Int) -> CommentTableViewCellModel? {
-        if post.tableDataSource.isEmpty {
+        if post.commentsTableDatasource.isEmpty {
             return nil
         }
         
         switch self.postType {
         case .article:
-            return post.tableDataSource[section - 1]
+            return post.commentsTableDatasource[section - 1]
         default:
-            return post.tableDataSource[section - 2]
+            return post.commentsTableDatasource[section - 2]
         }
     }
     
@@ -87,10 +87,10 @@ extension CampaignPostViewViewModel {
             defaultSections = 2
         }
         
-        if  post.tableDataSource.isEmpty {
+        if  post.commentsTableDatasource.isEmpty {
             return defaultSections
         } else {
-            return post.tableDataSource.count + defaultSections
+            return post.commentsTableDatasource.count + defaultSections
         }
     }
     
@@ -133,7 +133,7 @@ extension CampaignPostViewViewModel {
             
                 dataSource.append(contentsOf: normalComments)
                 
-                self.post.tableDataSource = dataSource
+                self.post.commentsTableDatasource = dataSource
             }
             catch {
                 print("Error fetching best 5 comments - \(error.localizedDescription)")
@@ -179,6 +179,9 @@ extension CampaignPostViewViewModel {
                 
                 var dataSource: [CommentTableViewCellModel] = []
                 dataSource = comments.map({ comment in
+                    
+                    
+                    
                     return CommentTableViewCellModel(
                         type: .best,
                         id: comment.commentId,
@@ -206,7 +209,7 @@ extension CampaignPostViewViewModel {
             
                 dataSource.append(contentsOf: normalComments)
                 
-                self.post.tableDataSource = dataSource
+                self.post.commentsTableDatasource = dataSource
             }
             catch {
                 print("Error fetching best 5 comments - \(error.localizedDescription)")

@@ -110,7 +110,7 @@ extension TextFieldCollectionViewCell {
                 .sink { _ in
                     if !vm.isSubmitButtonTapped {
                         print("Submit tapped!!")
-                        vm.isCameraButtonTapped = true
+                        vm.isSubmitButtonTapped = true
                     }
 //                    vm.saveComment(postId: vm.postId)
                 }

@@ -92,13 +92,15 @@ extension CampaignPostViewController {
         func bindViewToViewModel() {}
         
         func bindViewModelToView() {
-            campaignPostVM.post.$tableDataSource
+            campaignPostVM.post.$commentsTableDatasource
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
+                .sink { [weak self] data in
                     guard let `self` = self else { return }
-//                    print("Reload data...")
-//                    print("TableDS reload data.")
-                    self.collectionView?.reloadData()
+                    if !data.isEmpty {
+                        print("Reload data...")
+                        print("TableDS reload data.")
+                        self.collectionView?.reloadData()
+                    }
                 }
                 .store(in: &bindings)
             
@@ -106,9 +108,12 @@ extension CampaignPostViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] recomment in
                     guard let `self` = self else { return }
-//                    print("Reload data...")
-//                    print("Recommentreload data.")
-                    self.collectionView?.reloadData()
+                    if !recomment.isEmpty {
+                        print("Reload data...")
+                        print("Recommentreload data.")
+                        self.collectionView?.reloadData()
+                    }
+                    
                 }
                 .store(in: &bindings)
         }
@@ -410,7 +415,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             return cell
         } else {
          
-            guard let recomments = campaignPostVM.post.recomments[indexPath.section],
+            guard let recomments = campaignPostVM.post.commentsTableDatasource[indexPath.section - 1].recomments,
                   !recomments.isEmpty
             else {
                 defaultCell.configure(with: "아직 대댓글이 없습니다.")
@@ -444,8 +449,8 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 guard let cellVM = campaignPostVM.postCellViewModel(at: section),
                       cellVM.isOpened
                 else { return 1 }
-          
-                return (campaignPostVM.post.recomments[section]?.count ?? 0) + 1
+                print("Recomments count from Section#\(section): \(campaignPostVM.post.commentsTableDatasource[section - 1].recomments?.count ?? 9999)")
+                return (campaignPostVM.post.commentsTableDatasource[section - 1].recomments?.count ?? 0) + 1
             }
             
         default:
@@ -474,13 +479,14 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             if indexPath.section > 0 && indexPath.item == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
-                campaignPostVM.fetchRecomment(at: indexPath.section - 1, of: cellVM.id)
+                print("Section#\(indexPath.section) Is cell opened? \(cellVM.isOpened)")
+                self.collectionView?.reloadData()
             }
         default:
             if indexPath.section > 1 && indexPath.item == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
-                campaignPostVM.fetchRecomment(at: indexPath.section - 2, of: cellVM.id)
+                campaignPostVM.fetchRecomment(at: indexPath.section - 1, of: cellVM.id)
             }
         }
         
@@ -551,8 +557,10 @@ extension CampaignPostViewController: UIScrollViewDelegate {
         // TODO: Fetch additional paginated comments.
         if offset >= (totalContentHeight - totalScrollViewFixedHeight)
             && campaignPostVM.post.queryDocumentSnapshot != nil
+            && !campaignPostVM.post.isLoading
         {
             print("Scrolling...")
+            campaignPostVM.post.fetchAdditionalPaginatedComments(of: campaignPostVM.post.postId)
         }
     }
 }
