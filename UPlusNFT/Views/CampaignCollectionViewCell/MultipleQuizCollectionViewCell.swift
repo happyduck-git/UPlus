@@ -8,7 +8,11 @@
 import UIKit
 import Combine
 
-final class MultipleQuizCollectionViewCell: UICollectionViewCell {
+protocol CampaignCell: UICollectionReusableView {
+    func bind(with vm: CampaignCollectionViewCellViewModel)
+}
+
+final class MultipleQuizCollectionViewCell: UICollectionViewCell, CampaignCell {
     
     private var bindings = Set<AnyCancellable>()
     private var isButtonCreated: Bool = false

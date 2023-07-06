@@ -8,19 +8,19 @@
 import Foundation
 import FirebaseFirestore
 
-struct CampaignMetaData {
+struct CampaignMetaData: Codable {
     let configuration: CampaignConfiguration
     let items: [CampaignItem]? // {campaign_items}/campaign_item_set/{0} => fields
     let users: [CampaignUser]? //{campaign_users}/campaign_user_set/{doc-id} => fields
     let bestComments: [BestComment]? // {campaign_best_comment_items}/campaign_best_comment_item_set/{0} => fields
 }
 
-struct CampaignConfiguration {
+struct CampaignConfiguration: Codable {
     let beginTime: Timestamp
     let endTime: Timestamp
 }
 
-struct CampaignItem {
+struct CampaignItem: Codable {
     let id: Int64
     let caption: String
     let isRight: Bool
@@ -28,7 +28,7 @@ struct CampaignItem {
     let participantsCount: Int64?
 }
 
-struct CampaignUser {
+struct CampaignUser: Codable {
     let id: String
     let selectedItemId: Int64
     let answerSubmitted: String?
@@ -36,7 +36,7 @@ struct CampaignUser {
     let isRewared: Bool
 }
 
-struct BestComment {
+struct BestComment: Codable {
     let order: Int64
     let rewardCategory: String? // Reward enum 처리 고려.
     let rewaredUser: String?

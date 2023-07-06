@@ -23,7 +23,7 @@ final class PostTableViewCellModel {
     let imageList: [String]?
     let likeUserCount: Int
     let createdTime: Date
-    let comments: [Comment]?
+    let commentCount: Int64
     
     // MARK: - Init
     init(
@@ -36,7 +36,7 @@ final class PostTableViewCellModel {
         imageList: [String]?,
         likeUserCount: Int,
         createdTime: Date,
-        comments: [Comment]?
+        commentCount: Int64
     ) {
         self.userId = userId
         self.postId = postId
@@ -47,7 +47,7 @@ final class PostTableViewCellModel {
         self.imageList = imageList
         self.likeUserCount = likeUserCount
         self.createdTime = createdTime
-        self.comments = comments
+        self.commentCount = commentCount
     }
 
 }

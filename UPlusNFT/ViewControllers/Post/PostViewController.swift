@@ -11,9 +11,13 @@ import Combine
 
 final class PostViewController: UIViewController {
     
+    // MARK: - Dependency
     private let vm: PostViewViewModel
+    
+    // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
+    // MARK: - UI Element
     private let postsTableView: UITableView = {
         let table = UITableView()
         table.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
@@ -29,18 +33,20 @@ final class PostViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    // MARK: - Life Cycle
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationItem.hidesBackButton = true
-        let writePostBarButtomItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .done, target: self, action: #selector(showWritePostVC))
-        let logoutBarButtonItem = UIBarButtonItem(title: "Logout", style: .done, target: self, action: #selector(logOutDidTap))
-        navigationItem.rightBarButtonItems = [writePostBarButtomItem, logoutBarButtonItem]
 
+    // MARK: - Init
+    init(vm: PostViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Life Cycle
+extension PostViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "메인화면"
@@ -54,20 +60,20 @@ final class PostViewController: UIViewController {
  
     }
     
-    // MARK: - Init
-    init(vm: PostViewViewModel) {
-        self.vm = vm
-        super.init(nibName: nil, bundle: nil)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationItem.hidesBackButton = true
+        let writePostBarButtomItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .done, target: self, action: #selector(showWritePostVC))
+        let logoutBarButtonItem = UIBarButtonItem(title: "Logout", style: .done, target: self, action: #selector(logOutDidTap))
+        navigationItem.rightBarButtonItems = [writePostBarButtomItem, logoutBarButtonItem]
+
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Private
+}
+
+// MARK: - Set UI & Layout & Delegate
+extension PostViewController {
     private func setUI() {
         view.addSubviews(postsTableView)
-        
     }
     
     private func setLayout() {
@@ -83,7 +89,10 @@ final class PostViewController: UIViewController {
         postsTableView.delegate = self
         postsTableView.dataSource = self
     }
-    
+}
+
+// MARK: - Bind ViewModel
+extension PostViewController {
     private func bind() {
         func bindViewToViewModel() {
             
@@ -110,7 +119,10 @@ final class PostViewController: UIViewController {
         bindViewToViewModel()
         bindViewModelToView()
     }
-    
+}
+
+// MARK: - Private Functions
+extension PostViewController {
     @objc
     private func showWritePostVC() {
         let vm = WritePostViewViewModel()
@@ -130,9 +142,9 @@ final class PostViewController: UIViewController {
             print("Error logout user \(error.localizedDescription)")
         }
     }
-    
 }
 
+// MARK: - UITableView Delegate & DataSource
 extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -179,30 +191,7 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
             )
             self.show(vc, sender: self)
         }
-        
-        
-//        switch vm.postType {
-//        case .article:
-//            let vc = PostDetailViewController(vm: vm)
-//            self.show(vc, sender: self)
-//        case .multipleChoice, .shortForm, .bestComment:
-//
-//            let campaignCellVM = self.vm.campaignCellViewModel(postId: vm.postId)
-//
-//            let campaignPostVM = CampaignPostViewViewModel(
-//                postId: vm.postId,
-//                postType: vm.postType,
-//                post: vm,
-//                campaign: campaignCellVM
-//            )
-//
-//            let vc = CampaignPostViewController(
-//                postType: vm.postType,
-//                campaignPostVM: campaignPostVM
-//            )
-//            self.show(vc, sender: self)
-//        }
-        
+    
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -210,6 +199,7 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - Scrolling Pagination
 extension PostViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset.y

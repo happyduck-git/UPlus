@@ -74,7 +74,7 @@ final class PostTableViewCell: UITableViewCell {
     func configure(with vm: PostTableViewCellModel) {
         self.title.text = vm.postTitle
         self.likeButton.setTitle(String(describing: vm.likeUserCount), for: .normal)
-        self.commentButton.setTitle(String(describing: vm.comments?.count ?? 0), for: .normal)
+        self.commentButton.setTitle(String(describing: vm.commentCount), for: .normal)
     }
     
 }

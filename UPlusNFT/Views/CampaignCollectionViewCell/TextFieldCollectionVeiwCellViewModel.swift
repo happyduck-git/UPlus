@@ -18,7 +18,8 @@ final class TextFieldCollectionVeiwCellViewModel {
     let postId: String
     @Published var commentText: String = ""
     @Published var selectedImage: UIImage?
-    var isButtonTapped: Bool = false
+    var isCameraButtonTapped: Bool = false
+    var isSubmitButtonTapped: Bool = false
     
     //MARK: - Init
     init(postId: String) {
@@ -65,6 +66,8 @@ extension TextFieldCollectionVeiwCellViewModel {
                     to: postId,
                     comment
                 )
+                
+                self.isSubmitButtonTapped = false
             }
             catch {
                 print("Error saving comment -- \(error.localizedDescription)")

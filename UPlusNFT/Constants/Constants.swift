@@ -107,7 +107,8 @@ struct FirestoreConstants {
     static let contentImagePathList = "content_image_path_list"
     static let campaignMetadataBundle = "campaign_metadata_bundle"
     static let documentLimt: Int = 6
-
+    static let postUrlPrefix: String = "https://platfarm.net/thread/"
+    
     /* Comment */
     static let commentSet = "comment_set"
     static let commentAuthorUid = "comment_author_uid"

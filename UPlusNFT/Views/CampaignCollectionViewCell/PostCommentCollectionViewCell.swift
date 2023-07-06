@@ -8,11 +8,7 @@
 import UIKit
 import Combine
 import Nuke
-
-//enum CommentCellType {
-//    case best
-//    case normal
-//}
+import FirebaseStorage
 
 final class PostCommentCollectionViewCell: UICollectionViewCell {
     
@@ -188,16 +184,24 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
                         guard let imagePath = user.profileImagePath,
                               let url = URL(string: imagePath)
                         else { return }
-                        print("Image url: \(url.absoluteString)")
-                        self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+                        self.profileImageView.image = try await self.urlToImage(url)
                     }
                     catch {
-                        print("Error converting profile image - \(error)")
+                        print("Error converting profile image - \(error.localizedDescription)")
                     }
                 }
             }
             .store(in: &bindings)
         
+    }
+    
+    private func urlToImage(_ url: URL) async throws -> UIImage? {
+        var imgUrl: URL = url
+        
+        if !url.absoluteString.hasPrefix("http") {
+            imgUrl = try await Storage.storage().reference(withPath: url.absoluteString).downloadURL()
+        }
+        return try await ImagePipeline.shared.image(for: imgUrl)
     }
     
     func resetCell() {

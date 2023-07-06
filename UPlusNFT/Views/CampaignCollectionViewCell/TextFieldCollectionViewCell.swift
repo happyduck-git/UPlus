@@ -53,8 +53,9 @@ final class TextFieldCollectionViewCell: UICollectionViewCell {
     private let submitButton: UIButton = {
         let button = UIButton()
         button.setTitle(PostConstants.writeButton, for: .normal)
-        button.backgroundColor = .black
         button.setTitleColor(.white, for: .normal)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 5
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -96,9 +97,9 @@ extension TextFieldCollectionViewCell {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
-                    if !vm.isButtonTapped {
+                    if !vm.isCameraButtonTapped {
                         self.cameraButtonHandler?()
-                        vm.isButtonTapped = true
+                        vm.isCameraButtonTapped = true
                     }
                 }
                 .store(in: &bindings)
@@ -107,7 +108,11 @@ extension TextFieldCollectionViewCell {
                 .tapPublisher
                 .receive(on: RunLoop.current)
                 .sink { _ in
-                    vm.saveComment(postId: vm.postId)
+                    if !vm.isSubmitButtonTapped {
+                        print("Submit tapped!!")
+                        vm.isCameraButtonTapped = true
+                    }
+//                    vm.saveComment(postId: vm.postId)
                 }
                 .store(in: &bindings)
             
@@ -175,7 +180,7 @@ extension TextFieldCollectionViewCell {
             self.cameraButton.heightAnchor.constraint(equalTo: self.cameraButton.widthAnchor),
             
             self.submitButton.centerYAnchor.constraint(equalTo: self.cameraButton.centerYAnchor),
-            self.submitButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor)
+            self.submitButton.trailingAnchor.constraint(equalTo: self.commentTextField.trailingAnchor)
             
         ])
     }

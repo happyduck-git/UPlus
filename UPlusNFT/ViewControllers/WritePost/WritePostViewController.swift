@@ -124,6 +124,8 @@ final class WritePostViewController: UIViewController {
         setDelegate()
         configure()
         bind()
+        
+        hideKeyboardWhenTappedAround()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -238,7 +240,7 @@ final class WritePostViewController: UIViewController {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
-        self.view.frame.origin.y = 0 - keyboardSize.height
+        self.view.frame.origin.y = self.titleTextField.frame.height + self.contentTextView.frame.height - keyboardSize.height
     }
     
     @objc private func keyboardWillHide(_ notification: NSNotification) {
@@ -368,6 +370,7 @@ extension WritePostViewController: UICollectionViewDelegate, UICollectionViewDat
     }
 }
 
+// MARK: - PHPickerViewControllerDelegate
 extension WritePostViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {

@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import Nuke
+import FirebaseStorage
 
 final class PostDetailCollectionViewHeader: UICollectionReusableView {
     
@@ -131,6 +132,12 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         self.nicknameLabel.text = String(vm.userId.prefix(5))
         self.likeButton.setTitle(String(describing: vm.likeUserCount), for: .normal)
         self.createdAtLabel.text = String(describing: vm.createdTime.monthDayTimeFormat)
+    
+        Task {
+            let firstImage = vm.imageList?.first ?? ""
+            let url = URL(string: firstImage)
+            self.postImageView.image = try await self.urlToImage(url)
+        }
         
         bind(with: vm)
     }
@@ -185,8 +192,10 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             self.postImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 1),
             self.postImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageView.trailingAnchor, multiplier: 3),
-            self.nicknameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
+            self.postImageView.heightAnchor.constraint(equalToConstant: height / 3),
             
+            self.nicknameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
+
             self.self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.profileImageView.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
             self.profileImageView.heightAnchor.constraint(equalToConstant: height / 16),
@@ -200,7 +209,6 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             self.createdAtLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.likeButton.trailingAnchor, multiplier: 1),
             self.likeButton.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
         ])
-      
     }
     
     private func bind(with vm: PostDetailViewViewModel) {
@@ -213,7 +221,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
                         guard let url = URL(string: user?.profileImagePath ?? FirestoreConstants.defaultUserProfile) else {
                             return
                         }
-                        self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+                        self.profileImageView.image = try await self.urlToImage(url)
                     }
                     catch {
                         print("Error converting profile image -- \(error.localizedDescription)")
@@ -224,5 +232,15 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             .store(in: &bindings)
     }
     
+    private func urlToImage(_ url: URL?) async throws -> UIImage? {
+        guard var imageUrl = url else {
+            return nil
+        }
+        
+        if !imageUrl.absoluteString.hasPrefix("http") {
+            imageUrl = try await Storage.storage().reference(withPath: imageUrl.absoluteString).downloadURL()
+        }
+        return try await ImagePipeline.shared.image(for: imageUrl)
+    }
     
 }

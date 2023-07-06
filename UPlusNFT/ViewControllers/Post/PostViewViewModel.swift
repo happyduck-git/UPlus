@@ -13,6 +13,10 @@ final class PostViewViewModel {
     
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Property
+    
+    /// Pagination related.
     var queryDocumentSnapshot: QueryDocumentSnapshot?
     var isLoading: Bool = false
     
@@ -40,7 +44,7 @@ final class PostViewViewModel {
             imageList: vm.imageList,
             likeUserCount: vm.likeUserCount,
             createdTime: vm.createdTime,
-            comments: vm.comments
+            comments: nil
         )
     }
     
@@ -56,7 +60,7 @@ extension PostViewViewModel {
     func fetchAllInitialPosts() {
         Task {
             do {
-                let results = try await firestoreManager.getAllInitialPostContent()
+                let results = try await firestoreManager.getPaginatedPosts()
                 let vms = results.posts.map { post in
                     return self.convertToCellViewModel(post: post)
                 }
@@ -71,33 +75,33 @@ extension PostViewViewModel {
     
     func fetchAdditionalPosts() {
         Task {
-            self.isLoading = true
-            
-            let results = try await firestoreManager.getAllAdditionalPostContent(after: self.queryDocumentSnapshot)
-            let vms = results.posts.map { post in
-                return self.convertToCellViewModel(post: post)
+                self.isLoading = true
+                
+                let results = try await firestoreManager.getAdditionalPaginatedPosts(after: self.queryDocumentSnapshot)
+                let vms = results.posts.map { post in
+                    return self.convertToCellViewModel(post: post)
+                }
+                
+                self.didLoadAdditionalPosts = true
+                self.isLoading = false
+                
+                self.tableDataSource.append(contentsOf: vms)
+                self.queryDocumentSnapshot = results.lastDoc
             }
-            
-            self.didLoadAdditionalPosts = true
-            self.isLoading = false
-            
-            self.tableDataSource.append(contentsOf: vms)
-            self.queryDocumentSnapshot = results.lastDoc
-        }
     }
     
-    private func convertToCellViewModel(post: PostContent) -> PostTableViewCellModel {
+    private func convertToCellViewModel(post: Post) -> PostTableViewCellModel {
         return PostTableViewCellModel(
-            userId: post.post.authorUid,
-            postId: post.post.id,
-            postUrl: post.post.url,
-            postType: PostType(rawValue: post.post.cachedType) ?? .article,
-            postTitle: post.post.title,
-            postContent: post.post.contentText,
-            imageList: post.post.contentImagePathList,
-            likeUserCount: post.post.likedUserIdList?.count ?? 0,
-            createdTime: post.post.createdTime,
-            comments: post.comments
+            userId: post.authorUid,
+            postId: post.id,
+            postUrl: post.url,
+            postType: PostType(rawValue: post.cachedType) ?? .article,
+            postTitle: post.title,
+            postContent: post.contentText,
+            imageList: post.contentImagePathList,
+            likeUserCount: post.likedUserIdList?.count ?? 0,
+            createdTime: post.createdTime.dateValue(),
+            commentCount: post.cachedCommentCount ?? 0
         )
     }
 }

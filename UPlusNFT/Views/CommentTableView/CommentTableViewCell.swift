@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import Nuke
+import FirebaseStorage
 
 enum CommentCellType {
     case best
@@ -187,7 +188,7 @@ final class CommentTableViewCell: UITableViewCell {
                         guard let imagePath = user.profileImagePath,
                               let url = URL(string: imagePath)
                         else { return }
-                        self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+                        self.profileImageView.image = try await self.urlToImage(url)
                     }
                     catch {
                         print("Error converting profile image - \(error)")
@@ -196,6 +197,15 @@ final class CommentTableViewCell: UITableViewCell {
             }
             .store(in: &bindings)
         
+    }
+    
+    private func urlToImage(_ url: URL) async throws -> UIImage? {
+        var imgUrl: URL = url
+        
+        if !url.absoluteString.hasPrefix("http") {
+            imgUrl = try await Storage.storage().reference(withPath: url.absoluteString).downloadURL()
+        }
+        return try await ImagePipeline.shared.image(for: imgUrl)
     }
     
     func resetCell() {

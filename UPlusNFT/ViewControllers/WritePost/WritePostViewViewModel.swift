@@ -8,6 +8,7 @@
 import UIKit.UIImage
 import FirebaseAuth
 import FirebaseStorage
+import FirebaseFirestore
 import Combine
 
 final class WritePostViewViewModel {
@@ -74,14 +75,17 @@ extension WritePostViewViewModel {
         
         let post = Post(
             id: postId,
-            url: "https://platfarm.net/thread/\(postId)",
+            url: FirestoreConstants.postUrlPrefix + postId,
             cachedType: PostType.article.rawValue,
             title: self.titleText,
             contentText: self.postText,
             contentImagePathList: imageUrls,
             authorUid: userId,
-            createdTime: Date(),
+            createdTime: Timestamp(date: Date()),
             likedUserIdList: nil,
+            cachedLikedCount: nil,
+            campaignMetadataBundle: nil,
+            cachedCommentCount: nil,
             cachedBestCommentIdList: nil
         )
         

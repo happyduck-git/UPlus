@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseAuth
 import Combine
+import FirebaseFirestore
 
 final class PostDetailViewViewModel {
     
@@ -35,6 +36,10 @@ final class PostDetailViewViewModel {
     @Published var recomments: [Int: [Recomment]] = [:]
     @Published var user: User?
     
+    /// Pagination related.
+    var queryDocumentSnapshot: QueryDocumentSnapshot?
+    var isLoading: Bool = false
+    
     // MARK: - Init
     init(
         userId: String,
@@ -58,8 +63,6 @@ final class PostDetailViewViewModel {
         self.likeUserCount = likeUserCount
         self.createdTime = createdTime
         self.comments = comments
-        
-        // TODO: Fetch Best comment and then append normal comments at the end.
         
         self.fetchComments(of: postId)
 
@@ -89,10 +92,10 @@ extension PostDetailViewViewModel {
     func fetchComments(of postId: String) {
         Task {
             do {
-                let comments = try await firestoreManager.getBestComments(of: postId)
+                let bestComments = try await firestoreManager.getBestComments(of: postId)
                 
                 var dataSource: [CommentTableViewCellModel] = []
-                dataSource = comments.map({ comment in
+                dataSource = bestComments.map({ comment in
                     return CommentTableViewCellModel(
                         type: .best,
                         id: comment.commentId,
@@ -105,7 +108,11 @@ extension PostDetailViewViewModel {
                     )
                 })
      
-                let normalComments = self.comments?.map({ comment in
+                let normalCommentData = try await firestoreManager.getPaginatedComments(of: postId)
+                
+                self.queryDocumentSnapshot = normalCommentData.lastDoc
+                
+                let normalComments = normalCommentData.comments.map({ comment in
                     return CommentTableViewCellModel(
                         type: .normal,
                         id: comment.commentId,
@@ -116,14 +123,14 @@ extension PostDetailViewViewModel {
                         recomments: nil,
                         createdAt: comment.commentCreatedTime
                     )
-                }) ?? []
+                })
             
                 dataSource.append(contentsOf: normalComments)
                 
                 self.tableDataSource = dataSource
             }
             catch {
-                print("Error fetching best 5 comments - \(error.localizedDescription)")
+                print("Error fetching comments of Post ID \(postId) - \(error.localizedDescription)")
             }
         }
     }

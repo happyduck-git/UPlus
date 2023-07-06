@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class CommentCampaignCollectionViewCell: UICollectionViewCell {
+final class CommentCampaignCollectionViewCell: UICollectionViewCell, CampaignCell {
     
     private var bindings = Set<AnyCancellable>()
     

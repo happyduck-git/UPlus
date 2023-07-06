@@ -8,8 +8,9 @@
 import UIKit
 import Combine
 
-final class ShortQuizCollectionViewCell: UICollectionViewCell {
+final class ShortQuizCollectionViewCell: UICollectionViewCell, CampaignCell {
     
+    // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
@@ -79,8 +80,11 @@ final class ShortQuizCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Set UI & Layout
+
+}
+
+// MARK: - Set UI & Layout
+extension ShortQuizCollectionViewCell {
     private func setUI() {
         contentView.addSubviews(
             campaignView,
@@ -117,11 +121,10 @@ final class ShortQuizCollectionViewCell: UICollectionViewCell {
         self.submittedAnswerLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.answerTextField.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
-    
-    // MARK: - Private
-  
-    
-    // MARK: - Internal
+}
+
+// MARK: - Bind ViewModel
+extension ShortQuizCollectionViewCell {
     func bind(with vm: CampaignCollectionViewCellViewModel) {
         func bindViewToViewModel() {
             self.answerTextField.textPublisher
