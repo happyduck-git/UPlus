@@ -66,6 +66,8 @@ final class LoginViewViewModel {
                 
                 let user = User(
                     id: userId,
+                    email: nil,
+                    introduction: nil,
                     address: "wallet_address", //TODO: 생성된 실제 지갑 address 사용.
                     nickname: username,
                     profileImagePath: profileImageUrlString,

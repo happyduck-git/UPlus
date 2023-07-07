@@ -21,9 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
       
-        /*
+        
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
+            setBasicUserInfo()
+            
             let loginVM = LoginViewViewModel()
             let loginVC = LoginViewController(vm: loginVM)
             
@@ -37,11 +39,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
-*/
+
         // Check PostVC
-        let vm = PostViewViewModel()
-        let vc = PostViewController(vm: vm)
-        window?.rootViewController = UINavigationController(rootViewController: vc)
+//        let vm = PostViewViewModel()
+//        let vc = PostViewController(vm: vm)
+//        window?.rootViewController = UINavigationController(rootViewController: vc)
 
         window?.makeKeyAndVisible()
         
@@ -88,3 +90,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+/// Save basic user login information.
+extension SceneDelegate {
+    private func setBasicUserInfo() {
+        let userId = Auth.auth().currentUser?.uid ?? ""
+        let username = Auth.auth().currentUser?.displayName ?? FirestoreConstants.noUsername
+        let profileImageUrl = Auth.auth().currentUser?.photoURL
+        var profileImageUrlString = ""
+        if let profileImageUrl = profileImageUrl {
+            profileImageUrlString = String(describing: profileImageUrl)
+        }
+        
+        UserDefaults.standard.setValue(userId, forKey: UserDefaultsConstants.userId)
+        UserDefaults.standard.setValue(username, forKey: UserDefaultsConstants.username)
+        UserDefaults.standard.setValue(profileImageUrlString, forKey: UserDefaultsConstants.profileImage)
+        
+    }
+}

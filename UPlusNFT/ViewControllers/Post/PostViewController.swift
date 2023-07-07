@@ -27,6 +27,7 @@ final class PostViewController: UIViewController {
     
     private let titleLabel: UILabel = {
        let label = UILabel()
+        label.lineBreakMode = .byTruncatingMiddle
         label.numberOfLines = 2
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 20, weight: .bold)

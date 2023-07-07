@@ -31,9 +31,17 @@ final class PostDetailViewViewModel {
         return self.userId == currentUserId ? true : false
     }
     
-    @Published var commentsTableDatasource: [CommentTableViewCellModel] = []
+    @Published var commentsTableDatasource: [CommentTableViewCellModel] = [] {
+        didSet {
+            let recom: [[Recomment]] = self.commentsTableDatasource.compactMap { vm in
+                vm.recomments
+            }
+            recomments = recom
+        }
+    }
     
-    @Published var recomments: [Int: [Recomment]] = [:]
+    private var recomments: [[Recomment]] = []
+
     @Published var user: User?
     
     /// Pagination related.
@@ -84,6 +92,34 @@ extension PostDetailViewViewModel {
         return self.commentsTableDatasource.count
     }
     
+    private func recommentsForSection(at section: Int) -> [Recomment] {
+        switch postType {
+        case .article:
+            return self.recomments[section - 1]
+        default:
+            return self.recomments[section - 2]
+        }
+    }
+    
+    func numberOfRecommentsForSection(at section: Int) -> Int {
+        return recommentsForSection(at: section).count + 1
+    }
+    
+    func recommentsViewModelForItem(at item: Int, section: Int) -> CommentTableViewCellModel {
+        let recomments = self.recommentsForSection(at: section)
+        let recomment = recomments[item - 1]
+        return CommentTableViewCellModel(
+            type: .normal,
+            id: recomment.recommentId,
+            userId: recomment.recommentAuthorUid,
+            comment: recomment.recommentContentText,
+            imagePath: nil,
+            likeUserCount: nil,
+            recomments: nil,
+            createdAt: recomment.recommentCreatedTime
+        )
+    }
+    
 }
 
 // MARK: - Fetch Data from Firestore
@@ -108,11 +144,10 @@ extension PostDetailViewViewModel {
                 }
 
                 self.commentsTableDatasource = dataSource
-                print("Datasource initial: \n\(dataSource)")
                 self.queryDocumentSnapshot = normalCommentData.lastDoc
             }
             catch {
-                print("Error fetching comments of Post ID \(postId) - \(error.localizedDescription)")
+                print("Error fetching comments of Post ID \(postId) - \(error)")
             }
         }
     }
@@ -142,21 +177,8 @@ extension PostDetailViewViewModel {
             }
         }
     }
-    
-    // TODO: Get recomments and map it to CommentTableViewCellModel
-    func fetchRecomment(at section: Int, of commentId: String) {
-        Task {
-            do {
-                let comments = try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
-                recomments[section] = comments
-            }
-            catch {
-                print("Error fetching recomments - \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func fetchRecomment2(of commentId: String) async throws -> [Recomment] {
+ 
+    func fetchRecomment(of commentId: String) async throws -> [Recomment] {
         return try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
     }
 
@@ -175,7 +197,7 @@ extension PostDetailViewViewModel {
 
 extension PostDetailViewViewModel {
     private func convertToViewModel(from comment: Comment, commentType: CommentCellType) async throws -> CommentTableViewCellModel {
-        let recomments = try await fetchRecomment2(of: comment.commentId)
+        let recomments = try await fetchRecomment(of: comment.commentId)
         return CommentTableViewCellModel(
             type: commentType,
             id: comment.commentId,
@@ -187,4 +209,22 @@ extension PostDetailViewViewModel {
             createdAt: comment.commentCreatedTime
         )
     }
+}
+
+/// Currently NOT IN USE
+extension PostDetailViewViewModel {
+    
+    // TODO: Get recomments and map it to CommentTableViewCellModel
+    func fetchRecommentOld(at section: Int, of commentId: String) {
+        Task {
+            do {
+                let comments = try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
+               
+            }
+            catch {
+                print("Error fetching recomments - \(error.localizedDescription)")
+            }
+        }
+    }
+    
 }

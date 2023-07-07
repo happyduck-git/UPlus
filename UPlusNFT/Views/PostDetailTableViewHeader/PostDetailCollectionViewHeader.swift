@@ -51,6 +51,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     private let postTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.numberOfLines = 2
         label.font = .systemFont(ofSize: 17, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -136,7 +137,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         Task {
             let firstImage = vm.imageList?.first ?? ""
             let url = URL(string: firstImage)
-            self.postImageView.image = try await self.urlToImage(url)
+            self.postImageView.image = try await URL.urlToImage(url)
         }
         
         bind(with: vm)
@@ -221,7 +222,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
                         guard let url = URL(string: user?.profileImagePath ?? FirestoreConstants.defaultUserProfile) else {
                             return
                         }
-                        self.profileImageView.image = try await self.urlToImage(url)
+                        self.profileImageView.image = try await URL.urlToImage(url)
                     }
                     catch {
                         print("Error converting profile image -- \(error.localizedDescription)")
@@ -231,16 +232,5 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             }
             .store(in: &bindings)
     }
-    
-    private func urlToImage(_ url: URL?) async throws -> UIImage? {
-        guard var imageUrl = url else {
-            return nil
-        }
-        
-        if !imageUrl.absoluteString.hasPrefix("http") {
-            imageUrl = try await Storage.storage().reference(withPath: imageUrl.absoluteString).downloadURL()
-        }
-        return try await ImagePipeline.shared.image(for: imageUrl)
-    }
-    
+  
 }

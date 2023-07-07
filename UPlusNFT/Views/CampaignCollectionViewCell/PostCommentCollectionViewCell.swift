@@ -12,6 +12,7 @@ import FirebaseStorage
 
 final class PostCommentCollectionViewCell: UICollectionViewCell {
     
+    // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
 
     private(set) var type: CommentCellType = .normal
@@ -42,6 +43,28 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let editButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.setImage(UIImage(systemName: SFSymbol.edit), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let deleteButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.setImage(UIImage(systemName: SFSymbol.delete), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let editTextField: UITextField = {
+        let txtField = UITextField()
+        txtField.translatesAutoresizingMaskIntoConstraints = false
+        return txtField
+    }()
+    
     private let commentTexts: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -52,6 +75,8 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     
     private let commentImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: SFSymbol.camera)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -98,6 +123,8 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             bestLabel,
             profileImageView,
             nicknameLabel,
+            editButton,
+            deleteButton,
             commentTexts,
             commentImage,
             likeButton,
@@ -121,24 +148,29 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             self.nicknameLabel.centerYAnchor.constraint(equalTo: self.profileImageView.centerYAnchor),
             self.nicknameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImageView.trailingAnchor, multiplier: 1),
             
+            self.deleteButton.centerYAnchor.constraint(equalTo: self.nicknameLabel.centerYAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.deleteButton.trailingAnchor, multiplier: 2),
+            self.editButton.centerYAnchor.constraint(equalTo: self.nicknameLabel.centerYAnchor),
+            self.deleteButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.editButton.trailingAnchor, multiplier: 1),
+            
             self.commentTexts.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.commentTexts.leadingAnchor.constraint(equalTo: self.bestLabel.leadingAnchor),
             
-            self.commentImage.topAnchor.constraint(equalToSystemSpacingBelow: self.commentTexts.bottomAnchor, multiplier: 1),
-            self.commentImage.leadingAnchor.constraint(equalTo: self.commentTexts.leadingAnchor),
+            self.commentImage.topAnchor.constraint(equalTo: self.commentTexts.bottomAnchor),
+            self.commentImage.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
+            self.commentImage.widthAnchor.constraint(equalToConstant: viewWidth / 5),
             
-            self.likeButton.leadingAnchor.constraint(equalTo: self.commentImage.leadingAnchor),
             self.likeButton.topAnchor.constraint(equalToSystemSpacingBelow: self.commentImage.bottomAnchor, multiplier: 1),
+            self.likeButton.leadingAnchor.constraint(equalTo: self.commentImage.leadingAnchor),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.likeButton.bottomAnchor, multiplier: 2),
             
-            self.commentButton.topAnchor.constraint(equalTo: self.likeButton.topAnchor),
             self.commentButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.likeButton.trailingAnchor, multiplier: 1),
             self.commentButton.bottomAnchor.constraint(equalTo: self.likeButton.bottomAnchor),
             
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.createdAtLabel.trailingAnchor, multiplier: 2),
             self.createdAtLabel.bottomAnchor.constraint(equalTo: self.likeButton.bottomAnchor)
         ])
-        self.commentTexts.setContentHuggingPriority(.defaultLow, for: .vertical)
+        self.commentImage.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
     
     // MARK: - Internal
@@ -151,9 +183,9 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             self.bestLabel.isHidden = true
         }
         
+        self.currentUserConfiguration(with: vm)
         self.commentTexts.text = vm.comment
         self.likeButton.setTitle(String(describing: vm.likeUserCount ?? 0), for: .normal)
-        // TODO: Recomment 개수 필요
         self.commentButton.setTitle(String(describing: vm.recomments?.count ?? 0), for: .normal)
         self.createdAtLabel.text = String(describing: vm.createdAt.dateValue().monthDayTimeFormat)
         
@@ -161,47 +193,64 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             guard let image = vm.imagePath,
                   let url = URL(string: image)
             else { return }
+
+            do {
+                let photo = try await URL.urlToImage(url)
+                self.commentImage.image = photo
+            }
+            catch {
+                print("Error fetching comment image \(error)")
+            }
             
-            self.commentImage.image = try await ImagePipeline.shared.image(for: url)
         }
         
         bind(with: vm)
     }
-    
-    func bind(with vm: CommentTableViewCellModel) {
+
+    private func bind(with vm: CommentTableViewCellModel) {
+        func bindViewToViewModel() {
+            editButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { _ in
+                    self.commentTexts.isHidden = true
+                }
+                .store(in: &bindings)
+            
+            deleteButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { _ in
+                    
+                }
+                .store(in: &bindings)
+        }
         
-        vm.$user
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] user in
-                guard let `self` = self,
-                      let user = user
-                else { return }
-                
-                self.nicknameLabel.text = user.nickname
-                
-                Task {
-                    do {
-                        guard let imagePath = user.profileImagePath,
-                              let url = URL(string: imagePath)
-                        else { return }
-                        self.profileImageView.image = try await self.urlToImage(url)
-                    }
-                    catch {
-                        print("Error converting profile image - \(error.localizedDescription)")
+        func bindViewModelToView() {
+            vm.$user
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] user in
+                    guard let `self` = self,
+                          let user = user
+                    else { return }
+                    
+                    self.nicknameLabel.text = user.nickname
+                    
+                    Task {
+                        do {
+                            guard let imagePath = user.profileImagePath,
+                                  let url = URL(string: imagePath)
+                            else { return }
+                            self.profileImageView.image = try await URL.urlToImage(url)
+                        }
+                        catch {
+                            print("Error converting profile image - \(error.localizedDescription)")
+                        }
                     }
                 }
-            }
-            .store(in: &bindings)
-        
-    }
-    
-    private func urlToImage(_ url: URL) async throws -> UIImage? {
-        var imgUrl: URL = url
-        
-        if !url.absoluteString.hasPrefix("http") {
-            imgUrl = try await Storage.storage().reference(withPath: url.absoluteString).downloadURL()
+                .store(in: &bindings)
         }
-        return try await ImagePipeline.shared.image(for: imgUrl)
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
     
     func resetCell() {
@@ -209,10 +258,26 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         self.profileImageView.image = nil
         self.nicknameLabel.text = nil
         self.commentTexts.text = nil
+        self.commentImage.image = nil
         self.createdAtLabel.text = nil
+        self.editButton.isHidden = true
+        self.deleteButton.isHidden = true
     }
     
     func changeCellType(to celltype: CommentCellType) {
         self.type = celltype
+    }
+}
+
+// MARK: - Find Current User's Comment
+extension PostCommentCollectionViewCell {
+    private func currentUserConfiguration(with vm: CommentTableViewCellModel) {
+        guard let currentUserId = UserDefaults.standard.string(forKey: UserDefaultsConstants.userId),
+        vm.userId == currentUserId
+        else {
+            return
+        }
+        editButton.isHidden = false
+        deleteButton.isHidden = false
     }
 }

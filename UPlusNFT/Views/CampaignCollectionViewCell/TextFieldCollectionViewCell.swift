@@ -109,10 +109,9 @@ extension TextFieldCollectionViewCell {
                 .receive(on: RunLoop.current)
                 .sink { _ in
                     if !vm.isSubmitButtonTapped {
-                        print("Submit tapped!!")
+                        vm.saveComment(postId: vm.postId)
                         vm.isSubmitButtonTapped = true
                     }
-//                    vm.saveComment(postId: vm.postId)
                 }
                 .store(in: &bindings)
             

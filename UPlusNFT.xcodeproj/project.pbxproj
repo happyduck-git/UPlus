@@ -48,6 +48,7 @@
 		932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34D92A53F7960032192A /* CommentCampaignCollectionViewCell.swift */; };
 		932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DB2A5401B80032192A /* CampaignPostViewViewModel.swift */; };
 		932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DD2A540D2B0032192A /* PostDetailCollectionViewHeader.swift */; };
+		932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DF2A57A06A0032192A /* URL+Extension.swift */; };
 		9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */; };
 		936F88232A4AB6ED0062E759 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 936F88222A4AB6ED0062E759 /* Nuke */; };
 		936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */; };
@@ -112,6 +113,7 @@
 		932C34D92A53F7960032192A /* CommentCampaignCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCampaignCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C34DB2A5401B80032192A /* CampaignPostViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignPostViewViewModel.swift; sourceTree = "<group>"; };
 		932C34DD2A540D2B0032192A /* PostDetailCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailCollectionViewHeader.swift; sourceTree = "<group>"; };
+		932C34DF2A57A06A0032192A /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
 		936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewViewModel.swift; sourceTree = "<group>"; };
 		936F88272A4AC8860062E759 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
@@ -202,15 +204,15 @@
 		930D96A02A416AC30007801A /* UPlusNFT */ = {
 			isa = PBXGroup;
 			children = (
+				930D96B52A416AE10007801A /* Supporting Files */,
 				930D96CC2A4197E90007801A /* Extensions */,
-				937C76572A492B8F001024D0 /* Views */,
+				930D96C42A41834C0007801A /* Constants */,
 				937C76502A457EF4001024D0 /* Models */,
 				937C764D2A457B1F001024D0 /* Utilities */,
 				930D96E52A45739A0007801A /* Firebase */,
-				930D96D12A42D0900007801A /* UPlusNFT.entitlements */,
-				930D96C42A41834C0007801A /* Constants */,
+				937C76572A492B8F001024D0 /* Views */,
 				930D96B72A416E7C0007801A /* ViewControllers */,
-				930D96B52A416AE10007801A /* Supporting Files */,
+				930D96D12A42D0900007801A /* UPlusNFT.entitlements */,
 				930D96AF2A416AC40007801A /* Info.plist */,
 			);
 			path = UPlusNFT;
@@ -282,6 +284,7 @@
 				932C34CA2A5254A70032192A /* Date+Extention.swift */,
 				932C34CE2A52B7520032192A /* UIColor+Extension.swift */,
 				932C34D72A53F5330032192A /* UIControl+Combine.swift */,
+				932C34DF2A57A06A0032192A /* URL+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -544,6 +547,7 @@
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
+				932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */,
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,

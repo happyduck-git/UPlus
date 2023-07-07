@@ -97,25 +97,11 @@ extension CampaignPostViewController {
                 .sink { [weak self] data in
                     guard let `self` = self else { return }
                     if !data.isEmpty {
-                        print("Reload data...")
-                        print("TableDS reload data.")
                         self.collectionView?.reloadData()
                     }
                 }
                 .store(in: &bindings)
-            
-            campaignPostVM.post.$recomments
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] recomment in
-                    guard let `self` = self else { return }
-                    if !recomment.isEmpty {
-                        print("Reload data...")
-                        print("Recommentreload data.")
-                        self.collectionView?.reloadData()
-                    }
-                    
-                }
-                .store(in: &bindings)
+ 
         }
         
         bindViewToViewModel()
@@ -314,7 +300,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 case 0:
                     return self.makeTextFieldCell(collectionView, cellForItemAt: indexPath)
                 default:
-                    return self.makePostCell(collectionView, viewModelAt: indexPath)
+                    return self.makePostCell(collectionView, cellForItemAt: indexPath)
                 }
                 
             case .multipleChoice:
@@ -324,7 +310,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 case 1:
                     return self.makeTextFieldCell(collectionView, cellForItemAt: indexPath)
                 default:
-                    return self.makePostCell(collectionView, viewModelAt: indexPath)
+                    return self.makePostCell(collectionView, cellForItemAt: indexPath)
                 }
           
             case .shortForm:
@@ -334,7 +320,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 case 1:
                     return self.makeTextFieldCell(collectionView, cellForItemAt: indexPath)
                 default:
-                    return self.makePostCell(collectionView, viewModelAt: indexPath)
+                    return self.makePostCell(collectionView, cellForItemAt: indexPath)
                 }
          
             case .bestComment:
@@ -344,7 +330,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 case 1:
                     return self.makeTextFieldCell(collectionView, cellForItemAt: indexPath)
                 default:
-                    return self.makePostCell(collectionView, viewModelAt: indexPath)
+                    return self.makePostCell(collectionView, cellForItemAt: indexPath)
                 }
             }
     }
@@ -383,7 +369,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
               let textInputVM = campaignPostVM.textInput else {
             return UICollectionViewCell()
         }
-        print("Make textfield cell called!")
+        
         cell.cameraButtonHandler = { [weak self] in
             guard let `self` = self else { return }
             self.present(self.photoPicker, animated: true)
@@ -393,8 +379,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         return cell
     }
     
-    private func makePostCell(_ collectionView: UICollectionView, viewModelAt indexPath: IndexPath) -> UICollectionViewCell {
-//        print("Make postcell indexPath: \(indexPath)")
+    private func makePostCell(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCommentCollectionViewCell.identifier, for: indexPath) as? PostCommentCollectionViewCell,
               let defaultCell = collectionView.dequeueReusableCell(withReuseIdentifier: DefaultCollectionViewCell.identifier, for: indexPath) as? DefaultCollectionViewCell
         else {
@@ -414,27 +399,10 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             cell.bind(with: commentCellVM)
             return cell
         } else {
-         
-            guard let recomments = campaignPostVM.post.commentsTableDatasource[indexPath.section - 1].recomments,
-                  !recomments.isEmpty
-            else {
-                defaultCell.configure(with: "아직 대댓글이 없습니다.")
-                return defaultCell
-            }
-            /// recomment != nil nor empty
-            let recomment = recomments[indexPath.item - 1]
-            let cellVM = CommentTableViewCellModel(
-                type: .normal,
-                id: recomment.recommentId,
-                userId: recomment.recommentAuthorUid,
-                comment: recomment.recommentContentText,
-                imagePath: nil,
-                likeUserCount: nil,
-                recomments: nil,
-                createdAt: recomment.recommentCreatedTime
-            )
+            let recommentCellVM = campaignPostVM.post.recommentsViewModelForItem(at: indexPath.item, section: indexPath.section)
+ 
             cell.contentView.backgroundColor = .systemGray5
-            cell.configure(with: cellVM)
+            cell.configure(with: recommentCellVM)
             return cell
         }
     }
@@ -449,8 +417,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 guard let cellVM = campaignPostVM.postCellViewModel(at: section),
                       cellVM.isOpened
                 else { return 1 }
-                print("Recomments count from Section#\(section): \(campaignPostVM.post.commentsTableDatasource[section - 1].recomments?.count ?? 9999)")
-                return (campaignPostVM.post.commentsTableDatasource[section - 1].recomments?.count ?? 0) + 1
+                return campaignPostVM.post.numberOfRecommentsForSection(at: section)
             }
             
         default:
@@ -465,28 +432,27 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 guard let cellVM = campaignPostVM.postCellViewModel(at: section),
                       cellVM.isOpened
                 else { return 1 }
-                //                    print("Number of rows in section #\(section) --- \((campaignPostVM.post.recomments[section - 1]?.count ?? 0) + 1)")
-                return campaignPostVM.post.recomments[section - 2]?.count ?? 0
+                return campaignPostVM.post.numberOfRecommentsForSection(at: section)
             }
         }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        print("Item tapped at : Section #\(indexPath.section) Item #\(indexPath.item)")
+
         switch campaignPostVM.postType {
         case .article:
             if indexPath.section > 0 && indexPath.item == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
-                print("Section#\(indexPath.section) Is cell opened? \(cellVM.isOpened)")
                 self.collectionView?.reloadData()
             }
         default:
             if indexPath.section > 1 && indexPath.item == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
-                campaignPostVM.fetchRecomment(at: indexPath.section - 1, of: cellVM.id)
+                self.collectionView?.reloadData()
+//                campaignPostVM.fetchRecomment(at: indexPath.section - 1, of: cellVM.id)
             }
         }
         
@@ -554,12 +520,10 @@ extension CampaignPostViewController: UIScrollViewDelegate {
         let totalContentHeight = scrollView.contentSize.height
         let totalScrollViewFixedHeight = scrollView.frame.size.height
         
-        // TODO: Fetch additional paginated comments.
         if offset >= (totalContentHeight - totalScrollViewFixedHeight)
             && campaignPostVM.post.queryDocumentSnapshot != nil
             && !campaignPostVM.post.isLoading
         {
-            print("Scrolling...")
             campaignPostVM.post.fetchAdditionalPaginatedComments(of: campaignPostVM.post.postId)
         }
     }

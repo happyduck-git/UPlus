@@ -5,6 +5,7 @@
 //  Created by Platfarm on 2023/06/26.
 //
 
+// NOTE: Currently NOT IN USE
 import UIKit
 import Combine
 
@@ -115,13 +116,13 @@ final class PostDetailViewController: UIViewController {
                 }
                 .store(in: &bindings)
             
-            vm.$recomments
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] recomment in
-                    print("Recomment -- \(recomment)")
-                    self?.postDetailTable.reloadData()
-                }
-                .store(in: &bindings)
+//            vm.$recomments
+//                .receive(on: DispatchQueue.main)
+//                .sink { [weak self] recomment in
+//                    print("Recomment -- \(recomment)")
+//                    self?.postDetailTable.reloadData()
+//                }
+//                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -166,8 +167,9 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
             else { return 1 }
             
             if cellVM.isOpened {
-                print("Number of rows in section #\(section) --- \((self.vm.recomments[section]?.count ?? 0) + 1)")
-                return (self.vm.recomments[section]?.count ?? 0) + 1
+//                print("Number of rows in section #\(section) --- \((self.vm.recomments[section]?.count ?? 0) + 1)")
+//                return (self.vm.recomments[section]?.count ?? 0) + 1
+                return 1
             }
             else {
                 return 1
@@ -182,7 +184,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.resetCell()
             
-            if indexPath.row == 0 {
+//            if indexPath.row == 0 {
                 guard let cellVM = vm.viewModelForRow(at: indexPath.section)
                 else {
 //                    let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
@@ -196,35 +198,35 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.configure(with: cellVM)
                 
                 return cell
-            }
-            else {
-                guard let recomments = self.vm.recomments[indexPath.section],
-                      !recomments.isEmpty
-                else {
-                    let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-                    // recomment == nil || recomment is empty
-                    var config = defaultCell.defaultContentConfiguration()
-                    config.text = "아직 대댓글이 없습니다!"
-                    defaultCell.contentConfiguration = config
-                    defaultCell.backgroundColor = .systemGray4
-                    return defaultCell
-                }
-                // recomment != nil nor empty
-                let recomment = recomments[indexPath.row - 1]
-                let cellVM = CommentTableViewCellModel(
-                    type: .normal,
-                    id: recomment.recommentId,
-                    userId: recomment.recommentAuthorUid,
-                    comment: recomment.recommentContentText,
-                    imagePath: nil,
-                    likeUserCount: nil,
-                    recomments: nil,
-                    createdAt: recomment.recommentCreatedTime
-                )
-                cell.backgroundColor = .systemGray4
-                cell.configure(with: cellVM)
-                return cell
-            }
+//            }
+//            else {
+//                guard let recomments = self.vm.recomments[indexPath.section],
+//                      !recomments.isEmpty
+//                else {
+//                    let defaultCell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+//                    // recomment == nil || recomment is empty
+//                    var config = defaultCell.defaultContentConfiguration()
+//                    config.text = "아직 대댓글이 없습니다!"
+//                    defaultCell.contentConfiguration = config
+//                    defaultCell.backgroundColor = .systemGray4
+//                    return defaultCell
+//                }
+//                // recomment != nil nor empty
+//                let recomment = recomments[indexPath.row - 1]
+//                let cellVM = CommentTableViewCellModel(
+//                    type: .normal,
+//                    id: recomment.recommentId,
+//                    userId: recomment.recommentAuthorUid,
+//                    comment: recomment.recommentContentText,
+//                    imagePath: nil,
+//                    likeUserCount: nil,
+//                    recomments: nil,
+//                    createdAt: recomment.recommentCreatedTime
+//                )
+//                cell.backgroundColor = .systemGray4
+//                cell.configure(with: cellVM)
+//                return cell
+//            }
         
         
     }
@@ -236,7 +238,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
             guard let cellVM = vm.viewModelForRow(at: indexPath.section) else { return }
             cellVM.isOpened = !cellVM.isOpened
             
-            self.vm.fetchRecomment(at: indexPath.section, of: cellVM.id)
+            self.vm.fetchRecommentOld(at: indexPath.section, of: cellVM.id)
         }
     }
     

@@ -21,10 +21,6 @@ final class CampaignPostViewViewModel {
     var campaign: CampaignCollectionViewCellViewModel?
     var textInput: TextFieldCollectionVeiwCellViewModel?
     
-    /// Pagination related.
-    var queryDocumentSnapshot: QueryDocumentSnapshot?
-    var isLoading: Bool = false
-    
     // MARK: - Init
     init(
         postId: String,
@@ -96,66 +92,8 @@ extension CampaignPostViewViewModel {
     
 }
 
-//MARK: - Fetch Post related data
+//MARK: - Fetch User related data
 extension CampaignPostViewViewModel {
-    
-    func fetchComments(of postId: String) {
-        Task {
-            do {
-                let comments = try await firestoreManager.getBestComments(of: postId)
-                
-                var dataSource: [CommentTableViewCellModel] = []
-                dataSource = comments.map({ comment in
-                    return CommentTableViewCellModel(
-                        type: .best,
-                        id: comment.commentId,
-                        userId: comment.commentAuthorUid,
-                        comment: comment.commentContentText,
-                        imagePath: comment.commentContentImagePath,
-                        likeUserCount: comment.commentLikedUserUidList?.count,
-                        recomments: nil,
-                        createdAt: comment.commentCreatedTime
-                    )
-                })
-     
-                let normalComments = self.post.comments?.map({ comment in
-                    return CommentTableViewCellModel(
-                        type: .normal,
-                        id: comment.commentId,
-                        userId: comment.commentAuthorUid,
-                        comment: comment.commentContentText,
-                        imagePath: comment.commentContentImagePath,
-                        likeUserCount: comment.commentLikedUserUidList?.count,
-                        recomments: nil,
-                        createdAt: comment.commentCreatedTime
-                    )
-                }) ?? []
-            
-                dataSource.append(contentsOf: normalComments)
-                
-                self.post.commentsTableDatasource = dataSource
-            }
-            catch {
-                print("Error fetching best 5 comments - \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    // TODO: Get recomments and map it to CommentTableViewCellModel
-    func fetchRecomment(at section: Int, of commentId: String) {
-        Task {
-            do {
-                let comments = try await firestoreManager.getRecomments(
-                    postId: post.postId,
-                    commentId: commentId
-                )
-                post.recomments[section] = comments
-            }
-            catch {
-                print("Error fetching recomments - \(error.localizedDescription)")
-            }
-        }
-    }
 
     func fetchUser(_ userId: String) {
         Task {
@@ -168,54 +106,6 @@ extension CampaignPostViewViewModel {
         }
     }
     
-}
-
-// MARK: - Pagination Related
-extension CampaignPostViewViewModel {
-    func fetchInitialPaginatedComments(of postId: String) {
-        Task {
-            do {
-                let comments = try await firestoreManager.getBestComments(of: postId)
-                
-                var dataSource: [CommentTableViewCellModel] = []
-                dataSource = comments.map({ comment in
-                    
-                    
-                    
-                    return CommentTableViewCellModel(
-                        type: .best,
-                        id: comment.commentId,
-                        userId: comment.commentAuthorUid,
-                        comment: comment.commentContentText,
-                        imagePath: comment.commentContentImagePath,
-                        likeUserCount: comment.commentLikedUserUidList?.count,
-                        recomments: nil,
-                        createdAt: comment.commentCreatedTime
-                    )
-                })
-     
-                let normalComments = self.post.comments?.map({ comment in
-                    return CommentTableViewCellModel(
-                        type: .normal,
-                        id: comment.commentId,
-                        userId: comment.commentAuthorUid,
-                        comment: comment.commentContentText,
-                        imagePath: comment.commentContentImagePath,
-                        likeUserCount: comment.commentLikedUserUidList?.count,
-                        recomments: nil,
-                        createdAt: comment.commentCreatedTime
-                    )
-                }) ?? []
-            
-                dataSource.append(contentsOf: normalComments)
-                
-                self.post.commentsTableDatasource = dataSource
-            }
-            catch {
-                print("Error fetching best 5 comments - \(error.localizedDescription)")
-            }
-        }
-    }
 }
 
 //MARK: - Fetch Campaign related data

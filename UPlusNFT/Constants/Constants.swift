@@ -69,6 +69,8 @@ struct SFSymbol {
     static let cameraViewFinder: String = "camera.viewfinder"
     static let cameraFill: String = "camera.circle.fill"
     static let photoLibrary: String = "photo.on.rectangle.angled"
+    static let edit: String = "pencil"
+    static let delete: String = "trash"
 }
 
 // MARK: - Firebase
@@ -106,9 +108,9 @@ struct FirestoreConstants {
     static let url = "url"
     static let contentImagePathList = "content_image_path_list"
     static let campaignMetadataBundle = "campaign_metadata_bundle"
-    static let documentLimt: Int = 6
+    static let documentLimit: Int = 6
     static let postUrlPrefix: String = "https://platfarm.net/thread/"
-    
+    static let cachedCommentCount: String = "cached_comment_count"
     /* Comment */
     static let commentSet = "comment_set"
     static let commentAuthorUid = "comment_author_uid"

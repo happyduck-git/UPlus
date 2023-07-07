@@ -20,6 +20,9 @@ final class FirestoreManager {
     
     // Database
     private let db = Firestore.firestore()
+    private let threadsSetCollectionPath = Firestore.firestore().collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)")
+    private let userSetCollectionPath =
+    Firestore.firestore().collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.users)/\(FirestoreConstants.userSetCollection)")
     
     // Pagination
     var isPagenating: Bool = false
@@ -30,26 +33,9 @@ final class FirestoreManager {
 extension FirestoreManager {
 
     //MARK: - Get Posts
-    /// Fetch all the posts
-    func getAllPosts() async throws -> [Post] {
-        let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
-            .getDocuments()
-            .documents
-        
-        // Convert document snapshot to `Post`.
-        var posts: [Post] = []
-        for snapshot in snapshots {
-            posts.append(try await self.convertQueryDocumentToPost(snapshot))
-        }
-
-//        print("Posts: \(posts)")
-//        print(posts.count)
-        return posts
-    }
-    
     func getPaginatedPosts() async throws -> (posts: [Post], lastDoc: QueryDocumentSnapshot?) {
         let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
-            .limit(to: FirestoreConstants.documentLimt)
+            .limit(to: FirestoreConstants.documentLimit)
             .getDocuments()
             .documents
         
@@ -75,7 +61,7 @@ extension FirestoreManager {
         
         let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
             .start(afterDocument: lastSnapshot)
-            .limit(to: FirestoreConstants.documentLimt)
+            .limit(to: FirestoreConstants.documentLimit)
             .getDocuments()
             .documents
         
@@ -89,37 +75,7 @@ extension FirestoreManager {
         return (posts: posts, lastDoc: lastDoc)
     }
 
-    //MARK: - Get Comments
-    /// Fetch all the comments
-    func getAllComments() async throws {
-        // comment_set parent document id & Post id
-        let snapshot = try await db.collectionGroup(FirestoreConstants.commentSet)
-            .getDocuments()
-            .documents
-        
-        let comments = snapshot.map { snapshot in
-            let data = snapshot.data()
-            
-            let commentAuthorUid = data[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
-            let commentContentImagePath = data[FirestoreConstants.commentContentImagePath] as? String
-            let commentContentText = data[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
-            let commentCreatedTime = data[FirestoreConstants.commentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
-            let commentId = data[FirestoreConstants.commentId] as? String ?? FirestoreConstants.noUserUid
-            let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
-            
-            return Comment(
-                commentAuthorUid: commentAuthorUid,
-                commentContentImagePath: commentContentImagePath,
-                commentContentText: commentContentText,
-                commentCreatedTime: commentCreatedTime,
-                commentId: commentId,
-                commentLikedUserUidList: commentLikedUserUidList
-            )
-        }
-        print("Comments: \(comments) \n Counts: \(comments.count)")
-    }
-    
-    // MARK: - Get Recomments
+    // MARK: - Get Comments & Recomments
     /// Fetch all the re-comments
     func getAllRecomments() async throws {
         // recomment_set parent document id & Comment id
@@ -146,32 +102,14 @@ extension FirestoreManager {
         }
         print("Recomments: \(recomments) \n Counts: \(recomments.count)")
     }
-    
-    /// Fetch all the comments of a certain post
-    func getComments(of postId: String) async throws -> [Comment] {
-        let snapshots = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
-            .getDocuments()
-            .documents
-        
-        var comments: [Comment] = []
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        for snapshot in snapshots {
-            do {
-                comments.append(try await snapshot.reference.getDocument(as: Comment.self, decoder: decoder))
-            }
-            catch {
-                print("Error fetching comments: \(error.localizedDescription)")
-            }
-        }
-        return comments
-       
-    }
-    
+ 
     /// Fetch initial paginated comments of a certain post
     func getPaginatedComments(of postId: String) async throws -> (comments: [Comment], lastDoc: QueryDocumentSnapshot?) {
-        let snapshots = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
-            .limit(to: FirestoreConstants.documentLimt)
+        let snapshots = try await threadsSetCollectionPath
+            .document(postId)
+            .collection(FirestoreConstants.commentSet)
+            .order(by: FirestoreConstants.commentCreatedTime, descending: true)
+            .limit(to: FirestoreConstants.documentLimit)
             .getDocuments()
             .documents
      
@@ -183,7 +121,7 @@ extension FirestoreManager {
                 comments.append(try await snapshot.reference.getDocument(as: Comment.self, decoder: decoder))
             }
             catch {
-                print("Error fetching comments: \(error.localizedDescription)")
+                print("Error fetching initial comments: \(error.localizedDescription)")
             }
         }
         
@@ -201,9 +139,10 @@ extension FirestoreManager {
             throw FirestoreErorr.documentFoundToBeNil
         }
         
-        let snapshots = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
+        let snapshots = try await threadsSetCollectionPath.document(postId).collection(FirestoreConstants.commentSet)
+            .order(by: FirestoreConstants.commentCreatedTime, descending: true)
             .start(afterDocument: lastSnapshot)
-            .limit(to: FirestoreConstants.documentLimt)
+            .limit(to: FirestoreConstants.documentLimit)
             .getDocuments()
             .documents
         
@@ -215,7 +154,7 @@ extension FirestoreManager {
                    comments.append(try await snapshot.reference.getDocument(as: Comment.self, decoder: decoder))
                }
                catch {
-                   print("Error fetching comments: \(error.localizedDescription)")
+                   print("Error fetching additional comments: \(error.localizedDescription)")
                }
            }
 
@@ -226,8 +165,8 @@ extension FirestoreManager {
     /// - Parameter postId: Id of the post to query best comments.
     /// - Returns: Comments list.
     func getBestComments(of postId: String) async throws -> [Comment] {
-        guard let postData = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)")
-            .document(postId)
+        let postDocPath = threadsSetCollectionPath.document(postId)
+        guard let postData = try await postDocPath
             .getDocument()
             .data() else {
             return []
@@ -235,37 +174,33 @@ extension FirestoreManager {
         
         let commentIds = postData[FirestoreConstants.cachedBestCommentIdList] as? [String] ?? []
         var comments: [Comment] = []
-        print("Comments ids: \(commentIds)")
-        for id in commentIds {
-            let data = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
-                .document(id)
-                .getDocument()
-                .data()
-            
-            let commentAuthorUid = data?[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
-            let commentContentImagePath = data?[FirestoreConstants.commentContentImagePath] as? String
-            let commentContentText = data?[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
-            let commentCreatedTime = data?[FirestoreConstants.commentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
-            let commentId = data?[FirestoreConstants.commentId] as? String ?? FirestoreConstants.noUserUid
-            let commentLikedUserUidList = data?[FirestoreConstants.commentLikedUserUidList] as? [String]
-            
-            let comment = Comment(
-                commentAuthorUid: commentAuthorUid,
-                commentContentImagePath: commentContentImagePath,
-                commentContentText: commentContentText,
-                commentCreatedTime: commentCreatedTime,
-                commentId: commentId,
-                commentLikedUserUidList: commentLikedUserUidList
-            )
-            comments.append(comment)
-        }
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
+        for id in commentIds {
+            let data = postDocPath
+                .collection(FirestoreConstants.commentSet)
+                .document(id)
+           
+            do {
+                let comment = try await data.getDocument(as: Comment.self, decoder: decoder)
+                comments.append(comment)
+            }
+            catch {
+                print("Error fetching best comments: \(error.localizedDescription)")
+            }
+        }
         return comments
     }
+        
     
     /// Fetch all the recommnets of a certain comment
     func getRecomments(postId: String, commentId: String) async throws -> [Recomment] {
-        let snapshots = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)/\(commentId)/\(FirestoreConstants.recommentSet)")
+        let snapshots = try await threadsSetCollectionPath
+            .document(postId)
+            .collection(FirestoreConstants.commentSet)
+            .document(commentId)
+            .collection(FirestoreConstants.recommentSet)
             .getDocuments()
             .documents
         
@@ -287,12 +222,10 @@ extension FirestoreManager {
             )
         }
         
-        print("\(#function) Recomments counts: \(recomments.count)")
         return recomments
     }
     
     // MARK: - MetaData
-    
     func getMetadata(of postId: String) async throws -> CampaignMetaData? {
         let snapshots =  try await self.db.collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.campaignMetadataBundle)")
             .getDocuments()
@@ -398,14 +331,13 @@ extension FirestoreManager {
             users: users,
             bestComments: bestComments
         )
-//        print("Meta data: \(metaData)")
+
         return metaData
     }
     
     // MARK: - Get user
     func getUser(_ userId: String) async throws -> User {
-        return try await self.db
-            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.users)/\(FirestoreConstants.userSetCollection)")
+        return try await self.userSetCollectionPath
             .document(userId)
             .getDocument(as: User.self)
     }
@@ -417,8 +349,7 @@ extension FirestoreManager {
     
     //MARK: - Save User Info
     func saveUser(_ user: User) throws {
-        let userSet = self.db
-            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.users)/\(FirestoreConstants.userSetCollection)")
+        let userSet = self.userSetCollectionPath
             .document(user.id)
         
         try userSet.setData(
@@ -465,8 +396,7 @@ extension FirestoreManager {
     }
     
     func savePost(_ post: Post) throws {
-        let threadSet = self.db
-            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)")
+        let threadSet = self.threadsSetCollectionPath
             .document(post.id)
         
         try threadSet.setData(
@@ -479,21 +409,37 @@ extension FirestoreManager {
     
     //MARK: - Save Comment
     func saveComment(to postId: String, _ comment: Comment) async throws {
-        let commentSet = self.db
-            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
-            .document()
+        
+        /// Save Comments to `comment_set` collection.
+        let commentSet = self.threadsSetCollectionPath
+            .document(postId)
+            .collection(FirestoreConstants.commentSet)
+            .document(comment.commentId)
+        
+        let encoder = Firestore.Encoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
         
         try commentSet.setData(
             from: comment,
-            merge: true
-        ) { _ in
-            print("Comment sucessfully save!")
+            merge: true,
+            encoder: encoder
+        ) {
+            _ in
+                print("Comment sucessfully save!")
         }
+
+        /// Increment `cached_comment_count`
+        let post = self.threadsSetCollectionPath
+            .document(postId)
+        
+        try await post.updateData([
+            FirestoreConstants.cachedCommentCount: FieldValue.increment(Int64(1))
+        ])
     }
     
     func saveCommentImage(to postId: String, image: Data?) async throws -> String? {
         
-        guard image != nil else {
+        guard let photo = image else {
             return nil
         }
         
@@ -503,15 +449,9 @@ extension FirestoreManager {
         let uploadMetadata = StorageMetadata()
         uploadMetadata.contentType = "image/jpeg"
         
-        // When using url
-        /*
         let uploadRef = Storage.storage().reference(withPath: path)
-        let metadata = try await uploadRef.putDataAsync(image)
-        let url = try await uploadRef.downloadURL()
-        return url.absoluteString
-        */
-        
-        // When using reference path
+        let _ = try await uploadRef.putDataAsync(photo)
+    
         return path
     }
     
@@ -522,6 +462,59 @@ extension FirestoreManager {
         // Need to include a logic that updates cached_best_comment_id_list
         
     }
+    
+}
+
+// MARK: - Patch
+extension FirestoreManager {
+    
+    func editPost(
+        of postId: String,
+        title: String,
+        content: String,
+        images: [String]?
+    ) async throws {
+        do {
+            try await threadsSetCollectionPath
+                .document(postId)
+                .updateData([
+                    FirestoreConstants.title: title,
+                    FirestoreConstants.contentText: content,
+                    FirestoreConstants.contentImagePathList: FieldValue.arrayUnion(images ?? [])
+                ])
+            print("Post successfully edited!")
+        }
+        catch {
+            print("Error editing post#\(postId) -- \(error.localizedDescription)")
+        }
+    }
+    
+    func editComment(
+        of postId: String,
+        commentId: String,
+        comment: String,
+        image: String
+    ) async throws {
+        do {
+            try await threadsSetCollectionPath
+                .document(postId)
+                .collection(FirestoreConstants.commentSet)
+                .document(commentId)
+                .updateData([
+                    FirestoreConstants.commentContentText: comment,
+                    FirestoreConstants.commentContentImagePath: image
+                ])
+            print("Comment successfully edited!")
+        }
+        catch {
+            print("Error editing comment#\(commentId) of post#\(postId) -- \(error.localizedDescription)")
+        }
+    }
+    
+}
+
+// MARK: - Delete
+extension FileManager {
     
 }
 
@@ -546,7 +539,73 @@ extension FirestoreManager {
 /// Codes when `cached_comment_count` was not introduced to db.
 /// Currently NOT IN USE.
 extension FirestoreManager {
+    
+    /// Fetch all the posts
+    func getAllPosts() async throws -> [Post] {
+        let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
+            .getDocuments()
+            .documents
+        
+        // Convert document snapshot to `Post`.
+        var posts: [Post] = []
+        for snapshot in snapshots {
+            posts.append(try await self.convertQueryDocumentToPost(snapshot))
+        }
 
+        return posts
+    }
+    
+    /// Fetch all the comments
+    func getAllComments() async throws {
+        // comment_set parent document id & Post id
+        let snapshot = try await db.collectionGroup(FirestoreConstants.commentSet)
+            .getDocuments()
+            .documents
+        
+        let comments = snapshot.map { snapshot in
+            let data = snapshot.data()
+            
+            let commentAuthorUid = data[FirestoreConstants.commentAuthorUid] as? String ?? FirestoreConstants.noUserUid
+            let commentContentImagePath = data[FirestoreConstants.commentContentImagePath] as? String
+            let commentContentText = data[FirestoreConstants.commentContentText] as? String ?? FirestoreConstants.noUserUid
+            let commentCreatedTime = data[FirestoreConstants.commentCreatedTime] as? Timestamp ?? Timestamp(date: Date())
+            let commentId = data[FirestoreConstants.commentId] as? String ?? FirestoreConstants.noUserUid
+            let commentLikedUserUidList = data[FirestoreConstants.commentLikedUserUidList] as? [String]
+            
+            return Comment(
+                commentAuthorUid: commentAuthorUid,
+                commentContentImagePath: commentContentImagePath,
+                commentContentText: commentContentText,
+                commentCreatedTime: commentCreatedTime,
+                commentId: commentId,
+                commentLikedUserUidList: commentLikedUserUidList
+            )
+        }
+        print("Comments: \(comments) \n Counts: \(comments.count)")
+    }
+    
+    
+    /// Fetch all the comments of a certain post
+    func getComments(of postId: String) async throws -> [Comment] {
+        let snapshots = try await db            .collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)/\(postId)/\(FirestoreConstants.commentSet)")
+            .getDocuments()
+            .documents
+        
+        var comments: [Comment] = []
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        for snapshot in snapshots {
+            do {
+                comments.append(try await snapshot.reference.getDocument(as: Comment.self, decoder: decoder))
+            }
+            catch {
+                print("Error fetching comments: \(error.localizedDescription)")
+            }
+        }
+        return comments
+       
+    }
+    
     func getAllInitialPostContent() async throws -> (posts: [PostContent], lastDoc: QueryDocumentSnapshot?) {
         var contents: [PostContent] = []
         let results = try await self.getPaginatedPosts()
