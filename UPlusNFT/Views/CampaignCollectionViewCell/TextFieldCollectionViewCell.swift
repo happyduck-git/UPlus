@@ -171,7 +171,7 @@ extension TextFieldCollectionViewCell {
             self.photoCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.commentTextField.bottomAnchor, multiplier: 1),
             self.photoCollectionView.leadingAnchor.constraint(equalTo: self.commentTextField.leadingAnchor),
             self.photoCollectionView.trailingAnchor.constraint(equalTo: self.commentTextField.trailingAnchor),
-            self.photoCollectionView.heightAnchor.constraint(equalToConstant: cellHeight / 3),
+            self.photoCollectionView.heightAnchor.constraint(equalToConstant: cellHeight / 4),
             
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.cameraButton.bottomAnchor, multiplier: 2),
             self.cameraButton.leadingAnchor.constraint(equalTo: self.commentTextField.leadingAnchor),

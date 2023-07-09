@@ -21,6 +21,8 @@ final class CampaignPostViewViewModel {
     var campaign: CampaignCollectionViewCellViewModel?
     var textInput: TextFieldCollectionVeiwCellViewModel?
     
+    var itemsMode: [Bool] = []
+    
     // MARK: - Init
     init(
         postId: String,

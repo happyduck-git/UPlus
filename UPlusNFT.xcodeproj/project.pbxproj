@@ -11,6 +11,7 @@
 		244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */; };
 		244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */; };
 		244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */; };
+		24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */; };
 		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
 		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
 		249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */; };
@@ -75,6 +76,7 @@
 		244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCollectionVeiwCellViewModel.swift; sourceTree = "<group>"; };
+		24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageCacheManager.swift; sourceTree = "<group>"; };
 		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewHeader.swift; sourceTree = "<group>"; };
@@ -150,6 +152,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		24984ABB2A5A6D25001F28CF /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				937C764E2A457B2E001024D0 /* FirestoreManager.swift */,
+				24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		249F59ED2A4EF3F3008CF6BE /* PhotoCollectionView */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				930D96B52A416AE10007801A /* Supporting Files */,
+				24984ABB2A5A6D25001F28CF /* Managers */,
 				930D96CC2A4197E90007801A /* Extensions */,
 				930D96C42A41834C0007801A /* Constants */,
 				937C76502A457EF4001024D0 /* Models */,
@@ -377,7 +389,6 @@
 		937C764D2A457B1F001024D0 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				937C764E2A457B2E001024D0 /* FirestoreManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -568,6 +579,7 @@
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
 				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
+				24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,

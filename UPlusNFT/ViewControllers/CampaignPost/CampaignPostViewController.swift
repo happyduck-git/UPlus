@@ -289,7 +289,15 @@ extension CampaignPostViewController {
 extension CampaignPostViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return campaignPostVM.numberOfSections()
+        let numberOfSections = campaignPostVM.numberOfSections()
+        switch campaignPostVM.postType {
+        case .article:
+            campaignPostVM.itemsMode.append(contentsOf: Array(repeating: false, count: numberOfSections - 1))
+        default:
+            campaignPostVM.itemsMode = Array(repeating: false, count: numberOfSections - 2)
+        }
+        
+        return numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -392,11 +400,29 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             return defaultCell
         }
         
+        var currentSection: Int = 0
+        switch self.campaignPostVM.postType {
+        case .article:
+            currentSection = indexPath.section - 1
+        default:
+            currentSection = indexPath.section - 2
+        }
+        
+        // Edit button tap 여부 확인.
+        cell.editButtonDidTap = { [weak self] in
+            self?.campaignPostVM.itemsMode[currentSection] = true
+        }
+//        print("Tap status: \(self.campaignPostVM.itemsMode)")
+        // Edit 상태에 따라 reset 상태 다르게 적용.
+        if campaignPostVM.itemsMode[currentSection] {
+            // Edit 상태인 경우.
+            cell.resetCellForEditMode()
+        }
+        // 모든 상태에 적용.
         cell.resetCell()
         
         if indexPath.item == 0 {
             cell.configure(with: commentCellVM)
-            cell.bind(with: commentCellVM)
             return cell
         } else {
             let recommentCellVM = campaignPostVM.post.recommentsViewModelForItem(at: indexPath.item, section: indexPath.section)
@@ -446,13 +472,13 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
                 self.collectionView?.reloadData()
+                
             }
         default:
             if indexPath.section > 1 && indexPath.item == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
                 self.collectionView?.reloadData()
-//                campaignPostVM.fetchRecomment(at: indexPath.section - 1, of: cellVM.id)
             }
         }
         

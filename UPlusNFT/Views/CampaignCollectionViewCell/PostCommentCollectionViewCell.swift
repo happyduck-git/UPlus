@@ -12,10 +12,18 @@ import FirebaseStorage
 
 final class PostCommentCollectionViewCell: UICollectionViewCell {
     
+    //MARK: - Dependency
+    private var vm: CommentTableViewCellModel?
+    
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
-
+    
     private(set) var type: CommentCellType = .normal
+    
+    private var isEditMode: Bool = false
+    
+    //MARK: - Closure
+    var editButtonDidTap: (() -> Void)?
     
     // MARK: - UI Elements
     private let bestLabel:  UILabel = {
@@ -29,7 +37,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.circle.fill")
+        imageView.image = UIImage(systemName: SFSymbol.defaultProfile)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -61,6 +69,8 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     
     private let editTextField: UITextField = {
         let txtField = UITextField()
+        txtField.isHidden = true
+        txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
@@ -69,6 +79,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textColor = .black
+        label.lineBreakMode = .byTruncatingMiddle
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -83,7 +94,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     
     private let likeButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "heart"), for: .normal) //heart.fill
+        button.setImage(UIImage(systemName: SFSymbol.like), for: .normal) //heart.fill
         button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -91,7 +102,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     
     private let commentButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "text.bubble"), for: .normal)
+        button.setImage(UIImage(systemName: SFSymbol.comment), for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -104,20 +115,44 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let cancelButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemGray
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let confirmButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.setTitle("수정", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemGray
+        button.isUserInteractionEnabled = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
-        setLayout()
         
-        contentView.backgroundColor = .systemGray5
+        contentView.backgroundColor = .systemGray
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Set UI & Layout
+}
+
+// MARK: - Set UI & Layout
+extension PostCommentCollectionViewCell {
+    
     private func setUI() {
         contentView.addSubviews(
             bestLabel,
@@ -127,9 +162,12 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             deleteButton,
             commentTexts,
             commentImage,
+            editTextField,
             likeButton,
             commentButton,
-            createdAtLabel
+            createdAtLabel,
+            cancelButton,
+            confirmButton
         )
     }
     
@@ -141,7 +179,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             self.bestLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             
             self.profileImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.bestLabel.bottomAnchor, multiplier: 1),
-            self.profileImageView.leadingAnchor.constraint(equalTo: self.bestLabel.leadingAnchor),
+            self.profileImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.profileImageView.widthAnchor.constraint(equalToConstant: viewWidth / 16),
             self.profileImageView.heightAnchor.constraint(equalTo: self.profileImageView.widthAnchor),
             
@@ -155,6 +193,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             
             self.commentTexts.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.commentTexts.leadingAnchor.constraint(equalTo: self.bestLabel.leadingAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.commentTexts.trailingAnchor, multiplier: 2),
             
             self.commentImage.topAnchor.constraint(equalTo: self.commentTexts.bottomAnchor),
             self.commentImage.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
@@ -171,10 +210,29 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
             self.createdAtLabel.bottomAnchor.constraint(equalTo: self.likeButton.bottomAnchor)
         ])
         self.commentImage.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        
     }
     
-    // MARK: - Internal
+    private func setEditTextFieldLayout() {
+        NSLayoutConstraint.activate([
+            self.editTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.nicknameLabel.bottomAnchor, multiplier: 1),
+            self.editTextField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.editTextField.trailingAnchor, multiplier: 2),
+            self.cancelButton.topAnchor.constraint(equalToSystemSpacingBelow: self.editTextField.bottomAnchor, multiplier: 1),
+            
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.confirmButton.bottomAnchor, multiplier: 2),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.confirmButton.trailingAnchor, multiplier: 2),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.cancelButton.bottomAnchor, multiplier: 2),
+            self.confirmButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.cancelButton.trailingAnchor, multiplier: 1)
+        ])
+    }
+}
+
+//MARK: - Cell Configuration & View Model Binding
+extension PostCommentCollectionViewCell {
+
     func configure(with vm: CommentTableViewCellModel) {
+        self.vm = vm
         
         switch vm.type {
         case .best:
@@ -188,11 +246,15 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         self.likeButton.setTitle(String(describing: vm.likeUserCount ?? 0), for: .normal)
         self.commentButton.setTitle(String(describing: vm.recomments?.count ?? 0), for: .normal)
         self.createdAtLabel.text = String(describing: vm.createdAt.dateValue().monthDayTimeFormat)
+        self.editTextField.text = vm.comment
         
         Task {
             guard let image = vm.imagePath,
                   let url = URL(string: image)
-            else { return }
+            else {
+                self.commentImage.isHidden = true
+                return
+            }
 
             do {
                 let photo = try await URL.urlToImage(url)
@@ -205,18 +267,55 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         }
         
         bind(with: vm)
+        setLayout()
     }
 
     private func bind(with vm: CommentTableViewCellModel) {
         func bindViewToViewModel() {
             editButton.tapPublisher
                 .receive(on: DispatchQueue.main)
-                .sink { _ in
-                    self.commentTexts.isHidden = true
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.convertToEditMode()
+                    self.editButtonDidTap?()
+                    self.editTextField.text = vm.comment
+                    self.isEditMode = true
                 }
                 .store(in: &bindings)
             
             deleteButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                }
+                .store(in: &bindings)
+            
+            editTextField.textPublisher
+                .receive(on: DispatchQueue.main)
+                .removeDuplicates()
+                .debounce(for: 0.1, scheduler: RunLoop.main)
+                .sink {
+                    if $0.trimmingCharacters(in: .whitespacesAndNewlines) == vm.comment {
+                        self.confirmButton.backgroundColor = .systemGray
+                        self.confirmButton.isUserInteractionEnabled = false
+                    } else {
+                        self.confirmButton.backgroundColor = .black
+                        self.confirmButton.isUserInteractionEnabled = true
+                    }
+                }
+                .store(in: &bindings)
+            
+            cancelButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.convertToNormalMode()
+                    self.isEditMode = false
+                }
+                .store(in: &bindings)
+            
+            confirmButton.tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { _ in
                     
@@ -242,6 +341,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
                             self.profileImageView.image = try await URL.urlToImage(url)
                         }
                         catch {
+                            self.profileImageView.image = UIImage(systemName: SFSymbol.defaultProfile)
                             print("Error converting profile image - \(error.localizedDescription)")
                         }
                     }
@@ -253,15 +353,24 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         bindViewModelToView()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        convertToNormalMode()
+    }
+    
     func resetCell() {
-        self.contentView.backgroundColor = .white
+        self.contentView.backgroundColor = .systemGray
         self.profileImageView.image = nil
         self.nicknameLabel.text = nil
         self.commentTexts.text = nil
         self.commentImage.image = nil
         self.createdAtLabel.text = nil
-        self.editButton.isHidden = true
-        self.deleteButton.isHidden = true
+        self.editTextField.text = nil
+    }
+    
+    func resetCellForEditMode() {
+        self.contentView.backgroundColor = .systemGray
+        convertToEditMode()
     }
     
     func changeCellType(to celltype: CommentCellType) {
@@ -269,8 +378,9 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     }
 }
 
-// MARK: - Find Current User's Comment
+//MARK: - Comment Edit Mode
 extension PostCommentCollectionViewCell {
+    // MARK: - Find Current User's Comment
     private func currentUserConfiguration(with vm: CommentTableViewCellModel) {
         guard let currentUserId = UserDefaults.standard.string(forKey: UserDefaultsConstants.userId),
         vm.userId == currentUserId
@@ -280,4 +390,37 @@ extension PostCommentCollectionViewCell {
         editButton.isHidden = false
         deleteButton.isHidden = false
     }
+    
+    //MARK: - Change to Edit mode
+    private func convertToEditMode() {
+        editButton.isHidden = true
+        deleteButton.isHidden = true
+        commentTexts.isHidden = true
+        likeButton.isHidden = true
+        commentButton.isHidden = true
+        commentImage.isHidden = true
+        createdAtLabel.isHidden = true
+        
+        editTextField.isHidden = false
+        cancelButton.isHidden = false
+        confirmButton.isHidden = false
+        
+        setEditTextFieldLayout()
+    }
+    
+    private func convertToNormalMode() {
+        editButton.isHidden = false
+        deleteButton.isHidden = false
+        commentTexts.isHidden = false
+        likeButton.isHidden = false
+        commentButton.isHidden = false
+        commentImage.isHidden = false
+        createdAtLabel.isHidden = false
+        
+        editTextField.isHidden = true
+        cancelButton.isHidden = true
+        confirmButton.isHidden = true
+    }
 }
+
+

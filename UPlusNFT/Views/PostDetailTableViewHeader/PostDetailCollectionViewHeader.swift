@@ -52,6 +52,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         let label = UILabel()
         label.textColor = .black
         label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingTail
         label.font = .systemFont(ofSize: 17, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -92,6 +93,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     private let nicknameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.lineBreakMode = .byTruncatingMiddle
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -180,6 +182,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             
             self.postTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postTypeView.bottomAnchor, multiplier: 1),
             self.postTitleLabel.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postTitleLabel.trailingAnchor, multiplier: 2),
             
             self.horizontalLineView.topAnchor.constraint(equalToSystemSpacingBelow: self.postTitleLabel.bottomAnchor, multiplier: 1),
             self.horizontalLineView.heightAnchor.constraint(equalToConstant: 2),

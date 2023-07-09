@@ -25,7 +25,9 @@ final class CommentTableViewCellModel {
     let createdAt: Timestamp
     
     @Published var user: User?
+    @Published var editedComment: String?
     
+    //MARK: - Init
     init(
         type: CommentCellType,
         id: String,

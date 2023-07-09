@@ -13,6 +13,8 @@ final class PostTableViewCell: UITableViewCell {
     
     private let title: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingMiddle
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -56,8 +58,9 @@ final class PostTableViewCell: UITableViewCell {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.title.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.title.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.title.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.title.trailingAnchor, multiplier: 2),
             
             self.likeButton.leadingAnchor.constraint(equalTo: self.title.leadingAnchor),
             self.likeButton.topAnchor.constraint(equalToSystemSpacingBelow: self.title.bottomAnchor, multiplier: 1),
