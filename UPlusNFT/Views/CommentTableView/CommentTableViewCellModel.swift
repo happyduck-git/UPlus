@@ -5,7 +5,7 @@
 //  Created by Platfarm on 2023/06/27.
 //
 
-import Foundation
+import UIKit.UIImage
 import Combine
 import FirebaseFirestore
 
@@ -27,6 +27,9 @@ final class CommentTableViewCellModel {
     
     @Published var user: User?
     @Published var editedComment: String?
+    @Published var selectedImageToEdit: UIImage?
+    
+    var isBinded: Bool = false
     
     //MARK: - Init
     init(

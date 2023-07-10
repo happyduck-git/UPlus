@@ -20,6 +20,8 @@ final class CampaignPostViewController: UIViewController {
     //MARK: - Property
     private var collectionView: UICollectionView?
     private let postType: PostType
+    private var activeView: UIView?
+    private var activeCellSection: Int?
     
     private let photoPicker: PHPickerViewController = {
         var configuration = PHPickerConfiguration()
@@ -275,7 +277,7 @@ extension CampaignPostViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.3)
+                heightDimension: .fractionalHeight(0.4)
             ),
             subitems: [item]
         )
@@ -380,6 +382,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         
         cell.cameraButtonHandler = { [weak self] in
             guard let `self` = self else { return }
+            self.activeView = cell
             self.present(self.photoPicker, animated: true)
         }
         
@@ -408,17 +411,23 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             currentSection = indexPath.section - 2
         }
         
-        // Edit button tap 여부 확인.
+        /// When camera button tapped.
+        cell.commentEditViewCameraBtnDidTap = {
+            self.activeView = cell
+            self.activeCellSection = indexPath.section
+            self.present(self.photoPicker, animated: true)
+        }
+        
+        /// Edit button tap 여부 확인.
         cell.editButtonDidTap = { [weak self] in
             self?.campaignPostVM.itemsMode[currentSection] = true
         }
 //        print("Tap status: \(self.campaignPostVM.itemsMode)")
-        // Edit 상태에 따라 reset 상태 다르게 적용.
-        if campaignPostVM.itemsMode[currentSection] {
-            // Edit 상태인 경우.
+        
+        if campaignPostVM.itemsMode[currentSection] { // Edit 상태에 따라 reset 상태 다르게 적용.
             cell.resetCellForEditMode()
         }
-        // 모든 상태에 적용.
+        /// 모든 상태에 적용.
         cell.resetCell()
         
         if indexPath.item == 0 {
@@ -467,7 +476,6 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch campaignPostVM.postType {
         case .article:
-            print("Cell did tap at: Section#\(indexPath.section) Item#\(indexPath.item)")
             if indexPath.section > 0 && indexPath.item == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
@@ -499,22 +507,44 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
 // MARK: - PHPPicker Delegate
 extension CampaignPostViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
- 
-        guard let vm = campaignPostVM.textInput
-        else { return }
         
-        guard let result = results.first else {
+        if activeView is PostCommentCollectionViewCell {
+            
+            guard let cellSection = self.activeCellSection,
+                  let vm = campaignPostVM.postCellViewModel(at: cellSection)
+            else { return }
+            
+            guard let result = results.first else {
+                picker.dismiss(animated: true)
+                return
+            }
+            self.loadImageFromItemProvider(itemProvider: result.itemProvider) { image in
+                vm.selectedImageToEdit = image
+            }
+            
+            picker.dismiss(animated: true)
+            
+        } else if activeView is TextFieldCollectionViewCell {
+            
+            guard let vm = campaignPostVM.textInput
+            else { return }
+            
+            guard let result = results.first else {
+                vm.isCameraButtonTapped = false
+                picker.dismiss(animated: true)
+                return
+            }
+            
+            self.loadImageFromItemProvider(itemProvider: result.itemProvider) { image in
+                vm.selectedImage = image
+            }
+            
             vm.isCameraButtonTapped = false
             picker.dismiss(animated: true)
-            return
+        } else {
+            print("Some other collection view cell selected images.")
         }
-        
-        self.loadImageFromItemProvider(itemProvider: result.itemProvider) { image in
-            vm.selectedImage = image
-        }
-        
-        vm.isCameraButtonTapped = false
-        picker.dismiss(animated: true)
+       
     }
     
     /// Change itemProvider to UIImage

@@ -34,7 +34,8 @@ extension FirestoreManager {
 
     //MARK: - Get Posts
     func getPaginatedPosts() async throws -> (posts: [Post], lastDoc: QueryDocumentSnapshot?) {
-        let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
+        let snapshots = try await threadsSetCollectionPath
+            .order(by: FirestoreConstants.createdTime, descending: true)
             .limit(to: FirestoreConstants.documentLimit)
             .getDocuments()
             .documents
@@ -59,7 +60,8 @@ extension FirestoreManager {
             throw FirestoreErorr.documentFoundToBeNil
         }
         
-        let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
+        let snapshots = try await threadsSetCollectionPath
+            .order(by: FirestoreConstants.createdTime, descending: true)
             .start(afterDocument: lastSnapshot)
             .limit(to: FirestoreConstants.documentLimit)
             .getDocuments()
@@ -398,10 +400,13 @@ extension FirestoreManager {
     func savePost(_ post: Post) throws {
         let threadSet = self.threadsSetCollectionPath
             .document(post.id)
+        let encoder = Firestore.Encoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
         
         try threadSet.setData(
             from: post,
-            merge: true
+            merge: true,
+            encoder: encoder
         ) { _ in
             print("Post sucessfully save!")
         }

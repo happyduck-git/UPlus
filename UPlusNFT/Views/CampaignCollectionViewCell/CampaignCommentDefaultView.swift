@@ -10,7 +10,7 @@ import UIKit
 final class CampaignCommentDefaultView: UIView {
     
     // MARK: - UI Elements
-    private let commentTexts: UILabel = {
+    let commentTexts: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textColor = .black
@@ -38,6 +38,10 @@ final class CampaignCommentDefaultView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutIfNeeded() {
+        super.layoutIfNeeded()
+        setLayout()
+    }
 }
 
 extension CampaignCommentDefaultView {
@@ -56,6 +60,7 @@ extension CampaignCommentDefaultView {
             commentImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             commentImage.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
+        self.commentTexts.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
 

@@ -6,13 +6,19 @@
 //
 
 import UIKit
+import Combine
 
 final class CampaignCommentEditView: UIView {
     
+    // MARK: - Closure
+    var cameraBtnDidTapHandler: (() -> Void)?
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
     // MARK: - UI Elements
-    private let editTextField: UITextField = {
+    let editTextField: UITextField = {
         let txtField = UITextField()
-        txtField.isHidden = true
         txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -26,17 +32,17 @@ final class CampaignCommentEditView: UIView {
         return imageView
     }()
     
-    private let cameraButton: UIButton = {
+    private lazy var cameraButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: SFSymbol.camera), for: .normal)
         button.tintColor = .systemGray
+        button.addTarget(self, action: #selector(cameraBtnDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    private let cancelButton: UIButton = {
+    let cancelButton: UIButton = {
         let button = UIButton()
-        button.isHidden = true
         button.setTitle("취소", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemGray
@@ -44,9 +50,8 @@ final class CampaignCommentEditView: UIView {
         return button
     }()
     
-    private let confirmButton: UIButton = {
+    let confirmButton: UIButton = {
         let button = UIButton()
-        button.isHidden = true
         button.setTitle("수정", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemGray
@@ -58,8 +63,8 @@ final class CampaignCommentEditView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setUI()
-        setLayout()
+        self.setUI()
+        self.setLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -82,21 +87,35 @@ extension CampaignCommentEditView {
             editTextField.topAnchor.constraint(equalTo: self.topAnchor),
             editTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             editTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            editTextField.heightAnchor.constraint(equalToConstant: 30),
             
             editImage.topAnchor.constraint(equalToSystemSpacingBelow: editTextField.bottomAnchor, multiplier: 1),
-            editImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            editImage.heightAnchor.constraint(equalToConstant: self.frame.height / 2),
-            editImage.widthAnchor.constraint(equalTo: editImage.heightAnchor),
+            editImage.heightAnchor.constraint(equalToConstant: 50),
+            editImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            editImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: editTextField.bottomAnchor, multiplier: 1),
+            confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: editImage.bottomAnchor, multiplier: 1),
             confirmButton.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            confirmButton.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
             cancelButton.topAnchor.constraint(equalTo: confirmButton.topAnchor),
-            cancelButton.trailingAnchor.constraint(equalToSystemSpacingAfter: confirmButton.leadingAnchor, multiplier: 1),
+            confirmButton.leadingAnchor.constraint(equalToSystemSpacingAfter: cancelButton.trailingAnchor, multiplier: 1),
+            cancelButton.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
             cameraButton.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor),
             cameraButton.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            cameraButton.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
+        editImage.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        cameraButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        confirmButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        cancelButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+}
+
+extension CampaignCommentEditView {
+    @objc func cameraBtnDidTap() {
+        self.cameraBtnDidTapHandler?()
     }
 }
 
@@ -120,5 +139,50 @@ extension CampaignCommentEditView {
             }
             
         }
+        
+        if !vm.isBinded {
+            bind(with: vm)
+            vm.isBinded = true
+        }
+        
+    }
+    
+    private func bind(with vm: CommentTableViewCellModel) {
+        print("BINDED")
+        func bindViewToViewModel() {
+            confirmButton.tapPublisher
+                .receive(on: RunLoop.current)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    /*
+                    Task {
+                        do {
+                            // TODO: `imageToEdit: UIImage?` 로 arugment 추가하기.
+                            try await vm.editComment(postId: vm.postId,
+                                                     commentId: vm.id,
+                                                     comment: vm.editedComment ?? vm.comment)
+                            self.convertToNormalMode()
+                            self.commentDefaultView.commentTexts.text = vm.editedComment ?? vm.comment
+                        }
+                        catch {
+                            print("Error editing comment - \(error.localizedDescription)")
+                        }
+                    }
+                     */
+                }
+                .store(in: &bindings)
+        }
+        func bindViewModelToView() {
+            vm.$selectedImageToEdit
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.editImage.image = $0
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
 }
