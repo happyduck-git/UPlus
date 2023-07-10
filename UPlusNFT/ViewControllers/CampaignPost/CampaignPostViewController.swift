@@ -465,14 +465,13 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
         switch campaignPostVM.postType {
         case .article:
+            print("Cell did tap at: Section#\(indexPath.section) Item#\(indexPath.item)")
             if indexPath.section > 0 && indexPath.item == 0 {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
                 self.collectionView?.reloadData()
-                
             }
         default:
             if indexPath.section > 1 && indexPath.item == 0 {

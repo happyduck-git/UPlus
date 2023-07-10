@@ -15,6 +15,7 @@ final class CommentTableViewCellModel {
     
     // MARK: - Property
     let type: CommentCellType
+    let postId: String
     let id: String
     let userId: String
     var isOpened: Bool = false
@@ -30,6 +31,7 @@ final class CommentTableViewCellModel {
     //MARK: - Init
     init(
         type: CommentCellType,
+        postId: String,
         id: String,
         userId: String,
         comment: String,
@@ -39,6 +41,7 @@ final class CommentTableViewCellModel {
         createdAt: Timestamp
     ) {
         self.type = type
+        self.postId = postId
         self.id = id
         self.userId = userId
         self.comment = comment
@@ -49,6 +52,10 @@ final class CommentTableViewCellModel {
         
         self.fetchUser(userId)
     }
+
+}
+
+extension CommentTableViewCellModel {
     
     func fetchUser(_ userId: String) {
         Task {
@@ -60,4 +67,13 @@ final class CommentTableViewCellModel {
             }
         }
     }
+  
+    func editComment(postId: String,
+                     commentId: String,
+                     comment: String) async throws {
+        try await firestoreManager.editComment(of: postId,
+                                               commentId: commentId,
+                                               comment: comment)
+    }
+    
 }

@@ -110,6 +110,7 @@ extension PostDetailViewViewModel {
         let recomment = recomments[item - 1]
         return CommentTableViewCellModel(
             type: .normal,
+            postId: self.postId,
             id: recomment.recommentId,
             userId: recomment.recommentAuthorUid,
             comment: recomment.recommentContentText,
@@ -200,6 +201,7 @@ extension PostDetailViewViewModel {
         let recomments = try await fetchRecomment(of: comment.commentId)
         return CommentTableViewCellModel(
             type: commentType,
+            postId: self.postId,
             id: comment.commentId,
             userId: comment.commentAuthorUid,
             comment: comment.commentContentText,

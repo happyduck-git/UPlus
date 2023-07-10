@@ -492,8 +492,8 @@ extension FirestoreManager {
     func editComment(
         of postId: String,
         commentId: String,
-        comment: String,
-        image: String
+        comment: String
+//        image: String
     ) async throws {
         do {
             try await threadsSetCollectionPath
@@ -501,8 +501,8 @@ extension FirestoreManager {
                 .collection(FirestoreConstants.commentSet)
                 .document(commentId)
                 .updateData([
-                    FirestoreConstants.commentContentText: comment,
-                    FirestoreConstants.commentContentImagePath: image
+                    FirestoreConstants.commentContentText: comment
+//                    FirestoreConstants.commentContentImagePath: image
                 ])
             print("Comment successfully edited!")
         }

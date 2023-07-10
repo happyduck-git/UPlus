@@ -15,6 +15,8 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     //MARK: - Dependency
     private var vm: CommentTableViewCellModel?
     
+    private var binded: Bool = false
+    
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
@@ -115,6 +117,22 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let cameraButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: SFSymbol.camera), for: .normal)
+        button.tintColor = .systemGray
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let editedImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .systemBlue
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private let cancelButton: UIButton = {
         let button = UIButton()
         button.isHidden = true
@@ -140,7 +158,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
-        
+        setLayout()
         contentView.backgroundColor = .systemGray
     }
     
@@ -231,25 +249,24 @@ extension PostCommentCollectionViewCell {
 //MARK: - Cell Configuration & View Model Binding
 extension PostCommentCollectionViewCell {
 
-    func configure(with vm: CommentTableViewCellModel) {
-        self.vm = vm
-        
-        switch vm.type {
+    func configure(with cellVM: CommentTableViewCellModel) {
+        self.vm = cellVM
+        switch cellVM.type {
         case .best:
             self.bestLabel.isHidden = false
         case .normal:
             self.bestLabel.isHidden = true
         }
         
-        self.currentUserConfiguration(with: vm)
-        self.commentTexts.text = vm.comment
-        self.likeButton.setTitle(String(describing: vm.likeUserCount ?? 0), for: .normal)
-        self.commentButton.setTitle(String(describing: vm.recomments?.count ?? 0), for: .normal)
-        self.createdAtLabel.text = String(describing: vm.createdAt.dateValue().monthDayTimeFormat)
-        self.editTextField.text = vm.comment
+        self.currentUserConfiguration(with: cellVM)
+        self.commentTexts.text = cellVM.comment
+        self.likeButton.setTitle(String(describing: cellVM.likeUserCount ?? 0), for: .normal)
+        self.commentButton.setTitle(String(describing: cellVM.recomments?.count ?? 0), for: .normal)
+        self.createdAtLabel.text = String(describing: cellVM.createdAt.dateValue().monthDayTimeFormat)
+        self.editTextField.text = cellVM.comment
         
         Task {
-            guard let image = vm.imagePath,
+            guard let image = cellVM.imagePath,
                   let url = URL(string: image)
             else {
                 self.commentImage.isHidden = true
@@ -266,19 +283,25 @@ extension PostCommentCollectionViewCell {
             
         }
         
-        bind(with: vm)
-        setLayout()
+        if !self.binded {
+            self.bind(with: cellVM)
+            self.binded = true
+        }
     }
 
     private func bind(with vm: CommentTableViewCellModel) {
         func bindViewToViewModel() {
+            
             editButton.tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
-                    guard let `self` = self else { return }
+                    guard let `self` = self,
+                          let cellVM = self.vm else { return }
+                    
                     self.convertToEditMode()
                     self.editButtonDidTap?()
-                    self.editTextField.text = vm.comment
+
+                    self.editTextField.text = cellVM.comment
                     self.isEditMode = true
                 }
                 .store(in: &bindings)
@@ -295,8 +318,11 @@ extension PostCommentCollectionViewCell {
                 .receive(on: DispatchQueue.main)
                 .removeDuplicates()
                 .debounce(for: 0.1, scheduler: RunLoop.main)
-                .sink {
-                    if $0.trimmingCharacters(in: .whitespacesAndNewlines) == vm.comment {
+                .sink { [weak self] in
+                    guard let `self` = self,
+                          let cellVM = self.vm else { return }
+                    if !$0.isEmpty
+                        && $0.trimmingCharacters(in: .whitespacesAndNewlines) == cellVM.comment {
                         self.confirmButton.backgroundColor = .systemGray
                         self.confirmButton.isUserInteractionEnabled = false
                     } else {
@@ -316,11 +342,27 @@ extension PostCommentCollectionViewCell {
                 .store(in: &bindings)
             
             confirmButton.tapPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { _ in
+                .receive(on: RunLoop.current)
+                .sink { [weak self] _ in
+                    guard let `self` = self,
+                          let cellVM = self.vm else { return }
+                    
+                    Task {
+                        do {
+                            try await cellVM.editComment(postId: cellVM.postId,
+                                           commentId: cellVM.id,
+                                           comment: self.editTextField.text!)
+                            self.convertToNormalMode()
+                            self.commentTexts.text = cellVM.editedComment ?? cellVM.comment
+                        }
+                        catch {
+                            print("Error editing comment - \(error.localizedDescription)")
+                        }
+                    }
                     
                 }
                 .store(in: &bindings)
+             
         }
         
         func bindViewModelToView() {
