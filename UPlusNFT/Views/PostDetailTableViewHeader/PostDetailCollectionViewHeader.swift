@@ -76,7 +76,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .systemGray6
+        imageView.backgroundColor = .systemBlue
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -137,9 +137,15 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         self.createdAtLabel.text = String(describing: vm.createdTime.monthDayTimeFormat)
     
         Task {
-            let firstImage = vm.imageList?.first ?? ""
-            let url = URL(string: firstImage)
-            self.postImageView.image = try await URL.urlToImage(url)
+            if let firstImage = vm.imageList?.first {
+                let url = URL(string: firstImage)
+                self.postImageView.image = try await URL.urlToImage(url)
+            } else {
+                self.postImageView.isHidden = true
+                self.postImageView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+                self.layoutIfNeeded()
+            }
+            
         }
         
         bind(with: vm)

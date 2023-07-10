@@ -113,6 +113,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setUI()
         setLayout()
+        commentEditSaveButtonDidTap()
         contentView.backgroundColor = .systemGray
     }
     
@@ -264,28 +265,6 @@ extension PostCommentCollectionViewCell {
                     self.isEditMode = false
                 }
                 .store(in: &bindings)
-            
-//            commentEditView.confirmButton.tapPublisher
-//                .receive(on: RunLoop.current)
-//                .sink { [weak self] _ in
-//                    guard let `self` = self,
-//                          let cellVM = self.vm else { return }
-//                    
-//                    Task {
-//                        do {
-//                            try await cellVM.editComment(postId: cellVM.postId,
-//                                                         commentId: cellVM.id,
-//                                                         comment: self.commentEditView.editTextField.text!)
-//                            self.convertToNormalMode()
-//                            self.commentDefaultView.commentTexts.text = cellVM.editedComment ?? cellVM.comment
-//                        }
-//                        catch {
-//                            print("Error editing comment - \(error.localizedDescription)")
-//                        }
-//                    }
-//                    
-//                }
-//                .store(in: &bindings)
              
         }
         
@@ -342,6 +321,14 @@ extension PostCommentCollectionViewCell {
     
     func changeCellType(to celltype: CommentCellType) {
         self.type = celltype
+    }
+}
+
+extension PostCommentCollectionViewCell {
+    private func commentEditSaveButtonDidTap() {
+        self.commentEditView.editedCommentDidSavedHandler = {
+            self.convertToNormalMode()
+        }
     }
 }
 

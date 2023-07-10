@@ -12,6 +12,7 @@ final class CampaignCommentEditView: UIView {
     
     // MARK: - Closure
     var cameraBtnDidTapHandler: (() -> Void)?
+    var editedCommentDidSavedHandler: (() -> Void)?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -148,30 +149,47 @@ extension CampaignCommentEditView {
     }
     
     private func bind(with vm: CommentTableViewCellModel) {
-        print("BINDED")
+        
         func bindViewToViewModel() {
+            
+            editTextField.textPublisher
+                .receive(on: RunLoop.current)
+                .removeDuplicates()
+                .sink {
+                    vm.editedComment = $0
+                }
+                .store(in: &bindings)
+            
             confirmButton.tapPublisher
                 .receive(on: RunLoop.current)
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
-                    /*
+                  
                     Task {
                         do {
+                        
                             // TODO: `imageToEdit: UIImage?` 로 arugment 추가하기.
                             try await vm.editComment(postId: vm.postId,
                                                      commentId: vm.id,
-                                                     comment: vm.editedComment ?? vm.comment)
+                                                     commentToEdit: vm.editedComment ?? vm.comment,
+                                                     originalImagePath: vm.imagePath,
+                                                     imageToEdit: vm.selectedImageToEdit)
+                   
+                            /*
                             self.convertToNormalMode()
                             self.commentDefaultView.commentTexts.text = vm.editedComment ?? vm.comment
+                             */
+                            self.editedCommentDidSavedHandler?()
                         }
                         catch {
                             print("Error editing comment - \(error.localizedDescription)")
                         }
                     }
-                     */
+                    
                 }
                 .store(in: &bindings)
         }
+        
         func bindViewModelToView() {
             vm.$selectedImageToEdit
                 .receive(on: DispatchQueue.main)

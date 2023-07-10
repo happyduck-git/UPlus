@@ -497,18 +497,32 @@ extension FirestoreManager {
     func editComment(
         of postId: String,
         commentId: String,
-        comment: String
-//        image: String
+        commentToEdit: String,
+        imageToEdit: String?
     ) async throws {
         do {
-            try await threadsSetCollectionPath
-                .document(postId)
-                .collection(FirestoreConstants.commentSet)
-                .document(commentId)
-                .updateData([
-                    FirestoreConstants.commentContentText: comment
-//                    FirestoreConstants.commentContentImagePath: image
-                ])
+            if let image = imageToEdit {
+                try await threadsSetCollectionPath
+                    .document(postId)
+                    .collection(FirestoreConstants.commentSet)
+                    .document(commentId)
+                    .updateData([
+                        FirestoreConstants.commentContentText: commentToEdit,
+                        FirestoreConstants.commentContentImagePath: image,
+                        FirestoreConstants.commentCreatedTime: Timestamp()
+                    ])
+            } else {
+                try await threadsSetCollectionPath
+                    .document(postId)
+                    .collection(FirestoreConstants.commentSet)
+                    .document(commentId)
+                    .updateData([
+                        FirestoreConstants.commentContentText: commentToEdit,
+                        FirestoreConstants.commentCreatedTime: Timestamp()
+                    ])
+            }
+            
+                
             print("Comment successfully edited!")
         }
         catch {
@@ -519,8 +533,12 @@ extension FirestoreManager {
 }
 
 // MARK: - Delete
-extension FileManager {
-    
+extension FirestoreManager {
+    func deleteImageFromStorage(path: String?) async throws {
+        guard let path = path else { return }
+        let ref = Storage.storage().reference(withPath: path)
+        try await ref.delete()
+    }
 }
 
 //MARK: - Convert `Query Document` to `Post`

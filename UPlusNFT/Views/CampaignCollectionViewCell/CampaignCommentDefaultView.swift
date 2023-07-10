@@ -21,6 +21,7 @@ final class CampaignCommentDefaultView: UIView {
     
     private let commentImage: UIImageView = {
         let imageView = UIImageView()
+        
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(systemName: SFSymbol.camera)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,11 +38,7 @@ final class CampaignCommentDefaultView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func layoutIfNeeded() {
-        super.layoutIfNeeded()
-        setLayout()
-    }
+
 }
 
 extension CampaignCommentDefaultView {
@@ -55,12 +52,13 @@ extension CampaignCommentDefaultView {
             commentTexts.topAnchor.constraint(equalTo: self.topAnchor),
             commentTexts.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             commentTexts.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            
+//            commentTexts.heightAnchor.constraint(equalToConstant: 50),
             commentImage.topAnchor.constraint(equalToSystemSpacingBelow: commentTexts.bottomAnchor, multiplier: 1),
-            commentImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            commentImage.heightAnchor.constraint(equalToConstant: 200),
+            commentImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            commentImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             commentImage.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-        self.commentTexts.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
 
@@ -72,6 +70,8 @@ extension CampaignCommentDefaultView {
                   let url = URL(string: image)
             else {
                 self.commentImage.isHidden = true
+                self.commentImage.heightAnchor.constraint(equalToConstant: 0).isActive = true
+                self.layoutIfNeeded()
                 return
             }
 

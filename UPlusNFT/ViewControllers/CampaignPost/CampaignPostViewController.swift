@@ -249,7 +249,7 @@ extension CampaignPostViewController {
         
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.7)
+            heightDimension: .estimated(400)
         )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
@@ -267,7 +267,7 @@ extension CampaignPostViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
+                heightDimension: .estimated(100)
             )
         )
         item.contentInsets = NSDirectionalEdgeInsets(top: 0,
@@ -277,7 +277,7 @@ extension CampaignPostViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.4)
+                heightDimension: .estimated(100)
             ),
             subitems: [item]
         )
@@ -387,6 +387,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         }
         
         cell.configure(with: textInputVM)
+        cell.layoutIfNeeded()
         return cell
     }
     
@@ -432,6 +433,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         
         if indexPath.item == 0 {
             cell.configure(with: commentCellVM)
+            cell.layoutIfNeeded()
             return cell
         } else {
             let recommentCellVM = campaignPostVM.post.recommentsViewModelForItem(at: indexPath.item, section: indexPath.section)
@@ -519,7 +521,7 @@ extension CampaignPostViewController: PHPickerViewControllerDelegate {
                 return
             }
             self.loadImageFromItemProvider(itemProvider: result.itemProvider) { image in
-                vm.selectedImageToEdit = image
+//                vm.selectedImageToEdit = image
             }
             
             picker.dismiss(animated: true)

@@ -73,10 +73,18 @@ extension CommentTableViewCellModel {
   
     func editComment(postId: String,
                      commentId: String,
-                     comment: String) async throws {
+                     commentToEdit: String,
+                     originalImagePath: String?,
+                     imageToEdit: UIImage?) async throws {
+        
+        async let path = firestoreManager.saveCommentImage(to: postId, image: imageToEdit?.jpegData(compressionQuality: 0.75))
+        async let _ = firestoreManager.deleteImageFromStorage(path: originalImagePath)
+        
         try await firestoreManager.editComment(of: postId,
                                                commentId: commentId,
-                                               comment: comment)
+                                               commentToEdit: comment,
+                                               imageToEdit: path)
+        
     }
     
 }
