@@ -29,7 +29,7 @@ final class CommentTableViewCellModel {
     @Published var editedComment: String?
     @Published var selectedImageToEdit: UIImage?
     
-    var isBinded: Bool = false
+    var isBound: Bool = false
     
     //MARK: - Init
     init(
@@ -60,6 +60,8 @@ final class CommentTableViewCellModel {
 
 extension CommentTableViewCellModel {
     
+    /// Fetch user information from Firestore.
+    /// - Parameter userId: User Uid.
     func fetchUser(_ userId: String) {
         Task {
             do {
@@ -71,20 +73,51 @@ extension CommentTableViewCellModel {
         }
     }
   
+    
+    /// Update like counts.
+    /// - Parameters:
+    ///   - postId: Post id.
+    ///   - isLiked: If the post is liked.
+    func likeComment(postId: String,
+                     isLiked: Bool) async throws {
+        
+    }
+    
+    /// Edit texts or image of  a comment.
+    /// - Parameters:
+    ///   - postId: Post id of the comment is belonged to.
+    ///   - commentId: Comment id.
+    ///   - commentToEdit: New texts to be saved.
+    ///   - originalImagePath: Original image path, if any.
+    ///   - imageToEdit: New image, if any.
     func editComment(postId: String,
                      commentId: String,
                      commentToEdit: String,
                      originalImagePath: String?,
                      imageToEdit: UIImage?) async throws {
         
-        async let path = firestoreManager.saveCommentImage(to: postId, image: imageToEdit?.jpegData(compressionQuality: 0.75))
-        async let _ = firestoreManager.deleteImageFromStorage(path: originalImagePath)
+        let path = try await firestoreManager.saveCommentImage(
+            to: postId,
+            image: imageToEdit?.jpegData(compressionQuality: 0.75)
+        )
+        
+        if path != nil {
+            try await firestoreManager.deleteImageFromStorage(path: originalImagePath)
+        }
         
         try await firestoreManager.editComment(of: postId,
                                                commentId: commentId,
-                                               commentToEdit: comment,
+                                               commentToEdit: commentToEdit,
                                                imageToEdit: path)
-        
     }
     
+    /// Delete a comment.
+    /// - Parameters:
+    ///   - postId: Post id of the comment is belonged to.
+    ///   - commentId: Comment id.
+    func deleteComment(postId: String,
+                       commentId: String) async throws {
+        try await firestoreManager.deleteComment(postId: postId,
+                                                 commentId: commentId)
+    }
 }

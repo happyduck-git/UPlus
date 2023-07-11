@@ -95,7 +95,7 @@ extension FirestoreManager {
             let recommentId = data[FirestoreConstants.recommentId] as? String ?? FirestoreConstants.noUserUid
             
             return Recomment(
-                commentId: commentId,
+//                commentId: commentId,
                 recommentAuthorUid: recommentAuthorUid,
                 recommentContentText: recommentContentText,
                 recommentCreatedTime: recommentCreatedTime,
@@ -216,7 +216,7 @@ extension FirestoreManager {
             let recommentId = data[FirestoreConstants.recommentId] as? String ?? FirestoreConstants.noUserUid
             
             return Recomment(
-                commentId: commentId,
+//                commentId: commentId,
                 recommentAuthorUid: recommentAuthorUid,
                 recommentContentText: recommentContentText,
                 recommentCreatedTime: recommentCreatedTime,
@@ -403,11 +403,9 @@ extension FirestoreManager {
         let encoder = Firestore.Encoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         
-        try threadSet.setData(
-            from: post,
-            merge: true,
-            encoder: encoder
-        ) { _ in
+        try threadSet.setData(from: post,
+                              merge: true,
+                              encoder: encoder) { _ in
             print("Post sucessfully save!")
         }
     }
@@ -430,9 +428,9 @@ extension FirestoreManager {
             encoder: encoder
         ) {
             _ in
-                print("Comment sucessfully save!")
+            print("Comment sucessfully save!")
         }
-
+        
         /// Increment `cached_comment_count`
         let post = self.threadsSetCollectionPath
             .document(postId)
@@ -456,16 +454,127 @@ extension FirestoreManager {
         
         let uploadRef = Storage.storage().reference(withPath: path)
         let _ = try await uploadRef.putDataAsync(photo)
-    
+        
         return path
     }
     
+    // MARK: - Save Recomment.
+    func saveRecomment(postId: String,
+                       commentId: String,
+                       recomment: Recomment) throws {
+        let recommentId = UUID().uuidString
+        
+        let recommentDoc = threadsSetCollectionPath
+            .document(postId)
+            .collection(FirestoreConstants.commentSet)
+            .document(commentId)
+            .collection(FirestoreConstants.recommentSet)
+            .document(recomment.recommentId)
+        
+        let encoder = Firestore.Encoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        
+        try recommentDoc.setData(from: recomment,
+                                 merge: true,
+                                 encoder: encoder)
+        
+    }
+    
+}
+
+// MARK: - Update like counts
+extension FirestoreManager {
+    /// Like count update 시 사용.
+    private func updateCachedBestCommentIdList(postId: String) async throws {
+        // 1. Sort best 5 comments from comment_set
+        let comments = try await threadsSetCollectionPath
+            .document(postId)
+            .collection(FirestoreConstants.commentSet)
+            .order(by: FirestoreConstants.cachedCommentLikedCount, descending: true)
+            .limit(to: FirestoreConstants.bestCommentLimit)
+            .getDocuments()
+            .documents
+        
+        let commentIds = comments.map { snapshot in
+            let data = snapshot.data()
+            return data[FirestoreConstants.commentId] as? String ?? ""
+        }
+        
+        // 2. Update best 5 comments to the post field.
+        try await threadsSetCollectionPath
+            .document(postId)
+            .updateData([
+                FirestoreConstants.cachedBestCommentIdList: FieldValue.arrayUnion(commentIds)
+            ])
+    }
+    
     //MARK: - Update Like
+    
+    /// Check if the current user has liked a post.
+    /// - Parameter postId: Id of a post.
+    func isPostLiked(postId: String) async throws -> Bool {
+        let userId = UserDefaults.standard.string(forKey: UserDefaultsConstants.userId) ?? UserDefaultsConstants.noUserFound
+        
+        let data = try await threadsSetCollectionPath
+            .document(postId)
+            .getDocument()
+            .data()
+        
+        let likedUserList: [String] = data?[FirestoreConstants.likedUserIdList] as? [String] ?? []
+        
+        return likedUserList.contains { $0 == userId }
+    }
+    
     // Like button tap
-    func updateLike() {
+    func updatePostLike(postId: String, isLiked: Bool) async throws {
         
-        // Need to include a logic that updates cached_best_comment_id_list
+        let userId = UserDefaults.standard.string(forKey: UserDefaultsConstants.userId) ?? UserDefaultsConstants.noUserFound
         
+        // 1. Update like user uid list and cached like counts
+        switch isLiked {
+        case true:
+            try await threadsSetCollectionPath
+                .document(postId)
+                .updateData([
+                    FirestoreConstants.likedUserIdList: FieldValue.arrayUnion([userId]),
+                    FirestoreConstants.cachedLikedCount: FieldValue.increment(Int64(1))
+                ])
+        case false:
+            try await threadsSetCollectionPath
+                .document(postId)
+                .updateData([
+                    FirestoreConstants.likedUserIdList: FieldValue.arrayRemove([userId]),
+                    FirestoreConstants.cachedLikedCount: FieldValue.increment(Int64(-1))
+                ])
+        }
+    }
+    
+    func updateCommentLike(postId: String, commentId: String, isLiked: Bool) async throws {
+        //1. Update like user uid list and cached like counts
+        let userId = UserDefaults.standard.string(forKey: UserDefaultsConstants.userId) ?? UserDefaultsConstants.noUserFound
+        
+        switch isLiked {
+        case true:
+            try await threadsSetCollectionPath
+                .document(postId)
+                .collection(FirestoreConstants.commentSet)
+                .document(commentId)
+                .updateData([
+                    FirestoreConstants.commentLikedUserUidList: FieldValue.arrayUnion([userId]),
+                    FirestoreConstants.cachedCommentLikedCount: FieldValue.increment(Int64(1))
+                ])
+        case false:
+            try await threadsSetCollectionPath
+                .document(postId)
+                .collection(FirestoreConstants.commentSet)
+                .document(commentId)
+                .updateData([
+                    FirestoreConstants.commentLikedUserUidList: FieldValue.arrayRemove([userId]),
+                    FirestoreConstants.cachedCommentLikedCount: FieldValue.increment(Int64(-1))
+                ])
+        }
+        // 2. Update cached_best_comment_id_list
+        try await self.updateCachedBestCommentIdList(postId: postId)
     }
     
 }
@@ -538,6 +647,16 @@ extension FirestoreManager {
         guard let path = path else { return }
         let ref = Storage.storage().reference(withPath: path)
         try await ref.delete()
+        print("Successfully deleted image from Storage.")
+    }
+    
+    func deleteComment(postId: String, commentId: String) async throws {
+        try await threadsSetCollectionPath
+            .document(postId)
+            .collection(FirestoreConstants.commentSet)
+            .document(commentId)
+            .delete()
+        print("Successfully deleted the comment#\(commentId) of post#\(postId).")
     }
 }
 

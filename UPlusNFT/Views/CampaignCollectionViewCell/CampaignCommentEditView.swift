@@ -91,7 +91,7 @@ extension CampaignCommentEditView {
             editTextField.heightAnchor.constraint(equalToConstant: 30),
             
             editImage.topAnchor.constraint(equalToSystemSpacingBelow: editTextField.bottomAnchor, multiplier: 1),
-            editImage.heightAnchor.constraint(equalToConstant: 50),
+//            editImage.heightAnchor.constraint(equalToConstant: 200),
             editImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             editImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
@@ -128,6 +128,7 @@ extension CampaignCommentEditView {
                   let url = URL(string: image)
             else {
                 self.editImage.isHidden = true
+                self.layoutIfNeeded()
                 return
             }
 
@@ -141,9 +142,9 @@ extension CampaignCommentEditView {
             
         }
         
-        if !vm.isBinded {
+        if !vm.isBound {
             bind(with: vm)
-            vm.isBinded = true
+            vm.isBound = true
         }
         
     }
@@ -167,14 +168,12 @@ extension CampaignCommentEditView {
                   
                     Task {
                         do {
-                        
-                            // TODO: `imageToEdit: UIImage?` 로 arugment 추가하기.
+                            
                             try await vm.editComment(postId: vm.postId,
                                                      commentId: vm.id,
                                                      commentToEdit: vm.editedComment ?? vm.comment,
                                                      originalImagePath: vm.imagePath,
                                                      imageToEdit: vm.selectedImageToEdit)
-                   
                             /*
                             self.convertToNormalMode()
                             self.commentDefaultView.commentTexts.text = vm.editedComment ?? vm.comment

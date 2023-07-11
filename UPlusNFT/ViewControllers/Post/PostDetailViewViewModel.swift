@@ -26,6 +26,7 @@ final class PostDetailViewViewModel {
     let likeUserCount: Int
     let createdTime: Date
     var comments: [Comment]?
+    let isLiked: Bool
     var isPostOfCurrentUser: Bool {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return false }
         return self.userId == currentUserId ? true : false
@@ -59,7 +60,8 @@ final class PostDetailViewViewModel {
         imageList: [String]?,
         likeUserCount: Int,
         createdTime: Date,
-        comments: [Comment]?
+        comments: [Comment]?,
+        isLiked: Bool
     ) {
         self.userId = userId
         self.postId = postId
@@ -71,6 +73,7 @@ final class PostDetailViewViewModel {
         self.likeUserCount = likeUserCount
         self.createdTime = createdTime
         self.comments = comments
+        self.isLiked = isLiked
         
         self.fetchInitialPaginatedComments(of: postId)
 
@@ -102,7 +105,7 @@ extension PostDetailViewViewModel {
     }
     
     func numberOfRecommentsForSection(at section: Int) -> Int {
-        return recommentsForSection(at: section).count + 1
+        return recommentsForSection(at: section).count + 2
     }
     
     func recommentsViewModelForItem(at item: Int, section: Int) -> CommentTableViewCellModel {

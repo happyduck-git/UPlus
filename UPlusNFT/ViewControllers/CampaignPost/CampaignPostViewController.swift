@@ -112,7 +112,7 @@ extension CampaignPostViewController {
     
 }
 
-// MARK: -  Create CollectionView
+// MARK: - Create CollectionView
 extension CampaignPostViewController {
   
     private func createCollectionView() -> UICollectionView {
@@ -156,6 +156,11 @@ extension CampaignPostViewController {
         collectionView.register(
             TextFieldCollectionViewCell.self,
             forCellWithReuseIdentifier: TextFieldCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            RecommentTextInputCollectionViewCell.self,
+            forCellWithReuseIdentifier: RecommentTextInputCollectionViewCell.identifier
         )
         
         switch self.postType {
@@ -267,7 +272,7 @@ extension CampaignPostViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(100)
+                heightDimension: .estimated(120)
             )
         )
         item.contentInsets = NSDirectionalEdgeInsets(top: 0,
@@ -277,7 +282,7 @@ extension CampaignPostViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(100)
+                heightDimension: .estimated(120)
             ),
             subitems: [item]
         )
@@ -393,6 +398,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
     
     private func makePostCell(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCommentCollectionViewCell.identifier, for: indexPath) as? PostCommentCollectionViewCell,
+              let textInputCell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommentTextInputCollectionViewCell.identifier, for: indexPath) as? RecommentTextInputCollectionViewCell,
               let defaultCell = collectionView.dequeueReusableCell(withReuseIdentifier: DefaultCollectionViewCell.identifier, for: indexPath) as? DefaultCollectionViewCell
         else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
@@ -423,23 +429,33 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         cell.editButtonDidTap = { [weak self] in
             self?.campaignPostVM.itemsMode[currentSection] = true
         }
-//        print("Tap status: \(self.campaignPostVM.itemsMode)")
         
+        /// Conforming delegation
+        cell.delegate = self
+        cell.indexPath = indexPath
+        //        print("Tap status: \(self.campaignPostVM.itemsMode)")
+        
+        /// Reset cell.
         if campaignPostVM.itemsMode[currentSection] { // Edit 상태에 따라 reset 상태 다르게 적용.
             cell.resetCellForEditMode()
         }
-        /// 모든 상태에 적용.
         cell.resetCell()
+        
+        let numberOfItems = campaignPostVM.post.numberOfRecommentsForSection(at: indexPath.section)
         
         if indexPath.item == 0 {
             cell.configure(with: commentCellVM)
             cell.layoutIfNeeded()
             return cell
+        } else if indexPath.item == numberOfItems - 1 {
+            textInputCell.configure(with: commentCellVM)
+            return textInputCell
         } else {
             let recommentCellVM = campaignPostVM.post.recommentsViewModelForItem(at: indexPath.item, section: indexPath.section)
- 
+            
             cell.contentView.backgroundColor = .systemGray5
             cell.configure(with: recommentCellVM)
+            cell.layoutIfNeeded()
             return cell
         }
     }
@@ -475,7 +491,28 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: PostDetailCollectionViewHeader.identifier,
+            for: indexPath
+        ) as? PostDetailCollectionViewHeader else {
+            return UICollectionReusableView()
+        }
+        header.configure(with: campaignPostVM.post)
+        return header
+    }
+
+}
+
+extension CampaignPostViewController: PostCommentCollectionViewCellPorotocol {
+    @MainActor
+    func commentDeleted() {
+        self.collectionView?.reloadData()
+    }
+    
+    @MainActor
+    func showCommentDidTap(at indexPath: IndexPath) {
         switch campaignPostVM.postType {
         case .article:
             if indexPath.section > 0 && indexPath.item == 0 {
@@ -490,19 +527,6 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
                 self.collectionView?.reloadData()
             }
         }
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let header = collectionView.dequeueReusableSupplementaryView(
-            ofKind: kind,
-            withReuseIdentifier: PostDetailCollectionViewHeader.identifier,
-            for: indexPath
-        ) as? PostDetailCollectionViewHeader else {
-            return UICollectionReusableView()
-        }
-        header.configure(with: campaignPostVM.post)
-        return header
     }
 }
 
@@ -521,7 +545,7 @@ extension CampaignPostViewController: PHPickerViewControllerDelegate {
                 return
             }
             self.loadImageFromItemProvider(itemProvider: result.itemProvider) { image in
-//                vm.selectedImageToEdit = image
+                vm.selectedImageToEdit = image
             }
             
             picker.dismiss(animated: true)

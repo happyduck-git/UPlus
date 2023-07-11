@@ -33,7 +33,7 @@ final class PostViewViewModel {
     
     func postDetailViewModel(at row: Int) -> PostDetailViewViewModel {
         let vm = self.tableDataSource[row]
-        
+        print("Is liked? \(vm.isLiked)")
         return PostDetailViewViewModel(
             userId: vm.userId,
             postId: vm.postId,
@@ -44,7 +44,8 @@ final class PostViewViewModel {
             imageList: vm.imageList,
             likeUserCount: vm.likeUserCount,
             createdTime: vm.createdTime,
-            comments: nil
+            comments: nil,
+            isLiked: vm.isLiked
         )
     }
     
@@ -61,9 +62,13 @@ extension PostViewViewModel {
         Task {
             do {
                 let results = try await firestoreManager.getPaginatedPosts()
-                let vms = results.posts.map { post in
-                    return self.convertToCellViewModel(post: post)
+                var vms: [PostTableViewCellModel] = []
+                for post in results.posts {
+                    let vm = self.convertToCellViewModel(post: post)
+                    vm.isLiked = try await firestoreManager.isPostLiked(postId: post.id)
+                    vms.append(vm)
                 }
+                
                 self.tableDataSource = vms
                 self.queryDocumentSnapshot = results.lastDoc
             }
@@ -75,18 +80,21 @@ extension PostViewViewModel {
     
     func fetchAdditionalPosts() {
         Task {
-                self.isLoading = true
-                
-                let results = try await firestoreManager.getAdditionalPaginatedPosts(after: self.queryDocumentSnapshot)
-                let vms = results.posts.map { post in
-                    return self.convertToCellViewModel(post: post)
-                }
-                
-                self.didLoadAdditionalPosts = true
-                self.isLoading = false
-                
-                self.tableDataSource.append(contentsOf: vms)
-                self.queryDocumentSnapshot = results.lastDoc
+            self.isLoading = true
+            
+            let results = try await firestoreManager.getAdditionalPaginatedPosts(after: self.queryDocumentSnapshot)
+            var vms: [PostTableViewCellModel] = []
+            for post in results.posts {
+                let vm = self.convertToCellViewModel(post: post)
+                vm.isLiked = try await firestoreManager.isPostLiked(postId: post.id)
+                vms.append(vm)
+            }
+            
+            self.didLoadAdditionalPosts = true
+            self.isLoading = false
+            
+            self.tableDataSource.append(contentsOf: vms)
+            self.queryDocumentSnapshot = results.lastDoc
             }
     }
     
@@ -103,5 +111,17 @@ extension PostViewViewModel {
             createdTime: post.createdTime.dateValue(),
             commentCount: post.cachedCommentCount ?? 0
         )
+    }
+}
+
+extension PostViewViewModel {
+    /// Update like counts.
+    /// - Parameters:
+    ///   - postId: Post id.
+    ///   - isLiked: If the post is liked.
+    func updatePostLike(postId: String,
+                        isLiked: Bool) async throws {
+        try await self.firestoreManager.updatePostLike(postId: postId,
+                                                       isLiked: isLiked)
     }
 }

@@ -24,6 +24,7 @@ final class PostTableViewCellModel {
     let likeUserCount: Int
     let createdTime: Date
     let commentCount: Int64
+    var isLiked: Bool = false
     
     // MARK: - Init
     init(

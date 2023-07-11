@@ -8,8 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct Recomment: Hashable {
-    let commentId: String
+struct Recomment: Hashable, Codable {
     let recommentAuthorUid: String
     let recommentContentText: String
     let recommentCreatedTime: Timestamp

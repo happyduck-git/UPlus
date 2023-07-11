@@ -6,11 +6,23 @@
 //
 
 import UIKit
+import Combine
+
+protocol PostTableViewCellProtocol: AnyObject {
+    func likeButtonDidTap(vm: PostTableViewCellModel)
+}
 
 final class PostTableViewCell: UITableViewCell {
     
-    // MARK: - UI Elements
+    private var vm: PostTableViewCellModel?
     
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - Delegate
+    weak var delegate: PostTableViewCellProtocol?
+    
+    // MARK: - UI Elements
     private let title: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
@@ -21,7 +33,7 @@ final class PostTableViewCell: UITableViewCell {
     
     private let likeButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "heart"), for: .normal) //heart.fill
+        button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -41,13 +53,17 @@ final class PostTableViewCell: UITableViewCell {
         
         setUI()
         setLayout()
+        bind()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+// MARK: - Set UI & Layout
+extension PostTableViewCell {
     
-    // MARK: - Set UI & Layout
     private func setUI() {
         contentView.addSubviews(
             title,
@@ -72,12 +88,41 @@ final class PostTableViewCell: UITableViewCell {
         ])
         self.title.setContentHuggingPriority(.defaultLow, for: .vertical)
     }
-    
-    // MARK: - Internal
+}
+
+// MARK: - Configure and Bind Cell with View Model
+extension PostTableViewCell {
+
     func configure(with vm: PostTableViewCellModel) {
+        self.vm = vm
+        
         self.title.text = vm.postTitle
         self.likeButton.setTitle(String(describing: vm.likeUserCount), for: .normal)
         self.commentButton.setTitle(String(describing: vm.commentCount), for: .normal)
+        
+        let likeImage: String = vm.isLiked ? "heart.fill" : "heart"
+        self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
     }
     
+    private func bind() {
+        likeButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self,
+                    let cellVM = self.vm else { return }
+                self.delegate?.likeButtonDidTap(vm: cellVM)
+                cellVM.isLiked = !cellVM.isLiked
+                let likeImage = cellVM.isLiked ? "heart.fill" : "heart"
+                self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
+            }
+            .store(in: &bindings)
+    }
+    
+    func resetCell() {
+        self.title.text = nil
+        self.likeButton.setTitle(nil, for: .normal)
+        self.commentButton.setTitle(nil, for: .normal)
+        self.likeButton.setImage(nil, for: .normal)
+    }
 }
+

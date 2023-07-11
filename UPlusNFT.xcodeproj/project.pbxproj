@@ -52,6 +52,7 @@
 		932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34DF2A57A06A0032192A /* URL+Extension.swift */; };
 		932C34E22A5BCE0B0032192A /* CampaignCommentEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34E12A5BCE0B0032192A /* CampaignCommentEditView.swift */; };
 		932C34E42A5BCE700032192A /* CampaignCommentDefaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34E32A5BCE700032192A /* CampaignCommentDefaultView.swift */; };
+		932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34E52A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift */; };
 		9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */; };
 		936F88232A4AB6ED0062E759 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 936F88222A4AB6ED0062E759 /* Nuke */; };
 		936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */; };
@@ -120,6 +121,7 @@
 		932C34DF2A57A06A0032192A /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		932C34E12A5BCE0B0032192A /* CampaignCommentEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignCommentEditView.swift; sourceTree = "<group>"; };
 		932C34E32A5BCE700032192A /* CampaignCommentDefaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignCommentDefaultView.swift; sourceTree = "<group>"; };
+		932C34E52A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommentTextInputCollectionViewCell.swift; sourceTree = "<group>"; };
 		9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
 		936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewViewModel.swift; sourceTree = "<group>"; };
 		936F88272A4AC8860062E759 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 				244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */,
 				932C34E12A5BCE0B0032192A /* CampaignCommentEditView.swift */,
 				932C34E32A5BCE700032192A /* CampaignCommentDefaultView.swift */,
+				932C34E52A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift */,
 			);
 			path = CampaignCollectionViewCell;
 			sourceTree = "<group>";
@@ -574,6 +577,7 @@
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
+				932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */,
 				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,

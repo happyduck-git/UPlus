@@ -11,6 +11,7 @@ struct UserDefaultsConstants {
     static let userId: String = "userId"
     static let username: String = "username"
     static let profileImage: String = "profileImage"
+    static let noUserFound: String = "no user found"
 }
 
 struct LoginConstants {
@@ -114,6 +115,9 @@ struct FirestoreConstants {
     static let documentLimit: Int = 6
     static let postUrlPrefix: String = "https://platfarm.net/thread/"
     static let cachedCommentCount: String = "cached_comment_count"
+    static let cachedCommentLikedCount: String = "cached_comment_liked_count"
+    static let cachedLikedCount: String = "cached_liked_count"
+    
     /* Comment */
     static let commentSet = "comment_set"
     static let commentAuthorUid = "comment_author_uid"
@@ -122,7 +126,8 @@ struct FirestoreConstants {
     static let commentCreatedTime = "comment_created_time"
     static let commentId = "comment_id"
     static let commentLikedUserUidList = "comment_liked_user_uid_list"
-
+    static let bestCommentLimit = 5
+    
     /* Recomment */
     static let recommentSet = "recomment_set"
     static let recommentAuthorUid = "recomment_author_uid"

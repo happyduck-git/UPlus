@@ -24,16 +24,6 @@ final class PostViewController: UIViewController {
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
-    
-    private let titleLabel: UILabel = {
-       let label = UILabel()
-        label.lineBreakMode = .byTruncatingMiddle
-        label.numberOfLines = 2
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
 
     // MARK: - Init
     init(vm: PostViewViewModel) {
@@ -154,7 +144,9 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifier, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
+        cell.resetCell()
         let vm = vm.cellForRow(at: indexPath.row)
+        cell.delegate = self
         cell.configure(with: vm)
         return cell
     }
@@ -197,6 +189,19 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+}
+
+extension PostViewController: PostTableViewCellProtocol {
+    func likeButtonDidTap(vm: PostTableViewCellModel) {
+        Task {
+            do {
+                try await self.vm.updatePostLike(postId: vm.postId, isLiked: vm.isLiked)
+            }
+            catch {
+                print("Failed to update post like -- \(error.localizedDescription)")
+            }
+        }
     }
 }
 

@@ -9,8 +9,16 @@ import UIKit
 import Combine
 import Nuke
 import FirebaseStorage
+import OSLog
+
+protocol PostCommentCollectionViewCellPorotocol: AnyObject {
+    func commentDeleted()
+    func showCommentDidTap(at indexPath: IndexPath)
+}
 
 final class PostCommentCollectionViewCell: UICollectionViewCell {
+    
+    private let logger = Logger()
     
     //MARK: - Dependency
     private var vm: CommentTableViewCellModel?
@@ -27,6 +35,10 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     //MARK: - Closure
     var editButtonDidTap: (() -> Void)?
     var commentEditViewCameraBtnDidTap: (() -> Void)?
+    
+    // MARK: - Delegate
+    weak var delegate: PostCommentCollectionViewCellPorotocol?
+    var indexPath: IndexPath?
     
     // MARK: - UI Elements
     private let bestLabel:  UILabel = {
@@ -108,9 +120,22 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
         return label
     }()
    
+    private lazy var showCommentButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("답글 달기", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.setImage(UIImage(systemName: "arrowtriangle.down.fill"), for: .normal)
+        //arrowtriangle.up.fill | arrowtriangle.down.fill
+        button.semanticContentAttribute = .forceRightToLeft
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         setUI()
         setLayout()
         commentEditSaveButtonDidTap()
@@ -137,7 +162,8 @@ extension PostCommentCollectionViewCell {
             commentEditView,
             likeButton,
             commentButton,
-            createdAtLabel
+            createdAtLabel,
+            showCommentButton
         )
     }
     
@@ -169,10 +195,9 @@ extension PostCommentCollectionViewCell {
             self.commentEditView.leadingAnchor.constraint(equalTo: self.bestLabel.leadingAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.commentEditView.trailingAnchor, multiplier: 2),
             
-            
             self.likeButton.topAnchor.constraint(equalToSystemSpacingBelow: self.commentDefaultView.bottomAnchor, multiplier: 1),
             self.likeButton.leadingAnchor.constraint(equalTo: self.commentDefaultView.leadingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.likeButton.bottomAnchor, multiplier: 2),
+            self.showCommentButton.bottomAnchor.constraint(equalToSystemSpacingBelow: self.likeButton.bottomAnchor, multiplier: 3),
             
             self.commentButton.topAnchor.constraint(equalTo: self.likeButton.topAnchor),
             self.commentButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.likeButton.trailingAnchor, multiplier: 1),
@@ -180,7 +205,11 @@ extension PostCommentCollectionViewCell {
             
             self.createdAtLabel.topAnchor.constraint(equalTo: self.likeButton.topAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.createdAtLabel.trailingAnchor, multiplier: 2),
-            self.createdAtLabel.bottomAnchor.constraint(equalTo: self.likeButton.bottomAnchor)
+            self.createdAtLabel.bottomAnchor.constraint(equalTo: self.likeButton.bottomAnchor),
+            
+            self.showCommentButton.topAnchor.constraint(equalToSystemSpacingBelow: self.likeButton.bottomAnchor, multiplier: 1),
+            self.showCommentButton.leadingAnchor.constraint(equalTo: self.profileImageView.leadingAnchor),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.showCommentButton.bottomAnchor, multiplier: 2)
         ])
         self.bestLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
@@ -216,7 +245,7 @@ extension PostCommentCollectionViewCell {
 
     private func bind(with vm: CommentTableViewCellModel) {
         func bindViewToViewModel() {
-            
+                
             editButton.tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
@@ -225,7 +254,7 @@ extension PostCommentCollectionViewCell {
                     
                     self.convertToEditMode()
                     self.editButtonDidTap?()
-
+                    
                     self.commentEditView.configure(with: cellVM)
                     self.isEditMode = true
                 }
@@ -234,12 +263,22 @@ extension PostCommentCollectionViewCell {
             deleteButton.tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
-                    guard let `self` = self else { return }
-                    
+                    guard let `self` = self,
+                          let cellVM = self.vm else { return }
+                    Task {
+                        do {
+                            try await cellVM.deleteComment(postId: cellVM.postId,
+                                                           commentId: cellVM.id)
+                            self.delegate?.commentDeleted()
+                        }
+                        catch {
+                            self.logger.error("Error deleting a comment -- \(error.localizedDescription)")
+                        }
+                    }
                 }
                 .store(in: &bindings)
             
-                commentEditView.editTextField.textPublisher
+            commentEditView.editTextField.textPublisher
                 .receive(on: DispatchQueue.main)
                 .removeDuplicates()
                 .debounce(for: 0.1, scheduler: RunLoop.main)
@@ -265,7 +304,27 @@ extension PostCommentCollectionViewCell {
                     self.isEditMode = false
                 }
                 .store(in: &bindings)
-             
+            
+            likeButton.tapPublisher
+                .receive(on: RunLoop.current)
+                .sink { _ in
+                    print("Like btn tapped")
+                    
+                }
+                .store(in: &bindings)
+            
+            showCommentButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self,
+                          let indexPath = self.indexPath
+                    else { return }
+                    
+                    // TODO: Show recomments.
+                    self.delegate?.showCommentDidTap(at: indexPath)
+                }
+                .store(in: &bindings)
+            
         }
         
         func bindViewModelToView() {
@@ -350,14 +409,17 @@ extension PostCommentCollectionViewCell {
         editButton.isHidden = true
         deleteButton.isHidden = true
         commentDefaultView.isHidden = true
+        showCommentButton.isHidden = true
         
         commentEditView.isHidden = false
+        self.layoutIfNeeded()
     }
     
     private func convertToNormalMode() {
         editButton.isHidden = false
         deleteButton.isHidden = false
         commentDefaultView.isHidden = false
+        showCommentButton.isHidden = false
         
         commentEditView.isHidden = true
     }
