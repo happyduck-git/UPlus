@@ -500,6 +500,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             return UICollectionReusableView()
         }
         header.configure(with: campaignPostVM.post)
+        header.delegate = self
         return header
     }
 
@@ -525,6 +526,20 @@ extension CampaignPostViewController: PostCommentCollectionViewCellPorotocol {
                 guard let cellVM = campaignPostVM.postCellViewModel(at: indexPath.section) else { return }
                 cellVM.isOpened = !cellVM.isOpened
                 self.collectionView?.reloadData()
+            }
+        }
+    }
+}
+
+
+extension CampaignPostViewController: PostDetailCollectionViewHeaderProtocol {
+    func likeButtonDidTap(vm: PostDetailViewViewModel) {
+        Task {
+            do {
+                try await vm.updatePostLike(postId: vm.postId, isLiked: vm.isLiked)
+            }
+            catch {
+                print("Failed to update post like -- \(error.localizedDescription)")
             }
         }
     }
@@ -609,3 +624,4 @@ extension CampaignPostViewController: UIScrollViewDelegate {
         }
     }
 }
+

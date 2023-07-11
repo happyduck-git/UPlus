@@ -21,7 +21,7 @@ final class PostTableViewCellModel {
     let postTitle: String
     let postContent: String
     let imageList: [String]?
-    let likeUserCount: Int
+    var likeUserCount: Int
     let createdTime: Date
     let commentCount: Int64
     var isLiked: Bool = false

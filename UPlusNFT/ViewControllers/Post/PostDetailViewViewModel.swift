@@ -23,10 +23,10 @@ final class PostDetailViewViewModel {
     let postTitle: String
     let postContent: String
     let imageList: [String]?
-    let likeUserCount: Int
+    var likeUserCount: Int
     let createdTime: Date
     var comments: [Comment]?
-    let isLiked: Bool
+    var isLiked: Bool
     var isPostOfCurrentUser: Bool {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return false }
         return self.userId == currentUserId ? true : false
@@ -197,6 +197,15 @@ extension PostDetailViewViewModel {
         }
     }
     
+    /// Update like counts.
+    /// - Parameters:
+    ///   - postId: Post id.
+    ///   - isLiked: If the post is liked.
+    func updatePostLike(postId: String,
+                        isLiked: Bool) async throws {
+        try await self.firestoreManager.updatePostLike(postId: postId,
+                                                       isLiked: isLiked)
+    }
 }
 
 extension PostDetailViewViewModel {

@@ -110,10 +110,16 @@ extension PostTableViewCell {
             .sink { [weak self] _ in
                 guard let `self` = self,
                     let cellVM = self.vm else { return }
-                self.delegate?.likeButtonDidTap(vm: cellVM)
+//                self.delegate?.likeButtonDidTap(vm: cellVM)
                 cellVM.isLiked = !cellVM.isLiked
-                let likeImage = cellVM.isLiked ? "heart.fill" : "heart"
+                let likeImage: String = cellVM.isLiked ? "heart.fill" : "heart"
+                let updateLikeCount: Int = cellVM.isLiked ? 1 : -1
+                cellVM.likeUserCount += updateLikeCount
+                
+                self.delegate?.likeButtonDidTap(vm: cellVM)
+                
                 self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
+                self.likeButton.setTitle(String(cellVM.likeUserCount), for: .normal)
             }
             .store(in: &bindings)
     }

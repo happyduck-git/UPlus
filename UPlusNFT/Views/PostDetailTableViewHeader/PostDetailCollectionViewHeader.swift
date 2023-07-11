@@ -10,9 +10,17 @@ import Combine
 import Nuke
 import FirebaseStorage
 
+protocol PostDetailCollectionViewHeaderProtocol: AnyObject {
+    func likeButtonDidTap(vm: PostDetailViewViewModel)
+}
+
 final class PostDetailCollectionViewHeader: UICollectionReusableView {
     
+    //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
+    
+    //MARK: - Delegate
+    weak var delegate: PostDetailCollectionViewHeaderProtocol?
     
     //MARK: - Property
     private let postIdLabel: UILabel = {
@@ -81,7 +89,7 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.circle")
@@ -124,8 +132,11 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    //MARK: - Internal
+
+}
+
+//MARK: - Configure and bind CollectionViewHeader with View Model.
+extension PostDetailCollectionViewHeader {
     func configure(with vm: PostDetailViewViewModel) {
         self.postIdLabel.text = String(vm.postId.prefix(5))
         self.postUrlLabel.text = String(vm.postUrl.prefix(20))
@@ -135,7 +146,10 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         self.nicknameLabel.text = String(vm.userId.prefix(5))
         self.likeButton.setTitle(String(describing: vm.likeUserCount), for: .normal)
         self.createdAtLabel.text = String(describing: vm.createdTime.monthDayTimeFormat)
-    
+        
+        let likeImage: String = vm.isLiked ? "heart.fill" : "heart"
+        self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
+        
         Task {
             if let firstImage = vm.imageList?.first {
                 let url = URL(string: firstImage)
@@ -150,8 +164,48 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         
         bind(with: vm)
     }
+    
+    private func bind(with vm: PostDetailViewViewModel) {
+        vm.$user
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] user in
+                guard let `self` = self else { return }
+                Task {
+                    do {
+                        guard let url = URL(string: user?.profileImagePath ?? FirestoreConstants.defaultUserProfile) else {
+                            return
+                        }
+                        self.profileImageView.image = try await URL.urlToImage(url)
+                    }
+                    catch {
+                        print("Error converting profile image -- \(error.localizedDescription)")
+                    }
+                }
+               
+            }
+            .store(in: &bindings)
+        
+        likeButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                vm.isLiked = !vm.isLiked
+                let likeImage: String = vm.isLiked ? "heart.fill" : "heart"
+                let updateLikeCount: Int = vm.isLiked ? 1 : -1
+                vm.likeUserCount += updateLikeCount
+                
+                self.delegate?.likeButtonDidTap(vm: vm)
+                
+                self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
+                self.likeButton.setTitle(String(vm.likeUserCount), for: .normal)
+            }
+            .store(in: &bindings)
+    }
+  
+}
 
-    //MARK: - Private
+//MARK: - Set UI & Set Layout
+extension PostDetailCollectionViewHeader {
 
     private func setUI() {
         self.addSubviews(
@@ -220,26 +274,5 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
             self.likeButton.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
         ])
     }
-    
-    private func bind(with vm: PostDetailViewViewModel) {
-        vm.$user
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] user in
-                guard let `self` = self else { return }
-                Task {
-                    do {
-                        guard let url = URL(string: user?.profileImagePath ?? FirestoreConstants.defaultUserProfile) else {
-                            return
-                        }
-                        self.profileImageView.image = try await URL.urlToImage(url)
-                    }
-                    catch {
-                        print("Error converting profile image -- \(error.localizedDescription)")
-                    }
-                }
-               
-            }
-            .store(in: &bindings)
-    }
-  
+
 }
