@@ -74,6 +74,7 @@ final class CampaignCommentEditView: UIView {
     
 }
 
+// MARK: - Set UI & Layout
 extension CampaignCommentEditView {
     private func setUI() {
         self.addSubviews(editTextField,
@@ -122,6 +123,9 @@ extension CampaignCommentEditView {
 
 extension CampaignCommentEditView {
     func configure(with vm: CommentTableViewCellModel) {
+        bindings.forEach { $0.cancel() }
+        bindings.removeAll()
+        
         editTextField.text = vm.comment
         Task {
             guard let image = vm.imagePath,
@@ -142,11 +146,7 @@ extension CampaignCommentEditView {
             
         }
         
-        if !vm.isBound {
-            bind(with: vm)
-            vm.isBound = true
-        }
-        
+        bind(with: vm)
     }
     
     private func bind(with vm: CommentTableViewCellModel) {
@@ -165,10 +165,10 @@ extension CampaignCommentEditView {
                 .receive(on: RunLoop.current)
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
-                  
+       
                     Task {
                         do {
-                            
+
                             try await vm.editComment(postId: vm.postId,
                                                      commentId: vm.id,
                                                      commentToEdit: vm.editedComment ?? vm.comment,
@@ -187,6 +187,8 @@ extension CampaignCommentEditView {
                     
                 }
                 .store(in: &bindings)
+            
+            
         }
         
         func bindViewModelToView() {

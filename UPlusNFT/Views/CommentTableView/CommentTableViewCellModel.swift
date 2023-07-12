@@ -21,10 +21,11 @@ final class CommentTableViewCellModel {
     var isOpened: Bool = false
     let comment: String
     let imagePath: String?
-    let likeUserCount: Int?
+    var likeUserCount: Int?
     let recomments: [Recomment]?
     let createdAt: Timestamp
     
+    @Published var isLiked: Bool = false
     @Published var user: User?
     @Published var editedComment: String?
     @Published var selectedImageToEdit: UIImage?
@@ -78,9 +79,17 @@ extension CommentTableViewCellModel {
     /// - Parameters:
     ///   - postId: Post id.
     ///   - isLiked: If the post is liked.
-    func likeComment(postId: String,
-                     isLiked: Bool) async throws {
-        
+    func likeComment(isLiked: Bool) async throws {
+        Task {
+            do {
+                try await self.firestoreManager.updateCommentLike(postId: postId,
+                                                                  commentId: id,
+                                                                  isLiked: isLiked)
+            }
+            catch {
+                print("Error like comment - \(error.localizedDescription)")
+            }
+        }
     }
     
     /// Edit texts or image of  a comment.

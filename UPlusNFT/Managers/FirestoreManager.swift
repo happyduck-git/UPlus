@@ -525,6 +525,21 @@ extension FirestoreManager {
         return likedUserList.contains { $0 == userId }
     }
     
+    func isCommentLiked(postId: String, commentId: String) async throws -> Bool {
+        let userId = UserDefaults.standard.string(forKey: UserDefaultsConstants.userId) ?? UserDefaultsConstants.noUserFound
+        
+        let data = try await threadsSetCollectionPath
+            .document(postId)
+            .collection(FirestoreConstants.commentSet)
+            .document(commentId)
+            .getDocument()
+            .data()
+        
+        let likedUserList: [String] = data?[FirestoreConstants.commentLikedUserUidList] as? [String] ?? []
+        
+        return likedUserList.contains { $0 == userId }
+    }
+    
     // Like button tap
     func updatePostLike(postId: String, isLiked: Bool) async throws {
         
@@ -550,7 +565,6 @@ extension FirestoreManager {
     }
     
     func updateCommentLike(postId: String, commentId: String, isLiked: Bool) async throws {
-        //1. Update like user uid list and cached like counts
         let userId = UserDefaults.standard.string(forKey: UserDefaultsConstants.userId) ?? UserDefaultsConstants.noUserFound
         
         switch isLiked {

@@ -137,14 +137,20 @@ extension PostDetailViewViewModel {
                 var dataSource: [CommentTableViewCellModel] = []
            
                 for bestComment in bestComments {
-                    dataSource.append(try await convertToViewModel(from: bestComment, commentType: .best))
+                    let vm = try await convertToViewModel(from: bestComment, commentType: .best)
+                    vm.isLiked = try await firestoreManager.isCommentLiked(postId: postId, commentId: vm.id)
+                    print("Best com is liked? \(vm.comment) -- \(vm.isLiked)")
+                    dataSource.append(vm)
                 }
 
                 // Get Normal Paginated Comments
                 let normalCommentData = try await firestoreManager.getPaginatedComments(of: postId)
                 
                 for comment in normalCommentData.comments {
-                    dataSource.append(try await convertToViewModel(from: comment, commentType: .normal))
+                    let vm = try await convertToViewModel(from: comment, commentType: .normal)
+                    vm.isLiked = try await firestoreManager.isCommentLiked(postId: postId, commentId: vm.id)
+                    print("Normal com is liked? \(vm.comment) -- \(vm.isLiked)")
+                    dataSource.append(vm)
                 }
 
                 self.commentsTableDatasource = dataSource
@@ -168,7 +174,10 @@ extension PostDetailViewViewModel {
                 )
                 
                 for comment in commentsData.comments {
-                    comments.append(try await convertToViewModel(from: comment, commentType: .normal))
+                    let vm = try await convertToViewModel(from: comment, commentType: .normal)
+                    vm.isLiked = try await firestoreManager.isCommentLiked(postId: postId, commentId: vm.id)
+                    print("Normal com is liked? \(vm.comment) -- \(vm.isLiked)")
+                    comments.append(vm)
                 }
                 
                 self.commentsTableDatasource.append(contentsOf: comments)

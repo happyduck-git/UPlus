@@ -18,7 +18,7 @@ final class PostTableViewCell: UITableViewCell {
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
-    
+
     // MARK: - Delegate
     weak var delegate: PostTableViewCellProtocol?
     
@@ -53,7 +53,7 @@ final class PostTableViewCell: UITableViewCell {
         
         setUI()
         setLayout()
-        bind()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -94,32 +94,50 @@ extension PostTableViewCell {
 extension PostTableViewCell {
 
     func configure(with vm: PostTableViewCellModel) {
+        bindings.forEach { $0.cancel() }
+        bindings.removeAll()
+        
         self.vm = vm
         
         self.title.text = vm.postTitle
         self.likeButton.setTitle(String(describing: vm.likeUserCount), for: .normal)
         self.commentButton.setTitle(String(describing: vm.commentCount), for: .normal)
         
-        let likeImage: String = vm.isLiked ? "heart.fill" : "heart"
+        let likeImage: String = vm.isLiked ? SFSymbol.heartFill : SFSymbol.heart
         self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
+        
+        bind()
     }
     
     private func bind() {
+        
         likeButton.tapPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self,
-                    let cellVM = self.vm else { return }
-//                self.delegate?.likeButtonDidTap(vm: cellVM)
+                      let cellVM = self.vm
+                else { return }
                 cellVM.isLiked = !cellVM.isLiked
-                let likeImage: String = cellVM.isLiked ? "heart.fill" : "heart"
+            }
+            .store(in: &bindings)
+        
+        self.vm?.$isLiked
+            .receive(on: DispatchQueue.main)
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] status in
+                guard let `self` = self,
+                      let cellVM = self.vm
+                else { return }
+               
+                let likeImage: String = cellVM.isLiked ? SFSymbol.heartFill : SFSymbol.heart
                 let updateLikeCount: Int = cellVM.isLiked ? 1 : -1
                 cellVM.likeUserCount += updateLikeCount
                 
-                self.delegate?.likeButtonDidTap(vm: cellVM)
-                
                 self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
                 self.likeButton.setTitle(String(cellVM.likeUserCount), for: .normal)
+               
+                self.delegate?.likeButtonDidTap(vm: cellVM)
             }
             .store(in: &bindings)
     }

@@ -189,17 +189,19 @@ extension PostDetailCollectionViewHeader {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
+                
                 vm.isLiked = !vm.isLiked
-                let likeImage: String = vm.isLiked ? "heart.fill" : "heart"
+                let likeImage: String = vm.isLiked ? SFSymbol.heartFill : SFSymbol.heart
                 let updateLikeCount: Int = vm.isLiked ? 1 : -1
                 vm.likeUserCount += updateLikeCount
-                
-                self.delegate?.likeButtonDidTap(vm: vm)
-                
+ 
                 self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
                 self.likeButton.setTitle(String(vm.likeUserCount), for: .normal)
+                
+                self.delegate?.likeButtonDidTap(vm: vm)
             }
             .store(in: &bindings)
+        
     }
   
 }

@@ -33,7 +33,7 @@ final class PostViewViewModel {
     
     func postDetailViewModel(at row: Int) -> PostDetailViewViewModel {
         let vm = self.tableDataSource[row]
-        print("Is liked? \(vm.isLiked)")
+
         return PostDetailViewViewModel(
             userId: vm.userId,
             postId: vm.postId,
@@ -111,6 +111,29 @@ extension PostViewViewModel {
             createdTime: post.createdTime.dateValue(),
             commentCount: post.cachedCommentCount ?? 0
         )
+        /*
+         Task { () -> PostTableViewCellModel in
+             do {
+                 let isLiked: Bool = try await firestoreManager.isPostLiked(postId: post.id)
+                 return PostTableViewCellModel(
+                     userId: post.authorUid,
+                     postId: post.id,
+                     postUrl: post.url,
+                     postType: PostType(rawValue: post.cachedType) ?? .article,
+                     postTitle: post.title,
+                     postContent: post.contentText,
+                     imageList: post.contentImagePathList,
+                     likeUserCount: post.likedUserIdList?.count ?? 0,
+                     createdTime: post.createdTime.dateValue(),
+                     commentCount: post.cachedCommentCount ?? 0,
+                     isLiked: isLiked
+                 )
+             }
+             catch {
+                 print("Error getting post like")
+             }
+         }
+         */
     }
 }
 

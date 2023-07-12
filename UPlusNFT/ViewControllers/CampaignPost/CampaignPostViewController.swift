@@ -9,10 +9,18 @@ import UIKit
 import Combine
 import PhotosUI
 
+protocol CampaignPostViewControllerDelegate: AnyObject {
+    func likebuttonDidTap(at indexPath: IndexPath, isLiked: Bool)
+}
+
 final class CampaignPostViewController: UIViewController {
     
     // MARK: - Dependency
     private let campaignPostVM: CampaignPostViewViewModel
+    
+    // MARK: - Delegate
+    weak var delegate: CampaignPostViewControllerDelegate?
+    var indexPath: IndexPath?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -534,14 +542,9 @@ extension CampaignPostViewController: PostCommentCollectionViewCellPorotocol {
 
 extension CampaignPostViewController: PostDetailCollectionViewHeaderProtocol {
     func likeButtonDidTap(vm: PostDetailViewViewModel) {
-        Task {
-            do {
-                try await vm.updatePostLike(postId: vm.postId, isLiked: vm.isLiked)
-            }
-            catch {
-                print("Failed to update post like -- \(error.localizedDescription)")
-            }
-        }
+        guard let indexPath = self.indexPath else { return }
+        //                try await vm.updatePostLike(postId: vm.postId, isLiked: vm.isLiked)
+        self.delegate?.likebuttonDidTap(at: indexPath, isLiked: vm.isLiked)
     }
 }
 

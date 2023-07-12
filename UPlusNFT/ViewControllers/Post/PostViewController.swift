@@ -170,6 +170,9 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
                 postType: vm.postType,
                 campaignPostVM: campaignPostVM
             )
+
+            vc.delegate = self
+            vc.indexPath = indexPath
             self.show(vc, sender: self)
         default:
             let campaignPostVM = CampaignPostViewViewModel(
@@ -182,6 +185,8 @@ extension PostViewController: UITableViewDelegate, UITableViewDataSource {
                 postType: vm.postType,
                 campaignPostVM: campaignPostVM
             )
+            vc.delegate = self
+            vc.indexPath = indexPath
             self.show(vc, sender: self)
         }
     
@@ -202,6 +207,13 @@ extension PostViewController: PostTableViewCellProtocol {
                 print("Failed to update post like -- \(error.localizedDescription)")
             }
         }
+    }
+}
+
+extension PostViewController: CampaignPostViewControllerDelegate {
+    func likebuttonDidTap(at indexPath: IndexPath, isLiked: Bool) {
+        let vm = self.vm.tableDataSource[indexPath.row]
+        vm.isLiked = isLiked
     }
 }
 

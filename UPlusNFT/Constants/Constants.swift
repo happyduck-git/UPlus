@@ -73,8 +73,9 @@ struct SFSymbol {
     static let edit: String = "pencil"
     static let delete: String = "trash"
     static let defaultProfile: String = "person.circle.fill"
-    static let like: String = "heart"
     static let comment: String = "text.bubble"
+    static let heartFill: String = "heart.fill"
+    static let heart: String = "heart"
 }
 
 // MARK: - Firebase

@@ -60,12 +60,11 @@ final class RecommentTextInputCollectionViewCell: UICollectionViewCell {
 extension RecommentTextInputCollectionViewCell {
     
     func configure(with vm: CommentTableViewCellModel) {
-        self.vm = vm
+        bindings.forEach { $0.cancel() }
+        bindings.removeAll()
         
-        if !self.isBound {
-            self.bind(with: vm)
-            self.isBound = true
-        }
+        self.vm = vm
+        self.bind(with: vm)
     }
     
     private func bind(with vm: CommentTableViewCellModel) {

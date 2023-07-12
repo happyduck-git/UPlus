@@ -99,7 +99,7 @@ final class PostCommentCollectionViewCell: UICollectionViewCell {
     
     private let likeButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: SFSymbol.like), for: .normal) //heart.fill
+        button.setImage(UIImage(systemName: SFSymbol.heart), for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -222,6 +222,9 @@ extension PostCommentCollectionViewCell {
     func configure(with cellVM: CommentTableViewCellModel) {
         self.commentEditView.cameraBtnDidTapHandler = commentEditViewCameraBtnDidTap
         
+        bindings.forEach { $0.cancel() }
+        bindings.removeAll()
+        
         self.vm = cellVM
         switch cellVM.type {
         case .best:
@@ -234,13 +237,13 @@ extension PostCommentCollectionViewCell {
         self.likeButton.setTitle(String(describing: cellVM.likeUserCount ?? 0), for: .normal)
         self.commentButton.setTitle(String(describing: cellVM.recomments?.count ?? 0), for: .normal)
         self.createdAtLabel.text = String(describing: cellVM.createdAt.dateValue().monthDayTimeFormat)
-        
         self.commentDefaultView.configure(with: cellVM)
         
-        if !self.binded {
-            self.bind(with: cellVM)
-            self.binded = true
-        }
+        let likeImage: String = cellVM.isLiked ? SFSymbol.heartFill : SFSymbol.heart
+        self.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
+        
+        self.bind(with: cellVM)
+
     }
 
     private func bind(with vm: CommentTableViewCellModel) {
@@ -307,9 +310,10 @@ extension PostCommentCollectionViewCell {
             
             likeButton.tapPublisher
                 .receive(on: RunLoop.current)
-                .sink { _ in
-                    print("Like btn tapped")
-                    
+                .sink { [weak self] _ in
+                    guard let `self` = self,
+                          let cellVM = self.vm else { return }
+                    cellVM.isLiked = !cellVM.isLiked
                 }
                 .store(in: &bindings)
             
@@ -319,8 +323,6 @@ extension PostCommentCollectionViewCell {
                     guard let `self` = self,
                           let indexPath = self.indexPath
                     else { return }
-                    
-                    // TODO: Show recomments.
                     self.delegate?.showCommentDidTap(at: indexPath)
                 }
                 .store(in: &bindings)
@@ -328,7 +330,7 @@ extension PostCommentCollectionViewCell {
         }
         
         func bindViewModelToView() {
-            vm.$user
+            self.vm?.$user
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] user in
                     guard let `self` = self,
@@ -348,6 +350,27 @@ extension PostCommentCollectionViewCell {
                             self.profileImageView.image = UIImage(systemName: SFSymbol.defaultProfile)
                             print("Error converting profile image - \(error.localizedDescription)")
                         }
+                    }
+                }
+                .store(in: &bindings)
+            
+            self.vm?.$isLiked
+                .receive(on: DispatchQueue.main)
+                .dropFirst()
+                .removeDuplicates()
+                .sink { [weak self] liked in
+                    guard let `self` = self,
+                          let cellVM = self.vm
+                    else { return }
+                    Task {
+                        let image = liked ? SFSymbol.heartFill : SFSymbol.heart
+                        let updatedCount = liked ? 1 : -1
+                        let currentLikes = cellVM.likeUserCount ?? 0
+                        cellVM.likeUserCount = currentLikes + updatedCount
+
+                        self.likeButton.setImage(UIImage(systemName: image), for: .normal)
+                        self.likeButton.setTitle("\(currentLikes + updatedCount)", for: .normal)
+                        try await cellVM.likeComment(isLiked: liked)
                     }
                 }
                 .store(in: &bindings)
@@ -371,6 +394,8 @@ extension PostCommentCollectionViewCell {
         self.createdAtLabel.text = nil
         self.commentDefaultView.isHidden = false
         self.commentEditView.isHidden = true
+        self.likeButton.setTitle(nil, for: .normal)
+        self.likeButton.setImage(nil, for: .normal)
     }
     
     func resetCellForEditMode() {
@@ -424,5 +449,3 @@ extension PostCommentCollectionViewCell {
         commentEditView.isHidden = true
     }
 }
-
-
