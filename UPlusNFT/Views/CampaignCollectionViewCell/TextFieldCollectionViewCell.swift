@@ -30,9 +30,9 @@ final class TextFieldCollectionViewCell: UICollectionViewCell {
     
     private let photoCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+        layout.sectionInset = UIEdgeInsets(top: 12, left: 2, bottom: 3, right: 2)
         layout.scrollDirection = .horizontal
-      
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .systemGray5
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
@@ -200,11 +200,16 @@ extension TextFieldCollectionViewCell: UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.identifier, for: indexPath) as? PhotoCollectionViewCell,
             let vm = textFieldVM
-        else {
-            return UICollectionViewCell()
-        }
+        else { return UICollectionViewCell() }
+        cell.resetCell()
+        
         let image = vm.imageForItem()
         cell.configure(with: image)
+        
+        cell.buttonTapAction = {
+            vm.selectedImage = nil
+        }
+        
         return cell
     }
 }

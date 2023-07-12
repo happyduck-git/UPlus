@@ -61,6 +61,9 @@ final class CampaignCommentEditView: UIView {
         return button
     }()
     
+    var textFiedlHeightConstraint: NSLayoutConstraint?
+    var imageViewHeightConstraint: NSLayoutConstraint?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -72,6 +75,11 @@ final class CampaignCommentEditView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        textFiedlHeightConstraint?.constant = self.frame.height / 5
+        imageViewHeightConstraint?.constant = self.frame.height / 1.5
+    }
 }
 
 // MARK: - Set UI & Layout
@@ -85,14 +93,15 @@ extension CampaignCommentEditView {
     }
     
     private func setLayout() {
+        print("Height: \(self.frame.height)")
         NSLayoutConstraint.activate([
             editTextField.topAnchor.constraint(equalTo: self.topAnchor),
             editTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             editTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            editTextField.heightAnchor.constraint(equalToConstant: 30),
+//            editTextField.heightAnchor.constraint(equalToConstant: 25),
             
             editImage.topAnchor.constraint(equalToSystemSpacingBelow: editTextField.bottomAnchor, multiplier: 1),
-//            editImage.heightAnchor.constraint(equalToConstant: 200),
+//            editImage.heightAnchor.constraint(equalToConstant: 150),
             editImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             editImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
@@ -112,6 +121,11 @@ extension CampaignCommentEditView {
         cameraButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
         confirmButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
         cancelButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        
+        textFiedlHeightConstraint = editTextField.heightAnchor.constraint(equalToConstant: self.frame.height / 5)
+        imageViewHeightConstraint = editImage.heightAnchor.constraint(equalToConstant: self.frame.height / 1.5)
+        textFiedlHeightConstraint?.isActive = true
+        imageViewHeightConstraint?.isActive = true
     }
 }
 

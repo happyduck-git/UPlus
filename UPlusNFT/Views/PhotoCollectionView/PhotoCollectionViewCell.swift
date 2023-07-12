@@ -67,8 +67,8 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     
     //MARK: - Set UI & Layout
     private func setUI() {
-        contentView.addSubview(photo)
-        contentView.addSubview(deleteButton)
+        contentView.addSubviews(photo,
+                                deleteButton)
     }
     
     private func setLayout() {
@@ -84,6 +84,10 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
             deleteButton.widthAnchor.constraint(equalToConstant: 20),
             
         ])
+    }
+    
+    func resetCell() {
+        photo.image = nil
     }
     
     @objc private func deleteButtonDidTap() {

@@ -191,10 +191,14 @@ extension PostCommentCollectionViewCell {
             self.commentDefaultView.leadingAnchor.constraint(equalTo: self.bestLabel.leadingAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.commentDefaultView.trailingAnchor, multiplier: 2),
             
+            self.commentEditView.topAnchor.constraint(equalTo: self.commentDefaultView.topAnchor),
+            self.commentEditView.leadingAnchor.constraint(equalTo: self.commentDefaultView.leadingAnchor),
+            self.commentEditView.trailingAnchor.constraint(equalTo: self.commentDefaultView.trailingAnchor),
+            /*
             self.commentEditView.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.commentEditView.leadingAnchor.constraint(equalTo: self.bestLabel.leadingAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.commentEditView.trailingAnchor, multiplier: 2),
-            
+            */
             self.likeButton.topAnchor.constraint(equalToSystemSpacingBelow: self.commentDefaultView.bottomAnchor, multiplier: 1),
             self.likeButton.leadingAnchor.constraint(equalTo: self.commentDefaultView.leadingAnchor),
             self.showCommentButton.bottomAnchor.constraint(equalToSystemSpacingBelow: self.likeButton.bottomAnchor, multiplier: 3),
@@ -260,6 +264,7 @@ extension PostCommentCollectionViewCell {
                     
                     self.commentEditView.configure(with: cellVM)
                     self.isEditMode = true
+                    self.layoutIfNeeded()
                 }
                 .store(in: &bindings)
             
@@ -379,29 +384,44 @@ extension PostCommentCollectionViewCell {
         bindViewToViewModel()
         bindViewModelToView()
     }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        convertToNormalMode()
+    //MARK: - Change to Edit mode
+    private func convertToEditMode() {
         editButton.isHidden = true
         deleteButton.isHidden = true
+        commentDefaultView.isHidden = true
+        showCommentButton.isHidden = true
+        
+        commentEditView.isHidden = false
+        self.layoutIfNeeded()
+    }
+    
+    private func convertToNormalMode() {
+        editButton.isHidden = false
+        deleteButton.isHidden = false
+        commentDefaultView.isHidden = false
+        showCommentButton.isHidden = false
+        
+        commentEditView.isHidden = true
     }
     
     func resetCell() {
         self.contentView.backgroundColor = .systemGray
+        self.commentDefaultView.isHidden = false
+        self.commentEditView.isHidden = true
+        editButton.isHidden = true
+        deleteButton.isHidden = true
         self.profileImageView.image = nil
         self.nicknameLabel.text = nil
         self.createdAtLabel.text = nil
-        self.commentDefaultView.isHidden = false
-        self.commentEditView.isHidden = true
+        self.commentDefaultView.resetcontents()
         self.likeButton.setTitle(nil, for: .normal)
         self.likeButton.setImage(nil, for: .normal)
     }
     
-    func resetCellForEditMode() {
-        self.contentView.backgroundColor = .systemGray
-        convertToEditMode()
-    }
+//    func resetCellForEditMode() {
+//        self.contentView.backgroundColor = .systemGray
+//        convertToEditMode()
+//    }
     
     func changeCellType(to celltype: CommentCellType) {
         self.type = celltype
@@ -429,23 +449,5 @@ extension PostCommentCollectionViewCell {
         deleteButton.isHidden = false
     }
     
-    //MARK: - Change to Edit mode
-    private func convertToEditMode() {
-        editButton.isHidden = true
-        deleteButton.isHidden = true
-        commentDefaultView.isHidden = true
-        showCommentButton.isHidden = true
-        
-        commentEditView.isHidden = false
-        self.layoutIfNeeded()
-    }
-    
-    private func convertToNormalMode() {
-        editButton.isHidden = false
-        deleteButton.isHidden = false
-        commentDefaultView.isHidden = false
-        showCommentButton.isHidden = false
-        
-        commentEditView.isHidden = true
-    }
+
 }

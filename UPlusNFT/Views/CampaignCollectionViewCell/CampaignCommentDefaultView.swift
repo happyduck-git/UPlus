@@ -70,19 +70,30 @@ extension CampaignCommentDefaultView {
                   let url = URL(string: image)
             else {
                 self.commentImage.isHidden = true
-                self.commentImage.heightAnchor.constraint(equalToConstant: 0).isActive = true
-                self.layoutIfNeeded()
+//                self.commentImage.heightAnchor.constraint(equalToConstant: 0).isActive = true
+                print("Hiding image..")
                 return
             }
 
             do {
                 let photo = try await URL.urlToImage(url)
                 self.commentImage.image = photo
+                self.commentImage.isHidden = false
+//                self.commentImage.heightAnchor.constraint(equalToConstant: 0).isActive = false
             }
             catch {
                 print("Error fetching comment image \(error)")
             }
             
         }
+    }
+}
+
+extension CampaignCommentDefaultView {
+    func resetcontents() {
+        self.commentTexts.text = nil
+        self.commentImage.image = nil
+        self.commentImage.isHidden = false
+//        self.commentImage.heightAnchor.constraint(equalToConstant: 0).isActive = false
     }
 }

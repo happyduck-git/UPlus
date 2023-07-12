@@ -90,6 +90,14 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         return imageView
     }()
     
+    private let placeholderView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .red
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.circle")
@@ -120,6 +128,9 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    //MARK: - Constraints
+    var contentImageHeight: NSLayoutConstraint?
     
     //MARK: - Init
     override init(frame: CGRect) {
@@ -153,11 +164,12 @@ extension PostDetailCollectionViewHeader {
         Task {
             if let firstImage = vm.imageList?.first {
                 let url = URL(string: firstImage)
+                self.postImageView.isHidden = false
+                self.placeholderView.isHidden = true
                 self.postImageView.image = try await URL.urlToImage(url)
             } else {
                 self.postImageView.isHidden = true
-                self.postImageView.heightAnchor.constraint(equalToConstant: 0).isActive = true
-                self.layoutIfNeeded()
+                self.placeholderView.isHidden = false
             }
             
         }
@@ -203,7 +215,10 @@ extension PostDetailCollectionViewHeader {
             .store(in: &bindings)
         
     }
-  
+    override func layoutIfNeeded() {
+        super.layoutIfNeeded()
+        print("Header height after layout: \(self.frame.height)")
+    }
 }
 
 //MARK: - Set UI & Set Layout
@@ -217,6 +232,7 @@ extension PostDetailCollectionViewHeader {
             postTitleLabel,
             horizontalLineView,
             postContentTextView,
+            placeholderView,
             postImageView,
             profileImageView,
             nicknameLabel,
@@ -228,6 +244,7 @@ extension PostDetailCollectionViewHeader {
     
     private func setLayout() {
         let height = self.frame.height
+        print("Header height: \(height)")
         NSLayoutConstraint.activate([
             self.postIdLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
             self.postIdLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
@@ -254,19 +271,26 @@ extension PostDetailCollectionViewHeader {
             self.postContentTextView.topAnchor.constraint(equalToSystemSpacingBelow: self.horizontalLineView.bottomAnchor, multiplier: 1),
             self.postContentTextView.leadingAnchor.constraint(equalTo: self.horizontalLineView.leadingAnchor),
             self.postContentTextView.trailingAnchor.constraint(equalTo: self.horizontalLineView.trailingAnchor),
+            self.postContentTextView.heightAnchor.constraint(equalToConstant: 80),
             
             self.postImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 1),
             self.postImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.postImageView.trailingAnchor, multiplier: 3),
-            self.postImageView.heightAnchor.constraint(equalToConstant: height / 3),
+            self.postImageView.heightAnchor.constraint(equalToConstant: 200),
+            
+            self.placeholderView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 1),
+            self.placeholderView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.placeholderView.trailingAnchor, multiplier: 3),
+            self.placeholderView.heightAnchor.constraint(equalToConstant: 10),
             
             self.nicknameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
 
-            self.self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImageView.bottomAnchor, multiplier: 1),
             self.profileImageView.leadingAnchor.constraint(equalTo: self.postIdLabel.leadingAnchor),
-            self.profileImageView.heightAnchor.constraint(equalToConstant: height / 16),
+            self.profileImageView.heightAnchor.constraint(equalToConstant: 15),
             self.profileImageView.widthAnchor.constraint(equalTo: self.profileImageView.heightAnchor),
             
+            self.nicknameLabel.topAnchor.constraint(equalTo: self.profileImageView.topAnchor),
             self.nicknameLabel.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
             self.nicknameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImageView.trailingAnchor, multiplier: 1),
             
@@ -275,6 +299,7 @@ extension PostDetailCollectionViewHeader {
             self.createdAtLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.likeButton.trailingAnchor, multiplier: 1),
             self.likeButton.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
         ])
+
     }
 
 }

@@ -244,17 +244,17 @@ extension CampaignPostViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
+                heightDimension: .estimated(220)
             )
         )
         item.contentInsets = NSDirectionalEdgeInsets(top: 0,
                                                      leading: 0,
-                                                     bottom: 10,
+                                                     bottom: 0,
                                                      trailing: 0)
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.4)
+                heightDimension: .estimated(220)
             ),
             subitems: [item]
         )
@@ -262,7 +262,7 @@ extension CampaignPostViewController {
         
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(400)
+            heightDimension: .estimated(150)
         )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
@@ -280,17 +280,17 @@ extension CampaignPostViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(120)
+                heightDimension: .estimated(150)
             )
         )
         item.contentInsets = NSDirectionalEdgeInsets(top: 0,
                                                      leading: 0,
-                                                     bottom: 10,
+                                                     bottom: 0,
                                                      trailing: 0)
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(120)
+                heightDimension: .estimated(200)
             ),
             subitems: [item]
         )
@@ -445,7 +445,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         
         /// Reset cell.
         if campaignPostVM.itemsMode[currentSection] { // Edit 상태에 따라 reset 상태 다르게 적용.
-            cell.resetCellForEditMode()
+//            cell.resetCellForEditMode()
         }
         cell.resetCell()
         
@@ -453,6 +453,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         
         if indexPath.item == 0 {
             cell.configure(with: commentCellVM)
+            print("CellVM: \(commentCellVM.comment)  -- image? \(commentCellVM.imagePath)")
             cell.layoutIfNeeded()
             return cell
         } else if indexPath.item == numberOfItems - 1 {
@@ -509,6 +510,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
         }
         header.configure(with: campaignPostVM.post)
         header.delegate = self
+        
         return header
     }
 
