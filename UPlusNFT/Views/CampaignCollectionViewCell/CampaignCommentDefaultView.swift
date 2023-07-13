@@ -12,6 +12,8 @@ final class CampaignCommentDefaultView: UIView {
     // MARK: - UI Elements
     let commentTexts: UILabel = {
         let label = UILabel()
+        label.accessibilityIdentifier = "DefaultView Comment text lbl"
+        label.backgroundColor = .systemOrange
         label.numberOfLines = 0
         label.textColor = .black
         label.lineBreakMode = .byTruncatingMiddle
@@ -21,7 +23,8 @@ final class CampaignCommentDefaultView: UIView {
     
     private let commentImage: UIImageView = {
         let imageView = UIImageView()
-        
+        imageView.accessibilityIdentifier = "DefaultView Comment Image"
+        imageView.backgroundColor = .systemYellow
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(systemName: SFSymbol.camera)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,6 +40,11 @@ final class CampaignCommentDefaultView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutIfNeeded() {
+        super.layoutIfNeeded()
+        print("Default View Height: \(self.frame.height)")
     }
 
 }
@@ -64,13 +72,13 @@ extension CampaignCommentDefaultView {
 
 extension CampaignCommentDefaultView {
     func configure(with vm: CommentTableViewCellModel) {
+        print("Default View Height: \(self.frame.height)")
         commentTexts.text = vm.comment
         Task {
             guard let image = vm.imagePath,
                   let url = URL(string: image)
             else {
                 self.commentImage.isHidden = true
-//                self.commentImage.heightAnchor.constraint(equalToConstant: 0).isActive = true
                 print("Hiding image..")
                 return
             }
@@ -79,7 +87,6 @@ extension CampaignCommentDefaultView {
                 let photo = try await URL.urlToImage(url)
                 self.commentImage.image = photo
                 self.commentImage.isHidden = false
-//                self.commentImage.heightAnchor.constraint(equalToConstant: 0).isActive = false
             }
             catch {
                 print("Error fetching comment image \(error)")

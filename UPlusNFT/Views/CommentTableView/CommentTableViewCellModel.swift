@@ -14,7 +14,7 @@ final class CommentTableViewCellModel {
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - Property
-    let type: CommentCellType
+    private(set) var type: CommentCellType
     let postId: String
     let id: String
     let userId: String
@@ -59,6 +59,7 @@ final class CommentTableViewCellModel {
 
 }
 
+// MARK: - Fetch Data from Firestore
 extension CommentTableViewCellModel {
     
     /// Fetch user information from Firestore.
@@ -128,5 +129,11 @@ extension CommentTableViewCellModel {
                        commentId: String) async throws {
         try await firestoreManager.deleteComment(postId: postId,
                                                  commentId: commentId)
+    }
+}
+
+extension CommentTableViewCellModel {
+    func changeCellType(to cellType: CommentCellType) {
+        self.type = cellType
     }
 }

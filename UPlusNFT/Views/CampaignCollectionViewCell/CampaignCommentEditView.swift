@@ -20,6 +20,7 @@ final class CampaignCommentEditView: UIView {
     // MARK: - UI Elements
     let editTextField: UITextField = {
         let txtField = UITextField()
+        txtField.accessibilityIdentifier = "Comment Edit Txt Fld"
         txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -27,8 +28,9 @@ final class CampaignCommentEditView: UIView {
     
     private let editImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.accessibilityIdentifier = "Comment Edit Edit Image"
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = .systemBlue
+        imageView.backgroundColor = .systemGreen
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -46,6 +48,8 @@ final class CampaignCommentEditView: UIView {
         let button = UIButton()
         button.setTitle("취소", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 5
         button.backgroundColor = .systemGray
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -55,6 +59,8 @@ final class CampaignCommentEditView: UIView {
         let button = UIButton()
         button.setTitle("수정", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 5
         button.backgroundColor = .systemGray
         button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -77,6 +83,7 @@ final class CampaignCommentEditView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        print("Edit View Height: \(self.frame.height)")
         textFiedlHeightConstraint?.constant = self.frame.height / 5
         imageViewHeightConstraint?.constant = self.frame.height / 1.5
     }
@@ -98,10 +105,10 @@ extension CampaignCommentEditView {
             editTextField.topAnchor.constraint(equalTo: self.topAnchor),
             editTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             editTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-//            editTextField.heightAnchor.constraint(equalToConstant: 25),
+            editTextField.heightAnchor.constraint(equalToConstant: 30),
             
             editImage.topAnchor.constraint(equalToSystemSpacingBelow: editTextField.bottomAnchor, multiplier: 1),
-//            editImage.heightAnchor.constraint(equalToConstant: 150),
+            editImage.heightAnchor.constraint(equalToConstant: 250),
             editImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             editImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
@@ -117,10 +124,6 @@ extension CampaignCommentEditView {
             cameraButton.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             cameraButton.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-        editImage.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        cameraButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        confirmButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        cancelButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
         
         textFiedlHeightConstraint = editTextField.heightAnchor.constraint(equalToConstant: self.frame.height / 5)
         imageViewHeightConstraint = editImage.heightAnchor.constraint(equalToConstant: self.frame.height / 1.5)

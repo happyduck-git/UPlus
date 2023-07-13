@@ -224,10 +224,7 @@ extension CampaignPostViewController {
                 heightDimension: .fractionalHeight(1.0)
             )
         )
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0,
-                                                     leading: 0,
-                                                     bottom: 10,
-                                                     trailing: 0)
+
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -244,17 +241,14 @@ extension CampaignPostViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(220)
+                heightDimension: .estimated(230)
             )
         )
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0,
-                                                     leading: 0,
-                                                     bottom: 0,
-                                                     trailing: 0)
+
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(220)
+                heightDimension: .estimated(230)
             ),
             subitems: [item]
         )
@@ -283,10 +277,11 @@ extension CampaignPostViewController {
                 heightDimension: .estimated(150)
             )
         )
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0,
-                                                     leading: 0,
-                                                     bottom: 0,
-                                                     trailing: 0)
+        
+        let zeroSpacing = NSCollectionLayoutSpacing.fixed(0)
+        let spacing = NSCollectionLayoutSpacing.fixed(2)
+        item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: zeroSpacing, top: spacing, trailing: zeroSpacing, bottom: zeroSpacing)
+        
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -399,6 +394,7 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             self.present(self.photoPicker, animated: true)
         }
         
+        cell.delegate = self
         cell.configure(with: textInputVM)
         cell.layoutIfNeeded()
         return cell
@@ -432,28 +428,22 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             self.activeCellSection = indexPath.section
             self.present(self.photoPicker, animated: true)
         }
-        
-        /// Edit button tap 여부 확인.
-        cell.editButtonDidTap = { [weak self] in
-            self?.campaignPostVM.itemsMode[currentSection] = true
-        }
-        
+
         /// Conforming delegation
         cell.delegate = self
         cell.indexPath = indexPath
-        //        print("Tap status: \(self.campaignPostVM.itemsMode)")
         
         /// Reset cell.
         if campaignPostVM.itemsMode[currentSection] { // Edit 상태에 따라 reset 상태 다르게 적용.
-//            cell.resetCellForEditMode()
+            cell.resetCellForEditMode()
+        } else {
+            cell.resetCell()
         }
-        cell.resetCell()
         
         let numberOfItems = campaignPostVM.post.numberOfRecommentsForSection(at: indexPath.section)
         
         if indexPath.item == 0 {
             cell.configure(with: commentCellVM)
-            print("CellVM: \(commentCellVM.comment)  -- image? \(commentCellVM.imagePath)")
             cell.layoutIfNeeded()
             return cell
         } else if indexPath.item == numberOfItems - 1 {
@@ -463,7 +453,9 @@ extension CampaignPostViewController: UICollectionViewDelegate, UICollectionView
             let recommentCellVM = campaignPostVM.post.recommentsViewModelForItem(at: indexPath.item, section: indexPath.section)
             
             cell.contentView.backgroundColor = .systemGray5
+            recommentCellVM.changeCellType(to: .recomment)
             cell.configure(with: recommentCellVM)
+            
             cell.layoutIfNeeded()
             return cell
         }
@@ -539,6 +531,20 @@ extension CampaignPostViewController: PostCommentCollectionViewCellPorotocol {
             }
         }
     }
+    
+    func editButtonDidTap(at indexPath: IndexPath) {
+        var currentSection: Int = 0
+        switch self.campaignPostVM.postType {
+        case .article:
+            currentSection = indexPath.section - 1
+        default:
+            currentSection = indexPath.section - 2
+        }
+        self.campaignPostVM.itemsMode[currentSection] = true
+//        print("Item mode: \(self.campaignPostVM.itemsMode)")
+        self.collectionView?.layoutIfNeeded()
+    }
+
 }
 
 
@@ -630,3 +636,8 @@ extension CampaignPostViewController: UIScrollViewDelegate {
     }
 }
 
+extension CampaignPostViewController: TextFieldCollectionViewCellProtocol {
+    func commentReloaded() {
+        campaignPostVM.post.fetchInitialPaginatedComments(of: campaignPostVM.post.postId)
+    }
+}

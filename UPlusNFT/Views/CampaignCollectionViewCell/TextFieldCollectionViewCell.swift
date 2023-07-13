@@ -8,6 +8,10 @@
 import UIKit
 import Combine
 
+protocol TextFieldCollectionViewCellProtocol: AnyObject {
+    func commentReloaded()
+}
+
 final class TextFieldCollectionViewCell: UICollectionViewCell {
     
     //MARK: - Dependency
@@ -16,12 +20,15 @@ final class TextFieldCollectionViewCell: UICollectionViewCell {
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
+    // MARK: - Delegate
+    weak var delegate: TextFieldCollectionViewCellProtocol?
     //MARK: - Property
     var cameraButtonHandler: (() -> Void)?
    
     //MARK: - UI Element
     private let commentTextField: UITextField = {
         let txtField = UITextField()
+        txtField.accessibilityIdentifier = "TextFld Cell Txt Fld"
         txtField.placeholder = PostConstants.inputComment
         txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
@@ -106,10 +113,12 @@ extension TextFieldCollectionViewCell {
             self.submitButton
                 .tapPublisher
                 .receive(on: RunLoop.current)
-                .sink { _ in
+                .sink { [weak self]_ in
+                    guard let `self` = self else { return }
                     if !vm.isSubmitButtonTapped {
                         vm.saveComment(postId: vm.postId)
                         vm.isSubmitButtonTapped = true
+                        self.delegate?.commentReloaded()
                     }
                 }
                 .store(in: &bindings)
@@ -161,6 +170,7 @@ extension TextFieldCollectionViewCell {
     private func setLayout() {
         let cellHeight = self.contentView.frame.height
         let cellWidth = self.contentView.frame.width
+        print("Textfield height: \(cellHeight / 4)")
         NSLayoutConstraint.activate([
             self.commentTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
             self.commentTextField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),

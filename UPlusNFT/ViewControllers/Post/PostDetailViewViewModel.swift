@@ -139,7 +139,6 @@ extension PostDetailViewViewModel {
                 for bestComment in bestComments {
                     let vm = try await convertToViewModel(from: bestComment, commentType: .best)
                     vm.isLiked = try await firestoreManager.isCommentLiked(postId: postId, commentId: vm.id)
-                    print("Best com is liked? \(vm.comment) -- \(vm.isLiked)")
                     dataSource.append(vm)
                 }
 
@@ -149,7 +148,6 @@ extension PostDetailViewViewModel {
                 for comment in normalCommentData.comments {
                     let vm = try await convertToViewModel(from: comment, commentType: .normal)
                     vm.isLiked = try await firestoreManager.isCommentLiked(postId: postId, commentId: vm.id)
-                    print("Normal com is liked? \(vm.comment) -- \(vm.isLiked)")
                     dataSource.append(vm)
                 }
 
@@ -176,7 +174,6 @@ extension PostDetailViewViewModel {
                 for comment in commentsData.comments {
                     let vm = try await convertToViewModel(from: comment, commentType: .normal)
                     vm.isLiked = try await firestoreManager.isCommentLiked(postId: postId, commentId: vm.id)
-                    print("Normal com is liked? \(vm.comment) -- \(vm.isLiked)")
                     comments.append(vm)
                 }
                 
@@ -191,7 +188,7 @@ extension PostDetailViewViewModel {
         }
     }
  
-    func fetchRecomment(of commentId: String) async throws -> [Recomment] {
+    private func fetchRecomment(of commentId: String) async throws -> [Recomment] {
         return try await firestoreManager.getRecomments(postId: postId, commentId: commentId)
     }
 

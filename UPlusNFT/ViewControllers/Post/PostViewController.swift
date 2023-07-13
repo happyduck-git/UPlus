@@ -118,6 +118,7 @@ extension PostViewController {
     private func showWritePostVC() {
         let vm = WritePostViewViewModel()
         let vc = WritePostViewController(type: .newPost, vm: vm)
+        vc.delegate = self
         
         navigationController?.modalPresentationStyle = .fullScreen
         self.show(vc, sender: self)
@@ -230,5 +231,11 @@ extension PostViewController: UIScrollViewDelegate {
         {
             vm.fetchAdditionalPosts()
         }
+    }
+}
+
+extension PostViewController: WritePostViewControllerProtocol {
+    func postReloaded() {
+        self.vm.fetchAllInitialPosts()
     }
 }

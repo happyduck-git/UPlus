@@ -12,6 +12,10 @@ import FirebaseStorage
 import Nuke
 import Combine
 
+protocol WritePostViewControllerProtocol: AnyObject {
+    func postReloaded()
+}
+
 final class WritePostViewController: UIViewController {
     
     enum `Type` {
@@ -19,11 +23,15 @@ final class WritePostViewController: UIViewController {
         case editPost
     }
 
+    // MARK: - Delegate
+    weak var delegate: WritePostViewControllerProtocol?
+    
     private var type: Type
     private var vm: WritePostViewViewModel
     private let firestoreRepository = FirestoreManager.shared
     private var bindings = Set<AnyCancellable>()
     
+    // MARK: - UI Elements
     private let pickedImage: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .systemGray4
@@ -307,6 +315,8 @@ final class WritePostViewController: UIViewController {
                     self.vm.savePost(imageUrls: imageUrls)
                     
                     self.navigationController?.popViewController(animated: true)
+                    
+                    self.delegate?.postReloaded()
                 }
             }
         }

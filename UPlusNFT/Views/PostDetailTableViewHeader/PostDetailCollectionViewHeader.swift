@@ -84,7 +84,8 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
     
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .systemBlue
+        imageView.accessibilityIdentifier = "Post Image View"
+        imageView.backgroundColor = .systemGray3
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -149,6 +150,9 @@ final class PostDetailCollectionViewHeader: UICollectionReusableView {
 //MARK: - Configure and bind CollectionViewHeader with View Model.
 extension PostDetailCollectionViewHeader {
     func configure(with vm: PostDetailViewViewModel) {
+        bindings.forEach { $0.cancel() }
+        bindings.removeAll()
+ 
         self.postIdLabel.text = String(vm.postId.prefix(5))
         self.postUrlLabel.text = String(vm.postUrl.prefix(20))
         self.postTypeLabel.text = vm.postType.displayName
@@ -281,7 +285,7 @@ extension PostDetailCollectionViewHeader {
             self.placeholderView.topAnchor.constraint(equalToSystemSpacingBelow: self.postContentTextView.bottomAnchor, multiplier: 1),
             self.placeholderView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.placeholderView.trailingAnchor, multiplier: 3),
-            self.placeholderView.heightAnchor.constraint(equalToConstant: 10),
+            self.placeholderView.heightAnchor.constraint(equalToConstant: 0),
             
             self.nicknameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.postImageView.bottomAnchor, multiplier: 2),
 

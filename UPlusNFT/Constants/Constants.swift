@@ -63,6 +63,8 @@ struct PostConstants {
     static let inputAnswer: String = "답변을 입력해주세요."
     static let inputComment: String = "댓글을 입력해주세요."
     static let writeButton: String = "작성하기"
+    static let addComment: String = "답글 달기"
+    static let showComment: String = "답글 보기"
 }
 
 struct SFSymbol {
@@ -76,6 +78,8 @@ struct SFSymbol {
     static let comment: String = "text.bubble"
     static let heartFill: String = "heart.fill"
     static let heart: String = "heart"
+    static let arrowDown: String = "arrowtriangle.down.fill"
+    static let arrowUp: String = "arrowtriangle.up.fill"
 }
 
 // MARK: - Firebase

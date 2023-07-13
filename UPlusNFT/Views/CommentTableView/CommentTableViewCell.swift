@@ -10,11 +10,6 @@ import Combine
 import Nuke
 import FirebaseStorage
 
-enum CommentCellType {
-    case best
-    case normal
-}
-
 final class CommentTableViewCell: UITableViewCell {
     
     private var bindings = Set<AnyCancellable>()
@@ -153,6 +148,10 @@ final class CommentTableViewCell: UITableViewCell {
             self.bestLabel.isHidden = false
         case .normal:
             self.bestLabel.isHidden = true
+        case .recomment:
+            self.bestLabel.isHidden = true
+            self.likeButton.isHidden = true
+            self.commentButton.isHidden = true
         }
         
         self.commentTexts.text = vm.comment
@@ -206,8 +205,5 @@ final class CommentTableViewCell: UITableViewCell {
         self.commentTexts.text = nil
         self.createdAtLabel.text = nil
     }
-    
-    func changeCellType(to celltype: CommentCellType) {
-        self.type = celltype
-    }
+
 }
