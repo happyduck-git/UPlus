@@ -67,6 +67,13 @@ struct PostConstants {
     static let showComment: String = "답글 보기"
 }
 
+struct MissionConstants {
+    static let pointSuffix: String = "pt"
+    static let level: String = "Level"
+    static let levelPrefix: String = "LV."
+    static let levelUp: String = "레벨업하기"
+}
+
 struct SFSymbol {
     static let camera: String = "camera.fill"
     static let cameraViewFinder: String = "camera.viewfinder"
@@ -80,6 +87,7 @@ struct SFSymbol {
     static let heart: String = "heart"
     static let arrowDown: String = "arrowtriangle.down.fill"
     static let arrowUp: String = "arrowtriangle.up.fill"
+    static let info: String = "info.circle"
 }
 
 // MARK: - Firebase
