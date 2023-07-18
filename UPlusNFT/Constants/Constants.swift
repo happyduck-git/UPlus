@@ -72,6 +72,13 @@ struct MissionConstants {
     static let level: String = "Level"
     static let levelPrefix: String = "LV."
     static let levelUp: String = "레벨업하기"
+    static let todayMission: String = "오늘의 미션"
+    static let dailyQuiz: String = "데일리 퀴즈"
+    static let dailyMission: String = "갓생 인증 미션"
+    static let missionUnit: String = "개"
+    static let pointUnit: String = "P"
+    static let timeLeftSuffix: String = "시간 남음"
+    static let details: String = "자세히 보기"
 }
 
 struct SFSymbol {
@@ -88,6 +95,8 @@ struct SFSymbol {
     static let arrowDown: String = "arrowtriangle.down.fill"
     static let arrowUp: String = "arrowtriangle.up.fill"
     static let info: String = "info.circle"
+    static let list: String = "list.bullet"
+    static let speaker: String = "speaker.wave.2"
 }
 
 // MARK: - Firebase

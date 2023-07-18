@@ -40,8 +40,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
 */
-        // Check PostVC
-//        let vm = PostViewViewModel()
+        // Check MissionMainVC
+
         let vc = MissionMainViewController()
         window?.rootViewController = UINavigationController(rootViewController: vc)
 

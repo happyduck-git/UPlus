@@ -77,7 +77,15 @@
 		93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013862A6517AB0005E342 /* MissionMainViewController.swift */; };
 		93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013882A6518370005E342 /* SideMenuViewController.swift */; };
 		93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0138A2A651F730005E342 /* SideMenuPresentAnimator.swift */; };
-		93E0138F2A65283F0005E342 /* MissionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0138E2A65283F0005E342 /* MissionCollectionViewHeader.swift */; };
+		93E013912A6619F80005E342 /* TodayMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */; };
+		93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */; };
+		93E013952A66260A0005E342 /* MissionMainViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */; };
+		93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013962A664E6F0005E342 /* UPlusFont.swift */; };
+		93E013992A66527F0005E342 /* UPlusColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013982A66527F0005E342 /* UPlusColor.swift */; };
+		93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */; };
+		93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139C2A666E070005E342 /* UIStackView+Extension.swift */; };
+		93E0139F2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */; };
+		93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,7 +158,15 @@
 		93E013862A6517AB0005E342 /* MissionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewController.swift; sourceTree = "<group>"; };
 		93E013882A6518370005E342 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		93E0138A2A651F730005E342 /* SideMenuPresentAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentAnimator.swift; sourceTree = "<group>"; };
-		93E0138E2A65283F0005E342 /* MissionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionViewHeader.swift; sourceTree = "<group>"; };
+		93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMissionCollectionViewCell.swift; sourceTree = "<group>"; };
+		93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionProfileCollectionViewCell.swift; sourceTree = "<group>"; };
+		93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewViewModel.swift; sourceTree = "<group>"; };
+		93E013962A664E6F0005E342 /* UPlusFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UPlusFont.swift; path = UPlusNFT/ViewControllers/Mission/SideMenu/UPlusFont.swift; sourceTree = SOURCE_ROOT; };
+		93E013982A66527F0005E342 /* UPlusColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UPlusColor.swift; path = UPlusNFT/ViewControllers/Mission/SideMenu/UPlusColor.swift; sourceTree = SOURCE_ROOT; };
+		93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuizMissionCollectionViewCell.swift; sourceTree = "<group>"; };
+		93E0139C2A666E070005E342 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
+		93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionVeiwHeader.swift; sourceTree = "<group>"; };
+		93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -316,6 +332,7 @@
 				932C34CE2A52B7520032192A /* UIColor+Extension.swift */,
 				932C34D72A53F5330032192A /* UIControl+Combine.swift */,
 				932C34DF2A57A06A0032192A /* URL+Extension.swift */,
+				93E0139C2A666E070005E342 /* UIStackView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -411,6 +428,8 @@
 		937C764D2A457B1F001024D0 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				93E013962A664E6F0005E342 /* UPlusFont.swift */,
+				93E013982A66527F0005E342 /* UPlusColor.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -466,6 +485,7 @@
 				93E0138A2A651F730005E342 /* SideMenuPresentAnimator.swift */,
 				93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */,
 				93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */,
+				93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */,
 			);
 			path = SideMenu;
 			sourceTree = "<group>";
@@ -473,7 +493,11 @@
 		93E0138D2A6527D60005E342 /* MissionCollectionViewCell */ = {
 			isa = PBXGroup;
 			children = (
-				93E0138E2A65283F0005E342 /* MissionCollectionViewHeader.swift */,
+				93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */,
+				93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */,
+				93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */,
+				93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */,
+				93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */,
 			);
 			path = MissionCollectionViewCell;
 			sourceTree = "<group>";
@@ -590,7 +614,6 @@
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */,
-				93E0138F2A65283F0005E342 /* MissionCollectionViewHeader.swift in Sources */,
 				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,
 				244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
@@ -601,13 +624,17 @@
 				93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
+				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,
+				93E013952A66260A0005E342 /* MissionMainViewViewModel.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
+				93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */,
 				93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */,
 				93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */,
 				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
 				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
+				93E013912A6619F80005E342 /* TodayMissionCollectionViewCell.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				932C34CD2A5260410032192A /* User.swift in Sources */,
 				249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */,
@@ -619,10 +646,14 @@
 				932C34E22A5BCE0B0032192A /* CampaignCommentEditView.swift in Sources */,
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
+				93E0139F2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
+				93E013992A66527F0005E342 /* UPlusColor.swift in Sources */,
+				93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */,
 				932C34D22A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift in Sources */,
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
+				93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
 				932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */,
@@ -640,6 +671,7 @@
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
 				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
 				24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */,
+				93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,
