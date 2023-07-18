@@ -86,6 +86,7 @@
 		93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139C2A666E070005E342 /* UIStackView+Extension.swift */; };
 		93E0139F2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */; };
 		93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */; };
+		93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -167,6 +168,7 @@
 		93E0139C2A666E070005E342 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionVeiwHeader.swift; sourceTree = "<group>"; };
 		93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCollectionViewCell.swift; sourceTree = "<group>"; };
+		93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCompleteViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -312,6 +314,7 @@
 			children = (
 				930D96C82A4193A40007801A /* SignUpViewController.swift */,
 				930D96CA2A4194E50007801A /* SignUpViewViewModel.swift */,
+				93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -622,6 +625,7 @@
 				93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */,
 				936F882D2A4D0C710062E759 /* WritePostViewController.swift in Sources */,
 				93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */,
+				93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,

@@ -13,7 +13,8 @@ struct UPlusFont {
     static let head3: CGFloat = 20
     static let head4: CGFloat = 18
 
-    // 16
-    static let subTitle: CGFloat = 12
+    static let subTitle1: CGFloat = 16
+    static let subTitle2: CGFloat = 14
+    static let subTitle3: CGFloat = 12
     
 }

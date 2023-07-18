@@ -38,7 +38,7 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
     private let quizDescLabel: UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.subTitle)
+        label.font = .systemFont(ofSize: UPlusFont.subTitle3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

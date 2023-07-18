@@ -41,7 +41,7 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.accessibilityIdentifier = "timeLabel"
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.subTitle, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

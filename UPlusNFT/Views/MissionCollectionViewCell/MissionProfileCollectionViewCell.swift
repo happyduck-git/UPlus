@@ -66,7 +66,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     private let levelBadge: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.subTitle)
+        label.font = .systemFont(ofSize: UPlusFont.subTitle3)
         label.backgroundColor = UPlusColor.pointGagePink
         label.clipsToBounds = true
         label.textColor = .white
@@ -77,7 +77,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     private let progressLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.subTitle)
+        label.font = .systemFont(ofSize: UPlusFont.subTitle3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -224,7 +224,7 @@ extension MissionProfileCollectionViewCell {
     private func setButtonConfig() {
         
         if #available(iOS 15.0, *) {
-            let title = AttributedString(MissionConstants.levelUp, attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: UPlusFont.subTitle, weight: .bold)]))
+            let title = AttributedString(MissionConstants.levelUp, attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)]))
                 
             var config = UIButton.Configuration.filled()
             config.baseBackgroundColor = .systemGray3
@@ -235,7 +235,7 @@ extension MissionProfileCollectionViewCell {
         } else {
             levelUpButton.titleEdgeInsets = UIEdgeInsets(top: 3, left: 4, bottom: 3, right: 4)
             levelUpButton.backgroundColor = .systemGray3
-            levelUpButton.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle,  weight: .bold)
+            levelUpButton.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle3,  weight: .bold)
         }
         
     }

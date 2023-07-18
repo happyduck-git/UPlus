@@ -42,6 +42,10 @@ struct SignUpConstants {
     static let sinUpSuccessLabel: String = "회원가입이 완료되었습다."
     static let passwordValidation: String = "비밀번호에 기호, 숫자를 포함해주세요."
     static let passwordCheckValidation: String = "비밀번호가 일치하지 않습니다."
+    
+    static let greetings: String = "님의 NFT 멤버십이 시작됐어요"
+    static let desctiptions: String = "서태호와 함께 멤버십을 즐겨보세요"
+    static let nftInfo: String = "서태호 NFT는 한 사람 당 하나만 발급받을 수 있어요."
 }
 
 struct ResetPasswordConstants {
