@@ -14,10 +14,15 @@ struct UserDefaultsConstants {
     static let noUserFound: String = "no user found"
 }
 
+struct OnBoardingConstants {
+    static let showMore: String = "PoC 소개 더 보기"
+    static let start: String = "시작하기"
+}
+
 struct LoginConstants {
     static let emailLabel: String = "사내 이메일"
     static let passwordLabel: String = "비밀번호"
-    static let keepLoggedIn: String = "로그인 상태 유지"
+    static let keepSignedIn: String = " 로그인 상태 유지"
     static let loginButtonTitle: String = "로그인하기"
     static let logoutButtonTitle: String = "Log Out"
     static let photoButtonTitle: String = "Photo"
@@ -43,9 +48,10 @@ struct SignUpConstants {
     static let passwordValidation: String = "비밀번호에 기호, 숫자를 포함해주세요."
     static let passwordCheckValidation: String = "비밀번호가 일치하지 않습니다."
     
-    static let greetings: String = "님의 NFT 멤버십이 시작됐어요"
+    static let greetings: String = "님의\nNFT 멤버십이 시작됐어요"
     static let desctiptions: String = "서태호와 함께 멤버십을 즐겨보세요"
     static let nftInfo: String = "서태호 NFT는 한 사람 당 하나만 발급받을 수 있어요."
+    static let redeemGift: String = "웰컴 선물 받기"
 }
 
 struct ResetPasswordConstants {
@@ -85,6 +91,11 @@ struct MissionConstants {
     static let details: String = "자세히 보기"
 }
 
+struct EditUserInfo {
+    static let editVCTitle: String = "비밀번호 수정"
+    static let confirm: String = "수정완료"
+}
+
 struct SFSymbol {
     static let camera: String = "camera.fill"
     static let cameraViewFinder: String = "camera.viewfinder"
@@ -98,9 +109,12 @@ struct SFSymbol {
     static let heart: String = "heart"
     static let arrowDown: String = "arrowtriangle.down.fill"
     static let arrowUp: String = "arrowtriangle.up.fill"
+    static let arrowRight: String = "arrow.right"
     static let info: String = "info.circle"
     static let list: String = "list.bullet"
     static let speaker: String = "speaker.wave.2"
+    static let circledCheckmark: String = "checkmark.circle"
+    static let circleFilledCheckmark: String = "checkmark.circle.fill"
 }
 
 // MARK: - Firebase

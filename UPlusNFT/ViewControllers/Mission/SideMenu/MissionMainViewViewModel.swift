@@ -9,6 +9,9 @@ import Foundation
 
 final class MissionMainViewViewModel {
     
+    // STH holder인지 확인.
+    var isHolder: Bool = false
+    
     /* Mission Profile Section */
     let profileImage: String
     let username: String

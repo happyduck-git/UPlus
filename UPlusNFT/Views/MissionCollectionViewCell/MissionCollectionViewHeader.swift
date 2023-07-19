@@ -1,5 +1,5 @@
 //
-//  MissionCollectionVeiwHeader.swift
+//  MissionCollectionViewHeader.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/18.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MissionCollectionVeiwHeader: UICollectionReusableView {
+class MissionCollectionViewHeader: UICollectionReusableView {
     
     enum HeaderType {
         case normal
@@ -54,7 +54,7 @@ class MissionCollectionVeiwHeader: UICollectionReusableView {
 }
 
 // MARK: - Set UI & Layout
-extension MissionCollectionVeiwHeader {
+extension MissionCollectionViewHeader {
     private func setUI() {
         self.addSubviews(sectionTitle,
                          detailButton)

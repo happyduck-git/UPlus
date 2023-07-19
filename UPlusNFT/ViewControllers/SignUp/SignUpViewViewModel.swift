@@ -25,6 +25,7 @@ class SignUpViewViewModel {
     @Published var passwordCheck = ""
 //    @Published var nickname = ""
     @Published var errorDescription = ""
+    var welcomeNftImage = ""
     
     var isAuthenticated = PassthroughSubject<Bool, Never>()
     var isUserCreated = PassthroughSubject<Bool, Never>()

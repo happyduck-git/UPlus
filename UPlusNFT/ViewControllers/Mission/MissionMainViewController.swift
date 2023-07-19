@@ -28,6 +28,14 @@ class MissionMainViewController: UIViewController {
         setDelegate()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let vc = WelcomeBottomSheetViewController()
+        vc.modalPresentationStyle = .overCurrentContext
+
+        self.present(vc, animated: false)
+    }
 }
 
 // MARK: - Create CollectionView
@@ -43,9 +51,9 @@ extension MissionMainViewController {
         )
         
         // 1. Register section header
-        collectionView.register(MissionCollectionVeiwHeader.self,
+        collectionView.register(MissionCollectionViewHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: MissionCollectionVeiwHeader.identifier)
+                                withReuseIdentifier: MissionCollectionViewHeader.identifier)
         
         // 2. Register cell
         collectionView.register(
@@ -255,9 +263,9 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: MissionCollectionVeiwHeader.identifier,
+            withReuseIdentifier: MissionCollectionViewHeader.identifier,
             for: indexPath
-        ) as? MissionCollectionVeiwHeader else {
+        ) as? MissionCollectionViewHeader else {
             return UICollectionReusableView()
         }
         
@@ -267,28 +275,10 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
 }
 
 // MARK: - Preview
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        MissionMainViewController().toPreview()
-    }
-}
+//struct PreView: PreviewProvider {
+//    static var previews: some View {
+//        MissionMainViewController().toPreview()
+//    }
+//}
 
-#if DEBUG
-extension UIViewController {
-    private struct Preview: UIViewControllerRepresentable {
-            let viewController: UIViewController
-
-            func makeUIViewController(context: Context) -> UIViewController {
-                return viewController
-            }
-
-            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-            }
-        }
-
-        func toPreview() -> some View {
-            Preview(viewController: self)
-        }
-}
-#endif
 

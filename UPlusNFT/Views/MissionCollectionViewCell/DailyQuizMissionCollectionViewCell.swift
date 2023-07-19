@@ -133,9 +133,11 @@ extension DailyQuizMissionCollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        print("Height: \(self.pointContainer.frame.height)")
-        self.containerView.layer.cornerRadius = self.containerView.frame.width / 11
-        self.pointContainer.layer.cornerRadius = self.pointContainer.frame.height / 2
+        DispatchQueue.main.async {
+            self.containerView.layer.cornerRadius = self.containerView.frame.width / 11
+            self.pointContainer.layer.cornerRadius = self.pointContainer.frame.height / 2
+        }
     }
+
 
 }

@@ -34,13 +34,14 @@ class LoginViewController: UIViewController {
     
     private let placeHolderLabel: UILabel = {
         let label = UILabel()
-        label.text = "@uplus.net"
+        label.text = "@lguplus.net"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let emailTextField: UITextField = {
         let textField = UITextField()
+        textField.placeholder = "email"
         textField.borderStyle = .roundedRect
         textField.textContentType = .username
         textField.keyboardType = .emailAddress
@@ -67,10 +68,12 @@ class LoginViewController: UIViewController {
         return textField
     }()
 
-    private let keepLogInButton: UIButton = {
+    private let keepMeSignedInButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
-        button.setTitle(LoginConstants.keepLoggedIn, for: .normal)
+        button.setTitle(LoginConstants.keepSignedIn, for: .normal)
+        button.setTitleColor(.systemGray, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 13)
+        button.adjustsImageWhenHighlighted = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -112,7 +115,7 @@ class LoginViewController: UIViewController {
        let button = UIButton()
         button.setTitle(LoginConstants.changePassword, for: .normal)
         button.addTarget(self, action: #selector(changePassword), for: .touchUpInside)
-        button.setTitleColor(.systemGray, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12.0)
         button.setUnderline(1.0)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -124,7 +127,7 @@ class LoginViewController: UIViewController {
         button.addTarget(self, action: #selector(openSignUpVC), for: .touchUpInside)
         button.setTitle(LoginConstants.singInButtonTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(.darkGray, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12.0)
         button.setUnderline(1.0)
         return button
@@ -176,105 +179,11 @@ class LoginViewController: UIViewController {
         Auth.auth().removeStateDidChangeListener(authStateHandler!)
     }
 
-    //MARK: - Set UI & Layout
-    private func setUI() {
-        
-        // Views
-        view.addSubviews(
-            emailLabel,
-            passwordLabel,
-            emailTextField,
-            passwordTextField,
-            credentialValidationText,
-            keepLogInButton,
-            changePasswordButton,
-            loginButton,
-            createAccountButton
-        )
+}
 
-        // Adding a PlaceHolderView
-        placeHolderView.addSubview(placeHolderLabel)
-        self.emailTextField.rightView = placeHolderView
-        self.emailTextField.rightViewMode = .always
-    }
-
-    private func setLayout() {
-        NSLayoutConstraint.activate([
-            
-            emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
-            emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
-            emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailLabel.bottomAnchor, multiplier: 1),
-            emailTextField.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
-            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: emailTextField.trailingAnchor, multiplier: 3),
-            
-            passwordLabel.topAnchor.constraint(equalToSystemSpacingBelow: emailTextField.bottomAnchor, multiplier: 2),
-            passwordLabel.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
-            passwordTextField.topAnchor.constraint(equalToSystemSpacingBelow: passwordLabel.bottomAnchor, multiplier: 1),
-            passwordTextField.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
-            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: passwordTextField.trailingAnchor, multiplier: 2),
-            
-            credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: passwordTextField.bottomAnchor, multiplier: 1),
-            credentialValidationText.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
-            
-            keepLogInButton.topAnchor.constraint(equalToSystemSpacingBelow: credentialValidationText.bottomAnchor, multiplier: 1),
-            keepLogInButton.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
-            changePasswordButton.topAnchor.constraint(equalTo: keepLogInButton.topAnchor),
-            changePasswordButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
-            
-            loginButton.topAnchor.constraint(equalToSystemSpacingBelow: credentialValidationText.bottomAnchor, multiplier: 1),
-            loginButton.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
-            loginButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
-            
-            createAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: loginButton.bottomAnchor, multiplier: 2),
-            
-            placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: placeHolderView.topAnchor, multiplier: 1),
-            placeHolderLabel.leadingAnchor.constraint(equalTo: placeHolderView.leadingAnchor),
-            placeHolderView.trailingAnchor.constraint(equalToSystemSpacingAfter: placeHolderLabel.trailingAnchor, multiplier: 1),
-            placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: placeHolderLabel.bottomAnchor, multiplier: 1)
-        ])
-
-        keepLogInButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-    }
-
-    private func setDelegate() {
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-    }
+//MARK: - Bind with View Model
+extension LoginViewController {
     
-    private func setNavigationBar() {
-        self.navigationItem.backButtonTitle = ""
-        self.navigationController?.navigationBar.tintColor = .systemGray
-    }
-    
-    //MARK: - Private
-    @objc private func openSignUpVC() {
-        let vm = SignUpViewViewModel()
-        let vc = SignUpViewController(vm: vm)
-        navigationController?.modalPresentationStyle = .fullScreen
-        show(vc, sender: self)
-    }
-
-    @objc private func loginUser() {
-        self.viewModel.login()
-    }
-
-    @objc private func changePassword() {
-        let vm = ResetPasswordViewViewModel()
-        let vc = ResetPasswordViewController(vm: vm)
-        show(vc, sender: self)
-    }
-    
-    /// for debug
-    @objc private func logoutUser() {
-        do {
-            try Auth.auth().signOut()
-        }
-        catch {
-            print("Error logout user \(error.localizedDescription)")
-        }
-    }
-
     private func bind() {
         func bindViewToViewModel() {
             self.emailTextField.textPublisher
@@ -283,6 +192,13 @@ class LoginViewController: UIViewController {
             
             self.passwordTextField.textPublisher
                 .assign(to: \.password, on: viewModel)
+                .store(in: &bindings)
+            
+            self.keepMeSignedInButton.tapPublisher
+                .sink(receiveValue: { [weak self] in
+                    guard let `self` = self else { return }
+                    self.viewModel.isKeepMeSignedIntTapped = !self.viewModel.isKeepMeSignedIntTapped
+                })
                 .store(in: &bindings)
         }
         
@@ -302,6 +218,18 @@ class LoginViewController: UIViewController {
                 }
                 .store(in: &bindings)
             
+            viewModel.$isKeepMeSignedIntTapped
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isTapped in
+                    guard let `self` = self else { return }
+                    
+                    let color = isTapped ? UPlusColor.pointGagePink : .systemGray
+                    let image = isTapped ? SFSymbol.circleFilledCheckmark : SFSymbol.circledCheckmark
+                    self.keepMeSignedInButton.setTitleColor(color, for: .normal)
+                    self.keepMeSignedInButton.setImage(UIImage(systemName: image)?.withTintColor(color, renderingMode: .alwaysOriginal), for: .normal)
+                }
+                .store(in: &bindings)
+            
             viewModel.isLoginSuccess
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] value in
@@ -310,8 +238,8 @@ class LoginViewController: UIViewController {
                         // Save user information when login success.
                         viewModel.saveUser()
                         
-                        emailTextField.text = ""
-                        passwordTextField.text = ""
+                        self.emailTextField.text = ""
+                        self.passwordTextField.text = ""
                         let vm = PostViewViewModel()
                         let vc = PostViewController(vm: vm)
                         self.show(vc, sender: self)
@@ -326,9 +254,113 @@ class LoginViewController: UIViewController {
         bindViewToViewModel()
         bindViewModelToView()
     }
-
 }
 
+//MARK: - Set UI & Layout
+extension LoginViewController {
+
+    private func setUI() {
+        
+        // Views
+        self.view.addSubviews(
+            self.emailLabel,
+            self.passwordLabel,
+            self.emailTextField,
+            self.passwordTextField,
+            self.credentialValidationText,
+            self.keepMeSignedInButton,
+            self.changePasswordButton,
+            self.loginButton,
+            self.createAccountButton
+        )
+
+        // Adding a PlaceHolderView
+        self.placeHolderView.addSubview(placeHolderLabel)
+        self.emailTextField.rightView = placeHolderView
+        self.emailTextField.rightViewMode = .always
+    }
+
+    private func setLayout() {
+        NSLayoutConstraint.activate([
+            
+            self.emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
+            self.emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
+            self.emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.emailLabel.bottomAnchor, multiplier: 1),
+            self.emailTextField.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
+            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.emailTextField.trailingAnchor, multiplier: 3),
+            
+            self.passwordLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.emailTextField.bottomAnchor, multiplier: 2),
+            self.passwordLabel.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
+            self.passwordTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.passwordLabel.bottomAnchor, multiplier: 1),
+            self.passwordTextField.leadingAnchor.constraint(equalTo: self.emailTextField.leadingAnchor),
+            self.passwordTextField.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
+            
+            self.credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: self.passwordTextField.bottomAnchor, multiplier: 1),
+            self.credentialValidationText.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
+            
+            self.keepMeSignedInButton.topAnchor.constraint(equalToSystemSpacingBelow: self.credentialValidationText.bottomAnchor, multiplier: 1),
+            self.keepMeSignedInButton.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
+            self.changePasswordButton.topAnchor.constraint(equalTo: self.keepMeSignedInButton.topAnchor),
+            self.changePasswordButton.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
+            
+            self.loginButton.topAnchor.constraint(equalToSystemSpacingBelow: self.keepMeSignedInButton.bottomAnchor, multiplier: 2),
+            self.loginButton.leadingAnchor.constraint(equalTo: self.emailTextField.leadingAnchor),
+            self.loginButton.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
+            
+            self.createAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            self.createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: self.loginButton.bottomAnchor, multiplier: 2),
+            
+            self.placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderView.topAnchor, multiplier: 1),
+            self.placeHolderLabel.leadingAnchor.constraint(equalTo: self.placeHolderView.leadingAnchor),
+            self.placeHolderView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.placeHolderLabel.trailingAnchor, multiplier: 1),
+            self.placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderLabel.bottomAnchor, multiplier: 1)
+        ])
+
+        self.keepMeSignedInButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    }
+
+    private func setDelegate() {
+        self.emailTextField.delegate = self
+        self.passwordTextField.delegate = self
+    }
+    
+    private func setNavigationBar() {
+        self.navigationItem.hidesBackButton = true
+    }
+   
+}
+
+//MARK: - Private
+extension LoginViewController {
+    
+    @objc private func openSignUpVC() {
+        let vm = SignUpViewViewModel()
+        let vc = SignUpViewController(vm: vm)
+        self.navigationController?.modalPresentationStyle = .fullScreen
+        self.show(vc, sender: self)
+    }
+
+    @objc private func loginUser() {
+        self.viewModel.login()
+    }
+
+    @objc private func changePassword() {
+        let vm = ResetPasswordViewViewModel()
+        let vc = ResetPasswordViewController(vm: vm)
+        self.show(vc, sender: self)
+    }
+    
+    /// for debug
+    @objc private func logoutUser() {
+        do {
+            try Auth.auth().signOut()
+        }
+        catch {
+            print("Error logout user \(error.localizedDescription)")
+        }
+    }
+
+}
 // MARK: - UITextFieldDelegate
 extension LoginViewController: UITextFieldDelegate {
     

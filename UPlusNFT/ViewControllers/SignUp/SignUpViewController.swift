@@ -29,7 +29,7 @@ final class SignUpViewController: UIViewController {
     
     private let placeHolderLabel: UILabel = {
         let label = UILabel()
-        label.text = "@uplus.net"
+        label.text = "@lguplus.net"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

@@ -7,10 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A59A2A67A9ED00AEC530 /* OnBoardingViewController.swift */; };
+		2417A59E2A67C4E500AEC530 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */; };
+		2417A5A12A67C96900AEC530 /* InformationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A02A67C96900AEC530 /* InformationInputView.swift */; };
+		2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */; };
 		244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */; };
 		244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */; };
 		244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */; };
 		244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */; };
+		247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */; };
+		247FC60E2A678036001F3974 /* WelcomeBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */; };
+		247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */; };
 		24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */; };
 		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
 		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
@@ -84,16 +91,23 @@
 		93E013992A66527F0005E342 /* UPlusColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013982A66527F0005E342 /* UPlusColor.swift */; };
 		93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */; };
 		93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139C2A666E070005E342 /* UIStackView+Extension.swift */; };
-		93E0139F2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */; };
+		93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */; };
 		93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */; };
 		93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2417A59A2A67A9ED00AEC530 /* OnBoardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingViewController.swift; sourceTree = "<group>"; };
+		2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewController.swift; sourceTree = "<group>"; };
+		2417A5A02A67C96900AEC530 /* InformationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationInputView.swift; sourceTree = "<group>"; };
+		2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Preview.swift"; sourceTree = "<group>"; };
 		244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB132A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCollectionVeiwCellViewModel.swift; sourceTree = "<group>"; };
+		247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
+		247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewController.swift; sourceTree = "<group>"; };
+		247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
 		24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageCacheManager.swift; sourceTree = "<group>"; };
 		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
@@ -166,7 +180,7 @@
 		93E013982A66527F0005E342 /* UPlusColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UPlusColor.swift; path = UPlusNFT/ViewControllers/Mission/SideMenu/UPlusColor.swift; sourceTree = SOURCE_ROOT; };
 		93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuizMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E0139C2A666E070005E342 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
-		93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionVeiwHeader.swift; sourceTree = "<group>"; };
+		93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCompleteViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,6 +202,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2417A5992A67A9CE00AEC530 /* OnBoarding */ = {
+			isa = PBXGroup;
+			children = (
+				2417A59A2A67A9ED00AEC530 /* OnBoardingViewController.swift */,
+			);
+			path = OnBoarding;
+			sourceTree = "<group>";
+		};
+		2417A59C2A67C4C600AEC530 /* UserProfile */ = {
+			isa = PBXGroup;
+			children = (
+				2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */,
+			);
+			path = UserProfile;
+			sourceTree = "<group>";
+		};
+		2417A59F2A67C93800AEC530 /* SingUpView */ = {
+			isa = PBXGroup;
+			children = (
+				2417A5A02A67C96900AEC530 /* InformationInputView.swift */,
+			);
+			path = SingUpView;
+			sourceTree = "<group>";
+		};
+		247FC60A2A677672001F3974 /* BottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */,
+				247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */,
+				247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */,
+			);
+			path = BottomSheet;
+			sourceTree = "<group>";
+		};
 		24984ABB2A5A6D25001F28CF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +328,9 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				2417A59C2A67C4C600AEC530 /* UserProfile */,
+				2417A5992A67A9CE00AEC530 /* OnBoarding */,
+				247FC60A2A677672001F3974 /* BottomSheet */,
 				93E013812A6507B50005E342 /* Mission */,
 				249F59FB2A531744008CF6BE /* CampaignPost */,
 				936F882B2A4D0C590062E759 /* WritePost */,
@@ -336,6 +387,7 @@
 				932C34D72A53F5330032192A /* UIControl+Combine.swift */,
 				932C34DF2A57A06A0032192A /* URL+Extension.swift */,
 				93E0139C2A666E070005E342 /* UIStackView+Extension.swift */,
+				2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -452,6 +504,7 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2417A59F2A67C93800AEC530 /* SingUpView */,
 				93E0138D2A6527D60005E342 /* MissionCollectionViewCell */,
 				932C34D02A53ADBA0032192A /* CampaignCollectionViewCell */,
 				249F59F82A530A71008CF6BE /* CampaignView */,
@@ -499,7 +552,7 @@
 				93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */,
 				93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */,
 				93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */,
-				93E0139E2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift */,
+				93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */,
 				93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */,
 			);
 			path = MissionCollectionViewCell;
@@ -633,6 +686,7 @@
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
 				93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */,
+				2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */,
 				93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */,
 				93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */,
 				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
@@ -647,10 +701,12 @@
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
 				932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */,
+				2417A5A12A67C96900AEC530 /* InformationInputView.swift in Sources */,
 				932C34E22A5BCE0B0032192A /* CampaignCommentEditView.swift in Sources */,
+				2417A59E2A67C4E500AEC530 /* EditUserInfoViewController.swift in Sources */,
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
-				93E0139F2A6671DB0005E342 /* MissionCollectionVeiwHeader.swift in Sources */,
+				93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
 				93E013992A66527F0005E342 /* UPlusColor.swift in Sources */,
 				93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */,
@@ -662,9 +718,11 @@
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
 				932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */,
 				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
+				2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
+				247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
 				932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */,
 				244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */,
@@ -675,8 +733,10 @@
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
 				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
 				24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */,
+				247FC60E2A678036001F3974 /* WelcomeBottomSheetViewController.swift in Sources */,
 				93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
+				247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,
 				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,

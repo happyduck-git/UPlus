@@ -23,6 +23,7 @@ final class LoginViewViewModel {
     }
     @Published var password: String = ""
     @Published var errorDescription: String = ""
+    @Published var isKeepMeSignedIntTapped: Bool = false
     
     let isLoginSuccess = PassthroughSubject<Bool, Never>()
     
