@@ -11,6 +11,7 @@
 		2417A59E2A67C4E500AEC530 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */; };
 		2417A5A12A67C96900AEC530 /* InformationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A02A67C96900AEC530 /* InformationInputView.swift */; };
 		2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */; };
+		2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A42A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift */; };
 		244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */; };
 		244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */; };
 		244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */; };
@@ -101,6 +102,7 @@
 		2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewController.swift; sourceTree = "<group>"; };
 		2417A5A02A67C96900AEC530 /* InformationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationInputView.swift; sourceTree = "<group>"; };
 		2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Preview.swift"; sourceTree = "<group>"; };
+		2417A5A42A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		244BBB0D2A54361D006C33D2 /* PostCommentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB0F2A5543CD006C33D2 /* DefaultCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCollectionViewCell.swift; sourceTree = "<group>"; };
 		244BBB112A5561FA006C33D2 /* TextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -554,6 +556,7 @@
 				93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */,
 				93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */,
 				93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */,
+				2417A5A42A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift */,
 			);
 			path = MissionCollectionViewCell;
 			sourceTree = "<group>";
@@ -679,6 +682,7 @@
 				936F882D2A4D0C710062E759 /* WritePostViewController.swift in Sources */,
 				93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */,
 				93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */,
+				2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,

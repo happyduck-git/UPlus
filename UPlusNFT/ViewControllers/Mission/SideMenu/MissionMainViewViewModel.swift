@@ -28,6 +28,9 @@ final class MissionMainViewViewModel {
     let quizDesc: String
     let quizPoint: Int64
     
+    /* Daily Mission Section */
+    let dailyMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
+    
     init(profileImage: String,
          username: String,
          points: Int64,
@@ -37,7 +40,8 @@ final class MissionMainViewViewModel {
          timeLeft: Int64,
          quizTitle: String,
          quizDesc: String,
-         quizPoint: Int64
+         quizPoint: Int64,
+         dailyMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
     ) {
         self.profileImage = profileImage
         self.username = username
@@ -49,6 +53,7 @@ final class MissionMainViewViewModel {
         self.quizTitle = quizTitle
         self.quizDesc = quizDesc
         self.quizPoint = quizPoint
+        self.dailyMissionCellVMList = dailyMissionCellVMList
     }
     
 }

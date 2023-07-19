@@ -11,11 +11,24 @@ import SwiftUI
 
 class MissionMainViewController: UIViewController {
 
+    //MARK: - Dependency
+    private let vm: MissionMainViewViewModel
+    
     // MARK: - Side Menu Controller Manager
     private lazy var slideInTransitioningDelegate = SideMenuPresentationManager()
     
     // MARK: - UI Elements
     private var collectionView: UICollectionView?
+    
+    //MARK: - Init
+    init(vm: MissionMainViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -76,6 +89,11 @@ extension MissionMainViewController {
             forCellWithReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier
         )
         
+        collectionView.register(
+            DailyMissionCollectionViewCell.self,
+            forCellWithReuseIdentifier: DailyMissionCollectionViewCell.identifier
+        )
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
@@ -86,8 +104,10 @@ extension MissionMainViewController {
             return self.createProfileSectionLayout()
         case 1:
             return self.createTodayMissionSectionLayout()
-        default:
+        case 2:
             return self.createDailyQuizSectionLayout()
+        default:
+            return self.createDailyMissionSectionLayout()
         }
     }
     
@@ -164,6 +184,41 @@ extension MissionMainViewController {
         section.boundarySupplementaryItems = [header]
         return section
     }
+    
+    private func createDailyMissionSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(0.6),
+                heightDimension: .fractionalHeight(0.2)
+            ),
+            subitems: [item]
+        )
+
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.06)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
+        section.boundarySupplementaryItems = [header]
+        return section
+    }
 }
 
 // MARK: - Set UI & Layout
@@ -214,47 +269,40 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 4
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        switch section {
+        case 3:
+            return self.vm.dailyMissionCellVMList.count
+        default:
+            return 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        // NOTE: Temporary cell view model.
-        let userEmail = Auth.auth().currentUser?.email ?? "username@gmail.com"
-        let username = userEmail.components(separatedBy: "@").first ?? "N/A"
-        let tempProfileImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
-        
-        let tempVM = MissionMainViewViewModel(profileImage: tempProfileImage,
-                                              username: username,
-                                              points: 10,
-                                              maxPoints: 15,
-                                              level: 1,
-                                              numberOfMissions: 4,
-                                              timeLeft: 12,
-                                              quizTitle: "OX 퀴즈",
-                                              quizDesc: "1분이면 끝! 데일리 퀴즈 풀기",
-                                              quizPoint: 1
-        )
-     
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionProfileCollectionViewCell.identifier, for: indexPath) as? MissionProfileCollectionViewCell else { fatalError() }
             
-            cell.configure(with: tempVM)
+            cell.configure(with: self.vm)
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else { fatalError() }
             
-            cell.configure(with: tempVM)
+            cell.configure(with: self.vm)
             return cell
-        default:
+        case 2:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier, for: indexPath) as? DailyQuizMissionCollectionViewCell else { fatalError() }
             
-            cell.configure(with: tempVM)
+            cell.configure(with: self.vm)
+            return cell
+        default:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyMissionCollectionViewCell.identifier, for: indexPath) as? DailyMissionCollectionViewCell else { fatalError() }
+            
+            cell.configure(with: self.vm.dailyMissionCellVMList[indexPath.item])
             return cell
         }
         

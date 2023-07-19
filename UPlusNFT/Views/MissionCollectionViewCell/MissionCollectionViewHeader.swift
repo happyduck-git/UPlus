@@ -19,7 +19,6 @@ class MissionCollectionViewHeader: UICollectionReusableView {
     // MARK: - UI Elements
     private let sectionTitle: UILabel = {
         let label = UILabel()
-        
         label.text = MissionConstants.dailyQuiz
         label.textColor = .black
         label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)

@@ -45,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vm = SignUpViewViewModel()
         vm.welcomeNftImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200" //Temp
         let vc = SignUpCompleteViewController(vm: vm)
-
+        window?.rootViewController = UINavigationController(rootViewController: vc)
         window?.makeKeyAndVisible()
         
     }
