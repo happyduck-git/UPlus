@@ -34,7 +34,7 @@ class DailyMissionCollectionViewCell: UICollectionViewCell {
     private let pointLabel: UILabel = {
        let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -42,7 +42,7 @@ class DailyMissionCollectionViewCell: UICollectionViewCell {
     private let missionTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -51,9 +51,12 @@ class DailyMissionCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = .systemOrange
+        self.contentView.backgroundColor = .systemOrange
         self.setUI()
         self.setLayout()
+        
+        self.contentView.clipsToBounds = true
+        self.contentView.layer.cornerRadius = 10
     }
     
     required init?(coder: NSCoder) {
@@ -101,7 +104,7 @@ extension DailyMissionCollectionViewCell {
     }
     
     private func setLayout() {
-        print("Contentview height: \(self.contentView.frame.height)")
+        
         NSLayoutConstraint.activate([
             self.imageContainerView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.imageContainerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),

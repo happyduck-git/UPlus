@@ -38,7 +38,6 @@ class BottomSheetViewController: UIViewController {
         super.viewDidLoad()
         self.setupView()
         self.setupConstraints()
-        print("BS View did load")
     }
     
     override func viewDidAppear(_ animated: Bool) {

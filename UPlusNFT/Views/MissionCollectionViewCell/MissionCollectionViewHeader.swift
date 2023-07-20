@@ -19,9 +19,9 @@ class MissionCollectionViewHeader: UICollectionReusableView {
     // MARK: - UI Elements
     private let sectionTitle: UILabel = {
         let label = UILabel()
-        label.text = MissionConstants.dailyQuiz
+        label.text = MissionConstants.dailyAttendanceMission
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -48,6 +48,15 @@ class MissionCollectionViewHeader: UICollectionReusableView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+// MARK: - Configure with View Model
+extension MissionCollectionViewHeader {
+    
+    func configure(with headerText: String) {
+        self.sectionTitle.text = headerText
     }
     
 }

@@ -18,7 +18,7 @@ class SignUpCompleteViewController: UIViewController {
        let label = UILabel()
         label.textColor = .black
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .heavy)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

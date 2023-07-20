@@ -15,7 +15,7 @@ class WelcomeBottomSheetViewController: BottomSheetViewController {
         label.textColor = .black
         label.textAlignment = .center
         label.text = "서태호 홀더,\nsotitch 님만을 위한 특별 혜택"
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .heavy)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -83,7 +83,7 @@ class WelcomeBottomSheetViewController: BottomSheetViewController {
         
         self.setUI()
         self.setLayout()
-        print("WBSV View did load")
+        
     }
     
 }

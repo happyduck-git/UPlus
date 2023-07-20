@@ -8,11 +8,15 @@
 import UIKit
 import FirebaseAuth
 import SwiftUI
+import Combine
 
 class MissionMainViewController: UIViewController {
 
     //MARK: - Dependency
     private let vm: MissionMainViewViewModel
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - Side Menu Controller Manager
     private lazy var slideInTransitioningDelegate = SideMenuPresentationManager()
@@ -34,11 +38,14 @@ class MissionMainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationItem()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray6
         
-        setUI()
-        setLayout()
-        setDelegate()
+        self.setUI()
+        self.setLayout()
+        self.setDelegate()
+        
+        self.vm.getDailyAttendanceMission()
+        self.bind()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -49,6 +56,32 @@ class MissionMainViewController: UIViewController {
 
         self.present(vc, animated: false)
     }
+}
+
+// MARK: - Bind
+extension MissionMainViewController {
+    
+    private func bind() {
+        
+        func bindViewToViewModel() {
+            
+        }
+        
+        func bindViewModelToView() {
+            self.vm.$dailyAttendanceMissions
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.collectionView?.reloadSections(IndexSet(integer: 2))
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+        
+    }
+
 }
 
 // MARK: - Create CollectionView
@@ -170,6 +203,7 @@ extension MissionMainViewController {
         )
         
         let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
         
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
@@ -195,13 +229,13 @@ extension MissionMainViewController {
         
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(0.6),
-                heightDimension: .fractionalHeight(0.2)
+                widthDimension: .fractionalWidth(0.8),
+                heightDimension: .fractionalHeight(0.4)
             ),
             subitems: [item]
         )
 
-        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
@@ -261,6 +295,7 @@ extension MissionMainViewController {
     
 }
 
+// MARK: - Collection DataSource, Delegate
 extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     private func setDelegate() {
@@ -269,11 +304,13 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 4
+        return vm.sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
+        case 2:
+            return self.vm.dailyAttendanceMissions.count
         case 3:
             return self.vm.dailyMissionCellVMList.count
         default:
@@ -297,7 +334,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         case 2:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier, for: indexPath) as? DailyQuizMissionCollectionViewCell else { fatalError() }
             
-            cell.configure(with: self.vm)
+            cell.configure(with: self.vm.dailyAttendanceMissions[indexPath.item])
             return cell
         default:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyMissionCollectionViewCell.identifier, for: indexPath) as? DailyMissionCollectionViewCell else { fatalError() }
@@ -316,10 +353,21 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         ) as? MissionCollectionViewHeader else {
             return UICollectionReusableView()
         }
-        
+        header.configure(with: vm.sections[indexPath.section].rawValue)
         return header
     }
 
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 2:
+            let quizMissionDetailVC = DailyQuizMissionDetailViewController()
+            
+            quizMissionDetailVC.configure(with: self.vm.dailyAttendanceMissions[indexPath.item])
+            self.show(quizMissionDetailVC, sender: self)
+        default:
+            break
+        }
+    }
 }
 
 // MARK: - Preview

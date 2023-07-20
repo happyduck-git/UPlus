@@ -20,6 +20,11 @@ final class FirestoreManager {
     
     // Database
     private let db = Firestore.firestore()
+    
+    /* uplus_missions_v2 */
+    private let threadsSetCollectionPath2 = Firestore.firestore().collection(FirestoreConstants.devThreads2)
+    
+    /* uplus_posts_and_missions_v1 */
     private let threadsSetCollectionPath = Firestore.firestore().collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)")
     private let userSetCollectionPath =
     Firestore.firestore().collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.users)/\(FirestoreConstants.userSetCollection)")
@@ -29,6 +34,93 @@ final class FirestoreManager {
     var queryDocumentSnapshot: QueryDocumentSnapshot?
 }
 
+/* uplus_missions_v2 */
+extension FirestoreManager {
+    
+    // MARK: - Get Missions
+    func getAllDailyAttendanceMission() async throws -> [DailyAttendanceMission] {
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .collection(FirestoreConstants.dailyAttendanceMission)
+            .getDocuments()
+            .documents
+        
+        var missions: [DailyAttendanceMission] = []
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        for doc in documents {
+            missions.append(try doc.data(as: DailyAttendanceMission.self, decoder: decoder))
+        }
+        return missions
+    }
+    
+    func getAthleteMission() async throws -> [AthleteMission] {
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .collection(FirestoreConstants.athleteMission)
+            .getDocuments()
+            .documents
+        
+        var missions: [AthleteMission] = []
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        for doc in documents {
+            missions.append(try doc.data(as: AthleteMission.self, decoder: decoder))
+        }
+        return missions
+    }
+    
+    func getEnvironmentalistMission() async throws -> [EnvironmentalistMission] {
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .collection(FirestoreConstants.environmentalistMission)
+            .getDocuments()
+            .documents
+        
+        var missions: [EnvironmentalistMission] = []
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        for doc in documents {
+            missions.append(try doc.data(as: EnvironmentalistMission.self, decoder: decoder))
+        }
+        return missions
+    }
+    
+    func getGoodWorkerMission() async throws -> [GoodWorkerMission] {
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .collection(FirestoreConstants.goodWorkerMission)
+            .getDocuments()
+            .documents
+        
+        var missions: [GoodWorkerMission] = []
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        for doc in documents {
+            missions.append(try doc.data(as: GoodWorkerMission.self, decoder: decoder))
+        }
+        return missions
+    }
+    
+    func getSuddenMission() async throws -> [SuddenMission] {
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .collection(FirestoreConstants.suddenMission)
+            .getDocuments()
+            .documents
+        
+        var missions: [SuddenMission] = []
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        for doc in documents {
+            missions.append(try doc.data(as: SuddenMission.self, decoder: decoder))
+        }
+        return missions
+    }
+}
+
+
+/* uplus_posts_and_missions_v1 */
 // MARK: - Getters
 extension FirestoreManager {
 

@@ -24,7 +24,7 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.accessibilityIdentifier = "numberOfMissions"
         label.textColor = .systemGray
-        label.font = .systemFont(ofSize: UPlusFont.head3)
+        label.font = .systemFont(ofSize: UPlusFont.head5)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -32,6 +32,7 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
     private let timeLabelcontainerView: UIView = {
         let view = UIView()
         view.accessibilityIdentifier = "TimeContainerView"
+        view.clipsToBounds = true
         view.backgroundColor = .systemGray5
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -57,6 +58,16 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Life Cycle
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        DispatchQueue.main.async {
+            self.timeLabelcontainerView.layer.cornerRadius = self.timeLabelcontainerView.frame.height / 8
+        }
+        
     }
     
 }

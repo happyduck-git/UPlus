@@ -45,7 +45,8 @@ struct SignUpConstants {
     static let emailRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
     static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.2
     static let sinUpSuccessLabel: String = "회원가입이 완료되었습다."
-    static let passwordValidation: String = "비밀번호에 기호, 숫자를 포함해주세요."
+    static let emailCorrectFormat: String = "가입 가능한 이메일입니다."
+    static let passwordValidation: String = "비밀번호에 영문, 숫자를 포함해주세요."
     static let passwordCheckValidation: String = "비밀번호가 일치하지 않습니다."
     
     static let greetings: String = "님의\nNFT 멤버십이 시작됐어요"
@@ -83,12 +84,15 @@ struct MissionConstants {
     static let levelPrefix: String = "LV."
     static let levelUp: String = "레벨업하기"
     static let todayMission: String = "오늘의 미션"
-    static let dailyQuiz: String = "데일리 퀴즈"
-    static let dailyMission: String = "갓생 인증 미션"
+    static let dailyAttendanceMission: String = "데일리 퀴즈"
+    static let expMission: String = "갓생 인증 미션"
     static let missionUnit: String = "개"
     static let pointUnit: String = "P"
     static let timeLeftSuffix: String = "시간 남음"
     static let details: String = "자세히 보기"
+    /* Daily Quiz Mission */
+    static let quizMission: String = "퀴즈 미션"
+    static let checkAnswer: String = "정답 확인하기"
 }
 
 struct EditUserInfo {
@@ -129,6 +133,17 @@ struct FirestoreConstants {
     static let threadSetCollection = "thread_set"
     static let users = "users"
     static let userSetCollection = "user_set"
+    static let devThreads2 = "dev_threads2"
+    static let configuration = "configuration"
+    static let missions = "missions"
+    static let nfts = "nfts"
+    static let rewards = "rewards"
+    static let dailyAttendanceMission = "daily_attendance_mission_set"
+    static let athleteMission = "exp_athlete_mission_set"
+    static let environmentalistMission = "exp_environmentalist_mission_set"
+    static let goodWorkerMission = "exp_good_worker_mission_set"
+    static let suddenMission = "sudden_mission_set"
+    
     
     /* User */
     static let urlPrefix = "https://platfarm.net/"

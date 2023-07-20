@@ -30,7 +30,7 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = MissionConstants.todayMission
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -54,7 +54,7 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
     private let pointLabel: UILabel = {
        let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -76,10 +76,11 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Configuration
 extension DailyQuizMissionCollectionViewCell {
-    func configure(with vm: MissionMainViewViewModel) {
-        self.quizTitleLabel.text = vm.quizTitle
-        self.quizDescLabel.text = vm.quizDesc
-        self.pointLabel.text = String(describing: vm.quizPoint) + " " + MissionConstants.pointUnit
+    func configure(with vm: DailyAttendanceMission) {
+        
+        self.quizTitleLabel.text = vm.missionContentTitle ?? "No Title"
+        self.quizDescLabel.text = vm.missionContentText ?? "No Content"
+        self.pointLabel.text = String(describing: vm.missionRewardPoint) + " " + MissionConstants.pointUnit
     }
 }
 

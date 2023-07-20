@@ -95,6 +95,14 @@
 		93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */; };
 		93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */; };
 		93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */; };
+		93E013A62A68C0460005E342 /* DailyAttendanceMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A52A68C0460005E342 /* DailyAttendanceMission.swift */; };
+		93E013A82A68C1D70005E342 /* AthleteMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A72A68C1D70005E342 /* AthleteMission.swift */; };
+		93E013AA2A68C20E0005E342 /* EnvironmentalistMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A92A68C20E0005E342 /* EnvironmentalistMission.swift */; };
+		93E013AC2A68C2350005E342 /* GoodWorkerMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */; };
+		93E013AE2A68C4FE0005E342 /* SuddenMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AD2A68C4FE0005E342 /* SuddenMission.swift */; };
+		93E013B02A6909A10005E342 /* DailyQuizMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AF2A6909A10005E342 /* DailyQuizMissionDetailViewController.swift */; };
+		93E013B22A690E9A0005E342 /* DailyQuizMissionDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B12A690E9A0005E342 /* DailyQuizMissionDetailViewViewModel.swift */; };
+		93E013B42A691F450005E342 /* MissionCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B32A691F450005E342 /* MissionCompleteViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -185,6 +193,14 @@
 		93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCompleteViewController.swift; sourceTree = "<group>"; };
+		93E013A52A68C0460005E342 /* DailyAttendanceMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyAttendanceMission.swift; sourceTree = "<group>"; };
+		93E013A72A68C1D70005E342 /* AthleteMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleteMission.swift; sourceTree = "<group>"; };
+		93E013A92A68C20E0005E342 /* EnvironmentalistMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentalistMission.swift; sourceTree = "<group>"; };
+		93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoodWorkerMission.swift; sourceTree = "<group>"; };
+		93E013AD2A68C4FE0005E342 /* SuddenMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuddenMission.swift; sourceTree = "<group>"; };
+		93E013AF2A6909A10005E342 /* DailyQuizMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuizMissionDetailViewController.swift; sourceTree = "<group>"; };
+		93E013B12A690E9A0005E342 /* DailyQuizMissionDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuizMissionDetailViewViewModel.swift; sourceTree = "<group>"; };
+		93E013B32A691F450005E342 /* MissionCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCompleteViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -494,6 +510,7 @@
 		937C76502A457EF4001024D0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				93E013A42A68C0340005E342 /* Missions */,
 				937C76512A457F0A001024D0 /* Post.swift */,
 				937C76532A4586E5001024D0 /* Comment.swift */,
 				937C76552A4586F6001024D0 /* Recomment.swift */,
@@ -532,6 +549,9 @@
 			children = (
 				93E0138C2A65277E0005E342 /* SideMenu */,
 				93E013862A6517AB0005E342 /* MissionMainViewController.swift */,
+				93E013AF2A6909A10005E342 /* DailyQuizMissionDetailViewController.swift */,
+				93E013B12A690E9A0005E342 /* DailyQuizMissionDetailViewViewModel.swift */,
+				93E013B32A691F450005E342 /* MissionCompleteViewController.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -559,6 +579,18 @@
 				2417A5A42A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift */,
 			);
 			path = MissionCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		93E013A42A68C0340005E342 /* Missions */ = {
+			isa = PBXGroup;
+			children = (
+				93E013A52A68C0460005E342 /* DailyAttendanceMission.swift */,
+				93E013A72A68C1D70005E342 /* AthleteMission.swift */,
+				93E013A92A68C20E0005E342 /* EnvironmentalistMission.swift */,
+				93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */,
+				93E013AD2A68C4FE0005E342 /* SuddenMission.swift */,
+			);
+			path = Missions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -681,22 +713,26 @@
 				93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */,
 				936F882D2A4D0C710062E759 /* WritePostViewController.swift in Sources */,
 				93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */,
+				93E013AC2A68C2350005E342 /* GoodWorkerMission.swift in Sources */,
 				93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */,
 				2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,
 				93E013952A66260A0005E342 /* MissionMainViewViewModel.swift in Sources */,
+				93E013A62A68C0460005E342 /* DailyAttendanceMission.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
 				93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */,
 				2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */,
 				93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */,
 				93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */,
+				93E013A82A68C1D70005E342 /* AthleteMission.swift in Sources */,
 				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
 				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
 				93E013912A6619F80005E342 /* TodayMissionCollectionViewCell.swift in Sources */,
+				93E013AA2A68C20E0005E342 /* EnvironmentalistMission.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				932C34CD2A5260410032192A /* User.swift in Sources */,
 				249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */,
@@ -713,6 +749,7 @@
 				93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
 				93E013992A66527F0005E342 /* UPlusColor.swift in Sources */,
+				93E013B02A6909A10005E342 /* DailyQuizMissionDetailViewController.swift in Sources */,
 				93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */,
 				932C34D22A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift in Sources */,
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
@@ -725,6 +762,7 @@
 				2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
+				93E013B42A691F450005E342 /* MissionCompleteViewController.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
@@ -741,6 +779,8 @@
 				93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */,
+				93E013B22A690E9A0005E342 /* DailyQuizMissionDetailViewViewModel.swift in Sources */,
+				93E013AE2A68C4FE0005E342 /* SuddenMission.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,
 				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,

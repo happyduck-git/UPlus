@@ -36,7 +36,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     private let pointLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -51,7 +51,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     private let levelLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

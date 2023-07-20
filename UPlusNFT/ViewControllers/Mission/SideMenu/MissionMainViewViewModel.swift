@@ -6,8 +6,22 @@
 //
 
 import Foundation
+import Combine
 
 final class MissionMainViewViewModel {
+    
+    // MARK: - Dependency
+    private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Porperties
+    enum SectionType: String, CaseIterable {
+        case profile
+        case todayMission
+        case dailyAttendanceMission = "데일리 퀴즈"
+        case expMission = "갓생 인증 미션"
+    }
+    
+    var sections: [SectionType] = SectionType.allCases
     
     // STH holder인지 확인.
     var isHolder: Bool = false
@@ -19,11 +33,12 @@ final class MissionMainViewViewModel {
     let maxPoints: Int64
     let level: Int64
     
-    /* Todday Mission Section */
+    /* Today Mission Section */
     let numberOfMissions: Int64
     let timeLeft: Int64
     
     /* Daily Quiz Section */
+    @Published var dailyAttendanceMissions: [DailyAttendanceMission] = []
     let quizTitle: String
     let quizDesc: String
     let quizPoint: Int64
@@ -56,4 +71,19 @@ final class MissionMainViewViewModel {
         self.dailyMissionCellVMList = dailyMissionCellVMList
     }
     
+}
+
+extension MissionMainViewViewModel {
+    
+    func getDailyAttendanceMission() {
+        Task {
+            do {
+                self.dailyAttendanceMissions = try await self.firestoreManager.getAllDailyAttendanceMission()
+            }
+            catch {
+                print("Error fetching Daily Attendance Missions -- \(error)")
+            }
+        }
+    }
+  
 }
