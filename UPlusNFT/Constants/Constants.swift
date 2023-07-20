@@ -93,6 +93,9 @@ struct MissionConstants {
     /* Daily Quiz Mission */
     static let quizMission: String = "퀴즈 미션"
     static let checkAnswer: String = "정답 확인하기"
+    static let confirm: String = "확인"
+    static let missionSuccess: String = "미션 성공\n정답"
+    static let redeemPointSuffix: String = " 받아요"
 }
 
 struct EditUserInfo {
