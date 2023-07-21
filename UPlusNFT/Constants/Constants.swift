@@ -78,6 +78,16 @@ struct PostConstants {
     static let showComment: String = "답글 보기"
 }
 
+struct SideMenuConstants {
+    static let home: String = "홈"
+    static let mission: String = "미션"
+    static let rankBoard: String = "랭킹 게시판"
+}
+
+struct MyPageConstants {
+    static let goToMission: String = "미션 하러가기"
+}
+
 struct MissionConstants {
     static let pointSuffix: String = "pt"
     static let level: String = "Level"
@@ -114,15 +124,24 @@ struct SFSymbol {
     static let comment: String = "text.bubble"
     static let heartFill: String = "heart.fill"
     static let heart: String = "heart"
+    
     static let arrowDown: String = "arrowtriangle.down.fill"
     static let arrowUp: String = "arrowtriangle.up.fill"
     static let arrowLeft: String = "arrow.left"
     static let arrowRight: String = "arrow.right"
+    static let arrowTriangleRight: String = "arrowtriangle.right.fill"
+    
     static let info: String = "info.circle"
+    static let infoFill: String = "info.circle.fill"
     static let list: String = "list.bullet"
     static let speaker: String = "speaker.wave.2"
     static let circledCheckmark: String = "checkmark.circle"
     static let circleFilledCheckmark: String = "checkmark.circle.fill"
+    
+    static let mission: String = "figure.baseball"
+    static let circledPerson: String = "person.crop.circle"
+    static let medalFill: String = "medal.fill"
+    static let point: String = "parkingsign.circle.fill"
 }
 
 // MARK: - Firebase

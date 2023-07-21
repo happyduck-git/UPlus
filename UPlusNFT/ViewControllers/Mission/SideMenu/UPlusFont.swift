@@ -8,6 +8,9 @@
 import Foundation
 
 struct UPlusFont {
+    
+    static let main: CGFloat = 36
+    
     static let head1: CGFloat = 30
     static let head2: CGFloat = 26
     static let head3: CGFloat = 24

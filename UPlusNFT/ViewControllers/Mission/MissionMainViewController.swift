@@ -296,7 +296,9 @@ extension MissionMainViewController {
     
     @objc func openSideMenu() {
         slideInTransitioningDelegate.direction = .left
-        let sideMenuVC = SideMenuViewController()
+        
+        let vm = SideMenuViewViewModel()
+        let sideMenuVC = SideMenuViewController(vm: vm)
         sideMenuVC.transitioningDelegate = slideInTransitioningDelegate
         sideMenuVC.modalPresentationStyle = .custom
         self.navigationController?.present(sideMenuVC, animated: true)
