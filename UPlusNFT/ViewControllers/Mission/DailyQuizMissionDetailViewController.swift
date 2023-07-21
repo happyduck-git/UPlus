@@ -6,9 +6,17 @@
 //
 
 import UIKit
+import Combine
 
 class DailyQuizMissionDetailViewController: UIViewController {
     
+    // MARK: - Dependency
+    private let vm: DailyQuizMissionDetailViewViewModel
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - UI Elements
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = MissionConstants.quizMission
@@ -36,21 +44,23 @@ class DailyQuizMissionDetailViewController: UIViewController {
         return stack
     }()
     
-    private lazy var circleMarkView: UIButton = {
+    private lazy var circleMarkButton: UIButton = {
         let button = UIButton()
+        button.tag = 0
         button.clipsToBounds = true
         button.backgroundColor = .white
-        button.addTarget(self, action: #selector(circleMarkDidTap), for: .touchUpInside)
         return button
     }()
     
-    private let xMarkView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
+    private lazy var xMarkButton: UIButton = {
+        let button = UIButton()
+        button.tag = 1
+        button.clipsToBounds = true
+        button.backgroundColor = .white
+        return button
     }()
     
-    private let checkAnswerButton: UIButton = {
+    private lazy var checkAnswerButton: UIButton = {
         let button = UIButton()
         button.setTitle(MissionConstants.checkAnswer, for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -59,6 +69,17 @@ class DailyQuizMissionDetailViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Init
+    init(vm: DailyQuizMissionDetailViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,20 +87,109 @@ class DailyQuizMissionDetailViewController: UIViewController {
         
         self.setUI()
         self.setLayout()
+        self.configure()
+        self.bind()
 
     }
     
 }
 
+// MARK: - Bind
 extension DailyQuizMissionDetailViewController {
-    @objc private func circleMarkDidTap() {
-        print("Circle did tap.")
+
+    private func bind() {
+        func bindViewToViewModel() {
+            self.circleMarkButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    if !self.vm.circleButtonDidTap {
+                        self.vm.circleButtonDidTap = !self.vm.circleButtonDidTap
+                        self.vm.xButtonDidTap = !self.vm.circleButtonDidTap
+                        self.vm.selectedAnswer = Int64(self.circleMarkButton.tag)
+                    }
+                   
+                }
+                .store(in: &bindings)
+            
+            self.xMarkButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    if !self.vm.xButtonDidTap {
+                        self.vm.xButtonDidTap = !self.vm.xButtonDidTap
+                        self.vm.circleButtonDidTap = !self.vm.xButtonDidTap
+                        self.vm.selectedAnswer = Int64(self.xMarkButton.tag)
+                    }
+                    
+                }
+                .store(in: &bindings)
+            
+            self.checkAnswerButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    if checkUserAnswer() {
+                        print("Right answer submitted.")
+                        let vc = MissionCompleteViewController(vm: self.vm)
+                        navigationController?.modalPresentationStyle = .fullScreen
+                        self.show(vc, sender: self)
+                    } else {
+                        // TODO: 오답인 경우 로직 추가 필요.
+                        print("Wrong answer submitted.")
+                    }
+                    
+                }
+                .store(in: &bindings)
+        }
+        
+        func bindViewModelToView() {
+            self.vm.$circleButtonDidTap
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    let color: CGColor = $0 ? UPlusColor.pointGagePink.cgColor : UIColor.clear.cgColor
+                    let width: CGFloat = $0 ? 10.0 : 0.0
+                    
+                    self.circleMarkButton.layer.borderColor = color
+                    self.circleMarkButton.layer.borderWidth = width
+                }
+                .store(in: &bindings)
+            
+            self.vm.$xButtonDidTap
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    let color: CGColor = $0 ? UPlusColor.pointGagePink.cgColor : UIColor.clear.cgColor
+                    let width: CGFloat = $0 ? 10.0 : 0.0
+                    self.xMarkButton.layer.borderColor = color
+                    self.xMarkButton.layer.borderWidth = width
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
+    
+}
+
+// MARK: - Private
+extension DailyQuizMissionDetailViewController {
+
+    private func checkUserAnswer() -> Bool {
+        return self.vm.dataSource.missionChoiceQuizRightOrder == self.vm.selectedAnswer ? true : false
+    }
+    
 }
 
 extension DailyQuizMissionDetailViewController {
-    func configure(with vm: DailyAttendanceMission) {
-        self.quizLabel.text = vm.missionContentTitle
+    private func configure() {
+        self.quizLabel.text = vm.dataSource.missionContentTitle
     }
 }
 
@@ -92,8 +202,8 @@ extension DailyQuizMissionDetailViewController {
                               stackView,
                               checkAnswerButton)
         
-        self.stackView.addArrangedSubviews(circleMarkView,
-                                           xMarkView)
+        self.stackView.addArrangedSubviews(circleMarkButton,
+                                           xMarkButton)
     }
     
     private func setLayout() {
@@ -116,21 +226,21 @@ extension DailyQuizMissionDetailViewController {
             
         ])
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         DispatchQueue.main.async {
             self.drawCircleMark()
-            self.circleMarkView.layer.cornerRadius = self.circleMarkView.frame.height / 15
-            self.xMarkView.layer.cornerRadius = self.xMarkView.frame.height / 15
+            self.circleMarkButton.layer.cornerRadius = self.circleMarkButton.frame.height / 15
+            self.xMarkButton.layer.cornerRadius = self.xMarkButton.frame.height / 15
         }
     }
     
     private func drawCircleMark() {
         let shapeLayer = CAShapeLayer()
         
-        let path = UIBezierPath(arcCenter: self.circleMarkView.center,
+        let path = UIBezierPath(arcCenter: self.circleMarkButton.center,
                                 radius: 50,
                                 startAngle: 0,
                                 endAngle: .pi * 2,
@@ -139,7 +249,7 @@ extension DailyQuizMissionDetailViewController {
         shapeLayer.strokeColor = UIColor.black.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineWidth = 10
-        self.circleMarkView.layer.addSublayer(shapeLayer)
+        self.circleMarkButton.layer.addSublayer(shapeLayer)
     }
     
     private func drawXMark() {

@@ -49,7 +49,9 @@ extension FirestoreManager {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         for doc in documents {
-            missions.append(try doc.data(as: DailyAttendanceMission.self, decoder: decoder))
+            var data = try doc.data(as: DailyAttendanceMission.self, decoder: decoder)
+            data.postId = doc.documentID
+            missions.append(data)
         }
         return missions
     }
@@ -116,6 +118,18 @@ extension FirestoreManager {
             missions.append(try doc.data(as: SuddenMission.self, decoder: decoder))
         }
         return missions
+    }
+    
+    // MARK: - Setters
+    func saveUserState(postId: String,
+                       userIndex: Int64,
+                       state: MissionAnswerState) async throws {
+        
+        try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(FirestoreConstants.dailyAttendanceMission)
+            .document(postId)
+            .updateData([FirestoreConstants.missionUserStateMap : [userIndex: state.rawValue]])
     }
 }
 

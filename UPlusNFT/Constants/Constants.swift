@@ -116,6 +116,7 @@ struct SFSymbol {
     static let heart: String = "heart"
     static let arrowDown: String = "arrowtriangle.down.fill"
     static let arrowUp: String = "arrowtriangle.up.fill"
+    static let arrowLeft: String = "arrow.left"
     static let arrowRight: String = "arrow.right"
     static let info: String = "info.circle"
     static let list: String = "list.bullet"
@@ -216,5 +217,7 @@ struct FirestoreConstants {
     static let bestCommentOrder = "best_comment_order"
     static let bestCommentRewardedUserUid = "best_comment_rewarded_user_uid"
     static let bestCommentRewardCategoryId = "best_comment_reward_category_id"
-
+    
+    /* Mission */
+    static let missionUserStateMap = "mission_user_state_map"
 }

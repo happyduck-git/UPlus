@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct DailyAttendanceMission: Codable {
+    var postId: String?
     let missionIndex: Int64
     let missionTopicType: String
     let missionFormatType: String

@@ -56,6 +56,15 @@ class MissionMainViewController: UIViewController {
 
         self.present(vc, animated: false)
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let backBtnImage = UIImage(systemName: SFSymbol.arrowLeft)?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        
+        navigationController?.navigationBar.backIndicatorImage = backBtnImage
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backBtnImage
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "\u{200B}", style: .plain, target: nil, action: nil)
+    }
 }
 
 // MARK: - Bind
@@ -360,9 +369,9 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 2:
-            let quizMissionDetailVC = DailyQuizMissionDetailViewController()
+            let vm = DailyQuizMissionDetailViewViewModel(dataSource: self.vm.dailyAttendanceMissions[indexPath.item])
             
-            quizMissionDetailVC.configure(with: self.vm.dailyAttendanceMissions[indexPath.item])
+            let quizMissionDetailVC = DailyQuizMissionDetailViewController(vm: vm)
             self.show(quizMissionDetailVC, sender: self)
         default:
             break

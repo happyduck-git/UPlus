@@ -6,9 +6,24 @@
 //
 
 import UIKit
+import Combine
+
+enum MissionAnswerState: String {
+    case pending
+    case successed
+    case failed
+}
 
 class MissionCompleteViewController: UIViewController {
     
+    // MARK: - Dependency
+    private let vm: DailyQuizMissionDetailViewViewModel
+    private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - UI Elements
     private let resultLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 40, weight: .bold)
@@ -25,6 +40,7 @@ class MissionCompleteViewController: UIViewController {
     private let missionCompleteIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .darkGray
+        imageView.transform = CGAffineTransform(rotationAngle: .pi / 4)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -37,33 +53,87 @@ class MissionCompleteViewController: UIViewController {
         return label
     }()
     
-    private let confirmButton: UIButton = {
+    private lazy var confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle(MissionConstants.confirm, for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
         button.backgroundColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    // MARK: - Init
+    init(vm: DailyQuizMissionDetailViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+        self.configure()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
+        self.setNavigationBar()
+        self.bind()
     }
     
 }
 
-//MARK: - Configure with View Model
 extension MissionCompleteViewController {
-    func configure(with vm: DailyAttendanceMission) {
-        self.pointLabel.text = String(describing: vm.missionRewardPoint) + MissionConstants.redeemPointSuffix
+    private func bind() {
+        self.confirmButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                // TODO: 정답인 경우 firestore 저장
+                Task {
+                    do {
+                        // 1. user 참여 document array item append
+                    
+                        // 2. mission 내 mission_user_state_map에 저장
+                        print("PostId: \(self.vm.dataSource.postId ?? "n/a")")
+                        try await self.firestoreManager.saveUserState(postId: self.vm.dataSource.postId ?? "n/a",
+                                                            userIndex: 0,
+                                                            state: .successed)
+                    }
+                    catch {
+                        print("")
+                    }
+                }
+            }
+            .store(in: &bindings)
     }
 }
 
-//MARK: - Set UI & Layout
+// MARK: - Configure with View Model
+extension MissionCompleteViewController {
+    private func configure() {
+        self.pointLabel.text = String(describing: self.vm.dataSource.missionRewardPoint) + MissionConstants.redeemPointSuffix
+    }
+}
+
+// MARK: - Button Action
+extension MissionCompleteViewController {
+    @objc private func confirmButtonDidTap() {
+        
+        guard let vcs = self.navigationController?.viewControllers else { return }
+        for vc in vcs where vc is MissionMainViewController {
+            self.navigationController?.popToViewController(vc, animated: true)
+        }
+        
+        // TODO: 수령한 Point DB에 저장.
+    }
+}
+
+// MARK: - Set UI & Layout
 extension MissionCompleteViewController {
     private func setUI() {
         self.view.addSubviews(resultLabel,
@@ -88,5 +158,9 @@ extension MissionCompleteViewController {
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.confirmButton.trailingAnchor, multiplier: 3),
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.confirmButton.bottomAnchor, multiplier: 3)
         ])
+    }
+    
+    private func setNavigationBar() {
+        self.navigationItem.hidesBackButton = true
     }
 }
