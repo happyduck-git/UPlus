@@ -80,6 +80,11 @@ extension MyPageViewController {
             forCellWithReuseIdentifier: MyNftsCollectionViewCell.identifier
         )
 
+        // 3. Register section footer
+        collectionView.register(MyPageCollectionViewFooter.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                                withReuseIdentifier: MyPageCollectionViewFooter.identifier)
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
@@ -106,18 +111,22 @@ extension MyPageViewController {
 
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.5)
+                widthDimension: .fractionalWidth(0.7),
+                heightDimension: .fractionalHeight(0.4)
             ),
             subitems: [item]
         )
         
+        let spacing = NSCollectionLayoutSpacing.fixed(10)
+        group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: spacing, top: nil, trailing: nil, bottom: nil)
+        
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         
+        // Header
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.9)
+            heightDimension: .estimated(600)
         )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
@@ -125,7 +134,19 @@ extension MyPageViewController {
             alignment: .top
         )
         
-        section.boundarySupplementaryItems = [header]
+        // Footer
+        let footerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(0.8),
+            heightDimension: .fractionalHeight(0.1)
+        )
+        
+        let footer = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: footerSize,
+            elementKind: UICollectionView.elementKindSectionFooter,
+            alignment: .bottom
+        )
+        
+        section.boundarySupplementaryItems = [header, footer]
         return section
     }
     
@@ -158,7 +179,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -168,7 +189,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyNftsCollectionViewCell.identifier, for: indexPath) as? MyNftsCollectionViewCell else {
                 fatalError()
             }
-            
+            cell.contentView.layer.cornerRadius = 5
+            print(cell.frame.width)
             return cell
         }
         
@@ -176,16 +198,31 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
-        guard let header = collectionView.dequeueReusableSupplementaryView(
-            ofKind: kind,
-            withReuseIdentifier: MyPageCollectionViewHeader.identifier,
-            for: indexPath
-        ) as? MyPageCollectionViewHeader else {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: MyPageCollectionViewHeader.identifier,
+                for: indexPath
+            ) as? MyPageCollectionViewHeader else {
+                return UICollectionReusableView()
+            }
+            
+            return header
+        case UICollectionView.elementKindSectionFooter:
+            guard let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: MyPageCollectionViewFooter.identifier,
+                for: indexPath
+            ) as? MyPageCollectionViewFooter else {
+                return UICollectionReusableView()
+            }
+            
+            return footer
+        default:
             return UICollectionReusableView()
         }
-        
-        return header
-        
+
     }
     
 }

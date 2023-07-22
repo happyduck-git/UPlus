@@ -20,7 +20,9 @@ final class MyPageCollectionViewHeader: UICollectionViewCell {
     private let shareNftButton: UIButton = {
         let button = UIButton()
         button.clipsToBounds = true
+        button.setImage(UIImage(systemName: "sparkles")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         button.setTitle("NFT 자랑하기", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head6, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UPlusColor.pointGagePink
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +42,7 @@ final class MyPageCollectionViewHeader: UICollectionViewCell {
         let label = UILabel()
         label.text = "Lv.1"
         label.textColor = UPlusColor.pointGagePink
+        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -61,6 +64,7 @@ final class MyPageCollectionViewHeader: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.contentView.backgroundColor = .systemGray6
         self.setUI()
         self.setLayout()
     }
@@ -85,18 +89,19 @@ extension MyPageCollectionViewHeader {
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.profileImage.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 3),
-            self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 3),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 3),
+            self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 8),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 8),
             self.profileImage.heightAnchor.constraint(equalTo: self.profileImage.widthAnchor),
             
             self.shareNftButton.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 2),
-            self.shareNftButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.leadingAnchor, multiplier: 3),
-            self.profileImage.trailingAnchor.constraint(equalToSystemSpacingAfter: self.shareNftButton.trailingAnchor, multiplier: 3),
+            self.shareNftButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.leadingAnchor, multiplier: 7),
+            self.shareNftButton.heightAnchor.constraint(equalToConstant: self.contentView.frame.height / 15),
+            self.profileImage.trailingAnchor.constraint(equalToSystemSpacingAfter: self.shareNftButton.trailingAnchor, multiplier: 7),
             
             self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.shareNftButton.bottomAnchor, multiplier: 2),
             self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.levelLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 1),
-            self.levelLabel.bottomAnchor.constraint(equalTo: self.usernameLabel.bottomAnchor),
+            self.levelLabel.centerYAnchor.constraint(equalTo: self.usernameLabel.centerYAnchor),
             
             self.infoButton.centerYAnchor.constraint(equalTo: self.usernameLabel.centerYAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.infoButton.trailingAnchor, multiplier: 2),
@@ -104,8 +109,17 @@ extension MyPageCollectionViewHeader {
             self.userMissionDataView.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 2),
             self.userMissionDataView.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor),
             self.userMissionDataView.trailingAnchor.constraint(equalTo: self.infoButton.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.userMissionDataView.bottomAnchor, multiplier: 5)
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.userMissionDataView.bottomAnchor, multiplier: 4)
         ])
+        
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        DispatchQueue.main.async {
+            self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
+            self.shareNftButton.layer.cornerRadius = self.shareNftButton.frame.height / 3
+        }
+    }
 }

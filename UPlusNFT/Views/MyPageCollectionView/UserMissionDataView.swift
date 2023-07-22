@@ -20,7 +20,6 @@ class UserMissionDataView: UIView {
     
     private let levelProgressBar: UIProgressView = {
         let bar = UIProgressView()
-        bar.progress = 0.0
         bar.clipsToBounds = true
         bar.progressViewStyle = .default
         bar.progressTintColor = UPlusColor.pointCirclePink
@@ -56,8 +55,8 @@ class UserMissionDataView: UIView {
     private let rankStackView: UIStackView = {
        let stack = UIStackView()
         stack.distribution = .fillProportionally
-        stack.spacing = 1.0
         stack.axis = .horizontal
+        stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
     
@@ -81,6 +80,7 @@ class UserMissionDataView: UIView {
         button.setTitle("13위", for: .normal)
         button.setImage(UIImage(systemName: SFSymbol.arrowTriangleRight)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
         button.setTitleColor(UPlusColor.rankBrown, for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -92,10 +92,19 @@ class UserMissionDataView: UIView {
         self.backgroundColor = .white
         self.setUI()
         self.setLayout()
+
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.levelProgressBar.setProgress(0.7, animated: true)
+        DispatchQueue.main.async {
+            self.rankingView.layer.cornerRadius = self.rankingView.frame.height / 2
+        }
     }
     
 }
@@ -114,6 +123,7 @@ extension UserMissionDataView {
     }
     
     private func setLayout() {
+    
         NSLayoutConstraint.activate([
             self.levelDescriptionLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 2),
             self.levelDescriptionLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
@@ -122,9 +132,8 @@ extension UserMissionDataView {
             self.levelProgressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.levelDescriptionLabel.bottomAnchor, multiplier: 2),
             self.levelProgressBar.leadingAnchor.constraint(equalTo: self.levelDescriptionLabel.leadingAnchor),
             self.levelProgressBar.trailingAnchor.constraint(equalTo: self.levelDescriptionLabel.trailingAnchor),
-            self.levelProgressBar.heightAnchor.constraint(equalToConstant: self.frame.height / 10),
+           
             self.pointImageView.leadingAnchor.constraint(equalTo: self.levelDescriptionLabel.leadingAnchor),
-            self.pointImageView.heightAnchor.constraint(equalToConstant: self.frame.height / 8),
             self.pointImageView.widthAnchor.constraint(equalTo: self.pointImageView.heightAnchor),
             self.pointImageView.centerYAnchor.constraint(equalTo: self.rankingView.centerYAnchor),
             
@@ -133,7 +142,8 @@ extension UserMissionDataView {
             
             self.rankingView.topAnchor.constraint(equalToSystemSpacingBelow: self.levelProgressBar.bottomAnchor, multiplier: 2),
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.rankingView.bottomAnchor, multiplier: 2),
-            self.rankingView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 5)
+            self.rankingView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 5),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rankingView.trailingAnchor, multiplier: 8)
         ])
         
         NSLayoutConstraint.activate([
@@ -142,5 +152,8 @@ extension UserMissionDataView {
             self.rankingView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rankStackView.trailingAnchor, multiplier: 1),
             self.rankingView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.rankStackView.bottomAnchor, multiplier: 1)
         ])
+        
+        self.levelProgressBar.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
+
 }

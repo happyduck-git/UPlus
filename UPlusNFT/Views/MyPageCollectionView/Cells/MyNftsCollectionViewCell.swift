@@ -21,6 +21,7 @@ final class MyNftsCollectionViewCell: UICollectionViewCell {
         button.setTitle(MyPageConstants.goToMission, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UPlusColor.pointGagePink
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -29,6 +30,7 @@ final class MyNftsCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         
         self.contentView.backgroundColor = .systemBlue
+        self.contentView.clipsToBounds = true
         self.setUI()
         self.setLayout()
     }
@@ -50,12 +52,14 @@ extension MyNftsCollectionViewCell {
             self.nftImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.nftImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.nftImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.nftImageView.heightAnchor.constraint(equalToConstant: self.contentView.frame.height * (2/3)),
+            self.nftImageView.heightAnchor.constraint(equalToConstant: self.contentView.frame.height * (3/4)),
             
             self.goToMissionButton.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 2),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.goToMissionButton.bottomAnchor, multiplier: 2),
             self.goToMissionButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.goToMissionButton.trailingAnchor, multiplier: 2)
         ])
+        self.goToMissionButton.layer.cornerRadius = 8
     }
+
 }
