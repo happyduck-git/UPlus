@@ -19,6 +19,7 @@ final class MissionMainViewViewModel {
         case todayMission
         case dailyAttendanceMission = "데일리 퀴즈"
         case expMission = "갓생 인증 미션"
+        case suddenMission = "돌발 퀴즈"
     }
     
     var sections: [SectionType] = SectionType.allCases

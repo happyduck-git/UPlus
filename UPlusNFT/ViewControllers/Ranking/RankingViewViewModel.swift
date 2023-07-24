@@ -22,7 +22,7 @@ extension RankingViewViewModel {
         Task {
             do {
                 self.userList = try await self.firestoreManager.getUsers()
-                print("Users: \(self.userList)")
+//                print("Users: \(self.userList)")
             }
             catch {
                 print("Error fetching users -- \(error)")

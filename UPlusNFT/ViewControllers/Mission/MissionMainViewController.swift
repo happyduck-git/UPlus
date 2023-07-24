@@ -14,6 +14,7 @@ class MissionMainViewController: UIViewController {
 
     //MARK: - Dependency
     private let vm: MissionMainViewViewModel
+    private var sideMenuVC: SideMenuViewController?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -45,6 +46,7 @@ class MissionMainViewController: UIViewController {
         self.setDelegate()
         
         self.vm.getDailyAttendanceMission()
+        self.vm.getSuddenMission()
         self.bind()
     }
 
@@ -341,11 +343,12 @@ extension MissionMainViewController {
         slideInTransitioningDelegate.direction = .left
         
         let vm = SideMenuViewViewModel()
-        let sideMenuVC = SideMenuViewController(vm: vm)
-        sideMenuVC.transitioningDelegate = slideInTransitioningDelegate
-        sideMenuVC.modalPresentationStyle = .custom
-        sideMenuVC.delegate = self
-        self.navigationController?.present(sideMenuVC, animated: true)
+        let sidemenuVC = SideMenuViewController(vm: vm)
+        self.sideMenuVC = sidemenuVC
+        sidemenuVC.transitioningDelegate = slideInTransitioningDelegate
+        sidemenuVC.modalPresentationStyle = .custom
+        sidemenuVC.delegate = self
+        self.navigationController?.present(sidemenuVC, animated: true)
     }
     
 }
@@ -368,6 +371,8 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             return self.vm.dailyAttendanceMissions.count
         case 3:
             return self.vm.longTermMissionCellVMList.count
+        case 4:
+            return self.vm.suddenMissions.count
         default:
             return 1
         }
@@ -399,7 +404,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         default:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier, for: indexPath) as? DailyQuizMissionCollectionViewCell else { fatalError() }
             
-            cell.configure(with: self.vm.dailyAttendanceMissions[indexPath.item])
+            cell.configure(with: self.vm.suddenMissions[indexPath.item])
             return cell
         }
         
@@ -433,17 +438,25 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
 extension MissionMainViewController: SideMenuViewControllerDelegate {
     func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int) {
 
-        for subview in view.subviews {
-            if subview.tag == 99 {
-                subview.removeFromSuperview()
+        for child in self.children {
+            if child.view.tag == 99 {
+                print("Child tag 99")
+                child.willMove(toParent: nil)
+                child.removeFromParent()
+                child.view.removeFromSuperview()
             }
         }
+//        for subview in view.subviews {
+//            if subview.tag == 99 {
+//                subview.willMove(toSuperview: nil)
+//                subview.removeFromSuperview()
+//            }
+//        }
         
         switch selectedRow {
         case 0:
             break
         case 1:
-            self.navigationItem.title = SideMenuConstants.mission
             UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let `self` = self else { return }
                 for subview in self.view.subviews {
@@ -452,27 +465,22 @@ extension MissionMainViewController: SideMenuViewControllerDelegate {
                     }
                 }
             }
-         
+            self.navigationItem.title = SideMenuConstants.mission
+            
         case 2:
             let vm = RankingViewViewModel()
             let vc = RankingViewController(vm: vm)
-            self.view.insertSubview(vc.view, at: 1)
+            self.view.addSubview(vc.view)
             self.addChild(vc)
-            vc.view.tag = 99
-            DispatchQueue.main.async {
-                vc.view.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    vc.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-                    vc.view.topAnchor.constraint(equalTo: self.view.topAnchor),
-                    vc.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-                    vc.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-                ])
-            }
-            self.navigationItem.title = RankingConstants.rank
             vc.didMove(toParent: self)
+            vc.view.tag = 99
+            
+            self.navigationItem.title = RankingConstants.rank
+            
         default:
             break
         }
+        self.sideMenuVC?.dismiss(animated: true)
     }
 }
 

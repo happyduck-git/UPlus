@@ -76,11 +76,19 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Configuration
 extension DailyQuizMissionCollectionViewCell {
-    func configure(with vm: DailyAttendanceMission) {
+    func configure(with vm: Mission) {
+       
+        if let attVM = vm as? DailyAttendanceMission {
+            self.quizTitleLabel.text = attVM.missionContentTitle ?? "No Title"
+            self.quizDescLabel.text = attVM.missionContentText ?? "No Content"
+            self.pointLabel.text = String(describing: attVM.missionRewardPoint) + " " + MissionConstants.pointUnit
+        }
         
-        self.quizTitleLabel.text = vm.missionContentTitle ?? "No Title"
-        self.quizDescLabel.text = vm.missionContentText ?? "No Content"
-        self.pointLabel.text = String(describing: vm.missionRewardPoint) + " " + MissionConstants.pointUnit
+        if let suddVM = vm as? SuddenMission {
+            self.quizTitleLabel.text = suddVM.missionContentTitle ?? "No Title"
+            self.quizDescLabel.text = suddVM.missionContentText ?? "No Content"
+            self.pointLabel.text = String(describing: suddVM.missionRewardPoint) + " " + MissionConstants.pointUnit
+        }
     }
 }
 

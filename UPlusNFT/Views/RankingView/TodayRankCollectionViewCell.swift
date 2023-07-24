@@ -62,7 +62,6 @@ extension TodayRankCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                print("Reloaded...")
                 self.rankTableView.reloadData()
             }
             .store(in: &bindings)

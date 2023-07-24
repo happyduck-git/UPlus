@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct SuddenMission: Codable {
+struct SuddenMission: Codable, Mission {
     let missionIndex: Int64
     let missionTopicType: String
     let missionFormatType: String
