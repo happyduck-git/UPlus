@@ -23,6 +23,17 @@ final class MyPageViewController: UIViewController {
         self.setUI()
         self.setLayout()
         self.setDelegate()
+
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        let backBtnImage = UIImage(systemName: SFSymbol.arrowLeft)?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        
+        navigationController?.navigationBar.backIndicatorImage = backBtnImage
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backBtnImage
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
 }
@@ -218,6 +229,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return UICollectionReusableView()
             }
             
+            footer.delegate = self
+            
             return footer
         default:
             return UICollectionReusableView()
@@ -225,4 +238,12 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
     }
     
+}
+
+extension MyPageViewController: MyPageCollectionViewFooterDelegate {
+    func rewardsButtomDidTap() {
+        let vm = RewardsViewViewModel()
+        let vc = RewardsViewController(vm: vm)
+        self.show(vc, sender: self)
+    }
 }

@@ -43,8 +43,11 @@ final class MissionMainViewViewModel {
     let quizDesc: String
     let quizPoint: Int64
     
-    /* Daily Mission Section */
-    let dailyMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
+    /* Long Term Mission Section */
+    let longTermMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
+    
+    /* Sudden Mission Section */
+    @Published var suddenMissions: [SuddenMission] = []
     
     init(profileImage: String,
          username: String,
@@ -68,11 +71,12 @@ final class MissionMainViewViewModel {
         self.quizTitle = quizTitle
         self.quizDesc = quizDesc
         self.quizPoint = quizPoint
-        self.dailyMissionCellVMList = dailyMissionCellVMList
+        self.longTermMissionCellVMList = dailyMissionCellVMList
     }
     
 }
 
+// MARK: - Fetch Data from Firestore
 extension MissionMainViewViewModel {
     
     func getDailyAttendanceMission() {
@@ -82,6 +86,17 @@ extension MissionMainViewViewModel {
             }
             catch {
                 print("Error fetching Daily Attendance Missions -- \(error)")
+            }
+        }
+    }
+    
+    func getSuddenMission() {
+        Task {
+            do {
+                self.suddenMissions = try await self.firestoreManager.getSuddenMission()
+            }
+            catch {
+                print("Error fetching Sudden Missions -- \(error)")
             }
         }
     }

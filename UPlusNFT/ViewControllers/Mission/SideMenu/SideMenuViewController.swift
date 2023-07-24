@@ -7,10 +7,17 @@
 
 import UIKit
 
-class SideMenuViewController: UIViewController {
+protocol SideMenuViewControllerDelegate: AnyObject {
+    func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int)
+}
+
+final class SideMenuViewController: UIViewController {
 
     // MARK: - Dependency
     private let vm: SideMenuViewViewModel
+    
+    // MARK: - Delegate
+    weak var delegate: SideMenuViewControllerDelegate?
     
     // MARK: - UI Elements
     private let menuTable: UITableView = {
@@ -33,22 +40,23 @@ class SideMenuViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        setUI()
-        menuTable.delegate = self
-        menuTable.dataSource = self
+        self.view.backgroundColor = .white
+        self.setUI()
+        self.menuTable.delegate = self
+        self.menuTable.dataSource = self
     }
 
 }
 
+// MARK: - TableView Delegate & DataSource
 extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     private func setUI() {
         view.addSubview(menuTable)
         NSLayoutConstraint.activate([
-            menuTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            menuTable.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            menuTable.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            menuTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            self.menuTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            self.menuTable.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            self.menuTable.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            self.menuTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
     }
     
@@ -71,6 +79,6 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        self.delegate?.menuTableViewController(controller: self, didSelectRow: indexPath.row)
     }
 }

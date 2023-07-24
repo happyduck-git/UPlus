@@ -120,6 +120,43 @@ extension FirestoreManager {
         return missions
     }
     
+    // MARK: - Get Rewards
+    func getRewardsOwned(by ownerIndex: String) async throws -> [Reward] {
+        let documents = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.rewards)
+            .collection(FirestoreConstants.rewardSetCollection)
+            .whereField(FirestoreConstants.rewardUser, isEqualTo: ownerIndex)
+            .getDocuments()
+            .documents
+        
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        let rewards = try documents.map { doc in
+            try doc.data(as: Reward.self, decoder: decoder)
+        }
+
+        return rewards
+    }
+    
+    // MARK: - Get Users
+    func getUsers() async throws -> [UPlusUser] {
+        let documents = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .getDocuments()
+            .documents
+        
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        let users = try documents.map { doc in
+            try doc.data(as: UPlusUser.self, decoder: decoder)
+        }
+
+        return users
+    }
+    
     // MARK: - Setters
     func saveUserState(postId: String,
                        userIndex: Int64,

@@ -13,12 +13,14 @@ final class SideMenuViewViewModel {
         case home
         case mission
         case rankBoard
+        case resetPassword
     }
     
     private let menuList: [MenuType: String] = [
         .home: SFSymbol.circledPerson,
         .mission: SFSymbol.mission,
-        .rankBoard: SFSymbol.medalFill
+        .rankBoard: SFSymbol.medalFill,
+        .resetPassword: SFSymbol.medalFill
     ]
     
     func numberOfMenu() -> Int {
@@ -34,6 +36,8 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.mission
         case .rankBoard:
             key = SideMenuConstants.rankBoard
+        case .resetPassword:
+            key = SideMenuConstants.resetPassword
         }
         return [key: self.menuList[type] ?? "n/a"]
     }
@@ -54,8 +58,10 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.home
         case .mission:
             key = SideMenuConstants.mission
-        default:
+        case .rankBoard:
             key = SideMenuConstants.rankBoard
+        default:
+            key = SideMenuConstants.resetPassword
         }
         
         return (key, self.menuList[sectionType] ?? "n/a")

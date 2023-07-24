@@ -63,7 +63,7 @@ class MissionMainViewController: UIViewController {
         
         navigationController?.navigationBar.backIndicatorImage = backBtnImage
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = backBtnImage
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "\u{200B}", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }
 
@@ -82,6 +82,14 @@ extension MissionMainViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     self.collectionView?.reloadSections(IndexSet(integer: 2))
+                }
+                .store(in: &bindings)
+            
+            self.vm.$suddenMissions
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.collectionView?.reloadSections(IndexSet(integer: 4))
                 }
                 .store(in: &bindings)
         }
@@ -148,8 +156,10 @@ extension MissionMainViewController {
             return self.createTodayMissionSectionLayout()
         case 2:
             return self.createDailyQuizSectionLayout()
+        case 3:
+            return self.createLongTermMissionSectionLayout()
         default:
-            return self.createDailyMissionSectionLayout()
+            return self.createSuddenQuizSectionLayout()
         }
     }
     
@@ -228,7 +238,7 @@ extension MissionMainViewController {
         return section
     }
     
-    private func createDailyMissionSectionLayout() -> NSCollectionLayoutSection {
+    private func createLongTermMissionSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -239,12 +249,45 @@ extension MissionMainViewController {
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(0.8),
-                heightDimension: .fractionalHeight(0.4)
+                heightDimension: .fractionalHeight(0.3)
             ),
             subitems: [item]
         )
 
         group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.06)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
+        section.boundarySupplementaryItems = [header]
+        return section
+    }
+    
+    private func createSuddenQuizSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.2)
+            ),
+            subitems: [item]
+        )
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
@@ -291,7 +334,7 @@ extension MissionMainViewController {
         
         navigationItem.setLeftBarButton(menuItem, animated: true)
         navigationItem.setRightBarButton(speakerItem, animated: true)
-        navigationItem.title = "미션 홈"
+        navigationItem.title = SideMenuConstants.mission
     }
     
     @objc func openSideMenu() {
@@ -301,6 +344,7 @@ extension MissionMainViewController {
         let sideMenuVC = SideMenuViewController(vm: vm)
         sideMenuVC.transitioningDelegate = slideInTransitioningDelegate
         sideMenuVC.modalPresentationStyle = .custom
+        sideMenuVC.delegate = self
         self.navigationController?.present(sideMenuVC, animated: true)
     }
     
@@ -323,7 +367,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         case 2:
             return self.vm.dailyAttendanceMissions.count
         case 3:
-            return self.vm.dailyMissionCellVMList.count
+            return self.vm.longTermMissionCellVMList.count
         default:
             return 1
         }
@@ -347,10 +391,15 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             
             cell.configure(with: self.vm.dailyAttendanceMissions[indexPath.item])
             return cell
-        default:
+        case 3:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyMissionCollectionViewCell.identifier, for: indexPath) as? DailyMissionCollectionViewCell else { fatalError() }
             
-            cell.configure(with: self.vm.dailyMissionCellVMList[indexPath.item])
+            cell.configure(with: self.vm.longTermMissionCellVMList[indexPath.item])
+            return cell
+        default:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier, for: indexPath) as? DailyQuizMissionCollectionViewCell else { fatalError() }
+            
+            cell.configure(with: self.vm.dailyAttendanceMissions[indexPath.item])
             return cell
         }
         
@@ -375,6 +424,52 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             
             let quizMissionDetailVC = DailyQuizMissionDetailViewController(vm: vm)
             self.show(quizMissionDetailVC, sender: self)
+        default:
+            break
+        }
+    }
+}
+
+extension MissionMainViewController: SideMenuViewControllerDelegate {
+    func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int) {
+
+        for subview in view.subviews {
+            if subview.tag == 99 {
+                subview.removeFromSuperview()
+            }
+        }
+        
+        switch selectedRow {
+        case 0:
+            break
+        case 1:
+            self.navigationItem.title = SideMenuConstants.mission
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let `self` = self else { return }
+                for subview in self.view.subviews {
+                    if subview.tag == 99 {
+                        subview.removeFromSuperview()
+                    }
+                }
+            }
+         
+        case 2:
+            let vm = RankingViewViewModel()
+            let vc = RankingViewController(vm: vm)
+            self.view.insertSubview(vc.view, at: 1)
+            self.addChild(vc)
+            vc.view.tag = 99
+            DispatchQueue.main.async {
+                vc.view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    vc.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+                    vc.view.topAnchor.constraint(equalTo: self.view.topAnchor),
+                    vc.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+                    vc.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+                ])
+            }
+            self.navigationItem.title = RankingConstants.rank
+            vc.didMove(toParent: self)
         default:
             break
         }

@@ -6,8 +6,21 @@
 //
 
 import UIKit
+import Combine
+
+protocol MyPageCollectionViewFooterDelegate: AnyObject {
+    func rewardsButtomDidTap()
+}
 
 final class MyPageCollectionViewFooter: UICollectionViewCell {
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - Delegate
+    weak var delegate: MyPageCollectionViewFooterDelegate?
+    
+    // MARK: - UI Elements
     private let button: UIButton = {
         let button = UIButton()
         button.clipsToBounds = true
@@ -20,7 +33,7 @@ final class MyPageCollectionViewFooter: UICollectionViewCell {
     
     private let buttonTitleLabel: UILabel = {
        let label = UILabel()
-        label.text = "보유한 경품"
+        label.text = MyPageConstants.ownedRewards
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,10 +42,29 @@ final class MyPageCollectionViewFooter: UICollectionViewCell {
         super.init(frame: frame)
         self.contentView.backgroundColor = .white
         self.setUI()
+        self.bind()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+extension MyPageCollectionViewFooter {
+
+    private func bind() {
+        
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        self.button.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                self.delegate?.rewardsButtomDidTap()
+            }
+            .store(in: &bindings)
     }
     
 }

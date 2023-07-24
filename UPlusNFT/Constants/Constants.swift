@@ -82,10 +82,16 @@ struct SideMenuConstants {
     static let home: String = "홈"
     static let mission: String = "미션"
     static let rankBoard: String = "랭킹 게시판"
+    static let resetPassword: String = "비밀번호 수정"
 }
 
 struct MyPageConstants {
     static let goToMission: String = "미션 하러가기"
+    static let ownedRewards: String = "보유한 경품"
+}
+
+struct RewardsConstants {
+    static let ownedRewards: String = "보유 경품"
 }
 
 struct MissionConstants {
@@ -106,6 +112,14 @@ struct MissionConstants {
     static let confirm: String = "확인"
     static let missionSuccess: String = "미션 성공\n정답"
     static let redeemPointSuffix: String = " 받아요"
+}
+
+struct RankingConstants {
+    static let rank: String = "랭킹"
+    static let todayRank: String = "일일 랭킹"
+    static let totalRank: String = "누적 랭킹"
+    static let topOneHundred: String = "TOP100"
+    static let myRank: String = "내 순위"
 }
 
 struct EditUserInfo {
@@ -161,6 +175,7 @@ struct FirestoreConstants {
     static let missions = "missions"
     static let nfts = "nfts"
     static let rewards = "rewards"
+    static let rewardSetCollection = "reward_set"
     static let dailyAttendanceMission = "daily_attendance_mission_set"
     static let athleteMission = "exp_athlete_mission_set"
     static let environmentalistMission = "exp_environmentalist_mission_set"
@@ -239,4 +254,7 @@ struct FirestoreConstants {
     
     /* Mission */
     static let missionUserStateMap = "mission_user_state_map"
+    
+    /* Reward */
+    static let rewardUser = "reward_user"
 }

@@ -51,7 +51,8 @@ class DailyMissionCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.contentView.backgroundColor = .systemOrange
+        self.contentView.backgroundColor = .white
+        self.backgroundColor = .systemGray6
         self.setUI()
         self.setLayout()
         
