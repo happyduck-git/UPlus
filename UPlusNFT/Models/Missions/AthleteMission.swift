@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct AthleteMission: Codable {
+struct AthleteMission: Codable, Hashable {
     let missionIndex: Int64
     let missionTopicType: String
     let missionFormatType: String

@@ -95,6 +95,10 @@
 		93A2ED9A2A6E1C9D00C2287D /* RankingMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED992A6E1C9D00C2287D /* RankingMenuBar.swift */; };
 		93A2ED9C2A6E3BDD00C2287D /* RankBottomFlatSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED9B2A6E3BDD00C2287D /* RankBottomFlatSheetView.swift */; };
 		93A2ED9E2A6E411900C2287D /* TodayRankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED9D2A6E411900C2287D /* TodayRankCollectionViewCell.swift */; };
+		93A2EDC22A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC12A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift */; };
+		93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */; };
+		93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 93A2EDC62A6FA74400C2287D /* FSCalendar */; };
+		93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013862A6517AB0005E342 /* MissionMainViewController.swift */; };
@@ -208,6 +212,9 @@
 		93A2ED992A6E1C9D00C2287D /* RankingMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingMenuBar.swift; sourceTree = "<group>"; };
 		93A2ED9B2A6E3BDD00C2287D /* RankBottomFlatSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankBottomFlatSheetView.swift; sourceTree = "<group>"; };
 		93A2ED9D2A6E411900C2287D /* TodayRankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayRankCollectionViewCell.swift; sourceTree = "<group>"; };
+		93A2EDC12A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryButtonCollectionViewCell.swift; sourceTree = "<group>"; };
+		93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryCalendarCollectionViewCell.swift; sourceTree = "<group>"; };
+		93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMissionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013862A6517AB0005E342 /* MissionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewController.swift; sourceTree = "<group>"; };
@@ -243,6 +250,7 @@
 				930D96C12A41828E0007801A /* FirebaseFirestore in Frameworks */,
 				930D96C32A41828E0007801A /* FirebaseFirestoreSwift in Frameworks */,
 				936F88232A4AB6ED0062E759 /* Nuke in Frameworks */,
+				93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */,
 				936F88322A4D0DFF0062E759 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -653,6 +661,9 @@
 				93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */,
 				93E013A02A6679E90005E342 /* DailyMissionCollectionViewCell.swift */,
 				2417A5A42A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift */,
+				93A2EDC12A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift */,
+				93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */,
+				93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */,
 			);
 			path = MissionCollectionViewCell;
 			sourceTree = "<group>";
@@ -694,6 +705,7 @@
 				930D96C22A41828E0007801A /* FirebaseFirestoreSwift */,
 				936F88222A4AB6ED0062E759 /* Nuke */,
 				936F88312A4D0DFF0062E759 /* FirebaseStorage */,
+				93A2EDC62A6FA74400C2287D /* FSCalendar */,
 			);
 			productName = UPlusNFT;
 			productReference = 930D969E2A416AC30007801A /* UPlusNFT.app */;
@@ -726,6 +738,7 @@
 			packageReferences = (
 				930D96BB2A41828E0007801A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				936F88212A4AB6EC0062E759 /* XCRemoteSwiftPackageReference "Nuke" */,
+				93A2EDC52A6FA74400C2287D /* XCRemoteSwiftPackageReference "FSCalendar" */,
 			);
 			productRefGroup = 930D969F2A416AC30007801A /* Products */;
 			projectDirPath = "";
@@ -787,8 +800,10 @@
 				244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
+				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */,
+				93A2EDC22A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift in Sources */,
 				93A2ED972A6E17BC00C2287D /* RankingViewViewModel.swift in Sources */,
 				936F882D2A4D0C710062E759 /* WritePostViewController.swift in Sources */,
 				93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */,
@@ -808,6 +823,7 @@
 				93A2ED9E2A6E411900C2287D /* TodayRankCollectionViewCell.swift in Sources */,
 				93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */,
 				93E013A82A68C1D70005E342 /* AthleteMission.swift in Sources */,
+				93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */,
 				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
 				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
 				930D96D52A42DC110007801A /* LoginViewViewModel.swift in Sources */,
@@ -1107,6 +1123,14 @@
 				minimumVersion = 12.0.0;
 			};
 		};
+		93A2EDC52A6FA74400C2287D /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1139,6 +1163,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 930D96BB2A41828E0007801A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		93A2EDC62A6FA74400C2287D /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 93A2EDC52A6FA74400C2287D /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

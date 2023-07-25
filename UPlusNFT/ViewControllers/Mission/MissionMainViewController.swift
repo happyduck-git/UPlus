@@ -10,18 +10,41 @@ import FirebaseAuth
 import SwiftUI
 import Combine
 
+enum MissionCellViewModel {
+    case A(String)
+    case B(Int)
+    /*
+    case profileCollectionViewCellViewModel(MissionMainViewViewModel)
+    case todayMissionCollectionViewCellViewModel(MissionMainViewViewModel)
+    case dailyQuizMissionCollectionViewCell(DailyAttendanceMission)
+    case dailyMissionCollectionViewCell(DailyMissionCollectionViewCellViewModel)
+    case suddenMissionCollectionViewCell(SuddenMission)
+     */
+}
+
+struct SectionA: Hashable {
+    
+    let id: String
+    let items: [MissionCellViewModel]
+    var isVisible: Bool
+    
+    static func == (lhs: SectionA, rhs: SectionA) -> Bool {
+        return lhs.id == rhs.id ? true : false
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+}
+
 class MissionMainViewController: UIViewController {
 
     //MARK: - Dependency
     private let vm: MissionMainViewViewModel
-    private var sideMenuVC: SideMenuViewController?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
-    
-    // MARK: - Side Menu Controller Manager
-    private lazy var slideInTransitioningDelegate = SideMenuPresentationManager()
-    
+   
     // MARK: - UI Elements
     private var collectionView: UICollectionView?
     
@@ -38,7 +61,7 @@ class MissionMainViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setNavigationItem()
+//        self.setNavigationItem()
         view.backgroundColor = .systemGray6
         
         self.setUI()
@@ -66,6 +89,7 @@ class MissionMainViewController: UIViewController {
         navigationController?.navigationBar.backIndicatorImage = backBtnImage
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = backBtnImage
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+
     }
 }
 
@@ -92,6 +116,15 @@ extension MissionMainViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     self.collectionView?.reloadSections(IndexSet(integer: 4))
+                }
+                .store(in: &bindings)
+            
+            self.vm.$isHistorySectionOpened
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.collectionView?.reloadSections(IndexSet(integer: 6))
                 }
                 .store(in: &bindings)
         }
@@ -146,6 +179,16 @@ extension MissionMainViewController {
             forCellWithReuseIdentifier: DailyMissionCollectionViewCell.identifier
         )
         
+        collectionView.register(
+            MissionHistoryButtonCollectionViewCell.self,
+            forCellWithReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            MissionHistoryCalendarCollectionViewCell.self,
+            forCellWithReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier
+        )
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
@@ -160,8 +203,12 @@ extension MissionMainViewController {
             return self.createDailyQuizSectionLayout()
         case 3:
             return self.createLongTermMissionSectionLayout()
-        default:
+        case 4:
             return self.createSuddenQuizSectionLayout()
+        case 5:
+            return self.createButtonSectionLayout()
+        default:
+            return self.createMissionHistorySectionLayout()
         }
     }
     
@@ -176,7 +223,7 @@ extension MissionMainViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.6)
+                heightDimension: .fractionalHeight(0.4)
             ),
             subitems: [item]
         )
@@ -307,6 +354,46 @@ extension MissionMainViewController {
         section.boundarySupplementaryItems = [header]
         return section
     }
+    
+    private func createButtonSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.08)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
+    private func createMissionHistorySectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.3)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
 }
 
 // MARK: - Set UI & Layout
@@ -324,33 +411,9 @@ extension MissionMainViewController {
     }
     
     private func setNavigationItem() {
-        let menuItem = UIBarButtonItem(image: UIImage(systemName: SFSymbol.list)?.withTintColor(.black, renderingMode: .alwaysOriginal),
-                                       style: .plain,
-                                       target: self,
-                                       action: #selector(openSideMenu))
         
-        let speakerItem = UIBarButtonItem(image: UIImage(systemName: SFSymbol.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
-                                          style: .plain,
-                                          target: self,
-                                          action: nil)
-        
-        navigationItem.setLeftBarButton(menuItem, animated: true)
-        navigationItem.setRightBarButton(speakerItem, animated: true)
-        navigationItem.title = SideMenuConstants.mission
     }
-    
-    @objc func openSideMenu() {
-        slideInTransitioningDelegate.direction = .left
-        
-        let vm = SideMenuViewViewModel()
-        let sidemenuVC = SideMenuViewController(vm: vm)
-        self.sideMenuVC = sidemenuVC
-        sidemenuVC.transitioningDelegate = slideInTransitioningDelegate
-        sidemenuVC.modalPresentationStyle = .custom
-        sidemenuVC.delegate = self
-        self.navigationController?.present(sidemenuVC, animated: true)
-    }
-    
+
 }
 
 // MARK: - Collection DataSource, Delegate
@@ -373,6 +436,8 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             return self.vm.longTermMissionCellVMList.count
         case 4:
             return self.vm.suddenMissions.count
+        case 6:
+            return self.vm.isHistorySectionOpened ? 1 : 0
         default:
             return 1
         }
@@ -401,10 +466,18 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             
             cell.configure(with: self.vm.longTermMissionCellVMList[indexPath.item])
             return cell
-        default:
+        case 4:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier, for: indexPath) as? DailyQuizMissionCollectionViewCell else { fatalError() }
             
             cell.configure(with: self.vm.suddenMissions[indexPath.item])
+            return cell
+        case 5:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else { fatalError() }
+            cell.delegate = self
+            return cell
+        default:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else { fatalError() }
+      
             return cell
         }
         
@@ -429,66 +502,35 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             
             let quizMissionDetailVC = DailyQuizMissionDetailViewController(vm: vm)
             self.show(quizMissionDetailVC, sender: self)
+        case 5:
+            guard let cell = collectionView.cellForItem(at: indexPath) as? MissionHistoryButtonCollectionViewCell else { return }
+            cell.isOpened.toggle()
         default:
             break
         }
     }
 }
 
-extension MissionMainViewController: SideMenuViewControllerDelegate {
-    func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int) {
-
-        for child in self.children {
-            if child.view.tag == 99 {
-                print("Child tag 99")
-                child.willMove(toParent: nil)
-                child.removeFromParent()
-                child.view.removeFromSuperview()
-            }
-        }
-//        for subview in view.subviews {
-//            if subview.tag == 99 {
-//                subview.willMove(toSuperview: nil)
-//                subview.removeFromSuperview()
-//            }
-//        }
-        
-        switch selectedRow {
-        case 0:
-            break
-        case 1:
-            UIView.animate(withDuration: 0.3) { [weak self] in
-                guard let `self` = self else { return }
-                for subview in self.view.subviews {
-                    if subview.tag == 99 {
-                        subview.removeFromSuperview()
-                    }
-                }
-            }
-            self.navigationItem.title = SideMenuConstants.mission
-            
-        case 2:
-            let vm = RankingViewViewModel()
-            let vc = RankingViewController(vm: vm)
-            self.view.addSubview(vc.view)
-            self.addChild(vc)
-            vc.didMove(toParent: self)
-            vc.view.tag = 99
-            
-            self.navigationItem.title = RankingConstants.rank
-            
-        default:
-            break
-        }
-        self.sideMenuVC?.dismiss(animated: true)
+extension MissionMainViewController: MissionHistoryButtonCollectionViewCellDelegate {
+    func showMissionButtonDidTap(isOpened: Bool) {
+        self.vm.isHistorySectionOpened = isOpened
     }
 }
 
-// MARK: - Preview
-//struct PreView: PreviewProvider {
-//    static var previews: some View {
-//        MissionMainViewController().toPreview()
-//    }
-//}
+/*
+extension MissionMainViewController: MyPageViewControllerDelegate {
+    func myPageViewControllerDidShow(_ controller: UIViewController) {
+        if controller is MyPageViewController {
+            let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+                                              style: .plain,
+                                              target: self,
+                                              action: nil)
+            
+            navigationItem.setRightBarButton(speakerItem, animated: true)
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
+}
 
-
+*/

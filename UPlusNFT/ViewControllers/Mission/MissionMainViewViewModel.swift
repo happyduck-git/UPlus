@@ -20,9 +20,14 @@ final class MissionMainViewViewModel {
         case dailyAttendanceMission = "데일리 퀴즈"
         case expMission = "갓생 인증 미션"
         case suddenMission = "돌발 퀴즈"
+        case button
+        case historyCalendar
     }
     
     var sections: [SectionType] = SectionType.allCases
+    
+    // History section open 여부 확인.
+    @Published var isHistorySectionOpened: Bool = false
     
     // STH holder인지 확인.
     var isHolder: Bool = false
@@ -40,9 +45,6 @@ final class MissionMainViewViewModel {
     
     /* Daily Quiz Section */
     @Published var dailyAttendanceMissions: [DailyAttendanceMission] = []
-    let quizTitle: String
-    let quizDesc: String
-    let quizPoint: Int64
     
     /* Long Term Mission Section */
     let longTermMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
@@ -57,9 +59,6 @@ final class MissionMainViewViewModel {
          level: Int64,
          numberOfMissions: Int64,
          timeLeft: Int64,
-         quizTitle: String,
-         quizDesc: String,
-         quizPoint: Int64,
          dailyMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
     ) {
         self.profileImage = profileImage
@@ -69,9 +68,6 @@ final class MissionMainViewViewModel {
         self.level = level
         self.numberOfMissions = numberOfMissions
         self.timeLeft = timeLeft
-        self.quizTitle = quizTitle
-        self.quizDesc = quizDesc
-        self.quizPoint = quizPoint
         self.longTermMissionCellVMList = dailyMissionCellVMList
     }
     

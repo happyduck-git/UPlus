@@ -38,6 +38,7 @@ final class FirestoreManager {
 extension FirestoreManager {
     
     // MARK: - Get Missions
+    
     func getAllDailyAttendanceMission() async throws -> [DailyAttendanceMission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(FirestoreConstants.dailyAttendanceMission)

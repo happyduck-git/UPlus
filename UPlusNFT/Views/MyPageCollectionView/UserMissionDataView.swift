@@ -30,7 +30,8 @@ class UserMissionDataView: UIView {
     
     private let pointImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: SFSymbol.point)?.withTintColor(UPlusColor.pointCirclePink, renderingMode: .alwaysOriginal) // TEMP ASSET
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.pointSticker)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -70,7 +71,8 @@ class UserMissionDataView: UIView {
     
     private let rankingImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: SFSymbol.medalFill)?.withTintColor(UPlusColor.trophyYellow, renderingMode: .alwaysOriginal) // TEMP ASSET
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.pointSticker)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -78,7 +80,7 @@ class UserMissionDataView: UIView {
     private let rankingButton: UIButton = {
         let button = UIButton()
         button.setTitle("13위", for: .normal)
-        button.setImage(UIImage(systemName: SFSymbol.arrowTriangleRight)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
+        button.setImage(UIImage(named: ImageAsset.trophy), for: .normal)
         button.setTitleColor(UPlusColor.rankBrown, for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
         button.translatesAutoresizingMaskIntoConstraints = false

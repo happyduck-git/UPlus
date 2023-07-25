@@ -127,6 +127,7 @@ struct EditUserInfo {
     static let confirm: String = "수정완료"
 }
 
+// MARK: - Assets
 struct SFSymbol {
     static let camera: String = "camera.fill"
     static let cameraViewFinder: String = "camera.viewfinder"
@@ -148,7 +149,7 @@ struct SFSymbol {
     static let info: String = "info.circle"
     static let infoFill: String = "info.circle.fill"
     static let list: String = "list.bullet"
-    static let speaker: String = "speaker.wave.2"
+    
     static let circledCheckmark: String = "checkmark.circle"
     static let circleFilledCheckmark: String = "checkmark.circle.fill"
     
@@ -156,6 +157,17 @@ struct SFSymbol {
     static let circledPerson: String = "person.crop.circle"
     static let medalFill: String = "medal.fill"
     static let point: String = "parkingsign.circle.fill"
+}
+
+struct ImageAsset {
+    static let speaker: String = "speaker"
+    static let pointSticker: String = "point-sticker"
+    static let trophy: String = "trophy"
+    static let xMark: String = "xmark-black"
+    static let levelBadge: String = "level-star-badge"
+    
+    static let arrowHeadDown: String = "arrow-head-down"
+    static let arrowHeadUp: String = "arrow-head-up"
 }
 
 // MARK: - Firebase

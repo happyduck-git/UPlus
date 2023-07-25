@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Reward: Codable {
+struct Reward: Codable, Hashable {
      let rewardIndex: Int64
      let rewardType: String
      let rewardName: String?

@@ -18,66 +18,42 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     weak var delegate: MissionCollectionViewHeaderProtocol?
     
     //MARK: - Property
-    private let profileImage: UIImageView = {
+    private let levelUpNoticeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.text = "다음 레벨 업까지\n미션 3개 남았어요!"
+        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.numberOfLines = 2
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let levelBadgeImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.clipsToBounds = true
+        imageView.image = UIImage(named: ImageAsset.levelBadge)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private let usernameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head1, weight: .heavy)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let pointLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let verticalBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray4
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     private let levelLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .white
         label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let infoButton: UIButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(systemName: SFSymbol.info)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal), for: .normal)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        return btn
+    private let pointImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.pointSticker)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
-    private let levelBadge: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3)
-        label.backgroundColor = UPlusColor.pointGagePink
-        label.clipsToBounds = true
-        label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let progressLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3)
+    private let totalPointLabel: UILabel = {
+       let label = UILabel()
+        label.textColor = .systemGray
+        label.text = "9/12"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -87,18 +63,31 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
         bar.progress = 0.0
         bar.clipsToBounds = true
         bar.progressViewStyle = .default
+        bar.backgroundColor = UPlusColor.gageBackgroundPink
         bar.progressTintColor = UPlusColor.pointGagePink
         bar.trackTintColor = .systemGray
         bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()
     
-    private let levelUpButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.black, for: .normal)
-        button.setTitle(MissionConstants.levelUp, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let certificateLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.text = "내 경험 인증서"
+        label.font = .systemFont(ofSize: UPlusFont.subTitle1, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let myMissionCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
     }()
     
     override init(frame: CGRect) {
@@ -106,7 +95,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
         
         setUI()
         setLayout()
-        setButtonConfig()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -121,12 +110,9 @@ extension MissionProfileCollectionViewCell {
         Task {
             do {
                 let url = URL(string: vm.profileImage)
-                self.profileImage.image = try await URL.urlToImage(url)
-                self.usernameLabel.text = vm.username
-                self.pointLabel.text = String(describing: vm.points) + "pt"
-                self.levelLabel.text = "Level " + String(describing: vm.level)
-                self.levelBadge.text = MissionConstants.levelPrefix + String(describing: vm.level)
-                self.progressLabel.text = String(describing: vm.points) + "/" + String(describing: vm.maxPoints)
+                
+                self.levelLabel.text = "Lv." + String(describing: vm.level)
+              
             }
             catch {
                 print("Error fetching profileImage -- \(error.localizedDescription)")
@@ -140,79 +126,54 @@ extension MissionProfileCollectionViewCell {
     
     private func setUI() {
         self.addSubviews(
-            profileImage,
-            usernameLabel,
-            pointLabel,
-            verticalBar,
+            levelUpNoticeLabel,
+            levelBadgeImageView,
             levelLabel,
-            infoButton,
+            pointImageView,
+            totalPointLabel,
             progressBar,
-            levelBadge,
-            levelUpButton
+            certificateLabel,
+            myMissionCollectionView
         )
-        
-        self.progressBar.addSubview(progressLabel)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.profileImage.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 3),
-            self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 5),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 5),
-            self.profileImage.heightAnchor.constraint(equalTo: self.profileImage.widthAnchor),
+            self.levelUpNoticeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.levelUpNoticeLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             
-            self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: profileImage.bottomAnchor, multiplier: 2),
-            self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 1),
-
-            self.pointLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 1),
-            self.pointLabel.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor),
-            self.verticalBar.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 1),
-            self.verticalBar.widthAnchor.constraint(equalToConstant: 1),
-            self.verticalBar.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 1),
-            self.verticalBar.heightAnchor.constraint(equalTo: self.pointLabel.heightAnchor),
+            self.levelBadgeImageView.topAnchor.constraint(equalTo: self.levelUpNoticeLabel.topAnchor),
+            self.levelBadgeImageView.bottomAnchor.constraint(equalTo: self.levelUpNoticeLabel.bottomAnchor),
+            self.levelBadgeImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.levelUpNoticeLabel.trailingAnchor, multiplier: 4),
             
-            self.levelLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 1),
-            self.levelLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.verticalBar.trailingAnchor, multiplier: 1),
-            self.infoButton.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 1),
-            self.infoButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.levelLabel.trailingAnchor, multiplier: 1),
+            self.levelLabel.centerXAnchor.constraint(equalTo: self.levelBadgeImageView.centerXAnchor),
+            self.levelLabel.centerYAnchor.constraint(equalTo: self.levelBadgeImageView.centerYAnchor),
             
-            self.levelBadge.topAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 2),
-            self.levelBadge.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor),
-            self.levelBadge.heightAnchor.constraint(equalToConstant: 40),
-            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelBadge.bottomAnchor, multiplier: 2),
+            self.pointImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.levelUpNoticeLabel.bottomAnchor, multiplier: 2),
+            self.pointImageView.leadingAnchor.constraint(equalTo: self.levelUpNoticeLabel.leadingAnchor),
             
-            self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.levelBadge.topAnchor, multiplier: 1),
-            self.progressBar.leadingAnchor.constraint(equalTo: self.levelBadge.centerXAnchor),
-            self.levelBadge.bottomAnchor.constraint(equalToSystemSpacingBelow: self.progressBar.bottomAnchor, multiplier: 1),
+            self.totalPointLabel.topAnchor.constraint(equalTo: self.pointImageView.topAnchor),
+            self.totalPointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointImageView.trailingAnchor, multiplier: 1),
             
-            self.levelUpButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.progressBar.trailingAnchor, multiplier: 3),
-            self.levelUpButton.centerYAnchor.constraint(equalTo: self.progressBar.centerYAnchor),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.levelUpButton.trailingAnchor, multiplier: 3),
+            self.progressBar.topAnchor.constraint(equalTo: self.pointImageView.topAnchor),
+            self.progressBar.leadingAnchor.constraint(equalToSystemSpacingAfter: self.totalPointLabel.trailingAnchor, multiplier: 2),
+            self.progressBar.bottomAnchor.constraint(equalTo: self.pointImageView.bottomAnchor),
+            self.progressBar.widthAnchor.constraint(equalToConstant: 230),
             
+            self.certificateLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pointImageView.bottomAnchor, multiplier: 3),
+            self.certificateLabel.leadingAnchor.constraint(equalTo: self.levelUpNoticeLabel.leadingAnchor),
+            
+            self.myMissionCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.certificateLabel.bottomAnchor, multiplier: 3),
+            self.myMissionCollectionView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.myMissionCollectionView.trailingAnchor, multiplier: 1),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.myMissionCollectionView.bottomAnchor, multiplier: 1)
         ])
-        
-        // Set layouts of point progress label.
-        NSLayoutConstraint.activate([
-            self.progressLabel.centerYAnchor.constraint(equalTo: self.progressBar.centerYAnchor),
-            self.progressBar.trailingAnchor.constraint(equalToSystemSpacingAfter: self.progressLabel.trailingAnchor, multiplier: 1)
-        ])
-        
-        self.levelBadge.setContentHuggingPriority(.defaultLow, for: .vertical)
-        self.progressBar.setContentHuggingPriority(.defaultLow, for: .vertical)
-        
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // Set profile image view corner radius.
-        self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 10
-        
         // Set progress bar corner radius.
-        self.levelBadge.widthAnchor.constraint(equalTo: self.levelBadge.heightAnchor).isActive = true
-        
-        self.levelBadge.layer.cornerRadius = self.levelBadge.frame.height / 2
         self.progressBar.layer.cornerRadius = self.progressBar.frame.height / 2
         self.progressBar.layer.sublayers?[1].cornerRadius = self.progressBar.frame.height / 2
         self.progressBar.subviews[1].clipsToBounds = true
@@ -220,23 +181,5 @@ extension MissionProfileCollectionViewCell {
         /* Checking progress animation */
         self.progressBar.setProgress(0.9, animated: true)
     }
-    
-    private func setButtonConfig() {
-        
-        if #available(iOS 15.0, *) {
-            let title = AttributedString(MissionConstants.levelUp, attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)]))
-                
-            var config = UIButton.Configuration.filled()
-            config.baseBackgroundColor = .systemGray3
-            config.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 4, bottom: 3, trailing: 4)
-            config.attributedTitle = title
-            levelUpButton.configuration = config
-            
-        } else {
-            levelUpButton.titleEdgeInsets = UIEdgeInsets(top: 3, left: 4, bottom: 3, right: 4)
-            levelUpButton.backgroundColor = .systemGray3
-            levelUpButton.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle3,  weight: .bold)
-        }
-        
-    }
+  
 }
