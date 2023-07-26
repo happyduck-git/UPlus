@@ -16,4 +16,9 @@ struct UPlusColor {
     static let trophyYellow = UIColor(hex: 0xFFBC10)
     
     static let rankBrown = UIColor(hex: 0x6A3900)
+    
+    
+    static let lightBlue = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.80)
+    static let gradientLightBlue = UIColor(hex: 0xA5C7FA)
+    static let gradientMediumBlue = UIColor(hex: 0x92F4EE)
 }

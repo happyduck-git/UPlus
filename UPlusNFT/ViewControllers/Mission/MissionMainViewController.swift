@@ -10,33 +10,6 @@ import FirebaseAuth
 import SwiftUI
 import Combine
 
-enum MissionCellViewModel {
-    case A(String)
-    case B(Int)
-    /*
-    case profileCollectionViewCellViewModel(MissionMainViewViewModel)
-    case todayMissionCollectionViewCellViewModel(MissionMainViewViewModel)
-    case dailyQuizMissionCollectionViewCell(DailyAttendanceMission)
-    case dailyMissionCollectionViewCell(DailyMissionCollectionViewCellViewModel)
-    case suddenMissionCollectionViewCell(SuddenMission)
-     */
-}
-
-struct SectionA: Hashable {
-    
-    let id: String
-    let items: [MissionCellViewModel]
-    var isVisible: Bool
-    
-    static func == (lhs: SectionA, rhs: SectionA) -> Bool {
-        return lhs.id == rhs.id ? true : false
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
-    }
-}
-
 class MissionMainViewController: UIViewController {
 
     //MARK: - Dependency
@@ -204,8 +177,6 @@ extension MissionMainViewController {
         case 3:
             return self.createLongTermMissionSectionLayout()
         case 4:
-            return self.createSuddenQuizSectionLayout()
-        case 5:
             return self.createButtonSectionLayout()
         default:
             return self.createMissionHistorySectionLayout()
@@ -223,7 +194,7 @@ extension MissionMainViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.4)
+                heightDimension: .estimated(300)
             ),
             subitems: [item]
         )
@@ -322,39 +293,6 @@ extension MissionMainViewController {
         return section
     }
     
-    private func createSuddenQuizSectionLayout() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-        )
-
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.2)
-            ),
-            subitems: [item]
-        )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
-        
-        let headerSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.06)
-        )
-        let header = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        
-        section.boundarySupplementaryItems = [header]
-        return section
-    }
-    
     private func createButtonSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
@@ -434,9 +372,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             return self.vm.dailyAttendanceMissions.count
         case 3:
             return self.vm.longTermMissionCellVMList.count
-        case 4:
-            return self.vm.suddenMissions.count
-        case 6:
+        case 5:
             return self.vm.isHistorySectionOpened ? 1 : 0
         default:
             return 1
@@ -467,11 +403,6 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             cell.configure(with: self.vm.longTermMissionCellVMList[indexPath.item])
             return cell
         case 4:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier, for: indexPath) as? DailyQuizMissionCollectionViewCell else { fatalError() }
-            
-            cell.configure(with: self.vm.suddenMissions[indexPath.item])
-            return cell
-        case 5:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else { fatalError() }
             cell.delegate = self
             return cell
@@ -502,7 +433,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
             
             let quizMissionDetailVC = DailyQuizMissionDetailViewController(vm: vm)
             self.show(quizMissionDetailVC, sender: self)
-        case 5:
+        case 4:
             guard let cell = collectionView.cellForItem(at: indexPath) as? MissionHistoryButtonCollectionViewCell else { return }
             cell.isOpened.toggle()
         default:
@@ -534,3 +465,10 @@ extension MissionMainViewController: MyPageViewControllerDelegate {
 }
 
 */
+
+// MARK: - Preview
+struct PreView: PreviewProvider {
+    static var previews: some View {
+        EditUserInfoViewController().toPreview()
+    }
+}

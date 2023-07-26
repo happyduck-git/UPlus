@@ -8,17 +8,17 @@
 import UIKit
 import Combine
 
-protocol MyPageCollectionViewFooterDelegate: AnyObject {
+protocol MyNftsCollectionViewFooterDelegate: AnyObject {
     func rewardsButtomDidTap()
 }
 
-final class MyPageCollectionViewFooter: UICollectionViewCell {
+final class MyNftsCollectionViewFooter: UICollectionViewCell {
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - Delegate
-    weak var delegate: MyPageCollectionViewFooterDelegate?
+    weak var delegate: MyNftsCollectionViewFooterDelegate?
     
     // MARK: - UI Elements
     private let button: UIButton = {
@@ -51,7 +51,11 @@ final class MyPageCollectionViewFooter: UICollectionViewCell {
     
 }
 
-extension MyPageCollectionViewFooter {
+extension MyNftsCollectionViewFooter {
+    
+    func configure(with vm: MyPageViewViewModel) {
+        self.button.setTitle(String(describing: vm.numberOfownedRewards) + RewardsConstants.rewardsUnit, for: .normal)
+    }
 
     private func bind() {
         
@@ -69,7 +73,7 @@ extension MyPageCollectionViewFooter {
     
 }
 
-extension MyPageCollectionViewFooter {
+extension MyNftsCollectionViewFooter {
     private func setUI() {
         self.contentView.addSubview(self.button)
         self.button.addSubviews(buttonTitleLabel)

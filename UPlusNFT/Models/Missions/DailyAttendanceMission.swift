@@ -8,20 +8,51 @@
 import Foundation
 import FirebaseFirestore
 
-protocol Mission{}
+enum MissionTopicType: String {
+    case dailyExp = "daily_exp"
+    case weeklyQuiz = "weekly_quiz"
+}
+
+enum MissionFormatType: String {
+    case photoAuth = "photo_auth"
+    case choiceQuiz = "choice_quiz"
+    case answerQuiz = "answer_quiz"
+}
+
+enum MissionUserState: String {
+    case pending
+    case succeeded
+    case failed
+}
+
+protocol Mission{
+    var missionId: String { get set } // document ID와 동일. missionTopicType과 복합된 고유한 키값.
+    var missionTopicType: String { get set }
+    var missionSubTopicType: String { get set }
+    var missionFormatType: String { get set }
+    var missionContentTitle: String? { get set }
+    var missionContentText: String? { get set }
+    var missionContentImagePaths: [String]? { get set }
+    var missionCreationTime: Timestamp { get set }
+    var missionBeginTime: Timestamp? { get set } //주간 퀴즈미션 weekly_quiz 은 항상 일요일
+    var missionUserStateMap: [String: String] { get set }
+    var missionRewardPoint: Int64 { get set }
+}
 
 struct DailyAttendanceMission: Codable, Mission {
+    var missionId: String
+    var missionTopicType: String
+    var missionSubTopicType: String
+    var missionFormatType: String
+    var missionContentTitle: String?
+    var missionContentText: String?
+    var missionContentImagePaths: [String]?
+    var missionCreationTime: Timestamp
+    var missionBeginTime: Timestamp?
+    var missionUserStateMap: [String : String]
+    var missionRewardPoint: Int64
+
     var postId: String?
-    let missionIndex: Int64
-    let missionTopicType: String
-    let missionFormatType: String
-    let missionContentTitle: String?
-    let missionContentText: String?
-    let missionContentImagePath: [String]?
-    let missionCreationTime: Timestamp
-    let missionBeginTime: Timestamp?
-    let missionEndTime: Timestamp?
-    let missionRewardPoint: Int64
     let missionChoiceQuizCaptions: [String]
     let missionChoiceQuizRightOrder: Int64
 }

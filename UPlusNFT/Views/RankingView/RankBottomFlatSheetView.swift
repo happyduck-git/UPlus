@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 final class RankBottomFlatSheetView: UIView {
 
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
     // MARK: - UI Elements
-    let bottomSheetView: UIView = {
+    private let bottomSheetView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.shadowColor = UIColor.darkGray.cgColor
@@ -19,6 +23,14 @@ final class RankBottomFlatSheetView: UIView {
         view.clipsToBounds = false
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    private let pointLabel: UILabel = {
+       let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     // MARK: - Init
@@ -47,8 +59,33 @@ final class RankBottomFlatSheetView: UIView {
 
 // MARK: - Set UI & Layout
 extension RankBottomFlatSheetView {
+    func bind(with vm: RankingViewViewModel, at item: Int) {
+        if item == 0 {
+            vm.$currentUserTodayRank
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.pointLabel.text = "Today Point: " + String(describing: $0?.userPointHistory?.first?.userPointCount ?? 0)
+                }
+                .store(in: &bindings)
+        } else {
+            vm.$currentUserTotalRank
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.pointLabel.text = "Total Point: " + String(describing: $0?.userPointHistory?.first?.userPointCount ?? 0)
+                }
+                .store(in: &bindings)
+        }
+        
+    }
+}
+
+// MARK: - Set UI & Layout
+extension RankBottomFlatSheetView {
     private func setUI() {
         self.addSubviews(self.bottomSheetView)
+        self.bottomSheetView.addSubviews(self.pointLabel)
     }
     
     private func setLayout() {
@@ -57,6 +94,13 @@ extension RankBottomFlatSheetView {
             self.bottomSheetView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.bottomSheetView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.bottomSheetView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.pointLabel.topAnchor.constraint(equalTo: self.bottomSheetView.topAnchor),
+            self.pointLabel.leadingAnchor.constraint(equalTo: self.bottomSheetView.leadingAnchor),
+            self.pointLabel.trailingAnchor.constraint(equalTo: self.bottomSheetView.trailingAnchor),
+            self.pointLabel.bottomAnchor.constraint(equalTo: self.bottomSheetView.bottomAnchor)
         ])
     }
     

@@ -72,15 +72,14 @@ class UserMissionDataView: UIView {
     private let rankingImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.pointSticker)
+        imageView.image = UIImage(named: ImageAsset.trophy)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private let rankingButton: UIButton = {
+    let rankingButton: UIButton = {
         let button = UIButton()
         button.setTitle("13위", for: .normal)
-        button.setImage(UIImage(named: ImageAsset.trophy), for: .normal)
         button.setTitleColor(UPlusColor.rankBrown, for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +90,9 @@ class UserMissionDataView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = .white
+        self.backgroundColor = UPlusColor.lightBlue
+        self.layer.borderColor = UIColor.white.cgColor
+        self.layer.borderWidth = 8.0
         self.setUI()
         self.setLayout()
 
@@ -109,6 +110,13 @@ class UserMissionDataView: UIView {
         }
     }
     
+}
+
+extension UserMissionDataView {
+    func configure(vm: MyPageViewViewModel) {
+        self.pointLabel.text = String(describing: vm.ownedPoints)
+        self.rankingButton.setTitle(String(describing: vm.todayRank) + "위", for: .normal)
+    }
 }
 
 extension UserMissionDataView {

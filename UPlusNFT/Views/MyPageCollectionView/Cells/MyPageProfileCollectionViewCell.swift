@@ -1,17 +1,25 @@
 //
-//  MyPageCollectionViewHeader.swift
+//  MyPageProfileCollectionView.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/21.
 //
 
 import UIKit
+import Nuke
+import Combine
 
-final class MyPageCollectionViewHeader: UICollectionViewCell {
+final class MyPageProfileCollectionViewCell: UICollectionViewCell {
+    
+    //MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.layer.borderWidth = 3.0
         imageView.backgroundColor = UPlusColor.pointCirclePink.withAlphaComponent(0.5)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -49,7 +57,7 @@ final class MyPageCollectionViewHeader: UICollectionViewCell {
     
     private let infoButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
+        button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -64,7 +72,11 @@ final class MyPageCollectionViewHeader: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.contentView.backgroundColor = .systemGray6
+        self.contentView.clipsToBounds = true
+        self.contentView.layer.cornerRadius = 30
+        self.contentView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        
+        self.setGradientLayer()
         self.setUI()
         self.setLayout()
     }
@@ -75,7 +87,54 @@ final class MyPageCollectionViewHeader: UICollectionViewCell {
     
 }
 
-extension MyPageCollectionViewHeader {
+extension MyPageProfileCollectionViewCell {
+ 
+    func configure(with vm: MyPageViewViewModel) {
+        
+        self.bind(with: vm)
+        
+        Task {
+            do {
+                let imageString = vm.userNfts.first?.documentID
+                ?? ImageAsset.dummyNftImageUrl
+                let url = URL(string: imageString)! // TODO: Optional 처리.
+                self.profileImage.image = try await ImagePipeline.shared.image(for: url)
+                self.usernameLabel.text = vm.username
+                self.userMissionDataView.configure(vm: vm)
+                
+                self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
+            }
+            catch {
+                print("Error fetching profileImage -- \(error)")
+            }
+        }
+        
+    }
+    
+    
+    private func bind(with vm: MyPageViewViewModel) {
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        vm.$todayRank2
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                self.userMissionDataView.rankingButton.setTitle(String(describing: $0) + "위", for: .normal)
+            }
+            .store(in: &bindings)
+    }
+
+}
+
+extension MyPageProfileCollectionViewCell {
+    
+    private func setGradientLayer() {
+        var gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.contentView.bounds
+        gradientLayer.colors = [UPlusColor.gradientMediumBlue.cgColor, UPlusColor.gradientLightBlue.cgColor]
+        self.contentView.layer.addSublayer(gradientLayer)
+    }
     
     private func setUI() {
         self.contentView.addSubviews(profileImage,
@@ -101,7 +160,7 @@ extension MyPageCollectionViewHeader {
             self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.shareNftButton.bottomAnchor, multiplier: 2),
             self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.levelLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 1),
-            self.levelLabel.centerYAnchor.constraint(equalTo: self.usernameLabel.centerYAnchor),
+            self.levelLabel.bottomAnchor.constraint(equalTo: self.usernameLabel.bottomAnchor),
             
             self.infoButton.centerYAnchor.constraint(equalTo: self.usernameLabel.centerYAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.infoButton.trailingAnchor, multiplier: 2),

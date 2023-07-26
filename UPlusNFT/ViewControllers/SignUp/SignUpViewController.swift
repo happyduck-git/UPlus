@@ -177,7 +177,7 @@ final class SignUpViewController: UIViewController {
         let button = UIButton()
         button.isHidden = true
         button.setTitle(SignUpConstants.register, for: .normal)
-        button.addTarget(self, action: #selector(registerButtonDidTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(registerButtonDidTap), for: .touchUpInside)
         button.backgroundColor = .systemGray2
         button.layer.cornerRadius = 3
         button.clipsToBounds = true
@@ -189,10 +189,13 @@ final class SignUpViewController: UIViewController {
         super.viewDidLoad()
         title = "회원가입"
         view.backgroundColor = .secondarySystemBackground
-        setUI()
-        setLayout()
         
-        bind()
+        self.setUI()
+        self.setLayout()
+        self.setNavigationItem()
+        
+        self.bind()
+        
     }
     
     // MARK: - Init
@@ -288,6 +291,16 @@ final class SignUpViewController: UIViewController {
         ])
     }
     
+    private func setNavigationItem() {
+        self.navigationItem.hidesBackButton = true
+        
+        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAsset.xMark)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+                                          style: .plain,
+                                          target: self,
+                                           action: #selector(cancelButtonDidTap))
+        
+        navigationItem.setRightBarButton(cancelButton, animated: true)
+    }
 
     
     private func bind() {
@@ -458,11 +471,19 @@ final class SignUpViewController: UIViewController {
         bindViewModelToView()
     }
     
+}
+
+//MARK: - Private
+extension SignUpViewController {
     @objc private func authButtonDidTap() {
         self.signupVM.sendEmailValification()
     }
     
-    @objc private func registerButtonDidTapped() {
+    @objc private func registerButtonDidTap() {
         self.signupVM.createNewUser()
+    }
+    
+    @objc private func cancelButtonDidTap() {
+        self.navigationController?.popViewController(animated: true)
     }
 }

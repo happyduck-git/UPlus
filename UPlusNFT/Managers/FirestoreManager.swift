@@ -10,13 +10,25 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
 
+enum FirestoreErorr: Error {
+    case documentNotFound
+    case documentFoundToBeNil
+    case userNotFound
+}
+
 final class FirestoreManager {
     
     //MARK: - Init
     static let shared = FirestoreManager()
-    private init() {}
+    
+    private init() {
+        self.decoder.keyDecodingStrategy = .convertFromSnakeCase
+    }
     
     //MARK: - Property
+
+    // Decoder
+    private let decoder = Firestore.Decoder()
     
     // Database
     private let db = Firestore.firestore()
@@ -35,10 +47,125 @@ final class FirestoreManager {
 }
 
 /* uplus_missions_v2 */
+//MARK: - UPlus Current User
+extension FirestoreManager {
+    
+    private func getCurrentUserDocumentPath(email: String) async throws -> QueryDocumentSnapshot {
+        let documents = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .whereField(FirestoreConstants.userEmail, isEqualTo: email)
+            .getDocuments()
+            .documents
+        
+        guard let currentUserDoc = documents.first else {
+            throw FirestoreErorr.userNotFound
+        }
+        
+        return currentUserDoc
+    }
+    
+    func saveUserInfo(email: String, uid: String, creationTime: Timestamp) async throws {
+        let currentUserDoc = try await self.getCurrentUserDocumentPath(email: email)
+        
+        // Save User UID
+        try await currentUserDoc.reference.setData([
+            FirestoreConstants.userUid: uid,
+            FirestoreConstants.accountCreationTime: creationTime
+        ], merge: true)
+    }
+    
+    func getCurrentUserInfo(email: String) async throws -> UPlusUser {
+        let currentUserDoc = try await self.getCurrentUserDocumentPath(email: email)
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        return try currentUserDoc.data(as: UPlusUser.self, decoder: decoder)
+    }
+    
+}
+
+//MARK: - Get Users Point
+extension FirestoreManager {
+
+    func getAllUserTodayPoint() async throws -> [UPlusUser] {
+        let start = CFAbsoluteTimeGetCurrent()
+        
+        let today = Date()
+        
+        let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
+            .whereField("user_point_time", isEqualTo: today.yearMonthDateFormat)
+            .order(by: "user_point_count", descending: true)
+            .getDocuments()
+            .documents
+        
+        var users: [UPlusUser] = []
+
+        for doc in documents {
+            
+            var point = try doc.data(as: PointHistory.self, decoder: self.decoder)
+            
+            guard let documentId = doc.reference.parent.parent?.documentID else {
+                continue
+            }
+            
+            do {
+                var user = try await self.getSingleUser(documentId)
+                user.userPointHistory = [point]
+                users.append(user)
+            }
+            catch {
+                print("Error fetching single user -- \(error)")
+            }
+         
+        }
+        
+        let end = CFAbsoluteTimeGetCurrent()
+        print("Time consumed: \(end - start) sec")
+        print("Today point 개수: \(documents.count)")
+        return users
+    }
+    
+    private func getSingleUser(_ userIndex: String) async throws -> UPlusUser {
+        
+        let document = try await self.db.collection("gene_threads")
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(userIndex)
+            .getDocument()
+        
+        return try document.data(as: UPlusUser.self, decoder: self.decoder)
+    }
+        
+    
+    func getAllUserTotalPoint() async throws -> [UPlusUser] {
+        
+        let documents = try await self.db.collection("gene_threads")
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .order(by: "user_total_point", descending: true)
+            .getDocuments()
+            .documents
+        
+        let decoder = Firestore.Decoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        var users: [UPlusUser] = []
+        for doc in documents {
+            var userData = try doc.data(as: UPlusUser.self, decoder: decoder)
+            users.append(userData)
+        }
+        print("Total point 개수: \(documents.count)")
+        return users
+    }
+    
+}
+
+/* uplus_missions_v2 */
 extension FirestoreManager {
     
     // MARK: - Get Missions
-    
+
     func getAllDailyAttendanceMission() async throws -> [DailyAttendanceMission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(FirestoreConstants.dailyAttendanceMission)
@@ -827,13 +954,6 @@ extension FirestoreManager {
         return try await queryDocument.reference.getDocument(as: Post.self, decoder: decoder)
     }
     
-}
-
-extension FirestoreManager {
-    enum FirestoreErorr: Error {
-        case documentNotFound
-        case documentFoundToBeNil
-    }
 }
 
 /// Codes when `cached_comment_count` was not introduced to db.

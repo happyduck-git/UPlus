@@ -88,9 +88,9 @@ extension SignUpCompleteViewController {
     @objc func welcomeDidTap() {
         self.dismiss(animated: true)
         
-        let vc = MyPageViewController()
-        self.navigationController?.modalPresentationStyle = .fullScreen
-        self.show(vc, sender: self)
+//        let vc = MyPageViewController()
+//        self.navigationController?.modalPresentationStyle = .fullScreen
+//        self.show(vc, sender: self)
     }
 }
 

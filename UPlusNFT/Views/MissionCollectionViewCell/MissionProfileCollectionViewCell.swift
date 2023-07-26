@@ -8,14 +8,9 @@
 import UIKit
 import Nuke
 
-protocol MissionCollectionViewHeaderProtocol: AnyObject {
-    func levelUpButtonDidTap()
-}
-
 final class MissionProfileCollectionViewCell: UICollectionViewCell {
-    
-    //MARK: - Delegate
-    weak var delegate: MissionCollectionViewHeaderProtocol?
+
+    private var vm: MissionMainViewViewModel?
     
     //MARK: - Property
     private let levelUpNoticeLabel: UILabel = {
@@ -30,6 +25,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     
     private let levelBadgeImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: ImageAsset.levelBadge)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -85,6 +81,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+        collectionView.register(MyMissionsCollectionViewCell.self, forCellWithReuseIdentifier: MyMissionsCollectionViewCell.identifier)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
@@ -93,9 +90,9 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setUI()
-        setLayout()
-        
+        self.setUI()
+        self.setLayout()
+        self.setDelegate()
     }
     
     required init?(coder: NSCoder) {
@@ -107,6 +104,8 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
 // MARK: - Configure
 extension MissionProfileCollectionViewCell {
     func configure(with vm: MissionMainViewViewModel) {
+        self.vm = vm
+        
         Task {
             do {
                 let url = URL(string: vm.profileImage)
@@ -125,7 +124,7 @@ extension MissionProfileCollectionViewCell {
 extension MissionProfileCollectionViewCell {
     
     private func setUI() {
-        self.addSubviews(
+        self.contentView.addSubviews(
             levelUpNoticeLabel,
             levelBadgeImageView,
             levelLabel,
@@ -144,7 +143,7 @@ extension MissionProfileCollectionViewCell {
             
             self.levelBadgeImageView.topAnchor.constraint(equalTo: self.levelUpNoticeLabel.topAnchor),
             self.levelBadgeImageView.bottomAnchor.constraint(equalTo: self.levelUpNoticeLabel.bottomAnchor),
-            self.levelBadgeImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.levelUpNoticeLabel.trailingAnchor, multiplier: 4),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.levelBadgeImageView.trailingAnchor, multiplier: 2),
             
             self.levelLabel.centerXAnchor.constraint(equalTo: self.levelBadgeImageView.centerXAnchor),
             self.levelLabel.centerYAnchor.constraint(equalTo: self.levelBadgeImageView.centerYAnchor),
@@ -163,23 +162,55 @@ extension MissionProfileCollectionViewCell {
             self.certificateLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pointImageView.bottomAnchor, multiplier: 3),
             self.certificateLabel.leadingAnchor.constraint(equalTo: self.levelUpNoticeLabel.leadingAnchor),
             
-            self.myMissionCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.certificateLabel.bottomAnchor, multiplier: 3),
+            self.myMissionCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.certificateLabel.bottomAnchor, multiplier: 2),
             self.myMissionCollectionView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.myMissionCollectionView.trailingAnchor, multiplier: 1),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.myMissionCollectionView.bottomAnchor, multiplier: 1)
         ])
     }
     
+    private func setDelegate() {
+        self.myMissionCollectionView.delegate = self
+        self.myMissionCollectionView.dataSource = self
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // Set progress bar corner radius.
-        self.progressBar.layer.cornerRadius = self.progressBar.frame.height / 2
-        self.progressBar.layer.sublayers?[1].cornerRadius = self.progressBar.frame.height / 2
-        self.progressBar.subviews[1].clipsToBounds = true
-        
-        /* Checking progress animation */
-        self.progressBar.setProgress(0.9, animated: true)
+        DispatchQueue.main.async {
+            // Set progress bar corner radius.
+            self.progressBar.layer.cornerRadius = self.progressBar.frame.height / 2
+            self.progressBar.layer.sublayers?[1].cornerRadius = self.progressBar.frame.height / 2
+            self.progressBar.subviews[1].clipsToBounds = true
+            
+            /* Checking progress animation */
+            self.progressBar.setProgress(0.9, animated: true)
+        }
+
     }
   
+}
+
+extension MissionProfileCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyMissionsCollectionViewCell.identifier, for: indexPath) as? MyMissionsCollectionViewCell,
+              let cellVM = self.vm
+        else {
+            return UICollectionViewCell()
+        }
+//        cell.configure(with: cellVM.missionVMList[indexPath.item])
+        cell.missionLabel.text = "6000보 걷기"
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.myMissionCollectionView.frame.height,
+                      height: self.myMissionCollectionView.frame.height)
+    }
+    
 }

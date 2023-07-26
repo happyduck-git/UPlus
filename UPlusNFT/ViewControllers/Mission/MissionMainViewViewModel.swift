@@ -19,7 +19,6 @@ final class MissionMainViewViewModel {
         case todayMission
         case dailyAttendanceMission = "데일리 퀴즈"
         case expMission = "갓생 인증 미션"
-        case suddenMission = "돌발 퀴즈"
         case button
         case historyCalendar
     }
@@ -33,6 +32,7 @@ final class MissionMainViewViewModel {
     var isHolder: Bool = false
     
     /* Mission Profile Section */
+    @Published var missionVMList : [MyMissionsCollectionViewCellViewModel] = []
     let profileImage: String
     let username: String
     let points: Int64

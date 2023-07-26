@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Nuke
 
 final class MyNftsCollectionViewCell: UICollectionViewCell {
     
@@ -40,6 +41,21 @@ final class MyNftsCollectionViewCell: UICollectionViewCell {
     }
     
 }
+
+extension MyNftsCollectionViewCell {
+    func configure(with vm: MyPageViewViewModel, at item: Int) {
+        Task {
+            do {
+                guard let url = URL(string: String(describing: vm.userNfts[item].documentID) ) else { return }
+                self.nftImageView.image = try await ImagePipeline.shared.image(for: url)
+            }
+            catch {
+              print("Error fetching nft image at Item#\(item) -- \(error)")
+            }
+        }
+    }
+}
+
 
 extension MyNftsCollectionViewCell {
     private func setUI() {

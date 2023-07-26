@@ -30,6 +30,7 @@ class RankingViewController: UIViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
         collection.register(TodayRankCollectionViewCell.self, forCellWithReuseIdentifier: TodayRankCollectionViewCell.identifier)
+        collection.register(TotalRankCollectionViewCell.self, forCellWithReuseIdentifier: TotalRankCollectionViewCell.identifier)
         
         collection.showsHorizontalScrollIndicator = false
         collection.isPagingEnabled = true
@@ -63,6 +64,8 @@ class RankingViewController: UIViewController {
         self.setUI()
         self.setLayout()
         self.setDelegate()
+        
+        self.bottomFlatSheet.bind(with: self.vm, at: 0)
     }
     
     override func viewDidLayoutSubviews() {
@@ -114,7 +117,6 @@ extension RankingViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         switch indexPath.item {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayRankCollectionViewCell.identifier, for: indexPath) as? TodayRankCollectionViewCell else {
@@ -125,10 +127,12 @@ extension RankingViewController: UICollectionViewDelegate, UICollectionViewDataS
             return cell
             
         default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TotalRankCollectionViewCell.identifier, for: indexPath) as? TotalRankCollectionViewCell else {
+                fatalError()
+            }
          
-            cell.backgroundColor = .systemGray6
-            
+            cell.contentView.backgroundColor = .systemGray6
+            cell.configure(with: vm)
             return cell
         }
         
@@ -136,7 +140,17 @@ extension RankingViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.menuBar.scrollIndicator(to: scrollView.contentOffset)
+        
+        if scrollView.contentOffset.x == 0 {
+            print("At section#0")
+            self.bottomFlatSheet.bind(with: self.vm, at: 0)
+        } else if scrollView.contentOffset.x == self.view.frame.width {
+            print("At section#1")
+            self.bottomFlatSheet.bind(with: self.vm, at: 1)
+        }
     }
+    
+    
 }
 
 extension RankingViewController: RankingMenuBarDelegate {

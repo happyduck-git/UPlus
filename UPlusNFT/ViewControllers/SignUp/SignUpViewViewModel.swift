@@ -9,11 +9,15 @@ import Foundation
 import Combine
 import RegexBuilder
 import FirebaseAuth
+import FirebaseFirestore
 import OSLog
 
 class SignUpViewViewModel {
     
     let logger = Logger()
+    
+    //MARK: - Dependency
+    private let firestoreManager = FirestoreManager.shared
     
     var fullEmail = ""
     @Published var email = "" {
@@ -96,38 +100,41 @@ class SignUpViewViewModel {
     func createNewUser() {
         Task {
             do {
-                try await Auth.auth()
+                // 1. Create User Account
+                let createdAccount = try await Auth.auth()
                     .createUser(
                         withEmail: self.fullEmail,
                         password: self.password
                     )
-                self.logger.info("User created.")
+                // 2. Save userUId and creationTime to Firestore
+                let uid = createdAccount.user.uid
+                let creationDate = createdAccount.user.metadata.creationDate ?? Date()
+                try await firestoreManager.saveUserInfo(email: self.fullEmail, uid: uid, creationTime: Timestamp(date: creationDate))
                 
-                // NOTE: Nickname related logic.
-                /*
-                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                changeRequest?.displayName = self.nickname
-                try await changeRequest?.commitChanges()
-                self.logger.info("Changed nickname.")
-                */
+                self.logger.info("User created.")
                 
                 isUserCreated.send(true)
             }
             catch (let error) {
-                let err = error as? AuthErrorCode
-                switch err {
-                case .none:
-                    break
-                case .some(let wrapped):
-                    self.logger.error("Error creating new user \(wrapped.localizedDescription)")
-                    switch wrapped.code {
-                    case .emailAlreadyInUse:
-                        self.errorDescription = "이미 등록된 이메일입니다."
-                    default:
-                        self.errorDescription = "\(wrapped.code)"
+                if error is AuthErrorCode {
+                    let err = error as? AuthErrorCode
+                    switch err {
+                    case .none:
+                        break
+                    case .some(let wrapped):
+                        self.logger.error("Error creating new user \(wrapped.localizedDescription)")
+                        switch wrapped.code {
+                        case .emailAlreadyInUse:
+                            self.errorDescription = "이미 등록된 이메일입니다."
+                        default:
+                            self.errorDescription = "\(wrapped.code)"
+                        }
+                        self.isUserCreated.send(false)
                     }
-                    self.isUserCreated.send(false)
+                } else {
+                    print("Error saving user info -- \(error)")
                 }
+                
                 return
             }
         }

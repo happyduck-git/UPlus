@@ -12,6 +12,7 @@ import FirebaseAuth
 final class MyPageViewController: UIViewController {
     
     // MARK: - Dependency
+    private let vm: MyPageViewViewModel
     private var sideMenuVC: SideMenuViewController?
     // MARK: - Side Menu Controller Manager
     private lazy var slideInTransitioningDelegate = SideMenuPresentationManager()
@@ -22,6 +23,16 @@ final class MyPageViewController: UIViewController {
     // MARK: - UI Elements
     private var collectionView: UICollectionView?
     
+    //MARK: - Init
+    init(vm: MyPageViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +42,7 @@ final class MyPageViewController: UIViewController {
         self.setDelegate()
 
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setNavigationItem()
@@ -48,6 +60,7 @@ final class MyPageViewController: UIViewController {
 
 }
 
+//MARK: - Set UI & Layout
 extension MyPageViewController {
     
     private func setUI() {
@@ -110,10 +123,10 @@ extension MyPageViewController {
         )
         
         // 1. Register section header
-        collectionView.register(MyPageCollectionViewHeader.self,
+        collectionView.register(MyNftsCollectionViewHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: MyPageCollectionViewHeader.identifier)
-        
+                                withReuseIdentifier: MyNftsCollectionViewHeader.identifier)
+
         // 2. Register cell
         collectionView.register(
             UICollectionViewCell.self,
@@ -121,32 +134,57 @@ extension MyPageViewController {
         )
 
         collectionView.register(
+            MyPageProfileCollectionViewCell.self,
+            forCellWithReuseIdentifier: MyPageProfileCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
             MyNftsCollectionViewCell.self,
             forCellWithReuseIdentifier: MyNftsCollectionViewCell.identifier
         )
 
         // 3. Register section footer
-        collectionView.register(MyPageCollectionViewFooter.self,
+        collectionView.register(MyNftsCollectionViewFooter.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: MyPageCollectionViewFooter.identifier)
+                                withReuseIdentifier: MyNftsCollectionViewFooter.identifier)
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
     
     private func createSection(for section: Int) -> NSCollectionLayoutSection {
-        /*
+        
         switch section {
         case 0:
-            return self.createMyPageProfileSectionLayout()
+            return self.createProfileSectionLayout()
         default:
-            return self.createObtainedRewardsSectionLayout()
+            return self.createOwnedNftsSectionLayout()
         }
-         */
-        return self.createMyPageProfileSectionLayout()
+         
     }
     
-    private func createMyPageProfileSectionLayout() -> NSCollectionLayoutSection {
+    private func createProfileSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(600)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+       
+        return section
+    }
+    
+    private func createOwnedNftsSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -171,7 +209,7 @@ extension MyPageViewController {
         // Header
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(600)
+            heightDimension: .fractionalHeight(0.1)
         )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
@@ -220,61 +258,89 @@ extension MyPageViewController {
 extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return self.vm.sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        switch section {
+        case 0:
+            return 1
+        default:
+            if self.vm.userNfts.isEmpty {
+                return 1
+            } else {
+                return self.vm.userNfts.count
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         switch indexPath.section {
-        default:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyNftsCollectionViewCell.identifier, for: indexPath) as? MyNftsCollectionViewCell else {
+        case 0:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyPageProfileCollectionViewCell.identifier, for: indexPath) as? MyPageProfileCollectionViewCell else {
                 fatalError()
             }
-            cell.contentView.layer.cornerRadius = 5
+            
+            cell.configure(with: self.vm)
             
             return cell
+        default:
+            if !self.vm.userNfts.isEmpty {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyNftsCollectionViewCell.identifier, for: indexPath) as? MyNftsCollectionViewCell else {
+                    fatalError()
+                }
+                cell.contentView.layer.cornerRadius = 5
+                cell.configure(with: self.vm, at: indexPath.item)
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
+                cell.contentView.backgroundColor = .systemOrange
+                return cell
+            }
         }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            guard let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind,
-                withReuseIdentifier: MyPageCollectionViewHeader.identifier,
-                for: indexPath
-            ) as? MyPageCollectionViewHeader else {
+        switch indexPath.section {
+        case 1:
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                guard let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: MyNftsCollectionViewHeader.identifier,
+                    for: indexPath
+                ) as? MyNftsCollectionViewHeader else {
+                    return UICollectionReusableView()
+                }
+                header.configure(with: self.vm)
+                
+                return header
+            case UICollectionView.elementKindSectionFooter:
+                guard let footer = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: MyNftsCollectionViewFooter.identifier,
+                    for: indexPath
+                ) as? MyNftsCollectionViewFooter else {
+                    return UICollectionReusableView()
+                }
+                
+                footer.delegate = self
+                footer.configure(with: self.vm)
+                return footer
+            default:
                 return UICollectionReusableView()
             }
-            
-            return header
-        case UICollectionView.elementKindSectionFooter:
-            guard let footer = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind,
-                withReuseIdentifier: MyPageCollectionViewFooter.identifier,
-                for: indexPath
-            ) as? MyPageCollectionViewFooter else {
-                return UICollectionReusableView()
-            }
-            
-            footer.delegate = self
-            
-            return footer
         default:
             return UICollectionReusableView()
         }
-
     }
     
 }
 
-extension MyPageViewController: MyPageCollectionViewFooterDelegate {
+extension MyPageViewController: MyNftsCollectionViewFooterDelegate {
     func rewardsButtomDidTap() {
         let vm = RewardsViewViewModel()
         let vc = RewardsViewController(vm: vm)
@@ -338,7 +404,7 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             )
             let vc = MissionMainViewController(vm: tempVM)
             self.addChildViewController(vc)
-            
+            self.navigationController?.navigationBar.backgroundColor = .white
             self.navigationItem.title = SideMenuConstants.mission
             
         case 2:

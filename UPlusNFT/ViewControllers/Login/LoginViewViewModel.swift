@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import FirebaseAuth
+import OSLog
 
 final class LoginViewViewModel {
     
@@ -24,6 +25,7 @@ final class LoginViewViewModel {
     @Published var password: String = ""
     @Published var errorDescription: String = ""
     @Published var isKeepMeSignedIntTapped: Bool = false
+    @Published var todayRank: Int = RankingConstants.totalMembers
     
     let isLoginSuccess = PassthroughSubject<Bool, Never>()
     
@@ -38,6 +40,7 @@ final class LoginViewViewModel {
         Task {
             do {
                 try await Auth.auth().signIn(withEmail: self.fullEmail, password: self.password)
+                self.saveLocalUserBasicInfo()
                 print("Signed in.")
                 self.isLoginSuccess.send(true)
             }
@@ -50,37 +53,50 @@ final class LoginViewViewModel {
         
     }
     
-    func saveUser() {
+    private func saveLocalUserBasicInfo() {
         Task {
             do {
-                let userId = Auth.auth().currentUser?.uid ?? ""
-                let username = Auth.auth().currentUser?.displayName ?? FirestoreConstants.noUsername
-                let profileImageUrl = Auth.auth().currentUser?.photoURL
-                var profileImageUrlString = ""
-                if let profileImageUrl = profileImageUrl {
-                    profileImageUrlString = String(describing: profileImageUrl)
+                let userEmail = Auth.auth().currentUser?.email ?? FirestoreConstants.noUserEmail
+                let currentUser = try await FirestoreManager.shared.getCurrentUserInfo(email: userEmail)
+                
+                if let encodedUserData = try? JSONEncoder().encode(currentUser) {
+                    UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
+                    print("User Info Result: \(currentUser)")
+                } else {
+                    print("Error encoding user data -- \(errorDescription)")
                 }
-                
-                UserDefaults.standard.setValue(userId, forKey: UserDefaultsConstants.userId)
-                UserDefaults.standard.setValue(username, forKey: UserDefaultsConstants.username)
-                UserDefaults.standard.setValue(profileImageUrlString, forKey: UserDefaultsConstants.profileImage)
-                
-                let user = User(
-                    id: userId,
-                    email: nil,
-                    introduction: nil,
-                    address: "wallet_address", //TODO: 생성된 실제 지갑 address 사용.
-                    nickname: username,
-                    profileImagePath: profileImageUrlString,
-                    profilePageUrl: FirestoreConstants.urlPrefix + userId
-                )
-                try firestoreManager.saveUser(user)
+
             }
             catch {
-                print("Error saving user: \(error.localizedDescription)")
+                switch error {
+                case FirestoreErorr.userNotFound:
+                    self.errorDescription = "가입되지 않은 사용자입니다."
+                    print("User not found!")
+                default:
+                    print("Error fetching user -- \(error)")
+                }
             }
         }
     }
     
 }
 
+//MARK: - Fetch Data from FireStore
+extension LoginViewViewModel {
+    func getTodayRank(of userIndex: String) {
+        Task {
+            
+            do {
+                let results = try await firestoreManager.getAllUserTodayPoint()
+                let rank = results.firstIndex {
+                    return String(describing: $0.userIndex) == userIndex
+                } ?? (RankingConstants.totalMembers - 1)
+                self.todayRank = rank + 1
+            }
+            catch {
+                print("Error getting today's points: \(error)")
+            }
+            
+        }
+    }
+}

@@ -107,9 +107,4 @@ extension EditUserInfoViewController {
 
     }
 }
-// MARK: - Preview
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        EditUserInfoViewController().toPreview()
-    }
-}
+

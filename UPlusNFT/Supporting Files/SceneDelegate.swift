@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 import OSLog
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -22,9 +23,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.overrideUserInterfaceStyle = .light
         
-        /*
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
+            try? Auth.auth().signOut()
+            /*
             setBasicUserInfo()
             
             let loginVM = LoginViewViewModel()
@@ -34,20 +36,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let postVC = PostViewController(vm: postVM)
             loginVC.navigationController?.addChild(postVC)
             window?.rootViewController = UINavigationController(rootViewController: postVC)
+             */
         } else {
             logger.info("User is not logged in.")
             let loginVM = LoginViewViewModel()
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
-*/
-        // Check SignupCompelete VC
 
+        /*
+        // Check SignupCompelete VC
         let vm = SignUpViewViewModel()
         vm.welcomeNftImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200" //Temp
         let vc = SignUpCompleteViewController(vm: vm)
         
         window?.rootViewController = UINavigationController(rootViewController: vc)
+        */
+        
         window?.makeKeyAndVisible()
         
     }

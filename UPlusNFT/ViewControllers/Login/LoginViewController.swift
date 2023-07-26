@@ -19,6 +19,16 @@ class LoginViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
+    
+    private let loadingVC = LoadingViewController()
+    
+    private let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView()
+        spinner.style = .medium
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        return spinner
+    }()
+    
     private let emailLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.emailLabel
@@ -90,7 +100,7 @@ class LoginViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.setTitle(LoginConstants.loginButtonTitle, for: .normal)
-        button.addTarget(self, action: #selector(loginUser), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(loginUser), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.isUserInteractionEnabled = false
@@ -154,6 +164,7 @@ class LoginViewController: UIViewController {
         bind()
 
         hideKeyboardWhenTappedAround()
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -200,10 +211,19 @@ extension LoginViewController {
                     self.viewModel.isKeepMeSignedIntTapped = !self.viewModel.isKeepMeSignedIntTapped
                 })
                 .store(in: &bindings)
+            
+            self.loginButton.tapPublisher
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+//                    self.spinner.startAnimating()
+                    self.addChildViewController(self.loadingVC)
+                    self.viewModel.login()
+                }
+                .store(in: &bindings)
         }
         
         func bindViewModelToView() {
-            viewModel.isCredentialNotEmpty
+            self.viewModel.isCredentialNotEmpty
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
@@ -218,7 +238,7 @@ extension LoginViewController {
                 }
                 .store(in: &bindings)
             
-            viewModel.$isKeepMeSignedIntTapped
+            self.viewModel.$isKeepMeSignedIntTapped
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] isTapped in
                     guard let `self` = self else { return }
@@ -227,28 +247,50 @@ extension LoginViewController {
                     let image = isTapped ? SFSymbol.circleFilledCheckmark : SFSymbol.circledCheckmark
                     self.keepMeSignedInButton.setTitleColor(color, for: .normal)
                     self.keepMeSignedInButton.setImage(UIImage(systemName: image)?.withTintColor(color, renderingMode: .alwaysOriginal), for: .normal)
+                    
+                    // TODO: if isTapped { //UserDefaults에 상태 저장. => 앱 종료 시에 로그아웃 여부 결정. }
+                    
                 }
                 .store(in: &bindings)
             
-            viewModel.isLoginSuccess
+            self.viewModel.isLoginSuccess
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
+                    self.loadingVC.removeViewController()
+                    
                     if value {
-                        // Save user information when login success.
-                        viewModel.saveUser()
                         
                         self.emailTextField.text = ""
                         self.passwordTextField.text = ""
-                        let vm = PostViewViewModel()
-                        let vc = PostViewController(vm: vm)
-                        self.show(vc, sender: self)
+                        
+                        guard let data = UserDefaults.standard.object(forKey: UserDefaultsConstants.currentUser) as? Data,
+                              let user = try? JSONDecoder().decode(UPlusUser.self, from: data)
+                        else {
+                            print("Error getting saved user info from UserDefaults")
+                            return
+                        }
+                        
+//                        self.viewModel.getTodayRank(of: String(describing: user.userIndex))
+    
+                        let vm = MyPageViewViewModel(user: user,
+                                                     userNfts: user.userNfts ?? [],
+                                                     username: user.userNickname,
+                                                     ownedPoints: user.userTotalPoint ?? 0,
+                                                     userDailyRank: 0,
+                                                     numberOfownedRewards: Int64(user.userRewards?.count ?? 0),
+                                                     todayRank: self.viewModel.todayRank)
+                        
+                        let myPageVC = MyPageViewController(vm: vm)
+                        self.navigationController?.modalPresentationStyle = .fullScreen
+                        self.show(myPageVC, sender: self)
+                        
                     } else {
-                        // TODO: Show UIAlert indicating login failed.
                         self.credentialValidationText.text = viewModel.errorDescription
                     }
                 }
                 .store(in: &bindings)
+
         }
         
         bindViewToViewModel()
@@ -263,6 +305,7 @@ extension LoginViewController {
         
         // Views
         self.view.addSubviews(
+            self.spinner,
             self.emailLabel,
             self.passwordLabel,
             self.emailTextField,
@@ -282,12 +325,14 @@ extension LoginViewController {
 
     private func setLayout() {
         NSLayoutConstraint.activate([
+            self.spinner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.spinner.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             
-            self.emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
-            self.emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
+            self.emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
+            self.emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
             self.emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.emailLabel.bottomAnchor, multiplier: 1),
             self.emailTextField.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
-            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.emailTextField.trailingAnchor, multiplier: 3),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.emailTextField.trailingAnchor, multiplier: 3),
             
             self.passwordLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.emailTextField.bottomAnchor, multiplier: 2),
             self.passwordLabel.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
@@ -307,7 +352,7 @@ extension LoginViewController {
             self.loginButton.leadingAnchor.constraint(equalTo: self.emailTextField.leadingAnchor),
             self.loginButton.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
             
-            self.createAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            self.createAccountButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: self.loginButton.bottomAnchor, multiplier: 2),
             
             self.placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderView.topAnchor, multiplier: 1),
@@ -340,9 +385,9 @@ extension LoginViewController {
         self.show(vc, sender: self)
     }
 
-    @objc private func loginUser() {
-        self.viewModel.login()
-    }
+//    @objc private func loginUser() {
+//        self.viewModel.login()
+//    }
 
     @objc private func changePassword() {
         let vm = ResetPasswordViewViewModel()

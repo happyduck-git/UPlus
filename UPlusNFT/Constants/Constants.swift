@@ -8,6 +8,7 @@
 import Foundation
 
 struct UserDefaultsConstants {
+    static let currentUser: String = "currentUser"
     static let userId: String = "userId"
     static let username: String = "username"
     static let profileImage: String = "profileImage"
@@ -92,6 +93,7 @@ struct MyPageConstants {
 
 struct RewardsConstants {
     static let ownedRewards: String = "보유 경품"
+    static let rewardsUnit: String = "개"
 }
 
 struct MissionConstants {
@@ -120,6 +122,7 @@ struct RankingConstants {
     static let totalRank: String = "누적 랭킹"
     static let topOneHundred: String = "TOP100"
     static let myRank: String = "내 순위"
+    static let totalMembers: Int = 700
 }
 
 struct EditUserInfo {
@@ -168,6 +171,8 @@ struct ImageAsset {
     
     static let arrowHeadDown: String = "arrow-head-down"
     static let arrowHeadUp: String = "arrow-head-up"
+    
+    static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }
 
 // MARK: - Firebase
@@ -182,18 +187,22 @@ struct FirestoreConstants {
     static let threadSetCollection = "thread_set"
     static let users = "users"
     static let userSetCollection = "user_set"
+    static let userEmail = "user_email"
+    static let userUid = "user_uid"
+    static let userPointHistory = "user_point_history"
+    static let accountCreationTime = "user_account_creation_time"
     static let devThreads2 = "dev_threads2"
     static let configuration = "configuration"
     static let missions = "missions"
     static let nfts = "nfts"
     static let rewards = "rewards"
     static let rewardSetCollection = "reward_set"
+    static let missionSetCollection = "mission_set"
     static let dailyAttendanceMission = "daily_attendance_mission_set"
     static let athleteMission = "exp_athlete_mission_set"
     static let environmentalistMission = "exp_environmentalist_mission_set"
     static let goodWorkerMission = "exp_good_worker_mission_set"
     static let suddenMission = "sudden_mission_set"
-    
     
     /* User */
     static let urlPrefix = "https://platfarm.net/"
@@ -204,6 +213,7 @@ struct FirestoreConstants {
     static let noPostId = "no_post_uid"
     static let noUserUid = "no_user_uid"
     static let noUsername = "no_username"
+    static let noUserEmail = "no_user_email"
     static let noUrl = "no_url"
     static let noTitle = "no_title"
     static let noContent = "no_content"
@@ -259,7 +269,6 @@ struct FirestoreConstants {
     static let isUserSendRightAnswer = "is_user_send_right_answer"
     static let userAnsweredText = "user_answered_text"
     static let userSelectedItemId = "user_selected_item_id"
-    static let userUid = "user_uid"
     static let bestCommentOrder = "best_comment_order"
     static let bestCommentRewardedUserUid = "best_comment_rewarded_user_uid"
     static let bestCommentRewardCategoryId = "best_comment_reward_category_id"
