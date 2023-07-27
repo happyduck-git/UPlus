@@ -46,7 +46,7 @@ extension MyNftsCollectionViewCell {
     func configure(with vm: MyPageViewViewModel, at item: Int) {
         Task {
             do {
-                guard let url = URL(string: String(describing: vm.userNfts[item].documentID) ) else { return }
+                guard let url = URL(string: String(describing: vm.user.userNfts?[item].documentID) ) else { return }
                 self.nftImageView.image = try await ImagePipeline.shared.image(for: url)
             }
             catch {

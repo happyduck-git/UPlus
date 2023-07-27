@@ -26,7 +26,7 @@ final class MyPageViewController: UIViewController {
     //MARK: - Init
     init(vm: MyPageViewViewModel) {
         self.vm = vm
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil, bundle: nil)        
     }
     
     required init?(coder: NSCoder) {
@@ -266,11 +266,13 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         case 0:
             return 1
         default:
-            if self.vm.userNfts.isEmpty {
+            guard let userNfts = self.vm.user.userNfts,
+                  !userNfts.isEmpty
+            else {
                 return 1
-            } else {
-                return self.vm.userNfts.count
             }
+            
+            return userNfts.count
         }
     }
     
@@ -286,18 +288,20 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             
             return cell
         default:
-            if !self.vm.userNfts.isEmpty {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyNftsCollectionViewCell.identifier, for: indexPath) as? MyNftsCollectionViewCell else {
-                    fatalError()
-                }
-                cell.contentView.layer.cornerRadius = 5
-                cell.configure(with: self.vm, at: indexPath.item)
-                return cell
-            } else {
+            guard let userNfts = self.vm.user.userNfts,
+                  !userNfts.isEmpty else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
                 cell.contentView.backgroundColor = .systemOrange
                 return cell
             }
+            
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyNftsCollectionViewCell.identifier, for: indexPath) as? MyNftsCollectionViewCell else {
+                fatalError()
+            }
+            cell.contentView.layer.cornerRadius = 5
+            cell.configure(with: self.vm, at: indexPath.item)
+            return cell
+            
         }
         
     }

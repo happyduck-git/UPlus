@@ -27,20 +27,23 @@ final class MyPageViewViewModel {
     
     //MARK: - Properties
     let user: UPlusUser
-    let userNfts: [DocumentReference]
-    let username: String
-    let ownedPoints: Int64
-    let userDailyRank: Int64
-    let numberOfownedRewards: Int64
+//    let userNfts: [DocumentReference]
+//    let username: String
+//    let ownedPoints: Int64
+//    let userDailyRank: Int64
+//    let numberOfownedRewards: Int64
     let todayRank: Int
     
-    init(user: UPlusUser, userNfts: [DocumentReference], username: String, ownedPoints: Int64, userDailyRank: Int64, numberOfownedRewards: Int64, todayRank: Int) {
+    init(user: UPlusUser,
+         todayRank: Int
+//         , userNfts: [DocumentReference], username: String, ownedPoints: Int64, userDailyRank: Int64, numberOfownedRewards: Int64, todayRank: Int
+    ) {
         self.user = user
-        self.userNfts = userNfts
-        self.username = username
-        self.ownedPoints = ownedPoints
-        self.userDailyRank = userDailyRank
-        self.numberOfownedRewards = numberOfownedRewards
+//        self.userNfts = userNfts
+//        self.username = username
+//        self.ownedPoints = ownedPoints
+//        self.userDailyRank = userDailyRank
+//        self.numberOfownedRewards = numberOfownedRewards
         self.todayRank = todayRank
         
         self.getTodayRank(of: String(describing: user.userIndex))

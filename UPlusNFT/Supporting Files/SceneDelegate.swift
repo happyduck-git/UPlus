@@ -12,8 +12,10 @@ import OSLog
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
-    let logger = Logger()
+    private let logger = Logger()
+    private let firestoreManager = FirestoreManager.shared
     
+    // MARK: - Window Cycle
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -25,25 +27,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
-            try? Auth.auth().signOut()
-            /*
+
             setBasicUserInfo()
-            
+
             let loginVM = LoginViewViewModel()
             let loginVC = LoginViewController(vm: loginVM)
+
+            guard let data = UserDefaults.standard.object(forKey: UserDefaultsConstants.currentUser) as? Data,
+                  let user = try? JSONDecoder().decode(UPlusUser.self, from: data)
+            else {
+                print("Error getting saved user info from UserDefaults")
+                return
+            }
+
+            let vm = MyPageViewViewModel(user: user,
+                                         todayRank: RankingConstants.totalMembers)
+            let myPageVC = MyPageViewController(vm: vm)
+
+            loginVC.navigationController?.addChild(myPageVC)
+            window?.rootViewController = UINavigationController(rootViewController: myPageVC)
             
-            let postVM = PostViewViewModel()
-            let postVC = PostViewController(vm: postVM)
-            loginVC.navigationController?.addChild(postVC)
-            window?.rootViewController = UINavigationController(rootViewController: postVC)
-             */
         } else {
             logger.info("User is not logged in.")
             let loginVM = LoginViewViewModel()
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
-
+ 
         /*
         // Check SignupCompelete VC
         let vm = SignUpViewViewModel()
@@ -101,17 +111,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 /// Save basic user login information.
 extension SceneDelegate {
     private func setBasicUserInfo() {
-        let userId = Auth.auth().currentUser?.uid ?? ""
-        let username = Auth.auth().currentUser?.displayName ?? FirestoreConstants.noUsername
-        let profileImageUrl = Auth.auth().currentUser?.photoURL
-        var profileImageUrlString = ""
-        if let profileImageUrl = profileImageUrl {
-            profileImageUrlString = String(describing: profileImageUrl)
+        Task {
+            do {
+                let userEmail = Auth.auth().currentUser?.email ?? FirestoreConstants.noUserEmail
+                let currentUser = try await firestoreManager.getCurrentUserInfo(email: userEmail)
+                
+                if let encodedUserData = try? JSONEncoder().encode(currentUser) {
+                    UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
+                    print("User Info Result: \(currentUser)")
+                } else {
+                    print("Error encoding user data")
+                }
+
+            }
+            catch {
+                switch error {
+                case FirestoreErorr.userNotFound:
+                    print("User not found -- \(error)")
+                default:
+                    print("Error fetching user -- \(error)")
+                }
+            }
         }
-        
-        UserDefaults.standard.setValue(userId, forKey: UserDefaultsConstants.userId)
-        UserDefaults.standard.setValue(username, forKey: UserDefaultsConstants.username)
-        UserDefaults.standard.setValue(profileImageUrlString, forKey: UserDefaultsConstants.profileImage)
-        
     }
 }

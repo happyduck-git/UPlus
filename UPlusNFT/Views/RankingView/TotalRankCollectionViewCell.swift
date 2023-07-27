@@ -27,6 +27,9 @@ final class TotalRankCollectionViewCell: UICollectionViewCell {
     private let rankTableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .systemGray6
+        table.showsVerticalScrollIndicator = false
+        table.showsHorizontalScrollIndicator = false
+        
         // TODO: Register Custom Cell
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
 
@@ -54,7 +57,6 @@ final class TotalRankCollectionViewCell: UICollectionViewCell {
 extension TotalRankCollectionViewCell {
     func configure(with vm: RankingViewViewModel) {
         self.vm = vm
-        vm.getTotalRanking()
         self.bind(with: vm)
     }
 }
@@ -111,8 +113,18 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
         
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         var config = cell.defaultContentConfiguration()
-        config.text = "\(cellVM.userNickname) -- Point: \(cellVM.userTotalPoint ?? 0)"
+        config.text = "#\(indexPath.row + 1)위 -- \(cellVM.userNickname) -- Point: \(cellVM.userTotalPoint ?? 0)"
         cell.contentConfiguration = config
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 100.0))
+        footer.backgroundColor = .white
+        return footer
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 100
     }
 }

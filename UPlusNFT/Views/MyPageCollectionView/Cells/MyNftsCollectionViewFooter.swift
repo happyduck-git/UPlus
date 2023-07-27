@@ -24,7 +24,8 @@ final class MyNftsCollectionViewFooter: UICollectionViewCell {
     private let button: UIButton = {
         let button = UIButton()
         button.clipsToBounds = true
-        button.setTitle("8개", for: .normal)
+//        button.setImage(UIImage(named: "arrow-head-right"), for: .normal)
+//        button.semanticContentAttribute = .forceRightToLeft
         button.backgroundColor = .systemGray5
         button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +55,7 @@ final class MyNftsCollectionViewFooter: UICollectionViewCell {
 extension MyNftsCollectionViewFooter {
     
     func configure(with vm: MyPageViewViewModel) {
-        self.button.setTitle(String(describing: vm.numberOfownedRewards) + RewardsConstants.rewardsUnit, for: .normal)
+        self.button.setTitle(String(describing: vm.user.userRewards?.count ?? 0) + RewardsConstants.rewardsUnit, for: .normal)
     }
 
     private func bind() {

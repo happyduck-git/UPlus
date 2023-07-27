@@ -48,6 +48,8 @@ class RankingViewController: UIViewController {
     init(vm: RankingViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        
+        self.vm.getUserPoints()
     }
     
     required init?(coder: NSCoder) {
@@ -142,10 +144,8 @@ extension RankingViewController: UICollectionViewDelegate, UICollectionViewDataS
         self.menuBar.scrollIndicator(to: scrollView.contentOffset)
         
         if scrollView.contentOffset.x == 0 {
-            print("At section#0")
             self.bottomFlatSheet.bind(with: self.vm, at: 0)
         } else if scrollView.contentOffset.x == self.view.frame.width {
-            print("At section#1")
             self.bottomFlatSheet.bind(with: self.vm, at: 1)
         }
     }

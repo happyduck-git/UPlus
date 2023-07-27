@@ -107,6 +107,7 @@
 		93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */; };
 		93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 93A2EDC62A6FA74400C2287D /* FSCalendar */; };
 		93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */; };
+		93A2EDCB2A725B4E00C2287D /* DailyRoutineMIssionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDCA2A725B4E00C2287D /* DailyRoutineMIssionViewController.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013862A6517AB0005E342 /* MissionMainViewController.swift */; };
@@ -231,6 +232,7 @@
 		93A2EDC12A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryCalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMissionsCollectionViewCell.swift; sourceTree = "<group>"; };
+		93A2EDCA2A725B4E00C2287D /* DailyRoutineMIssionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutineMIssionViewController.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013862A6517AB0005E342 /* MissionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewController.swift; sourceTree = "<group>"; };
@@ -680,6 +682,7 @@
 				93E013AF2A6909A10005E342 /* DailyQuizMissionDetailViewController.swift */,
 				93E013B12A690E9A0005E342 /* DailyQuizMissionDetailViewViewModel.swift */,
 				93E013B32A691F450005E342 /* MissionCompleteViewController.swift */,
+				93A2EDCA2A725B4E00C2287D /* DailyRoutineMIssionViewController.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -841,6 +844,7 @@
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
+				93A2EDCB2A725B4E00C2287D /* DailyRoutineMIssionViewController.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */,
 				24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */,

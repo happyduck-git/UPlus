@@ -27,7 +27,7 @@ struct ShortAnswerQuizMission: Mission {
     
     var missionBeginTime: Timestamp?
     
-    var missionUserStateMap: [String : String]
+    var missionUserStateMap: [String : String]?
     
     var missionRewardPoint: Int64
     

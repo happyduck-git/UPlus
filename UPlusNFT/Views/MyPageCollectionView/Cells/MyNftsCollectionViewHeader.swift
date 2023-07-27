@@ -41,7 +41,7 @@ final class MyNftsCollectionViewHeader: UICollectionViewCell {
 
 extension MyNftsCollectionViewHeader {
     func configure(with vm: MyPageViewViewModel) {
-        self.nfts.text = String(describing: vm.userNfts.count)
+        self.nfts.text = String(describing: vm.user.userNfts?.count ?? 0)
     }
 }
 

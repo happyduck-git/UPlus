@@ -32,7 +32,7 @@ final class MyPageProfileCollectionViewCell: UICollectionViewCell {
         button.setTitle("NFT 자랑하기", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head6, weight: .medium)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UPlusColor.pointGagePink
+        button.backgroundColor = UPlusColor.deepBlue
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -95,11 +95,11 @@ extension MyPageProfileCollectionViewCell {
         
         Task {
             do {
-                let imageString = vm.userNfts.first?.documentID
+                let imageString = vm.user.userNfts?.first?.documentID
                 ?? ImageAsset.dummyNftImageUrl
                 let url = URL(string: imageString)! // TODO: Optional 처리.
                 self.profileImage.image = try await ImagePipeline.shared.image(for: url)
-                self.usernameLabel.text = vm.username
+                self.usernameLabel.text = vm.user.userNickname
                 self.userMissionDataView.configure(vm: vm)
                 
                 self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
@@ -130,10 +130,16 @@ extension MyPageProfileCollectionViewCell {
 extension MyPageProfileCollectionViewCell {
     
     private func setGradientLayer() {
-        var gradientLayer = CAGradientLayer()
+        let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.contentView.bounds
         gradientLayer.colors = [UPlusColor.gradientMediumBlue.cgColor, UPlusColor.gradientLightBlue.cgColor]
         self.contentView.layer.addSublayer(gradientLayer)
+        
+        let gradientLayer2 = CAGradientLayer()
+        gradientLayer2.frame = self.shareNftButton.bounds
+        gradientLayer2.colors = [UPlusColor.mint.cgColor, UPlusColor.deepBlue.cgColor]
+        self.shareNftButton.layer.addSublayer(gradientLayer2)
+        
     }
     
     private func setUI() {

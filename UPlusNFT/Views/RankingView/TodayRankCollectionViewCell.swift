@@ -27,6 +27,9 @@ final class TodayRankCollectionViewCell: UICollectionViewCell {
     private let rankTableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .systemGray6
+        table.showsVerticalScrollIndicator = false
+        table.showsHorizontalScrollIndicator = false
+
         // TODO: Register Custom Cell
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
 
@@ -54,7 +57,6 @@ final class TodayRankCollectionViewCell: UICollectionViewCell {
 extension TodayRankCollectionViewCell {
     func configure(with vm: RankingViewViewModel) {
         self.vm = vm
-        vm.getTodayRanking()
         self.bind(with: vm)
     }
 }
@@ -70,9 +72,10 @@ extension TodayRankCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
+                
                 if !$0.isEmpty {
-                    self.rankTableView.reloadData()
                     self.spinner.stopAnimating()
+                    self.rankTableView.reloadData()
                 }
             }
             .store(in: &bindings)
@@ -111,8 +114,20 @@ extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
         
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         var config = cell.defaultContentConfiguration()
-        config.text = "\(cellVM.userNickname) -- Point: \(cellVM.userPointHistory?.first?.userPointCount ?? 0)"
+        
+        config.text = "#\(indexPath.row + 1)위 -- \(cellVM.userNickname) -- Point: \(cellVM.userPointHistory?.first?.userPointCount ?? 0)"
         cell.contentConfiguration = config
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 100.0))
+        footer.backgroundColor = .white
+        return footer
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 100
+    }
+    
 }

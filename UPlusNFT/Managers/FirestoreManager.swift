@@ -34,6 +34,8 @@ final class FirestoreManager {
     private let db = Firestore.firestore()
     
     /* uplus_missions_v2 */
+    private let dummyCollection = Firestore.firestore().collection("gene_threads")
+    
     private let threadsSetCollectionPath2 = Firestore.firestore().collection(FirestoreConstants.devThreads2)
     
     /* uplus_posts_and_missions_v1 */
@@ -88,6 +90,28 @@ extension FirestoreManager {
 //MARK: - Get Users Point
 extension FirestoreManager {
 
+    func getTodayPointHistoryPoint() async throws -> [PointHistory] {
+
+        let today = Date()
+        
+        let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
+            .whereField("user_point_time", isEqualTo: today.yearMonthDateFormat)
+            .order(by: "user_point_count", descending: true)
+            .getDocuments()
+            .documents
+        
+        var points: [PointHistory] = []
+
+        for doc in documents {
+            var point = try doc.data(as: PointHistory.self, decoder: self.decoder)
+            point.userIndex = doc.reference.parent.parent?.documentID
+            points.append(point)
+        }
+
+        return points
+    }
+    
+    // NOTE: Time consuming call... NOT IN USE.
     func getAllUserTodayPoint() async throws -> [UPlusUser] {
         let start = CFAbsoluteTimeGetCurrent()
         
@@ -128,7 +152,7 @@ extension FirestoreManager {
     
     private func getSingleUser(_ userIndex: String) async throws -> UPlusUser {
         
-        let document = try await self.db.collection("gene_threads")
+        let document = try await self.dummyCollection
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
             .document(userIndex)
@@ -140,7 +164,7 @@ extension FirestoreManager {
     
     func getAllUserTotalPoint() async throws -> [UPlusUser] {
         
-        let documents = try await self.db.collection("gene_threads")
+        let documents = try await self.dummyCollection
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
             .order(by: "user_total_point", descending: true)
@@ -152,11 +176,29 @@ extension FirestoreManager {
         
         var users: [UPlusUser] = []
         for doc in documents {
-            var userData = try doc.data(as: UPlusUser.self, decoder: decoder)
+            let userData = try doc.data(as: UPlusUser.self, decoder: decoder)
             users.append(userData)
         }
         print("Total point 개수: \(documents.count)")
         return users
+    }
+    
+}
+
+/* uplus_missions_v3 */
+extension FirestoreManager {
+
+    func getDailyAthleteMission() async throws -> [AthleteMission] {
+        let documents = try await dummyCollection.document(FirestoreConstants.missions)
+            .collection(FirestoreConstants.dailyExpAthleteMissionSet)
+            .getDocuments()
+            .documents
+        
+        var missions: [AthleteMission] = []
+        for doc in documents {
+            missions.append(try doc.data(as: AthleteMission.self, decoder: self.decoder))
+        }
+        return missions
     }
     
 }
@@ -168,7 +210,8 @@ extension FirestoreManager {
 
     func getAllDailyAttendanceMission() async throws -> [DailyAttendanceMission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
-            .collection(FirestoreConstants.dailyAttendanceMission)
+//            .collection(FirestoreConstants.dailyAttendanceMission)
+            .collection("weekly_quiz__1__mission_set")
             .getDocuments()
             .documents
         

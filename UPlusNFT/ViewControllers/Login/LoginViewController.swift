@@ -55,7 +55,7 @@ class LoginViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.textContentType = .username
         textField.keyboardType = .emailAddress
-//        textField.text = "rkrudtls@gmail.com" // for debug
+        textField.text = "rkrudtls" // for debug
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -73,7 +73,7 @@ class LoginViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.isSecureTextEntry = true
         textField.textContentType = .password
-//        textField.text = "Pass1234" // for debug
+        textField.text = "Pass1234" // for debug
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -215,7 +215,7 @@ extension LoginViewController {
             self.loginButton.tapPublisher
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
-//                    self.spinner.startAnimating()
+
                     self.addChildViewController(self.loadingVC)
                     self.viewModel.login()
                 }
@@ -273,6 +273,7 @@ extension LoginViewController {
                         
 //                        self.viewModel.getTodayRank(of: String(describing: user.userIndex))
     
+                        /*
                         let vm = MyPageViewViewModel(user: user,
                                                      userNfts: user.userNfts ?? [],
                                                      username: user.userNickname,
@@ -280,7 +281,9 @@ extension LoginViewController {
                                                      userDailyRank: 0,
                                                      numberOfownedRewards: Int64(user.userRewards?.count ?? 0),
                                                      todayRank: self.viewModel.todayRank)
-                        
+                        */
+                        let vm = MyPageViewViewModel(user: user,
+                                                     todayRank: self.viewModel.todayRank)
                         let myPageVC = MyPageViewController(vm: vm)
                         self.navigationController?.modalPresentationStyle = .fullScreen
                         self.show(myPageVC, sender: self)

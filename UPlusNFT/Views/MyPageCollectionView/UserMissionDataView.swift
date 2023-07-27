@@ -114,7 +114,7 @@ class UserMissionDataView: UIView {
 
 extension UserMissionDataView {
     func configure(vm: MyPageViewViewModel) {
-        self.pointLabel.text = String(describing: vm.ownedPoints)
+        self.pointLabel.text = String(describing: vm.user.userTotalPoint ?? 0)
         self.rankingButton.setTitle(String(describing: vm.todayRank) + "위", for: .normal)
     }
 }

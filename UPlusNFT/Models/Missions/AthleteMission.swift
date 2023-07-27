@@ -8,15 +8,27 @@
 import Foundation
 import FirebaseFirestore
 
-struct AthleteMission: Codable {
-    var missionIndex: Int64
+struct AthleteMission: Codable, Mission {
+    var missionId: String
+    
     var missionTopicType: String
+    
+    var missionSubTopicType: String
+    
     var missionFormatType: String
+    
     var missionContentTitle: String?
+    
     var missionContentText: String?
-    var missionContentImagePath: [String]?
+    
+    var missionContentImagePaths: [String]?
+    
     var missionCreationTime: Timestamp
+    
     var missionBeginTime: Timestamp?
-    var missionEndTime: Timestamp?
+    
+    var missionUserStateMap: [String : String]?
+    
     var missionRewardPoint: Int64
+    
 }

@@ -25,8 +25,15 @@ enum MissionUserState: String {
     case failed
 }
 
-protocol Mission{
+protocol WeeklyMission {
+    var missionId: Int64 { get set } // document ID와 동일. missionTopicType과 복합된 고유한 키값.
+}
+
+protocol DailyMission {
     var missionId: String { get set } // document ID와 동일. missionTopicType과 복합된 고유한 키값.
+}
+
+protocol Mission {
     var missionTopicType: String { get set }
     var missionSubTopicType: String { get set }
     var missionFormatType: String { get set }
@@ -35,12 +42,12 @@ protocol Mission{
     var missionContentImagePaths: [String]? { get set }
     var missionCreationTime: Timestamp { get set }
     var missionBeginTime: Timestamp? { get set } //주간 퀴즈미션 weekly_quiz 은 항상 일요일
-    var missionUserStateMap: [String: String] { get set }
+    var missionUserStateMap: [String: String]? { get set }
     var missionRewardPoint: Int64 { get set }
 }
 
-struct DailyAttendanceMission: Codable, Mission {
-    var missionId: String
+struct DailyAttendanceMission: Codable, Mission, WeeklyMission {
+    var missionId: Int64
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
@@ -49,10 +56,15 @@ struct DailyAttendanceMission: Codable, Mission {
     var missionContentImagePaths: [String]?
     var missionCreationTime: Timestamp
     var missionBeginTime: Timestamp?
-    var missionUserStateMap: [String : String]
+    var missionUserStateMap: [String : String]?
     var missionRewardPoint: Int64
 
     var postId: String?
-    let missionChoiceQuizCaptions: [String]
-    let missionChoiceQuizRightOrder: Int64
+    // 객관식
+    let missionChoiceQuizCaptions: [String]?
+    let missionChoiceQuizRightOrder: Int64?
+    // 주관식
+    let missionAnswerQuizCaption: String?
+    let missionAnswerQuizRightAnswer: String?
+    
 }

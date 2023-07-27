@@ -190,6 +190,7 @@ extension DailyQuizMissionDetailViewController {
 extension DailyQuizMissionDetailViewController {
     private func configure() {
         self.quizLabel.text = vm.dataSource.missionContentTitle
+        print("Captions: \(vm.dataSource.missionChoiceQuizCaptions)")
     }
 }
 
@@ -231,7 +232,7 @@ extension DailyQuizMissionDetailViewController {
         super.viewDidLayoutSubviews()
         
         DispatchQueue.main.async {
-            self.drawCircleMark()
+//            self.drawCircleMark()
             self.circleMarkButton.layer.cornerRadius = self.circleMarkButton.frame.height / 15
             self.xMarkButton.layer.cornerRadius = self.xMarkButton.frame.height / 15
         }

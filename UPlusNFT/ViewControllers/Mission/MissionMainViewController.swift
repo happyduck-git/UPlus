@@ -97,7 +97,7 @@ extension MissionMainViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     
-                    self.collectionView?.reloadSections(IndexSet(integer: 6))
+                    self.collectionView?.reloadSections(IndexSet(integer: 5))
                 }
                 .store(in: &bindings)
         }

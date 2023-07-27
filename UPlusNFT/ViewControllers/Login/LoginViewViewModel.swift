@@ -40,7 +40,7 @@ final class LoginViewViewModel {
         Task {
             do {
                 try await Auth.auth().signIn(withEmail: self.fullEmail, password: self.password)
-                self.saveLocalUserBasicInfo()
+                await self.saveLocalUserBasicInfo()
                 print("Signed in.")
                 self.isLoginSuccess.send(true)
             }
@@ -53,8 +53,8 @@ final class LoginViewViewModel {
         
     }
     
-    private func saveLocalUserBasicInfo() {
-        Task {
+    private func saveLocalUserBasicInfo() async {
+
             do {
                 let userEmail = Auth.auth().currentUser?.email ?? FirestoreConstants.noUserEmail
                 let currentUser = try await FirestoreManager.shared.getCurrentUserInfo(email: userEmail)
@@ -76,7 +76,7 @@ final class LoginViewViewModel {
                     print("Error fetching user -- \(error)")
                 }
             }
-        }
+
     }
     
 }
