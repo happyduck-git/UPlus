@@ -23,7 +23,7 @@ final class MyPageViewViewModel {
     let sections: [MyPageViewSectionType] = MyPageViewSectionType.allCases
     
     //MARK: - Combine
-    @Published var todayRank2: Int = RankingConstants.totalMembers
+    @Published var todayRank2: Int = UPlusServiceInfoConstant.totalMembers
     
     //MARK: - Properties
     let user: UPlusUser
@@ -60,7 +60,7 @@ extension MyPageViewViewModel {
                 let results = try await firestoreManager.getAllUserTodayPoint()
                 let rank = results.firstIndex {
                     return String(describing: $0.userIndex) == userIndex
-                } ?? (RankingConstants.totalMembers - 1)
+                } ?? (UPlusServiceInfoConstant.totalMembers - 1)
                 self.todayRank2 = rank + 1
             }
             catch {

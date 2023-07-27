@@ -46,7 +46,7 @@ protocol Mission {
     var missionRewardPoint: Int64 { get set }
 }
 
-struct DailyAttendanceMission: Codable, Mission, WeeklyMission {
+struct WeeklyQuizMission: Codable, Mission, WeeklyMission {
     var missionId: Int64
     var missionTopicType: String
     var missionSubTopicType: String

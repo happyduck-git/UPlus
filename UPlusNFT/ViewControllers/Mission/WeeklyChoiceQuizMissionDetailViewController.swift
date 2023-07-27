@@ -8,10 +8,10 @@
 import UIKit
 import Combine
 
-class DailyQuizMissionDetailViewController: UIViewController {
+class WeeklyChoiceQuizMissionDetailViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: DailyQuizMissionDetailViewViewModel
+    private let vm: WeeklyMissionDetailViewViewModel
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -48,6 +48,8 @@ class DailyQuizMissionDetailViewController: UIViewController {
         let button = UIButton()
         button.tag = 0
         button.clipsToBounds = true
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 90, weight: .bold)
         button.backgroundColor = .white
         return button
     }()
@@ -56,6 +58,8 @@ class DailyQuizMissionDetailViewController: UIViewController {
         let button = UIButton()
         button.tag = 1
         button.clipsToBounds = true
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 90, weight: .bold)
         button.backgroundColor = .white
         return button
     }()
@@ -70,7 +74,7 @@ class DailyQuizMissionDetailViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: DailyQuizMissionDetailViewViewModel) {
+    init(vm: WeeklyMissionDetailViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
     }
@@ -95,7 +99,7 @@ class DailyQuizMissionDetailViewController: UIViewController {
 }
 
 // MARK: - Bind
-extension DailyQuizMissionDetailViewController {
+extension WeeklyChoiceQuizMissionDetailViewController {
 
     private func bind() {
         func bindViewToViewModel() {
@@ -179,7 +183,7 @@ extension DailyQuizMissionDetailViewController {
 }
 
 // MARK: - Private
-extension DailyQuizMissionDetailViewController {
+extension WeeklyChoiceQuizMissionDetailViewController {
 
     private func checkUserAnswer() -> Bool {
         return self.vm.dataSource.missionChoiceQuizRightOrder == self.vm.selectedAnswer ? true : false
@@ -187,15 +191,17 @@ extension DailyQuizMissionDetailViewController {
     
 }
 
-extension DailyQuizMissionDetailViewController {
+extension WeeklyChoiceQuizMissionDetailViewController {
     private func configure() {
         self.quizLabel.text = vm.dataSource.missionContentTitle
-        print("Captions: \(vm.dataSource.missionChoiceQuizCaptions)")
+        
+        self.xMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[0] ?? "X", for: .normal)
+        self.circleMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[1] ?? "O", for: .normal)
     }
 }
 
 // MARK: - Set UI & Layout
-extension DailyQuizMissionDetailViewController {
+extension WeeklyChoiceQuizMissionDetailViewController {
     
     private func setUI() {
         self.view.addSubviews(titleLabel,
@@ -232,29 +238,9 @@ extension DailyQuizMissionDetailViewController {
         super.viewDidLayoutSubviews()
         
         DispatchQueue.main.async {
-//            self.drawCircleMark()
             self.circleMarkButton.layer.cornerRadius = self.circleMarkButton.frame.height / 15
             self.xMarkButton.layer.cornerRadius = self.xMarkButton.frame.height / 15
         }
-    }
-    
-    private func drawCircleMark() {
-        let shapeLayer = CAShapeLayer()
-        
-        let path = UIBezierPath(arcCenter: self.circleMarkButton.center,
-                                radius: 50,
-                                startAngle: 0,
-                                endAngle: .pi * 2,
-                                clockwise: true)
-        shapeLayer.path = path.cgPath
-        shapeLayer.strokeColor = UIColor.black.cgColor
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.lineWidth = 10
-        self.circleMarkButton.layer.addSublayer(shapeLayer)
-    }
-    
-    private func drawXMark() {
-        
     }
     
 }

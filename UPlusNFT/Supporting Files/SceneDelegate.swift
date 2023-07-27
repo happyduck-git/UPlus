@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
 
             let vm = MyPageViewViewModel(user: user,
-                                         todayRank: RankingConstants.totalMembers)
+                                         todayRank: UPlusServiceInfoConstant.totalMembers)
             let myPageVC = MyPageViewController(vm: vm)
 
             loginVC.navigationController?.addChild(myPageVC)

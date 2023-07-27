@@ -25,7 +25,7 @@ final class LoginViewViewModel {
     @Published var password: String = ""
     @Published var errorDescription: String = ""
     @Published var isKeepMeSignedIntTapped: Bool = false
-    @Published var todayRank: Int = RankingConstants.totalMembers
+    @Published var todayRank: Int = UPlusServiceInfoConstant.totalMembers
     
     let isLoginSuccess = PassthroughSubject<Bool, Never>()
     
@@ -90,7 +90,7 @@ extension LoginViewViewModel {
                 let results = try await firestoreManager.getAllUserTodayPoint()
                 let rank = results.firstIndex {
                     return String(describing: $0.userIndex) == userIndex
-                } ?? (RankingConstants.totalMembers - 1)
+                } ?? (UPlusServiceInfoConstant.totalMembers - 1)
                 self.todayRank = rank + 1
             }
             catch {

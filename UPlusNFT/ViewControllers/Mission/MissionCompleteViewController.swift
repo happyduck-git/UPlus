@@ -17,7 +17,7 @@ enum MissionAnswerState: String {
 class MissionCompleteViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: DailyQuizMissionDetailViewViewModel
+    private let vm: WeeklyMissionDetailViewViewModel
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - Combine
@@ -64,7 +64,7 @@ class MissionCompleteViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: DailyQuizMissionDetailViewViewModel) {
+    init(vm: WeeklyMissionDetailViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.configure()

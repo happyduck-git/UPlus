@@ -78,7 +78,7 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
 extension DailyQuizMissionCollectionViewCell {
     func configure(with vm: Mission) {
        
-        if let attVM = vm as? DailyAttendanceMission {
+        if let attVM = vm as? WeeklyQuizMission {
             self.quizTitleLabel.text = attVM.missionContentTitle ?? "No Title"
             self.quizDescLabel.text = attVM.missionContentText ?? "No Content"
             self.pointLabel.text = String(describing: attVM.missionRewardPoint) + " " + MissionConstants.pointUnit

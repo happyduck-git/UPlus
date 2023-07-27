@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct UPlusServiceInfoConstant {
+    static let startDay: String = "2023-07-26"
+    static let totalMembers: Int = 700
+}
+
 struct UserDefaultsConstants {
     static let currentUser: String = "currentUser"
     static let userId: String = "userId"
@@ -122,7 +127,6 @@ struct RankingConstants {
     static let totalRank: String = "누적 랭킹"
     static let topOneHundred: String = "TOP100"
     static let myRank: String = "내 순위"
-    static let totalMembers: Int = 700
 }
 
 struct EditUserInfo {

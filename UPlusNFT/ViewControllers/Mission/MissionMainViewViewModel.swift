@@ -25,6 +25,13 @@ final class MissionMainViewViewModel {
     
     var sections: [SectionType] = SectionType.allCases
     
+    // Start Week
+    private let dateFormatter: DateFormatter = {
+       let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }()
+    
     // History section open 여부 확인.
     @Published var isHistorySectionOpened: Bool = false
     
@@ -44,7 +51,7 @@ final class MissionMainViewViewModel {
     let timeLeft: Int64
     
     /* Daily Quiz Section */
-    @Published var dailyAttendanceMissions: [DailyAttendanceMission] = []
+    @Published var dailyAttendanceMissions: [WeeklyQuizMission] = []
     
     /* Long Term Mission Section */
     let longTermMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
@@ -76,10 +83,30 @@ final class MissionMainViewViewModel {
 // MARK: - Fetch Data from Firestore
 extension MissionMainViewViewModel {
     
+    
+    /// Calculate current number of week from the service start date.
+    /// - Returns: Number of week.
+    private func getNumberOfWeek() -> Int {
+        let currentDate = Date()
+        
+        guard let startDate = self.dateFormatter.date(from: UPlusServiceInfoConstant.startDay) else {
+            return 0
+        }
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: startDate, to: currentDate)
+        
+        guard let day = components.day else {
+            return 0
+        }
+        
+        return (day / 7) + 1
+    }
+    
     func getDailyAttendanceMission() {
         Task {
             do {
-                self.dailyAttendanceMissions = try await self.firestoreManager.getAllDailyAttendanceMission()
+                let week = self.getNumberOfWeek()
+                self.dailyAttendanceMissions = try await self.firestoreManager.getWeeklyMission(week: week)
             }
             catch {
                 print("Error fetching Daily Attendance Missions -- \(error)")

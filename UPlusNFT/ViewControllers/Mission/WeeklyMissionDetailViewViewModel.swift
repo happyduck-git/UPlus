@@ -8,9 +8,9 @@
 import Foundation
 import Combine
 
-final class DailyQuizMissionDetailViewViewModel {
+final class WeeklyMissionDetailViewViewModel {
     
-    let dataSource: DailyAttendanceMission
+    let dataSource: WeeklyQuizMission
     
     @Published var circleButtonDidTap: Bool = false
     @Published var xButtonDidTap: Bool = false
@@ -18,7 +18,7 @@ final class DailyQuizMissionDetailViewViewModel {
     @Published var answerDidCheck: Bool = false
 
     
-    init(dataSource: DailyAttendanceMission) {
+    init(dataSource: WeeklyQuizMission) {
         self.dataSource = dataSource
     }
     

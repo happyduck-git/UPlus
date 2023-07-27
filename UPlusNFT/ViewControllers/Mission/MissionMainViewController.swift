@@ -429,10 +429,20 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 2:
-            let vm = DailyQuizMissionDetailViewViewModel(dataSource: self.vm.dailyAttendanceMissions[indexPath.item])
+            let vm = WeeklyMissionDetailViewViewModel(dataSource: self.vm.dailyAttendanceMissions[indexPath.item])
             
-            let quizMissionDetailVC = DailyQuizMissionDetailViewController(vm: vm)
-            self.show(quizMissionDetailVC, sender: self)
+            switch vm.dataSource.missionFormatType {
+            case MissionFormatType.choiceQuiz.rawValue:
+                let quizMissionDetailVC = WeeklyChoiceQuizMissionDetailViewController(vm: vm)
+                self.show(quizMissionDetailVC, sender: self)
+            case MissionFormatType.answerQuiz.rawValue:
+                // TODO: quiz type이 answer 형인 경우.
+                
+                break
+            default:
+                break
+            }
+            
         case 4:
             guard let cell = collectionView.cellForItem(at: indexPath) as? MissionHistoryButtonCollectionViewCell else { return }
             cell.isOpened.toggle()

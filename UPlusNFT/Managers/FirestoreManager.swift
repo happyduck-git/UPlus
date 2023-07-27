@@ -208,19 +208,21 @@ extension FirestoreManager {
     
     // MARK: - Get Missions
 
-    func getAllDailyAttendanceMission() async throws -> [DailyAttendanceMission] {
+    func getWeeklyMission(week: Int) async throws -> [WeeklyQuizMission] {
+        
+        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
-//            .collection(FirestoreConstants.dailyAttendanceMission)
-            .collection("weekly_quiz__1__mission_set")
+            .collection(weekCollection)
             .getDocuments()
             .documents
         
-        var missions: [DailyAttendanceMission] = []
+        var missions: [WeeklyQuizMission] = []
         let decoder = Firestore.Decoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         for doc in documents {
-            var data = try doc.data(as: DailyAttendanceMission.self, decoder: decoder)
+            var data = try doc.data(as: WeeklyQuizMission.self, decoder: decoder)
             data.postId = doc.documentID
             missions.append(data)
         }
