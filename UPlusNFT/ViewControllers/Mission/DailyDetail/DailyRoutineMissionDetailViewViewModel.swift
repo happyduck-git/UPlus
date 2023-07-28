@@ -30,6 +30,7 @@ extension DailyRoutineMissionDetailViewViewModel {
         }
     }
     
+    /*
     func getUserParticipation() {
         self.athleteMissions.filter { mission in
             guard let userStateMap = mission.missionUserStateMap,
@@ -38,5 +39,5 @@ extension DailyRoutineMissionDetailViewViewModel {
             
         }
     }
-    
+    */
 }
