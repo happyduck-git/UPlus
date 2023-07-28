@@ -173,6 +173,8 @@ struct ImageAsset {
     static let xMark: String = "xmark-black"
     static let levelBadge: String = "level-star-badge"
     
+    static let share: String = "share-arrow-up"
+    
     static let arrowHeadDown: String = "arrow-head-down"
     static let arrowHeadUp: String = "arrow-head-up"
     
@@ -203,7 +205,7 @@ struct FirestoreConstants {
     static let rewardSetCollection = "reward_set"
     static let missionSetCollection = "mission_set"
     static let dailyAttendanceMission = "daily_attendance_mission_set"
-    static let athleteMission = "exp_athlete_mission_set"
+    static let athleteMission = "daily_exp__athlete__mission_set"
     static let environmentalistMission = "exp_environmentalist_mission_set"
     static let goodWorkerMission = "exp_good_worker_mission_set"
     static let suddenMission = "sudden_mission_set"

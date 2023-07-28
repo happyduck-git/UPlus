@@ -187,7 +187,8 @@ extension FirestoreManager {
 
 /* uplus_missions_v3 */
 extension FirestoreManager {
-
+    
+    /* Daily Mission */
     func getDailyAthleteMission() async throws -> [AthleteMission] {
         let documents = try await dummyCollection.document(FirestoreConstants.missions)
             .collection(FirestoreConstants.dailyExpAthleteMissionSet)
@@ -201,13 +202,7 @@ extension FirestoreManager {
         return missions
     }
     
-}
-
-/* uplus_missions_v2 */
-extension FirestoreManager {
-    
-    // MARK: - Get Missions
-
+    /* Weekly Mission */
     func getWeeklyMission(week: Int) async throws -> [WeeklyQuizMission] {
         
         let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
@@ -229,6 +224,12 @@ extension FirestoreManager {
         return missions
     }
     
+}
+
+/* uplus_missions_v2 */
+extension FirestoreManager {
+    
+    // MARK: - Get Missions
     func getAthleteMission() async throws -> [AthleteMission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(FirestoreConstants.athleteMission)

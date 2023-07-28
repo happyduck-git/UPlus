@@ -107,9 +107,12 @@
 		93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */; };
 		93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 93A2EDC62A6FA74400C2287D /* FSCalendar */; };
 		93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */; };
-		93A2EDCB2A725B4E00C2287D /* DailyRoutineMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDCA2A725B4E00C2287D /* DailyRoutineMissionViewController.swift */; };
+		93A2EDCB2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDCA2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift */; };
 		93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */; };
 		93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */; };
+		93D1747E2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747D2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift */; };
+		93D174822A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174812A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift */; };
+		93D174862A738C1000F5B1B1 /* StampCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174852A738C1000F5B1B1 /* StampCollectionViewCell.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013862A6517AB0005E342 /* MissionMainViewController.swift */; };
@@ -234,9 +237,12 @@
 		93A2EDC12A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryCalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMissionsCollectionViewCell.swift; sourceTree = "<group>"; };
-		93A2EDCA2A725B4E00C2287D /* DailyRoutineMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutineMissionViewController.swift; sourceTree = "<group>"; };
+		93A2EDCA2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutineMissionDetailViewController.swift; sourceTree = "<group>"; };
 		93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAnswerQuizMissionDetailViewController.swift; sourceTree = "<group>"; };
 		93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAnswerQuizMissionCollectionViewCell.swift; sourceTree = "<group>"; };
+		93D1747D2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutineMissionDetailViewViewModel.swift; sourceTree = "<group>"; };
+		93D174812A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutineMissionStampCollectionViewCell.swift; sourceTree = "<group>"; };
+		93D174852A738C1000F5B1B1 /* StampCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013862A6517AB0005E342 /* MissionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewController.swift; sourceTree = "<group>"; };
@@ -690,9 +696,27 @@
 		93D174782A733C8500F5B1B1 /* DailyDetail */ = {
 			isa = PBXGroup;
 			children = (
-				93A2EDCA2A725B4E00C2287D /* DailyRoutineMissionViewController.swift */,
+				93A2EDCA2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift */,
+				93D1747D2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift */,
 			);
 			path = DailyDetail;
+			sourceTree = "<group>";
+		};
+		93D1747F2A73827800F5B1B1 /* Weekly */ = {
+			isa = PBXGroup;
+			children = (
+				93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */,
+			);
+			path = Weekly;
+			sourceTree = "<group>";
+		};
+		93D174802A73828500F5B1B1 /* Daily */ = {
+			isa = PBXGroup;
+			children = (
+				93D174812A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift */,
+				93D174852A738C1000F5B1B1 /* StampCollectionViewCell.swift */,
+			);
+			path = Daily;
 			sourceTree = "<group>";
 		};
 		93E013812A6507B50005E342 /* Mission */ = {
@@ -723,6 +747,8 @@
 		93E0138D2A6527D60005E342 /* MissionCollectionViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				93D174802A73828500F5B1B1 /* Daily */,
+				93D1747F2A73827800F5B1B1 /* Weekly */,
 				93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */,
 				93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */,
 				93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */,
@@ -733,7 +759,6 @@
 				93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */,
 				93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */,
 				24542D4C2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift */,
-				93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */,
 			);
 			path = MissionCollectionViewCell;
 			sourceTree = "<group>";
@@ -866,7 +891,7 @@
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
-				93A2EDCB2A725B4E00C2287D /* DailyRoutineMissionViewController.swift in Sources */,
+				93A2EDCB2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */,
 				24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */,
@@ -875,6 +900,7 @@
 				244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
+				93D1747E2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift in Sources */,
 				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */,
@@ -896,6 +922,7 @@
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
 				93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */,
+				93D174862A738C1000F5B1B1 /* StampCollectionViewCell.swift in Sources */,
 				2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */,
 				93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */,
 				93A2ED9E2A6E411900C2287D /* TodayRankCollectionViewCell.swift in Sources */,
@@ -931,6 +958,7 @@
 				93E013992A66527F0005E342 /* UPlusColor.swift in Sources */,
 				93E013B02A6909A10005E342 /* WeeklyChoiceQuizMissionDetailViewController.swift in Sources */,
 				93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */,
+				93D174822A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift in Sources */,
 				93A2ED9C2A6E3BDD00C2287D /* RankBottomFlatSheetView.swift in Sources */,
 				24542D4F2A70AAE800F82CEA /* PhotoAuthMission.swift in Sources */,
 				932C34D22A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift in Sources */,
