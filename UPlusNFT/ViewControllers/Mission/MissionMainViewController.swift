@@ -437,8 +437,8 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
                 self.show(quizMissionDetailVC, sender: self)
             case MissionFormatType.answerQuiz.rawValue:
                 // TODO: quiz type이 answer 형인 경우.
-                
-                break
+                let answerMissionDetailVC = WeeklyAnswerQuizMissionDetailViewController(vm: vm)
+                self.show(answerMissionDetailVC, sender: self)
             default:
                 break
             }

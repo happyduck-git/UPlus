@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class WeeklyChoiceQuizMissionDetailViewController: UIViewController {
+final class WeeklyChoiceQuizMissionDetailViewController: UIViewController {
     
     // MARK: - Dependency
     private let vm: WeeklyMissionDetailViewViewModel

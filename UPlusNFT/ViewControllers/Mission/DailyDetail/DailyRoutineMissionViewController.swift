@@ -1,5 +1,5 @@
 //
-//  DailyRoutineMIssionViewController.swift
+//  DailyRoutineMissionViewController.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/27.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DailyRoutineMIssionViewController: UIViewController {
+final class DailyRoutineMissionViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
