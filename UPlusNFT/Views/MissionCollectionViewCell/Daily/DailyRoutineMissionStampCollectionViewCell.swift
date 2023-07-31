@@ -31,7 +31,7 @@ final class DailyRoutineMissionStampCollectionViewCell: UICollectionViewCell {
     private let progressLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "6 / 12"
+        label.text = "6 / 15"
         label.font = .systemFont(ofSize: UPlusFont.subTitle1, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -124,8 +124,7 @@ extension DailyRoutineMissionStampCollectionViewCell {
 extension DailyRoutineMissionStampCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let cellVM = self.vm else { return 0 }
-        return cellVM.athleteMissions.count
+        return 15
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -136,14 +135,21 @@ extension DailyRoutineMissionStampCollectionViewCell: UICollectionViewDelegate, 
             fatalError()
         }
 
-        let point = cellVM.athleteMissions[indexPath.item].missionRewardPoint
+        if indexPath.item >= cellVM.athleteMissions.count {
+            cell.contentView.backgroundColor = .systemGray
+            return cell
+        } else {
+            let point = cellVM.athleteMissions[indexPath.item].missionRewardPoint
+            
+            cell.configure(with: point)
+            return cell
+        }
         
-        cell.configure(with: point)
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellWidth = self.stampCollectionView.frame.height / 3 - 10
+        let cellWidth = self.stampCollectionView.frame.height / 3 - 8
+        
         return CGSize(width: cellWidth, height: cellWidth)
     }
     

@@ -5,7 +5,7 @@
 //  Created by Platfarm on 2023/07/28.
 //
 
-import Foundation
+import UIKit.UIImage
 import Combine
 
 final class DailyRoutineMissionDetailViewViewModel {
@@ -15,6 +15,7 @@ final class DailyRoutineMissionDetailViewViewModel {
     /* Athlete Mission */
     @Published var athleteMissions: [AthleteMission] = []
     
+    @Published var selectedImage: UIImage?
 }
 
 extension DailyRoutineMissionDetailViewViewModel {

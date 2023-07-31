@@ -113,6 +113,10 @@
 		93D1747E2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747D2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift */; };
 		93D174822A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174812A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift */; };
 		93D174862A738C1000F5B1B1 /* StampCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174852A738C1000F5B1B1 /* StampCollectionViewCell.swift */; };
+		93D174882A7734E000F5B1B1 /* DailyRoutainStampCollectionViewCellHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174872A7734E000F5B1B1 /* DailyRoutainStampCollectionViewCellHeader.swift */; };
+		93D1748A2A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174892A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift */; };
+		93D1748C2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1748B2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift */; };
+		93D1748E2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1748D2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013862A6517AB0005E342 /* MissionMainViewController.swift */; };
@@ -135,7 +139,7 @@
 		93E013AE2A68C4FE0005E342 /* SuddenMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AD2A68C4FE0005E342 /* SuddenMission.swift */; };
 		93E013B02A6909A10005E342 /* WeeklyChoiceQuizMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AF2A6909A10005E342 /* WeeklyChoiceQuizMissionDetailViewController.swift */; };
 		93E013B22A690E9A0005E342 /* WeeklyMissionDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B12A690E9A0005E342 /* WeeklyMissionDetailViewViewModel.swift */; };
-		93E013B42A691F450005E342 /* MissionCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B32A691F450005E342 /* MissionCompleteViewController.swift */; };
+		93E013B42A691F450005E342 /* WeeklyMissionCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -243,6 +247,10 @@
 		93D1747D2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutineMissionDetailViewViewModel.swift; sourceTree = "<group>"; };
 		93D174812A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutineMissionStampCollectionViewCell.swift; sourceTree = "<group>"; };
 		93D174852A738C1000F5B1B1 /* StampCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCollectionViewCell.swift; sourceTree = "<group>"; };
+		93D174872A7734E000F5B1B1 /* DailyRoutainStampCollectionViewCellHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRoutainStampCollectionViewCellHeader.swift; sourceTree = "<group>"; };
+		93D174892A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPhotoButtonCollectionViewCellFooter.swift; sourceTree = "<group>"; };
+		93D1748B2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPhotoButtonCollectionViewCell.swift; sourceTree = "<group>"; };
+		93D1748D2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCompleteViewController.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013862A6517AB0005E342 /* MissionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewController.swift; sourceTree = "<group>"; };
@@ -265,7 +273,7 @@
 		93E013AD2A68C4FE0005E342 /* SuddenMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuddenMission.swift; sourceTree = "<group>"; };
 		93E013AF2A6909A10005E342 /* WeeklyChoiceQuizMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChoiceQuizMissionDetailViewController.swift; sourceTree = "<group>"; };
 		93E013B12A690E9A0005E342 /* WeeklyMissionDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionDetailViewViewModel.swift; sourceTree = "<group>"; };
-		93E013B32A691F450005E342 /* MissionCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCompleteViewController.swift; sourceTree = "<group>"; };
+		93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionCompleteViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -698,6 +706,7 @@
 			children = (
 				93A2EDCA2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift */,
 				93D1747D2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift */,
+				93D1748D2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift */,
 			);
 			path = DailyDetail;
 			sourceTree = "<group>";
@@ -715,6 +724,9 @@
 			children = (
 				93D174812A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift */,
 				93D174852A738C1000F5B1B1 /* StampCollectionViewCell.swift */,
+				93D174872A7734E000F5B1B1 /* DailyRoutainStampCollectionViewCellHeader.swift */,
+				93D174892A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift */,
+				93D1748B2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift */,
 			);
 			path = Daily;
 			sourceTree = "<group>";
@@ -727,7 +739,7 @@
 				93D174782A733C8500F5B1B1 /* DailyDetail */,
 				93E013862A6517AB0005E342 /* MissionMainViewController.swift */,
 				93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */,
-				93E013B32A691F450005E342 /* MissionCompleteViewController.swift */,
+				93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -890,6 +902,7 @@
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
+				93D174882A7734E000F5B1B1 /* DailyRoutainStampCollectionViewCellHeader.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				93A2EDCB2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
@@ -944,6 +957,7 @@
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				93A2ED872A6A5ADE00C2287D /* UserMissionDataView.swift in Sources */,
+				93D1748A2A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift in Sources */,
 				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
 				93A2ED8E2A6E025000C2287D /* RewardsViewController.swift in Sources */,
 				932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */,
@@ -977,8 +991,9 @@
 				2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */,
 				93A2ED9A2A6E1C9D00C2287D /* RankingMenuBar.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
+				93D1748C2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
-				93E013B42A691F450005E342 /* MissionCompleteViewController.swift in Sources */,
+				93E013B42A691F450005E342 /* WeeklyMissionCompleteViewController.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
@@ -987,6 +1002,7 @@
 				93A2ED952A6E12A000C2287D /* UPlusUser.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				932C34E42A5BCE700032192A /* CampaignCommentDefaultView.swift in Sources */,
+				93D1748E2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
@@ -1148,6 +1164,8 @@
 				DEVELOPMENT_TEAM = W287BT4V38;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = UPlusNFT/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "UPlus에서 카메라를 사용하고자 합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 라이브러리를 사용하고자 합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -1177,6 +1195,8 @@
 				DEVELOPMENT_TEAM = W287BT4V38;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = UPlusNFT/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "UPlus에서 카메라를 사용하고자 합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 라이브러리를 사용하고자 합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

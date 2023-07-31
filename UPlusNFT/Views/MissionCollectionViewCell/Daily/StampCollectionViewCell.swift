@@ -40,6 +40,10 @@ final class StampCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.contentView.backgroundColor = .white
+    }
 }
 
 extension StampCollectionViewCell {

@@ -138,7 +138,7 @@ extension WeeklyChoiceQuizMissionDetailViewController {
                     
                     if checkUserAnswer() {
                         print("Right answer submitted.")
-                        let vc = MissionCompleteViewController(vm: self.vm)
+                        let vc = WeeklyMissionCompleteViewController(vm: self.vm)
                         navigationController?.modalPresentationStyle = .fullScreen
                         self.show(vc, sender: self)
                     } else {

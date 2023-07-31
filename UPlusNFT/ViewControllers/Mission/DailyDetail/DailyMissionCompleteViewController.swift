@@ -1,23 +1,17 @@
 //
-//  MissionCompleteViewController.swift
+//  DailyMissionCompleteViewController.swift
 //  UPlusNFT
 //
-//  Created by Platfarm on 2023/07/20.
+//  Created by Platfarm on 2023/07/31.
 //
 
 import UIKit
 import Combine
 
-enum MissionAnswerState: String {
-    case pending
-    case successed
-    case failed
-}
-
-class MissionCompleteViewController: UIViewController {
+class DailyMissionCompleteViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: WeeklyMissionDetailViewViewModel
+    private let vm: DailyRoutineMissionDetailViewViewModel
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - Combine
@@ -27,7 +21,7 @@ class MissionCompleteViewController: UIViewController {
     private let resultLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 40, weight: .bold)
-        let attributedString = NSMutableAttributedString(string: MissionConstants.missionSuccess)
+        let attributedString = NSMutableAttributedString(string: MissionConstants.missionComplete)
         attributedString.addAttributes([.font: UIFont.systemFont(ofSize: 82)], range: NSRange(location: 6, length: 2))
         label.attributedText = attributedString
         label.textAlignment = .center
@@ -64,7 +58,7 @@ class MissionCompleteViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: WeeklyMissionDetailViewViewModel) {
+    init(vm: DailyRoutineMissionDetailViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.configure()
@@ -87,7 +81,7 @@ class MissionCompleteViewController: UIViewController {
     
 }
 
-extension MissionCompleteViewController {
+extension DailyMissionCompleteViewController {
     private func bind() {
         self.confirmButton.tapPublisher
             .receive(on: DispatchQueue.main)
@@ -99,10 +93,7 @@ extension MissionCompleteViewController {
                         // 1. user 참여 document array item append
                     
                         // 2. mission 내 mission_user_state_map에 저장
-                        print("PostId: \(self.vm.dataSource.postId ?? "n/a")")
-                        try await self.firestoreManager.saveUserState(postId: self.vm.dataSource.postId ?? "n/a",
-                                                            userIndex: 0,
-                                                            state: .successed)
+                        
                     }
                     catch {
                         print("")
@@ -114,14 +105,14 @@ extension MissionCompleteViewController {
 }
 
 // MARK: - Configure with View Model
-extension MissionCompleteViewController {
+extension DailyMissionCompleteViewController {
     private func configure() {
-        self.pointLabel.text = String(describing: self.vm.dataSource.missionRewardPoint) + MissionConstants.redeemPointSuffix
+        self.pointLabel.text = "10" + MissionConstants.redeemPointSuffix
     }
 }
 
 // MARK: - Button Action
-extension MissionCompleteViewController {
+extension DailyMissionCompleteViewController {
     @objc private func confirmButtonDidTap() {
         
         guard let vcs = self.navigationController?.viewControllers else { return }
@@ -134,7 +125,7 @@ extension MissionCompleteViewController {
 }
 
 // MARK: - Set UI & Layout
-extension MissionCompleteViewController {
+extension DailyMissionCompleteViewController {
     private func setUI() {
         self.view.addSubviews(resultLabel,
                               missionCompleteIcon,

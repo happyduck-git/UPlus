@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 final class DailyRoutineMissionDetailViewController: UIViewController {
     
@@ -13,64 +14,23 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     private let vm: DailyRoutineMissionDetailViewViewModel
     
     // MARK: - UI Elements
-    private let quizDescription: UILabel = {
-        let label = UILabel()
-        label.text = "갓생미션 인증서와 300만원 경품권을 받으세요!"
-        label.textColor = .darkGray
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private var collectionView: UICollectionView?
+    private var buttonSectionHeight: CGFloat = 0.2
+    
+    private let photoPicker: PHPickerViewController = {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .any(of: [.images, .livePhotos])
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        return picker
     }()
     
-    private let quizTitle: UILabel = {
-        let label = UILabel()
-        label.text = "매일 6000보 걷기"
-        label.textColor = .black
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: UPlusFont.main, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let eventContentView: UIView = {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.backgroundColor = .white
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let eventLabel: UILabel = {
-        let label = UILabel()
-        label.text = "이벤트 기간 D-23"
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.5
-        label.textAlignment = .center
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let stampCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+    private let camera: UIImagePickerController = {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.cameraCaptureMode = .photo
         
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
-        collection.register(DailyRoutineMissionStampCollectionViewCell.self, forCellWithReuseIdentifier: DailyRoutineMissionStampCollectionViewCell.identifier)
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    
-    private let uploadImageButton: UIButton = {
-       let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.share), for: .normal)
-        button.titleLabel?.text = "날짜, 시간, 걸음수가 포함된 사진"
-        button.alignVerticalCenter()
-        return button
+        return picker
     }()
     
     // MARK: - Init
@@ -94,84 +54,346 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
         
         self.vm.getAtheleteMissions()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        self.eventContentView.layer.cornerRadius = self.eventContentView.frame.height / 3
-    }
-}
 
-extension DailyRoutineMissionDetailViewController {
-    
-    private func setDelegate() {
-        self.stampCollectionView.delegate = self
-        self.stampCollectionView.dataSource = self
-    }
-    
     private func setUI() {
-        self.view.addSubviews(self.quizDescription,
-                              self.quizTitle,
-                              self.eventContentView,
-                              self.stampCollectionView,
-                              self.uploadImageButton)
-        
-        self.eventContentView.addSubview(self.eventLabel)
+        let collectionView = self.createCollectionView()
+        self.collectionView = collectionView
+        view.addSubview(collectionView)
     }
     
     private func setLayout() {
-        NSLayoutConstraint.activate([
-            self.quizDescription.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-            self.quizDescription.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizDescription.trailingAnchor, multiplier: 2),
-            
-            self.quizTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.quizDescription.bottomAnchor, multiplier: 1),
-            self.quizTitle.leadingAnchor.constraint(equalTo: self.quizDescription.leadingAnchor),
-            self.quizTitle.trailingAnchor.constraint(equalTo: self.quizDescription.trailingAnchor),
-            
-            self.eventContentView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizTitle.bottomAnchor, multiplier: 2),
-            self.eventContentView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.eventContentView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizTitle.leadingAnchor, multiplier: 10),
-            self.quizTitle.trailingAnchor.constraint(equalToSystemSpacingAfter: self.eventContentView.trailingAnchor, multiplier: 10),
-            self.eventContentView.heightAnchor.constraint(equalToConstant: 40),
-            
-            self.stampCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.eventContentView.bottomAnchor, multiplier: 2),
-            self.stampCollectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.stampCollectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.stampCollectionView.heightAnchor.constraint(equalToConstant: 250)
-        ])
+        guard let collectionView = collectionView else { return }
+        collectionView.frame = view.bounds
+    }
+    
+    private func setDelegate() {
+        self.collectionView?.dataSource = self
+        self.collectionView?.delegate = self
         
-        NSLayoutConstraint.activate([
-            self.eventLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.eventContentView.topAnchor, multiplier: 1),
-            self.eventLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.eventContentView.leadingAnchor, multiplier: 1),
-            self.eventContentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.eventLabel.trailingAnchor, multiplier: 1),
-            self.eventContentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.eventLabel.bottomAnchor, multiplier: 1)
-        ])
+        self.photoPicker.delegate = self
+        self.camera.delegate = self
+    }
+}
+
+// MARK: - Create Section
+extension DailyRoutineMissionDetailViewController {
+    
+    private func createLayout() -> UICollectionViewCompositionalLayout {
+        let layout = UICollectionViewCompositionalLayout {  sectionIndex, _ in
+            return self.createSection(for: sectionIndex)
+        }
+        return layout
+    }
+     
+    private func createCollectionView() -> UICollectionView {
+  
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: self.createLayout()
+        )
         
+        // 1. Add a header to section#0
+        collectionView.register(DailyRoutainStampCollectionViewCellHeader.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: DailyRoutainStampCollectionViewCellHeader.identifier)
+        
+        // 2. Add stamp section cell
+        collectionView.register(UICollectionViewCell.self,
+                                forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+        collectionView.register(DailyRoutineMissionStampCollectionViewCell.self,
+            forCellWithReuseIdentifier: DailyRoutineMissionStampCollectionViewCell.identifier)
+        
+        collectionView.register(UploadPhotoButtonCollectionViewCell.self,
+            forCellWithReuseIdentifier: UploadPhotoButtonCollectionViewCell.identifier)
+        
+        // 3. Add a footer to section#1
+        collectionView.register(UploadPhotoButtonCollectionViewCellFooter.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                                withReuseIdentifier: UploadPhotoButtonCollectionViewCellFooter.identifier)
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }
+    
+    private func createSection(for section: Int) -> NSCollectionLayoutSection {
+        switch section {
+        case 0:
+            return self.createStampSectionLayout()
+        default:
+            return self.createUploadPhotoSectionLayout()
+        }
+    }
+    
+    private func createStampSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 5)
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.3)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.25)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+    
+        section.boundarySupplementaryItems = [header]
+        return section
+    }
+    
+    private func createUploadPhotoSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(self.buttonSectionHeight)
+//                heightDimension: .estimated(150)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        let footerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.4)
+            
+        )
+        let footer = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: footerSize,
+            elementKind: UICollectionView.elementKindSectionFooter,
+            alignment: .bottom
+        )
+        
+        section.boundarySupplementaryItems = [footer]
+        return section
     }
     
 }
 
-extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        switch section {
+        case 0:
+            return 2
+        default:
+            return 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyRoutineMissionStampCollectionViewCell.identifier, for: indexPath) as? DailyRoutineMissionStampCollectionViewCell else {
-            fatalError()
+        switch indexPath.section {
+        case 0:
+            if indexPath.item == 0 {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyRoutineMissionStampCollectionViewCell.identifier, for: indexPath) as? DailyRoutineMissionStampCollectionViewCell else {
+                    fatalError()
+                }
+                
+                cell.bind(with: self.vm)
+                cell.contentView.layer.cornerRadius = 10
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
+                cell.contentView.backgroundColor = .systemYellow
+                return cell
+            }
+            
+        case 1:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UploadPhotoButtonCollectionViewCell.identifier, for: indexPath) as? UploadPhotoButtonCollectionViewCell else {
+                fatalError()
+            }
+            cell.configure(with: self.vm)
+            cell.delegate = self
+            return cell
+        default:
+            return UICollectionViewCell()
         }
         
-        cell.bind(with: self.vm)
-        cell.contentView.layer.cornerRadius = 10
-        return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width - 20, height: self.stampCollectionView.frame.height)
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: DailyRoutainStampCollectionViewCellHeader.identifier,
+                for: indexPath
+            ) as? DailyRoutainStampCollectionViewCellHeader else {
+                return UICollectionReusableView()
+            }
+            
+            return header
+
+        case UICollectionView.elementKindSectionFooter:
+            guard let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: UploadPhotoButtonCollectionViewCellFooter.identifier,
+                for: indexPath
+            ) as? UploadPhotoButtonCollectionViewCellFooter else {
+                return UICollectionReusableView()
+            }
+            
+            footer.delegate = self
+            return footer
+            
+        default:
+            return UICollectionReusableView()
+        }
     }
+    
+}
+
+extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellDelegate {
+
+    func uploadButtonDidTap() {
+        self.showPhotoBottomAlert()
+    }
+
+    private func updateLayout() {
+        
+//        self.collectionView?.reloadSections(IndexSet(integer: 1))
+        
+        self.buttonSectionHeight = 0.5 // the new height
+
+        // Create a new layout and set it to the collection view
+        let newLayout = self.createLayout()
+        UIView.animate(withDuration: 0.1) {
+            self.collectionView?.setCollectionViewLayout(newLayout, animated: true)
+        }
+    }
+    
+    private func showPhotoBottomAlert() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(
+            title: "카메라",
+            style: .default,
+            handler: { [weak self] _ in
+                guard let `self` = self else { return }
+                self.present(
+                    camera,
+                    animated: true,
+                    completion: nil
+                )
+        }))
+        
+        alert.addAction(UIAlertAction(
+            title: "사진, 동영상 선택",
+            style: .default,
+            handler: { [weak self] _ in
+                guard let `self` = self else { return }
+                self.present(
+                    photoPicker,
+                    animated: true,
+                    completion: nil
+                )
+        }))
+        
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        
+        self.present(alert, animated: true)
+    }
+}
+
+// MARK: - PHPickerViewControllerDelegate
+extension DailyRoutineMissionDetailViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        
+        let group = DispatchGroup()
+        var pickedImage: UIImage?
+        
+        for result in results {
+            group.enter()
+            self.loadImageFromItemProvider(itemProvider: result.itemProvider) {  image in
+                group.leave()
+                pickedImage = image
+            }
+        }
+        
+        group.notify(queue: .main) {
+            self.vm.selectedImage = pickedImage
+        }
+
+        picker.dismiss(animated: true)
+        self.updateLayout()
+    }
+    
+    /// Change itemProvider to UIImage
+    /// - Parameters:
+    ///   - itemProvider: item provider instance to convert
+    ///   - completion: callback
+    private func loadImageFromItemProvider(itemProvider: NSItemProvider, completion: @escaping (UIImage?) -> Void) {
+        if itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                guard error == nil else {
+                    print("Error loading object from itemProvider: " + String(describing: error?.localizedDescription))
+                    return
+                }
+                guard let image = image as? UIImage else {
+                    return
+                }
+                completion(image)
+            }
+        } else {
+            completion(nil)
+        }
+    }
+    
+}
+
+extension DailyRoutineMissionDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let pickedImage = info[.originalImage] as? UIImage else { return }
+        self.vm.selectedImage = pickedImage
+        self.updateLayout()
+        dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
+}
+
+extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellFooterDelegate {
+    
+    func confirmDidTap() {
+        let vm = DailyRoutineMissionDetailViewViewModel()
+        let vc = DailyMissionCompleteViewController(vm: vm)
+        self.navigationController?.modalPresentationStyle = .fullScreen
+        self.show(vc, sender: self)
+    }
+    
 }
 
 /*

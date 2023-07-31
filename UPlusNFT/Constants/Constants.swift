@@ -118,6 +118,7 @@ struct MissionConstants {
     static let checkAnswer: String = "정답 확인하기"
     static let confirm: String = "확인"
     static let missionSuccess: String = "미션 성공\n정답"
+    static let missionComplete: String = "미션 참여\n완료"
     static let redeemPointSuffix: String = " 받아요"
 }
 

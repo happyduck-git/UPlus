@@ -185,7 +185,7 @@ extension FirestoreManager {
     
 }
 
-/* uplus_missions_v3 */
+/* uplus_missions_v3 - Getters */
 extension FirestoreManager {
     
     /* Daily Mission */
@@ -223,6 +223,13 @@ extension FirestoreManager {
         }
         return missions
     }
+    
+}
+/* uplus_missions_v3 - Setters */
+extension FirestoreManager {
+    
+  
+    
     
 }
 
