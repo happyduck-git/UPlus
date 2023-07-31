@@ -44,6 +44,7 @@ final class MyNftsCollectionViewFooter: UICollectionViewCell {
         self.contentView.backgroundColor = .white
         self.setUI()
         self.bind()
+
     }
     
     required init?(coder: NSCoder) {

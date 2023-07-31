@@ -25,12 +25,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.overrideUserInterfaceStyle = .light
         
+        /* Checking DailyRoutineDetailVC */
+        /*
         let vm = DailyRoutineMissionDetailViewViewModel()
         let vc = DailyRoutineMissionDetailViewController(vm: vm)
         
         window?.rootViewController = UINavigationController(rootViewController: vc)
+        */
         
-        /*
         if Auth.auth().currentUser != nil {
             logger.info("User is logged in.")
 
@@ -59,9 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
- */
-        
-        
+          
         /*
         // Check SignupCompelete VC
         let vm = SignUpViewViewModel()

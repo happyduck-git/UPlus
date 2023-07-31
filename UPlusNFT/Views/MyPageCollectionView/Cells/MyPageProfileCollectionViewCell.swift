@@ -24,19 +24,7 @@ final class MyPageProfileCollectionViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
-    private let shareNftButton: UIButton = {
-        let button = UIButton()
-        button.clipsToBounds = true
-        button.setImage(UIImage(systemName: "sparkles")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
-        button.setTitle("NFT 자랑하기", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head6, weight: .medium)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UPlusColor.deepBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
+
     private let usernameLabel: UILabel = {
         let label = UILabel()
         label.text = "username"
@@ -79,6 +67,8 @@ final class MyPageProfileCollectionViewCell: UICollectionViewCell {
         self.setGradientLayer()
         self.setUI()
         self.setLayout()
+        
+        self.contentView.backgroundColor = .white
     }
     
     required init?(coder: NSCoder) {
@@ -134,17 +124,10 @@ extension MyPageProfileCollectionViewCell {
         gradientLayer.frame = self.contentView.bounds
         gradientLayer.colors = [UPlusColor.gradientMediumBlue.cgColor, UPlusColor.gradientLightBlue.cgColor]
         self.contentView.layer.addSublayer(gradientLayer)
-        
-        let gradientLayer2 = CAGradientLayer()
-        gradientLayer2.frame = self.shareNftButton.bounds
-        gradientLayer2.colors = [UPlusColor.mint.cgColor, UPlusColor.deepBlue.cgColor]
-        self.shareNftButton.layer.addSublayer(gradientLayer2)
-        
     }
     
     private func setUI() {
         self.contentView.addSubviews(profileImage,
-                                     shareNftButton,
                                      usernameLabel,
                                      levelLabel,
                                      infoButton,
@@ -157,13 +140,8 @@ extension MyPageProfileCollectionViewCell {
             self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 8),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 8),
             self.profileImage.heightAnchor.constraint(equalTo: self.profileImage.widthAnchor),
-            
-            self.shareNftButton.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 2),
-            self.shareNftButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.leadingAnchor, multiplier: 7),
-            self.shareNftButton.heightAnchor.constraint(equalToConstant: self.contentView.frame.height / 15),
-            self.profileImage.trailingAnchor.constraint(equalToSystemSpacingAfter: self.shareNftButton.trailingAnchor, multiplier: 7),
-            
-            self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.shareNftButton.bottomAnchor, multiplier: 2),
+
+            self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 4),
             self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.levelLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 1),
             self.levelLabel.bottomAnchor.constraint(equalTo: self.usernameLabel.bottomAnchor),
@@ -184,7 +162,6 @@ extension MyPageProfileCollectionViewCell {
         
         DispatchQueue.main.async {
             self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
-            self.shareNftButton.layer.cornerRadius = self.shareNftButton.frame.height / 3
         }
     }
 }

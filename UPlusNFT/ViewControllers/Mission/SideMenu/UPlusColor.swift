@@ -17,10 +17,10 @@ struct UPlusColor {
     
     static let rankBrown = UIColor(hex: 0x6A3900)
     
-    
     static let lightBlue = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.80)
     static let gradientLightBlue = UIColor(hex: 0xA5C7FA)
     static let gradientMediumBlue = UIColor(hex: 0x92F4EE)
     static let mint = UIColor(hex: 0x48DED5)
     static let deepBlue = UIColor(hex: 0x759FDE)
+    static let myPageTopBarBlue = UIColor(hex: 0xB8EDF6)
 }

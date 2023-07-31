@@ -21,12 +21,20 @@ final class MyPageViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private var collectionView: UICollectionView?
+    private let topView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UPlusColor.gradientMediumBlue
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
+    private var collectionView: UICollectionView?
+
     //MARK: - Init
     init(vm: MyPageViewViewModel) {
         self.vm = vm
-        super.init(nibName: nil, bundle: nil)        
+        super.init(nibName: nil, bundle: nil)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -40,7 +48,6 @@ final class MyPageViewController: UIViewController {
         self.setUI()
         self.setLayout()
         self.setDelegate()
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,15 +70,37 @@ final class MyPageViewController: UIViewController {
 //MARK: - Set UI & Layout
 extension MyPageViewController {
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.topView.heightAnchor.constraint(equalToConstant: self.view.safeAreaInsets.top
+        ).isActive = true
+    }
+    
     private func setUI() {
         let collectionView = self.createCollectionView()
         self.collectionView = collectionView
+        collectionView.backgroundColor = .systemGray6
+
+        view.addSubview(self.topView)
         view.addSubview(collectionView)
     }
     
     private func setLayout() {
         guard let collectionView = collectionView else { return }
-        collectionView.frame = view.bounds
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+
+            collectionView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
     }
     
     private func setNavigationItem() {
@@ -126,7 +155,7 @@ extension MyPageViewController {
         collectionView.register(MyNftsCollectionViewHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: MyNftsCollectionViewHeader.identifier)
-
+        
         // 2. Register cell
         collectionView.register(
             UICollectionViewCell.self,
@@ -134,13 +163,40 @@ extension MyPageViewController {
         )
 
         collectionView.register(
+            TodayMissionCollectionViewCell.self,
+            forCellWithReuseIdentifier: TodayMissionCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            RoutineMissionCollectionViewCell.self,
+            forCellWithReuseIdentifier: RoutineMissionCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            WeeklyMissionCollectionViewCell.self,
+            forCellWithReuseIdentifier: WeeklyMissionCollectionViewCell.identifier
+        )
+
+        collectionView.register(
+            MissionHistoryButtonCollectionViewCell.self,
+            forCellWithReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            MissionHistoryCalendarCollectionViewCell.self,
+            forCellWithReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier
+        )
+        
+        // 2. Register cell
+
+        collectionView.register(
             MyPageProfileCollectionViewCell.self,
             forCellWithReuseIdentifier: MyPageProfileCollectionViewCell.identifier
         )
         
         collectionView.register(
-            MyNftsCollectionViewCell.self,
-            forCellWithReuseIdentifier: MyNftsCollectionViewCell.identifier
+            MissionAndEventCollectionViewHeader.self,
+            forCellWithReuseIdentifier: MissionAndEventCollectionViewHeader.identifier
         )
 
         // 3. Register section footer
@@ -157,8 +213,18 @@ extension MyPageViewController {
         switch section {
         case 0:
             return self.createProfileSectionLayout()
+        case 1:
+            return self.createButtonSectionLayout()
+        case 2:
+            return self.createTodayMissionSectionLayout()
+        case 3:
+            return self.createRoutineMissionSectionLayout()
+        case 4:
+            return self.weeklyMissionSectionLayout()
+        case 5:
+            return self.createHistorySectionLayout()
         default:
-            return self.createOwnedNftsSectionLayout()
+            return self.calendarSectionLayout()
         }
          
     }
@@ -184,7 +250,28 @@ extension MyPageViewController {
         return section
     }
     
-    private func createOwnedNftsSectionLayout() -> NSCollectionLayoutSection {
+    private func createButtonSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.1)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+       
+        return section
+    }
+    
+    private func createTodayMissionSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -194,63 +281,94 @@ extension MyPageViewController {
 
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(0.7),
-                heightDimension: .fractionalHeight(0.4)
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.1)
             ),
             subitems: [item]
         )
         
-        let spacing = NSCollectionLayoutSpacing.fixed(10)
-        group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: spacing, top: nil, trailing: nil, bottom: nil)
-        
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
         
-        // Header
-        let headerSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.1)
-        )
-        let header = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        
-        // Footer
-        let footerSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.8),
-            heightDimension: .fractionalHeight(0.1)
-        )
-        
-        let footer = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: footerSize,
-            elementKind: UICollectionView.elementKindSectionFooter,
-            alignment: .bottom
-        )
-        
-        section.boundarySupplementaryItems = [header, footer]
         return section
     }
     
-    private func createObtainedRewardsSectionLayout() -> NSCollectionLayoutSection {
+    private func createHistorySectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
                 heightDimension: .fractionalHeight(1.0)
             )
         )
-        
-        let group = NSCollectionLayoutGroup.horizontal(
+
+        let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.2)
+                heightDimension: .fractionalHeight(0.08)
             ),
             subitems: [item]
         )
         
         let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
+    private func createRoutineMissionSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
 
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.1)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
+    private func weeklyMissionSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.1)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
+    private func calendarSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.1)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
         return section
     }
 }
@@ -287,21 +405,42 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             cell.configure(with: self.vm)
             
             return cell
-        default:
-            guard let userNfts = self.vm.user.userNfts,
-                  !userNfts.isEmpty else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
-                cell.contentView.backgroundColor = .systemOrange
-                return cell
-            }
-            
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyNftsCollectionViewCell.identifier, for: indexPath) as? MyNftsCollectionViewCell else {
+        case 1:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
                 fatalError()
             }
-            cell.contentView.layer.cornerRadius = 5
-            cell.configure(with: self.vm, at: indexPath.item)
+            
+            return cell
+        
+        //TODO: Routine mission
+        case 2:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionCollectionViewCell.identifier, for: indexPath) as? RoutineMissionCollectionViewCell else {
+                fatalError()
+            }
+            
+            return cell
+        // TODO: Weekly mission
+        case 3:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
+                fatalError()
+            }
+            
+            return cell
+        // TODO: Mission History button
+        case 4:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else {
+                fatalError()
+            }
+            
             return cell
             
+            // TODO: Calendar
+        default:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
+                fatalError()
+            }
+            
+            return cell
         }
         
     }

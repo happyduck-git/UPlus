@@ -31,6 +31,7 @@ final class MyNftsCollectionViewHeader: UICollectionViewCell {
         
         self.setUI()
         self.setLayout()
+        self.contentView.backgroundColor = .white
     }
     
     required init?(coder: NSCoder) {

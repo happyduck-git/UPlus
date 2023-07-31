@@ -178,6 +178,7 @@ struct ImageAsset {
     
     static let arrowHeadDown: String = "arrow-head-down"
     static let arrowHeadUp: String = "arrow-head-up"
+    static let arrowHeadRight: String = "arrow-head-right"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }
