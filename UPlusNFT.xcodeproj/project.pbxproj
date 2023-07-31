@@ -34,6 +34,7 @@
 		249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */; };
 		249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F92A530B59008CF6BE /* CampaignView.swift */; };
 		249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */; };
+		24DB21812A77F54C00AE0174 /* PassThroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DB21802A77F54C00AE0174 /* PassThroughView.swift */; };
 		930D96A22A416AC30007801A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A12A416AC30007801A /* AppDelegate.swift */; };
 		930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A32A416AC30007801A /* SceneDelegate.swift */; };
 		930D96A62A416AC30007801A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A52A416AC30007801A /* LoginViewController.swift */; };
@@ -174,6 +175,7 @@
 		249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewHeader.swift; sourceTree = "<group>"; };
 		249F59F92A530B59008CF6BE /* CampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignView.swift; sourceTree = "<group>"; };
 		249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignPostViewController.swift; sourceTree = "<group>"; };
+		24DB21802A77F54C00AE0174 /* PassThroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughView.swift; sourceTree = "<group>"; };
 		930D969E2A416AC30007801A /* UPlusNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPlusNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		930D96A12A416AC30007801A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		930D96A32A416AC30007801A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -646,6 +648,7 @@
 				249F59ED2A4EF3F3008CF6BE /* PhotoCollectionView */,
 				936F88262A4AC8700062E759 /* CommentTableView */,
 				937C765E2A492EDE001024D0 /* PostTableView */,
+				24DB21802A77F54C00AE0174 /* PassThroughView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -967,6 +970,7 @@
 				249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */,
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
+				24DB21812A77F54C00AE0174 /* PassThroughView.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				93A2ED872A6A5ADE00C2287D /* UserMissionDataView.swift in Sources */,
 				93D1748A2A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift in Sources */,

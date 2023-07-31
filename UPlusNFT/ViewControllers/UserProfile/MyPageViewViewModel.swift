@@ -16,8 +16,11 @@ final class MyPageViewViewModel {
     
     //MARK: - Sections
     enum MyPageViewSectionType: CaseIterable {
-        case profile
-        case myNfts
+        case today
+        case routine
+        case weekly
+        case button
+        case calendar
     }
     
     let sections: [MyPageViewSectionType] = MyPageViewSectionType.allCases
