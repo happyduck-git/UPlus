@@ -171,7 +171,7 @@ struct ImageAsset {
     static let speaker: String = "speaker"
     static let pointSticker: String = "point-sticker"
     static let trophy: String = "trophy"
-    static let xMark: String = "xmark-black"
+    static let xMarkBlack: String = "xmark-black"
     static let levelBadge: String = "level-star-badge"
     
     static let share: String = "share-arrow-up"
@@ -211,6 +211,7 @@ struct FirestoreConstants {
     static let environmentalistMission = "exp_environmentalist_mission_set"
     static let goodWorkerMission = "exp_good_worker_mission_set"
     static let suddenMission = "sudden_mission_set"
+    static let missionTimelineMap = "missions_begin_end_time_map"
     
     /* User */
     static let urlPrefix = "https://platfarm.net/"

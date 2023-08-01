@@ -130,7 +130,7 @@ extension SignUpCompleteViewController {
     }
     
     private func setNavigationItem() {
-        let rightButtonItem = UIBarButtonItem(image: UIImage(named: ImageAsset.xMark)?.withTintColor(.systemGray2, renderingMode: .alwaysOriginal), style: .done, target: self, action: #selector(welcomeDidTap))
+        let rightButtonItem = UIBarButtonItem(image: UIImage(named: ImageAsset.xMarkBlack)?.withTintColor(.systemGray2, renderingMode: .alwaysOriginal), style: .done, target: self, action: #selector(welcomeDidTap))
         self.navigationItem.setRightBarButton(rightButtonItem, animated: true)
     }
     

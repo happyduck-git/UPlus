@@ -294,7 +294,7 @@ final class SignUpViewController: UIViewController {
     private func setNavigationItem() {
         self.navigationItem.hidesBackButton = true
         
-        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAsset.xMark)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAsset.xMarkBlack)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
                                           style: .plain,
                                           target: self,
                                            action: #selector(cancelButtonDidTap))

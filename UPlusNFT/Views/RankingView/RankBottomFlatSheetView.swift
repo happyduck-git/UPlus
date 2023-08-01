@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class RankBottomFlatSheetView: UIView {
+final class RankBottomFlatSheetView: PassThroughView {
 
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -109,13 +109,5 @@ extension RankBottomFlatSheetView {
         topLayer.backgroundColor = UIColor.black.cgColor
         topLayer.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: 1)
         self.bottomSheetView.layer.addSublayer(topLayer)
-    }
-}
-
-// MARK: - Hit Test Set Up
-extension RankBottomFlatSheetView {
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let hitView = super.hitTest(point, with: event)
-        return hitView == self ? nil : hitView
     }
 }

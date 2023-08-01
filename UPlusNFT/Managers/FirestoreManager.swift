@@ -224,12 +224,43 @@ extension FirestoreManager {
         return missions
     }
     
+    func getMissionDate() async throws -> [String: [Timestamp]] {
+        let data = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .getDocument()
+            .data()
+        
+        return data?[FirestoreConstants.missionTimelineMap] as? [String: [Timestamp]] ?? [:]
+    }
+    
 }
 /* uplus_missions_v3 - Setters */
 extension FirestoreManager {
     
-  
-    
+    func saveDailyMissionPhoto(userIndex: Int64,
+                               missionType: MissionType,
+                               image: Data) async throws {
+        
+        let imageId = UUID().uuidString
+        let path = "dev_threads/missions/mission_set/\(missionType.storagePathFolderName)/\(userIndex)/\(imageId).jpg"
+        let uploadRef = Storage.storage().reference(withPath: path)
+        
+        let uploadMetadata = StorageMetadata()
+        uploadMetadata.contentType = "image/jpeg"
+        
+        uploadRef.putData(image, metadata: uploadMetadata) { metadata, error in
+            
+            guard error == nil else {
+                print("Error uploading image to Firebase Storage. --- " + String(describing: error?.localizedDescription))
+                return
+            }
+            guard metadata != nil else {
+                print("Metadata found to be nil.")
+                return
+            }
+            
+        }
+        
+    }
     
 }
 

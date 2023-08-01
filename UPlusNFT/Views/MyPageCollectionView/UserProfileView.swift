@@ -15,6 +15,8 @@ final class UserProfileView: UIView {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
+    let gradientLayer = CAGradientLayer()
+    
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
@@ -63,17 +65,23 @@ final class UserProfileView: UIView {
         self.clipsToBounds = true
         self.layer.cornerRadius = 30
         self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+       
+        self.layer.addSublayer(gradientLayer)
         
-        self.setGradientLayer()
         self.setUI()
         self.setLayout()
-  
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
+        self.setGradientLayer()
+        
+    }
+
 }
 
 extension UserProfileView {
@@ -119,10 +127,8 @@ extension UserProfileView {
 extension UserProfileView {
     
     private func setGradientLayer() {
-        let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.bounds
         gradientLayer.colors = [UPlusColor.gradientMediumBlue.cgColor, UPlusColor.gradientLightBlue.cgColor]
-        self.layer.addSublayer(gradientLayer)
     }
     
     private func setUI() {

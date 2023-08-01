@@ -15,42 +15,37 @@ final class MyPageViewViewModel {
     private let firestoreManager = FirestoreManager.shared
     
     //MARK: - Sections
-    enum MyPageViewSectionType: CaseIterable {
+    enum MyPageViewSectionType: String, CaseIterable {
         case today
-        case routine
-        case weekly
+        case routine = "루틴 미션"
+        case weekly = "여정 미션"
         case button
         case calendar
     }
     
     let sections: [MyPageViewSectionType] = MyPageViewSectionType.allCases
     
-    //MARK: - Combine
+    //MARK: - DataSource
     @Published var todayRank2: Int = UPlusServiceInfoConstant.totalMembers
+    @Published var weeklyMissions: [String: [Timestamp]] = [:]
+    var dailyMissions: [String: [Timestamp]] = [:]
+    @Published var isHistorySectionOpened: Bool = false
     
     //MARK: - Properties
     let user: UPlusUser
-//    let userNfts: [DocumentReference]
-//    let username: String
-//    let ownedPoints: Int64
-//    let userDailyRank: Int64
-//    let numberOfownedRewards: Int64
     let todayRank: Int
+    let missionViewModel: MissionMainViewViewModel
     
     init(user: UPlusUser,
-         todayRank: Int
-//         , userNfts: [DocumentReference], username: String, ownedPoints: Int64, userDailyRank: Int64, numberOfownedRewards: Int64, todayRank: Int
+         todayRank: Int,
+         missionViewModel: MissionMainViewViewModel
     ) {
         self.user = user
-//        self.userNfts = userNfts
-//        self.username = username
-//        self.ownedPoints = ownedPoints
-//        self.userDailyRank = userDailyRank
-//        self.numberOfownedRewards = numberOfownedRewards
         self.todayRank = todayRank
+        self.missionViewModel = missionViewModel
         
         self.getTodayRank(of: String(describing: user.userIndex))
-    
+        self.getMissionsTimeline()
     }
 }
 
@@ -70,6 +65,21 @@ extension MyPageViewViewModel {
                 print("Error getting today's points: \(error)")
             }
             
+        }
+    }
+    
+    func getMissionsTimeline() {
+        Task {
+            let results = try await firestoreManager.getMissionDate()
+            let weeklyMissions = results.filter {
+                $0.key.hasPrefix("weekly")
+            }
+            self.weeklyMissions = weeklyMissions
+            
+            let dailyMissions = results.filter {
+                $0.key.hasPrefix("daily")
+            }
+            self.dailyMissions = dailyMissions
         }
     }
 }

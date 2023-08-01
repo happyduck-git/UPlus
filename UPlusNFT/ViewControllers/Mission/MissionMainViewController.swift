@@ -422,7 +422,8 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         ) as? MissionCollectionViewHeader else {
             return UICollectionReusableView()
         }
-        header.configure(with: vm.sections[indexPath.section].rawValue)
+        header.configure(headerText: vm.sections[indexPath.section].rawValue,
+                         buttonTitle: "자세히 보기")
         return header
     }
 

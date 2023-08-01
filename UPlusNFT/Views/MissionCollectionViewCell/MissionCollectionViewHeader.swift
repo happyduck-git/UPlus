@@ -20,7 +20,7 @@ class MissionCollectionViewHeader: UICollectionReusableView {
     private let sectionTitle: UILabel = {
         let label = UILabel()
         label.text = MissionConstants.dailyAttendanceMission
-        label.textColor = .black
+        label.textColor = .darkGray
         label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -28,7 +28,6 @@ class MissionCollectionViewHeader: UICollectionReusableView {
     
     private let detailButton: UIButton = {
        let button = UIButton()
-        button.isHidden = true
         button.clipsToBounds = true
         button.setTitle(MissionConstants.details, for: .normal)
         button.backgroundColor = .white
@@ -55,8 +54,9 @@ class MissionCollectionViewHeader: UICollectionReusableView {
 // MARK: - Configure with View Model
 extension MissionCollectionViewHeader {
     
-    func configure(with headerText: String) {
+    func configure(headerText: String, buttonTitle: String) {
         self.sectionTitle.text = headerText
+        self.detailButton.setTitle(buttonTitle, for: .normal)
     }
     
 }

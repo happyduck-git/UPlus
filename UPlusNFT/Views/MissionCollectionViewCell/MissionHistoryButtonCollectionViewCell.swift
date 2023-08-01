@@ -50,9 +50,20 @@ final class MissionHistoryButtonCollectionViewCell: UICollectionViewCell {
 
 extension MissionHistoryButtonCollectionViewCell {
     func bind() {
-        self.$isOpened.receive(on: DispatchQueue.main)
+        
+        self.button.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.isOpened.toggle()
+            }
+            .store(in: &bindings)
+        
+        self.$isOpened
+            .receive(on: RunLoop.current)
             .sink { [weak self] in
-                guard let `self` = self else { return }
+                guard let `self` = self else {
+                    print("Self")
+                    return }
                 let text = $0 ? "이전 미션 참여기록 보기" : "이전 미션 참여기록 접기"
                 let image = $0 ? ImageAsset.arrowHeadDown : ImageAsset.arrowHeadUp
                 

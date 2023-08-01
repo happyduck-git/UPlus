@@ -8,6 +8,23 @@
 import Foundation
 import FirebaseFirestore
 
+enum MissionType: String {
+    case dailyExpAthlete = "daily_exp__athlete"
+    case dailyExpGoodWorker = "daily_exp__good_worker"
+    case dailyExpEnvironmentalist = "daily_exp__environmentalist"
+    
+    case weeklyQuiz1 = "weekly_quiz__1"
+    case weeklyQuiz2 = "weekly_quiz__2"
+    case weeklyQuiz3 = "weekly_quiz__3"
+
+    var storagePathFolderName: String {
+        switch self {
+        default:
+            return self.rawValue + "__mission_set"
+        }
+    }
+}
+
 enum MissionTopicType: String {
     case dailyExp = "daily_exp"
     case weeklyQuiz = "weekly_quiz"

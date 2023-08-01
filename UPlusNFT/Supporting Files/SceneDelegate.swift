@@ -47,9 +47,43 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 print("Error getting saved user info from UserDefaults")
                 return
             }
-
+            // NOTE: Temporary cell view model.
+            let userEmail = Auth.auth().currentUser?.email ?? "username@gmail.com"
+            let username = userEmail.components(separatedBy: "@").first ?? "N/A"
+            let tempProfileImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
+            let tempVM = MissionMainViewViewModel(profileImage: tempProfileImage,
+                                                  username: username,
+                                                  points: 10,
+                                                  maxPoints: 15,
+                                                  level: 1,
+                                                  numberOfMissions: 4,
+                                                  timeLeft: 12,
+                                                  dailyMissionCellVMList: [
+                                                    DailyMissionCollectionViewCellViewModel(
+                                                        missionTitle: "매일 6000보 걷기",
+                                                        missionImage: "https://i.seadn.io/gae/0Qx_dJjClFLvuYFGzVUpvrOyjMuWVZjyUAU7FPNHUkg2XQzhgEBrV2kTDD-k8l0RoUiEh3lT93dGRHmb_MA57vQ0z2ZI7AY06qM9qTs?auto=format&dpr=1&w=200",
+                                                        missionPoint: 1,
+                                                        missionCount: 15
+                                                    ),
+                                                    DailyMissionCollectionViewCellViewModel(
+                                                        missionTitle: "매일 6000보 걷기",
+                                                        missionImage: "https://i.seadn.io/gae/PYzUnkLUGXrZp0GHQvNSx8-UWdeus_UxkypDeXRWmroFRL_4eWbxm7LqJvQIUSUdXxHqNRSRWkyc_sWjFrPqAxzsgzY2f6be4x1b9Q?auto=format&dpr=1&w=200",
+                                                        missionPoint: 2,
+                                                        missionCount: 6
+                                                    ),
+                                                    DailyMissionCollectionViewCellViewModel(
+                                                        missionTitle: "매일 6000보 걷기",
+                                                        missionImage: "https://i.seadn.io/gae/hxqKVEpDu1GmI8OIVpUeQFdvqWd6HKUREfEt58lBvCBEtJrTgsIRKOk2UFYVUK8jvwz8ir6sEGir862LntFXXb_shyUXSkkTCagzfA?auto=format&dpr=1&w=200",
+                                                        missionPoint: 3,
+                                                        missionCount: 10
+                                                    )
+                                                  ]
+            )
+            
+            
             let vm = MyPageViewViewModel(user: user,
-                                         todayRank: UPlusServiceInfoConstant.totalMembers)
+                                         todayRank: UPlusServiceInfoConstant.totalMembers,
+                                         missionViewModel: tempVM)
             let myPageVC = MyPageViewController(vm: vm)
 
             loginVC.navigationController?.addChild(myPageVC)

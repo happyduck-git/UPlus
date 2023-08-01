@@ -19,6 +19,7 @@ final class RoutineMissionCollectionViewCell: UICollectionViewCell {
     
     private let missionTitle: UILabel = {
         let label = UILabel()
+        label.text = "루틴 시작하기"
         label.textColor = .black
         label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
         return label
@@ -26,6 +27,7 @@ final class RoutineMissionCollectionViewCell: UICollectionViewCell {
     
     private let missionDescription: UILabel = {
         let label = UILabel()
+        label.text = "원하는 루틴 미션을 1개 골라 참여하세요"
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
         return label
@@ -41,6 +43,7 @@ final class RoutineMissionCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.contentView.backgroundColor = .white
         self.setUI()
         self.setLayout()
     }

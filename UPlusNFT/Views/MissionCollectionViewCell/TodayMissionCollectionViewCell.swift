@@ -33,7 +33,7 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
         let view = UIView()
         view.accessibilityIdentifier = "TimeContainerView"
         view.clipsToBounds = true
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = UPlusColor.grayBlue
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

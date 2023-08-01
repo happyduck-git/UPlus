@@ -9,8 +9,13 @@ import UIKit
 
 final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
+    enum WeeklyCellType {
+        case open
+        case close
+    }
+    
     private let titleStack: UIStackView = {
-       let stack = UIStackView()
+        let stack = UIStackView()
         stack.axis = .vertical
         stack.alignment = .leading
         stack.distribution = .fillProportionally
@@ -33,15 +38,34 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     }()
     
     private let arrowButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setImage(UIImage(named: ImageAsset.arrowHeadRight)?.withTintColor(UPlusColor.mint, renderingMode: .alwaysOriginal), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    private let visualEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .light)
+        let visualEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        return visualEffectView
+    }()
+    
+    private let openDateLabel: UILabel = {
+        let label = UILabel()
+        label.isHidden = true
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.contentView.backgroundColor = .white
         self.setUI()
         self.setLayout()
     }
@@ -49,8 +73,45 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.visualEffectView.removeFromSuperview()
+        self.openDateLabel.isHidden = true
+    }
+    
+    func resetCell() {
+        self.missionTitle.text = nil
+        self.missionDescription.text = nil
+    }
 }
 
+// MARK: - Configure with View Model
+extension WeeklyMissionCollectionViewCell {
+    func configure(type: WeeklyCellType,
+                   title: String,
+                   period: String,
+                   point: Int64,
+                   openDate: String? = nil) {
+        switch type {
+        case .open:
+            self.visualEffectView.removeFromSuperview()
+            self.missionTitle.text = title
+            self.missionDescription.text = "참여기간: " + period
+            // TODO: Point 원형 뱃지 텍스트에 포인트 추가
+            self.openDateLabel.isHidden = true
+        case .close:
+            self.addBlurEffect()
+            self.addOpenDateLabel()
+            
+            self.missionTitle.text = title
+            self.missionDescription.text = "참여기간: " + period
+            self.openDateLabel.text = "🔒\n" + (openDate ?? "08.28") + "에 오픈" 
+        }
+    }
+}
+
+// MARK: - Set UI & Layout
 extension WeeklyMissionCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.titleStack,
@@ -71,5 +132,22 @@ extension WeeklyMissionCollectionViewCell {
         ])
         
         self.missionDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+    
+    private func addBlurEffect() {
+        visualEffectView.frame = self.contentView.bounds
+        self.contentView.backgroundColor = UPlusColor.blurGray.withAlphaComponent(0.8)
+        self.contentView.addSubview(visualEffectView)
+    }
+    
+    private func addOpenDateLabel() {
+        self.openDateLabel.isHidden = false
+        self.contentView.addSubview(openDateLabel)
+        NSLayoutConstraint.activate([
+            self.openDateLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.openDateLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.openDateLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.openDateLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+        ])
     }
 }

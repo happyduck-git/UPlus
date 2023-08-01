@@ -20,8 +20,8 @@ final class MyPageViewController: UIViewController {
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
-    // MARK: - UI Elements
-    private var initialHeight: CGFloat = 650
+    // MARK: - Dynamic Constraints
+    private var initialHeight: CGFloat = 660
     private var topOffset: CGFloat = 0.0
     private var initialTopOffset: CGFloat = 0.0
     private var isSet: Bool = false
@@ -29,6 +29,7 @@ final class MyPageViewController: UIViewController {
     private var topConstraint: NSLayoutConstraint?
     private var heightConstraint: NSLayoutConstraint?
     
+    // MARK: - UI Elements
     private let containerView: PassThroughView = {
         let view = PassThroughView()
         view.backgroundColor = UPlusColor.gradientMediumBlue
@@ -40,6 +41,13 @@ final class MyPageViewController: UIViewController {
         let profileView = UserProfileView()
         profileView.translatesAutoresizingMaskIntoConstraints = false
         return profileView
+    }()
+    
+    private let whiteBackView: PassThroughView = {
+        let view = PassThroughView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let buttonStack: UIStackView = {
@@ -55,7 +63,7 @@ final class MyPageViewController: UIViewController {
         button.tag = 0
         button.addTarget(self, action: #selector(buttonDidTap(_:)), for: .touchUpInside)
         button.backgroundColor = .white
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UPlusColor.navy, for: .normal)
         button.setTitle("미션", for: .normal)
         return button
     }()
@@ -65,9 +73,16 @@ final class MyPageViewController: UIViewController {
         button.tag = 1
         button.addTarget(self, action: #selector(buttonDidTap(_:)), for: .touchUpInside)
         button.backgroundColor = .white
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UPlusColor.navy, for: .normal)
         button.setTitle("이벤트", for: .normal)
         return button
+    }()
+    
+    private let buttonBottomBar: PassThroughView = {
+        let view = PassThroughView()
+        view.backgroundColor = UPlusColor.navy
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private var collectionView: UICollectionView?
@@ -77,6 +92,7 @@ final class MyPageViewController: UIViewController {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
 
+        self.bind()
         self.userProfileView.configure(with: vm)
     }
     
@@ -114,28 +130,63 @@ final class MyPageViewController: UIViewController {
 
 }
 
+// MARK: - Bind with View Model
+extension MyPageViewController {
+    private func bind() {
+        func bindViewToViewModel() {
+            
+        }
+        func bindViewModelToView() {
+            self.vm.$weeklyMissions
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self,
+                    let collection = self.collectionView
+                    else { return }
+                    collection.reloadSections(IndexSet(integer: 2))
+                }
+                .store(in: &bindings)
+            
+            self.vm.$isHistorySectionOpened
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.collectionView?.reloadSections(IndexSet(integer: 4))
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+}
+
 //MARK: - Set UI & Layout
 extension MyPageViewController {
     
     private func setUI() {
+       
         let collectionView = self.createCollectionView()
         self.collectionView = collectionView
         collectionView.backgroundColor = .systemGray6
         
         self.view.addSubviews(collectionView,
-                              self.containerView,
-                              self.buttonStack)
-        self.containerView.addSubviews(self.userProfileView,
+                              self.containerView)
+        
+        self.containerView.addSubviews(self.whiteBackView,
+                                       self.userProfileView,
                                        self.buttonStack)
+        
         self.buttonStack.addArrangedSubviews(self.missionButton,
                                              self.eventButton)
     }
     
     private func setLayout() {
-        guard let collectionView = collectionView else { return }
-        collectionView.frame = view.bounds
         let navHeight = self.navigationController?.navigationBar.frame.height ?? 0
         
+        guard let collectionView = self.collectionView else { return }
+        collectionView.frame = view.bounds
         collectionView.contentInset = UIEdgeInsets(top: self.initialHeight - navHeight,
                                                    left: 0,
                                                    bottom: 0,
@@ -156,7 +207,12 @@ extension MyPageViewController {
             self.userProfileView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.userProfileView.bottomAnchor.constraint(equalTo: self.buttonStack.topAnchor),
             
-            self.buttonStack.heightAnchor.constraint(equalToConstant: 50),
+            self.whiteBackView.topAnchor.constraint(equalTo: self.userProfileView.topAnchor),
+            self.whiteBackView.leadingAnchor.constraint(equalTo: self.userProfileView.leadingAnchor),
+            self.whiteBackView.trailingAnchor.constraint(equalTo: self.userProfileView.trailingAnchor),
+            self.whiteBackView.bottomAnchor.constraint(equalTo: self.userProfileView.bottomAnchor),
+            
+            self.buttonStack.heightAnchor.constraint(equalToConstant: 60),
             self.buttonStack.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.buttonStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.buttonStack.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
@@ -181,9 +237,11 @@ extension MyPageViewController {
     }
     
     private func setDelegate() {
+        
         guard let collectionView = collectionView else { return }
         collectionView.delegate = self
         collectionView.dataSource = self
+        
     }
     
     @objc func openSideMenu() {
@@ -221,6 +279,46 @@ extension MyPageViewController {
 
 // MARK: - Create CollectionView
 extension MyPageViewController {
+    
+    private func createContainerCollectionView() -> UICollectionView {
+        let layout = UICollectionViewCompositionalLayout {  sectionIndex, _ in
+            return self.createContainerSection(for: sectionIndex)
+        }
+        
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
+       
+        collectionView.register(
+            UICollectionViewCell.self,
+            forCellWithReuseIdentifier: UICollectionViewCell.identifier
+        )
+        
+        return collectionView
+    }
+    
+    private func createContainerSection(for section: Int) -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(400)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        return section
+    }
+    
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewCompositionalLayout {  sectionIndex, _ in
             return self.createSection(for: sectionIndex)
@@ -230,6 +328,11 @@ extension MyPageViewController {
             frame: .zero,
             collectionViewLayout: layout
         )
+        
+        // 1. Register header
+        collectionView.register(MissionCollectionViewHeader.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: MissionCollectionViewHeader.identifier)
         
         // 2. Register cell
         collectionView.register(
@@ -304,6 +407,91 @@ extension MyPageViewController {
         return section
     }
     
+    private func createRoutineMissionSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(0.9),
+                heightDimension: .fractionalHeight(0.15)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.1)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+    
+        section.boundarySupplementaryItems = [header]
+        
+        return section
+    }
+    
+    private func weeklyMissionSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(0.9),
+                heightDimension: .fractionalHeight(0.15)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.1)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+    
+        section.boundarySupplementaryItems = [header]
+        return section
+    }
+    
+    private func calendarSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.4)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
     private func createHistorySectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
@@ -324,125 +512,124 @@ extension MyPageViewController {
         return section
     }
     
-    private func createRoutineMissionSectionLayout() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-        )
-        
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.1)
-            ),
-            subitems: [item]
-        )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        return section
-    }
-    
-    private func weeklyMissionSectionLayout() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-        )
-        
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.1)
-            ),
-            subitems: [item]
-        )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        return section
-    }
-    
-    private func calendarSectionLayout() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-        )
-        
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.1)
-            ),
-            subitems: [item]
-        )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        return section
-    }
 }
 
-extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    
+extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.vm.sections.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 2:
-            return 3
+            return self.vm.weeklyMissions.count
+        case 4:
+            return self.vm.isHistorySectionOpened ? 1 : 0
         default:
             return 1
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
                 fatalError()
             }
-            
+            cell.configure(with: self.vm.missionViewModel)
             return cell
-            
-            //TODO: Routine mission
+
+        // Routine mission
         case 1:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionCollectionViewCell.identifier, for: indexPath) as? RoutineMissionCollectionViewCell else {
                 fatalError()
             }
-            
+
             return cell
-            // TODO: Weekly mission
+        // Weekly mission
         case 2:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
                 fatalError()
             }
+            cell.resetCell()
             
-            return cell
-            // TODO: Mission History button
+            let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
+            let missionInfo = self.vm.weeklyMissions[weekCollection] ?? []
+            let begin = missionInfo[0].dateValue().monthDayFormat
+            let end = missionInfo[1].dateValue().monthDayFormat
+            let weekTotalPoint: Int64 = 100 // TODO: Query from DB
+            
+            if missionInfo[0].dateValue() > Date() {
+                cell.configure(type: .close,
+                               title: weekCollection,
+                               period: begin + " - " + end,
+                               point: weekTotalPoint,
+                               openDate: begin)
+                return cell
+            } else {
+                cell.configure(type: .open, // open
+                               title: weekCollection,
+                               period: begin + " - " + end,
+                               point: weekTotalPoint)
+                return cell
+            }
+            
+            
+        // Mission History button
         case 3:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else {
                 fatalError()
             }
             
+            cell.delegate = self
             return cell
-            
+
             // TODO: Calendar
         default:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
                 fatalError()
             }
-            
+
             return cell
         }
-        
+
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: MissionCollectionViewHeader.identifier,
+                for: indexPath
+            ) as? MissionCollectionViewHeader else {
+                return UICollectionReusableView()
+            }
+            header.configure(headerText: vm.sections[indexPath.section].rawValue,
+                             buttonTitle: "자세히 보기")
+            return header
+            
+        default:
+            return UICollectionReusableView()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 1:
+           // TODO: 선택 가능한 Daily Mission 보여주기
+            let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
+            vc.modalPresentationStyle = .overCurrentContext
+
+            self.present(vc, animated: false)
+            
+        default:
+            break
+        }
+    }
+
 }
 
 extension MyPageViewController: SideMenuViewControllerDelegate {
@@ -521,4 +708,8 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
     }
 }
 
-
+extension MyPageViewController: MissionHistoryButtonCollectionViewCellDelegate {
+    func showMissionButtonDidTap(isOpened: Bool) {
+        self.vm.isHistorySectionOpened = isOpened
+    }
+}
