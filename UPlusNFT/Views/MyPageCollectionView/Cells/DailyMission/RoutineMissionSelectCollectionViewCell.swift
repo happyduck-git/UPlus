@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RoutineMissionCollectionViewCell: UICollectionViewCell {
+final class RoutineMissionSelectCollectionViewCell: UICollectionViewCell {
     private let titleStack: UIStackView = {
        let stack = UIStackView()
         stack.axis = .vertical
@@ -53,7 +53,7 @@ final class RoutineMissionCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension RoutineMissionCollectionViewCell {
+extension RoutineMissionSelectCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.titleStack,
                                      self.arrowButton)

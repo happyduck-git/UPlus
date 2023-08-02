@@ -41,7 +41,7 @@ class MissionMainViewController: UIViewController {
         self.setLayout()
         self.setDelegate()
         
-        self.vm.getDailyAttendanceMission()
+        self.vm.getWeeklyMission()
         self.vm.getSuddenMission()
         self.bind()
     }
@@ -76,7 +76,7 @@ extension MissionMainViewController {
         }
         
         func bindViewModelToView() {
-            self.vm.$dailyAttendanceMissions
+            self.vm.$weeklyMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
@@ -369,7 +369,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 2:
-            return self.vm.dailyAttendanceMissions.count
+            return self.vm.weeklyMissions.count
         case 3:
             return self.vm.longTermMissionCellVMList.count
         case 5:
@@ -395,7 +395,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         case 2:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyQuizMissionCollectionViewCell.identifier, for: indexPath) as? DailyQuizMissionCollectionViewCell else { fatalError() }
             
-            cell.configure(with: self.vm.dailyAttendanceMissions[indexPath.item])
+            cell.configure(with: self.vm.weeklyMissions[indexPath.item])
             return cell
         case 3:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyMissionCollectionViewCell.identifier, for: indexPath) as? DailyMissionCollectionViewCell else { fatalError() }
@@ -430,7 +430,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 2:
-            let vm = WeeklyMissionDetailViewViewModel(dataSource: self.vm.dailyAttendanceMissions[indexPath.item])
+            let vm = WeeklyMissionDetailViewViewModel(dataSource: self.vm.weeklyMissions[indexPath.item])
             
             switch vm.dataSource.missionFormatType {
             case MissionFormatType.choiceQuiz.rawValue:

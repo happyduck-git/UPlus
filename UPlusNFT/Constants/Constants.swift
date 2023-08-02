@@ -120,6 +120,8 @@ struct MissionConstants {
     static let missionSuccess: String = "미션 성공\n정답"
     static let missionComplete: String = "미션 참여\n완료"
     static let redeemPointSuffix: String = " 받아요"
+    
+    static let buttonBorderWidth: CGFloat = 2.0
 }
 
 struct RankingConstants {
@@ -216,6 +218,9 @@ struct FirestoreConstants {
     /* User */
     static let urlPrefix = "https://platfarm.net/"
     static let defaultUserProfile =  "https://i.seadn.io/gcs/files/45d4a23d5b8d448561cdb14257e044ad.png?auto=format&dpr=1&w=300"
+    static let selectedMissionTopic = "user_selected_mission_daily_exp_topic_type"
+    static let selectedMissionSubTopic = "mission_sub_topic_type"
+    
     /* Post */
     static let id = "id"
     static let authorUid = "author_uid"

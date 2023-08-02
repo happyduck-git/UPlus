@@ -10,12 +10,21 @@ import Combine
 
 final class DailyRoutineMissionDetailViewViewModel {
     
+    // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - DataSource
+    var missionType: MissionType
+    @Published var selectedImage: UIImage?
     
     /* Athlete Mission */
     @Published var athleteMissions: [AthleteMission] = []
     
-    @Published var selectedImage: UIImage?
+    // MARK: - Init
+    init(missionType: MissionType) {
+        self.missionType = missionType
+    }
+    
 }
 
 extension DailyRoutineMissionDetailViewViewModel {

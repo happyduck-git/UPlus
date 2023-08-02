@@ -7,10 +7,15 @@
 
 import UIKit
 import FirebaseFirestore
+import Combine
 
 final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
     
+    // MARK: - Dependency
     private let vm: MyPageViewViewModel
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
     private let cancelButton: UIButton = {
@@ -25,7 +30,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.textColor = .black
         label.textAlignment = .center
-        label.text = "루틴 선택하기"
+        label.text = "루틴 미션 시작하기"
         label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -44,6 +49,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
     private let buttonStack: UIStackView = {
         let stack = UIStackView()
         stack.distribution = .fillEqually
+        stack.spacing = 10.0
         stack.axis = .vertical
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -51,33 +57,43 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
     
     private let topButton: UIButton = {
         let button = UIButton()
+        button.clipsToBounds = true
         button.backgroundColor = .white
         button.setTitleColor(.black, for: .normal)
+        button.layer.borderWidth = MissionConstants.buttonBorderWidth
+        button.layer.borderColor = UIColor.systemGray.cgColor
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         return button
     }()
     
     private let midButton: UIButton = {
         let button = UIButton()
+        button.clipsToBounds = true
         button.backgroundColor = .white
         button.setTitleColor(.black, for: .normal)
+        button.layer.borderWidth = MissionConstants.buttonBorderWidth
+        button.layer.borderColor = UIColor.systemGray.cgColor
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         return button
     }()
     
     private let bottomButton: UIButton = {
         let button = UIButton()
+        button.clipsToBounds = true
         button.backgroundColor = .white
         button.setTitleColor(.black, for: .normal)
+        button.layer.borderWidth = MissionConstants.buttonBorderWidth
+        button.layer.borderColor = UIColor.systemGray.cgColor
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         return button
     }()
     
-    private let retrieveRewardButton: UIButton = {
+    private let selectButton: UIButton = {
         let button = UIButton()
+        button.clipsToBounds = true
         button.setTitleColor(.white, for: .normal)
-        button.setTitle("리워드 NFT 받기", for: .normal)
-        button.backgroundColor = .black
+        button.setTitle("선택 완료", for: .normal)
+        button.backgroundColor = UPlusColor.greenMint
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -99,15 +115,119 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         self.setUI()
         self.setLayout()
         self.configure()
+        
+        self.bind()
     }
 
+}
+
+// MARK: - Bind with View Model
+extension RoutineSelectBottomSheetViewController {
+    private func bind() {
+        func bindViewToViewModel() {
+            self.topButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink {[weak self] _ in
+                    guard let `self` = self else { return }
+                    self.vm.topButton.toggle()
+                    self.topButton.layer.borderColor = UPlusColor.greenMint.cgColor
+                    self.midButton.layer.borderColor = UIColor.systemGray.cgColor
+                    self.bottomButton.layer.borderColor = UIColor.systemGray.cgColor
+                }
+                .store(in: &bindings)
+            
+            self.midButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink {[weak self] _ in
+                    guard let `self` = self else { return }
+                    self.vm.midButton.toggle()
+                    self.topButton.layer.borderColor = UIColor.systemGray.cgColor
+                    self.midButton.layer.borderColor = UPlusColor.greenMint.cgColor
+                    self.bottomButton.layer.borderColor = UIColor.systemGray.cgColor
+                }
+                .store(in: &bindings)
+            
+            self.bottomButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink {[weak self] _ in
+                    guard let `self` = self else { return }
+                    self.vm.bottomButton.toggle()
+                    self.topButton.layer.borderColor = UIColor.systemGray.cgColor
+                    self.midButton.layer.borderColor = UIColor.systemGray.cgColor
+                    self.bottomButton.layer.borderColor = UPlusColor.greenMint.cgColor
+                }
+                .store(in: &bindings)
+            
+            self.selectButton.tapPublisher
+                .receive(on: DispatchQueue.global())
+                .sink { [weak self] _ in
+                    guard let `self` = self,
+                          let selectedMission = self.vm.selectedMission
+                    else { return }
+                    self.vm.saveSelectedMission(selectedMission)
+                }
+                .store(in: &bindings)
+        }
+        func bindViewModelToView() {
+            let keys = Array(self.vm.dailyMissions.keys)
+    
+            self.vm.$topButton
+                .receive(on: DispatchQueue.main)
+                .removeDuplicates()
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    if $0 {
+                        self.vm.midButton = !$0
+                        self.vm.bottomButton = !$0
+                        self.vm.selectedMission = MissionType(rawValue: keys[0].replacingOccurrences(of: "__mission_set", with: ""))
+                    }
+                }
+                .store(in: &bindings)
+            
+            self.vm.$midButton
+                .receive(on: DispatchQueue.main)
+                .removeDuplicates()
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    if $0 {
+                        self.vm.topButton = !$0
+                        self.vm.bottomButton = !$0
+                        self.vm.selectedMission = MissionType(rawValue: keys[1].replacingOccurrences(of: "__mission_set", with: ""))
+                    }
+                }
+                .store(in: &bindings)
+            
+            self.vm.$bottomButton
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    if $0 {
+                        self.vm.topButton = !$0
+                        self.vm.midButton = !$0
+                        self.vm.selectedMission = MissionType(rawValue: keys[2].replacingOccurrences(of: "__mission_set", with: ""))
+                    }
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+    
+    private func differingIndices<T: Equatable>(arr1: [T], arr2: [T]) -> [Int] {
+        guard arr1.count == arr2.count else {
+            fatalError("Arrays must be of the same length.")
+        }
+
+        let indices = arr1.enumerated().filter { $0.element != arr2[$0.offset] }.map { $0.offset }
+        return indices
+    }
 }
 
 // MARK: - Set UI & Layout
 extension RoutineSelectBottomSheetViewController {
     func configure() {
         let keys = Array(self.vm.dailyMissions.keys)
-        print("Keys: \(keys)")
         self.topButton.setTitle(keys[0], for: .normal)
         self.midButton.setTitle(keys[1], for: .normal)
         self.bottomButton.setTitle(keys[2], for: .normal)
@@ -121,7 +241,7 @@ extension RoutineSelectBottomSheetViewController {
                                        self.titleLabel,
                                        self.infoLabel,
                                        self.buttonStack,
-                                       self.retrieveRewardButton)
+                                       self.selectButton)
         self.buttonStack.addArrangedSubviews(self.topButton,
                                              self.midButton,
                                              self.bottomButton)
@@ -148,12 +268,12 @@ extension RoutineSelectBottomSheetViewController {
             self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 1),
             self.buttonStack.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
             self.buttonStack.trailingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
-            self.buttonStack.bottomAnchor.constraint(equalTo: self.retrieveRewardButton.topAnchor),
+            self.buttonStack.bottomAnchor.constraint(equalTo: self.selectButton.topAnchor),
             
-            self.retrieveRewardButton.heightAnchor.constraint(equalToConstant: 50),
-            self.retrieveRewardButton.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
-            self.retrieveRewardButton.trailingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.retrieveRewardButton.bottomAnchor, multiplier: 3)
+            self.selectButton.heightAnchor.constraint(equalToConstant: 50),
+            self.selectButton.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
+            self.selectButton.trailingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.selectButton.bottomAnchor, multiplier: 3)
         ])
     }
 }

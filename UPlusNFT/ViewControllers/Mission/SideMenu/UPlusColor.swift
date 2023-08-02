@@ -28,4 +28,7 @@ struct UPlusColor {
     static let navy = UIColor(hex: 0x245B99)
     
     static let blurGray = UIColor(hex: 0x909090)
+    
+    static let greenMint = UIColor(hex: 0x59E3C2)
+    static let green = UIColor(hex: 0x2F9A94)
 }

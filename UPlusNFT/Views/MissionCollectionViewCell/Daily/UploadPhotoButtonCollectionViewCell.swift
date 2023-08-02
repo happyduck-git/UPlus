@@ -89,7 +89,6 @@ extension UploadPhotoButtonCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                print("Button tapped")
                 self.delegate?.uploadButtonDidTap()
             }
             .store(in: &bindings)

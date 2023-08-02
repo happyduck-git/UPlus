@@ -37,7 +37,7 @@ struct PhotoAuthMission: Mission {
 }
 
 struct MissionPhotoTask {
-    let mission_photo_task_user: String //미션 참여자의 사용자 다큐먼트를 가리킨다.
+    let mission_photo_task_user: DocumentReference //미션 참여자의 사용자 다큐먼트를 가리킨다.
     let mission_photo_task_image_path: String //미션 참여자가 제출한 사진 이미지의 경로
     let mission_photo_task_time: Timestamp //미션 참여 일자를 가리킨다.
 }

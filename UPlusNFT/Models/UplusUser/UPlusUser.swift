@@ -28,6 +28,22 @@ struct UPlusUser: Codable {
     
 }
 
+extension UPlusUser {
+    static func getCurrentUser() throws -> Self {
+        guard let data = UserDefaults.standard.object(forKey: UserDefaultsConstants.currentUser) as? Data,
+              let user = try? JSONDecoder().decode(UPlusUser.self, from: data)
+        else {
+            print("Error getting saved user info from UserDefaults")
+            throw UPlusUserError.noUserSaved
+        }
+        return user
+    }
+    
+    enum UPlusUserError: Error {
+        case noUserSaved
+    }
+}
+
 struct PointHistory: Codable {
     
     // 사용자가 일별로 획득한 포인트 량을 다큐먼트로 갖는다. 다큐먼트 ID는 YYYYMMDD와 같은 ID를 갖는다.

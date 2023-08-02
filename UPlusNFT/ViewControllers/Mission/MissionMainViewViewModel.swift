@@ -50,8 +50,8 @@ final class MissionMainViewViewModel {
     let numberOfMissions: Int64
     let timeLeft: Int64
     
-    /* Daily Quiz Section */
-    @Published var dailyAttendanceMissions: [WeeklyQuizMission] = []
+    /* Weekly Quiz Section */
+    @Published var weeklyMissions: [WeeklyQuizMission] = []
     
     /* Long Term Mission Section */
     let longTermMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
@@ -102,11 +102,11 @@ extension MissionMainViewViewModel {
         return (day / 7) + 1
     }
     
-    func getDailyAttendanceMission() {
+    func getWeeklyMission() {
         Task {
             do {
                 let week = self.getNumberOfWeek()
-                self.dailyAttendanceMissions = try await self.firestoreManager.getWeeklyMission(week: week)
+                self.weeklyMissions = try await self.firestoreManager.getWeeklyMission(week: week)
             }
             catch {
                 print("Error fetching Daily Attendance Missions -- \(error)")

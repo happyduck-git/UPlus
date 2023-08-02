@@ -13,6 +13,8 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     // MARK: - Dependency
     private let vm: DailyRoutineMissionDetailViewViewModel
     
+    private let firestoreManager = FirestoreManager.shared
+    
     // MARK: - UI Elements
     private var collectionView: UICollectionView?
     private var buttonSectionHeight: CGFloat = 0.2
@@ -388,10 +390,27 @@ extension DailyRoutineMissionDetailViewController: UIImagePickerControllerDelega
 extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellFooterDelegate {
     
     func confirmDidTap() {
-        let vm = DailyRoutineMissionDetailViewViewModel()
-        let vc = DailyMissionCompleteViewController(vm: vm)
-        self.navigationController?.modalPresentationStyle = .fullScreen
-        self.show(vc, sender: self)
+        Task {
+            do {
+                // 1. Save image to Storage
+                let user = try UPlusUser.getCurrentUser()
+                guard let imageData = self.vm.selectedImage?.jpegData(compressionQuality: 0.75) else {
+                    return
+                }
+                try await self.firestoreManager.saveDailyMissionPhoto(userIndex: user.userIndex,
+                                                                      missionType: self.vm.missionType,
+                                                                      image: imageData)
+                
+                // 2. Show CompleteVC on complete.
+                let vc = DailyMissionCompleteViewController(vm: self.vm)
+                self.navigationController?.modalPresentationStyle = .fullScreen
+                self.show(vc, sender: self)
+            }
+            catch {
+                // TODO: 오류 발생 alert
+                print("Error process confirm button -- \(error)")
+            }
+        }
     }
     
 }

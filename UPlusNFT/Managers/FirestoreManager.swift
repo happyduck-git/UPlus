@@ -188,6 +188,23 @@ extension FirestoreManager {
 /* uplus_missions_v3 - Getters */
 extension FirestoreManager {
     
+    /// Get User Selected Routine MissionType.
+    /// - Parameter userIndex: Current User's index.
+    /// - Returns: Optional MissionType.
+    func getUserSelectedRoutineMission(userIndex: Int64) async throws -> MissionType? {
+        let data = try await self.threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+            .getDocument()
+            .data()
+        guard let rawVal = data?[FirestoreConstants.selectedMissionTopic] as? String else {
+            return nil
+        }
+        
+        return MissionType(rawValue: rawVal)
+    }
+    
     /* Daily Mission */
     func getDailyAthleteMission() async throws -> [AthleteMission] {
         let documents = try await dummyCollection.document(FirestoreConstants.missions)
@@ -199,6 +216,33 @@ extension FirestoreManager {
         for doc in documents {
             missions.append(try doc.data(as: AthleteMission.self, decoder: self.decoder))
         }
+        return missions
+    }
+    
+    func getRoutineMission(type: MissionType) async throws -> [Mission] {
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .collection(type.storagePathFolderName)
+            .getDocuments()
+            .documents
+        var missions: [Mission] = []
+        
+        switch type {
+        case .dailyExpAthlete:
+            for doc in documents {
+                missions.append(try doc.data(as: AthleteMission.self, decoder: self.decoder))
+            }
+        case .dailyExpGoodWorker:
+            for doc in documents {
+                missions.append(try doc.data(as: GoodWorkerMission.self, decoder: self.decoder))
+            }
+        case .dailyExpEnvironmentalist:
+            for doc in documents {
+                missions.append(try doc.data(as: EnvironmentalistMission.self, decoder: self.decoder))
+            }
+        default:
+            break
+        }
+        
         return missions
     }
     
@@ -224,7 +268,7 @@ extension FirestoreManager {
         return missions
     }
     
-    func getMissionDate() async throws -> [String: [Timestamp]] {
+    func getAllMissionDate() async throws -> [String: [Timestamp]] {
         let data = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .getDocument()
             .data()
@@ -240,6 +284,7 @@ extension FirestoreManager {
                                missionType: MissionType,
                                image: Data) async throws {
         
+        //1. Save photo to Storage
         let imageId = UUID().uuidString
         let path = "dev_threads/missions/mission_set/\(missionType.storagePathFolderName)/\(userIndex)/\(imageId).jpg"
         let uploadRef = Storage.storage().reference(withPath: path)
@@ -258,8 +303,22 @@ extension FirestoreManager {
                 return
             }
             
+            // 2. Save photo paths to dataBase
+                // 2-1. upload하는 날짜에 해당하는 mission document path에 mission_photo_task_set collection 생성(혹은 생성된 collection이용)
+                // 2-2. 미션 참여자 index를 document-id로 사용.
+                // 2-3. mission photo task 저장
+            
         }
         
+    }
+    
+    func saveSelectedRoutineMission(type: MissionType, userIndex: Int64) async throws {
+        try await self.threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+            .setData([FirestoreConstants.selectedMissionTopic: type.rawValue],
+                     merge: true)
     }
     
 }

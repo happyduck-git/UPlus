@@ -23,6 +23,32 @@ enum MissionType: String {
             return self.rawValue + "__mission_set"
         }
     }
+    
+    var displayName: String {
+        switch self {
+        case .dailyExpAthlete:
+            return "걷기 루틴 미션"
+        case .dailyExpGoodWorker:
+            return "환경 루틴 미션"
+        case .dailyExpEnvironmentalist:
+            return "업무 루틴 미션"
+        default:
+            return "주간 퀴즈"
+        }
+    }
+    
+    var description: String {
+        switch self {
+        case .dailyExpAthlete:
+            return "매일 6000보 걷기 인증"
+        case .dailyExpGoodWorker:
+            return "매일 텀블러 사용하기 인증"
+        case .dailyExpEnvironmentalist:
+            return "매일 TODO 리스트 작성하기 인증"
+        default:
+            return "주간 퀴즈"
+        }
+    }
 }
 
 enum MissionTopicType: String {

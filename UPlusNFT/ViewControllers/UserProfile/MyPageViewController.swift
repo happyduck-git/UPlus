@@ -107,6 +107,8 @@ final class MyPageViewController: UIViewController {
         self.setUI()
         self.setLayout()
         self.setDelegate()
+        
+//        self.vm.getRoutineParticipationCount()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,11 +139,24 @@ extension MyPageViewController {
             
         }
         func bindViewModelToView() {
-            self.vm.$weeklyMissions
+            self.vm.$savedMissionType
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
+                .sink { [weak self] mission in
                     guard let `self` = self,
                     let collection = self.collectionView
+                    else { return }
+                    
+                    if let mission = mission {
+                        collection.reloadSections(IndexSet(integer: 1))
+                    }
+                }
+                .store(in: &bindings)
+                
+            self.vm.$weeklyMissions
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] data in
+                    guard let `self` = self,
+                          let collection = self.collectionView
                     else { return }
                     collection.reloadSections(IndexSet(integer: 2))
                 }
@@ -150,9 +165,11 @@ extension MyPageViewController {
             self.vm.$isHistorySectionOpened
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
-                    guard let `self` = self else { return }
+                    guard let `self` = self,
+                    let collection = self.collectionView
+                    else { return }
                     
-                    self.collectionView?.reloadSections(IndexSet(integer: 4))
+                    collection.reloadSections(IndexSet(integer: 4))
                 }
                 .store(in: &bindings)
         }
@@ -184,10 +201,10 @@ extension MyPageViewController {
     
     private func setLayout() {
         let navHeight = self.navigationController?.navigationBar.frame.height ?? 0
-        
+
         guard let collectionView = self.collectionView else { return }
         collectionView.frame = view.bounds
-        collectionView.contentInset = UIEdgeInsets(top: self.initialHeight - navHeight,
+        collectionView.contentInset = UIEdgeInsets(top: self.initialHeight - (navHeight*1.5),
                                                    left: 0,
                                                    bottom: 0,
                                                    right: 0)
@@ -280,45 +297,6 @@ extension MyPageViewController {
 // MARK: - Create CollectionView
 extension MyPageViewController {
     
-    private func createContainerCollectionView() -> UICollectionView {
-        let layout = UICollectionViewCompositionalLayout {  sectionIndex, _ in
-            return self.createContainerSection(for: sectionIndex)
-        }
-        
-        let collectionView = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: layout
-        )
-       
-        collectionView.register(
-            UICollectionViewCell.self,
-            forCellWithReuseIdentifier: UICollectionViewCell.identifier
-        )
-        
-        return collectionView
-    }
-    
-    private func createContainerSection(for section: Int) -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-        )
-        
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(400)
-            ),
-            subitems: [item]
-        )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        
-        return section
-    }
-    
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewCompositionalLayout {  sectionIndex, _ in
             return self.createSection(for: sectionIndex)
@@ -346,8 +324,13 @@ extension MyPageViewController {
         )
         
         collectionView.register(
-            RoutineMissionCollectionViewCell.self,
-            forCellWithReuseIdentifier: RoutineMissionCollectionViewCell.identifier
+            RoutineMissionSelectCollectionViewCell.self,
+            forCellWithReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            RoutineMissionProgressCollectionViewCell.self,
+            forCellWithReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier
         )
         
         collectionView.register(
@@ -523,7 +506,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 2:
-            return self.vm.weeklyMissions.count
+            // NOTE: self.vm.weeklyMissions.count 시 에러 확인
+//            return self.vm.weeklyMissions.count
+            return 3
         case 4:
             return self.vm.isHistorySectionOpened ? 1 : 0
         default:
@@ -543,18 +528,27 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
         // Routine mission
         case 1:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionCollectionViewCell.identifier, for: indexPath) as? RoutineMissionCollectionViewCell else {
-                fatalError()
-            }
+            if self.vm.savedMissionType == nil {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
+                    fatalError()
+                }
 
-            return cell
+                return cell
+            } else {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
+                    fatalError()
+                }
+                cell.bind(with: self.vm)
+                return cell
+            }
+           
         // Weekly mission
         case 2:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
                 fatalError()
             }
             cell.resetCell()
-            
+       
             let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
             let missionInfo = self.vm.weeklyMissions[weekCollection] ?? []
             let begin = missionInfo[0].dateValue().monthDayFormat
@@ -575,7 +569,6 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                                point: weekTotalPoint)
                 return cell
             }
-            
             
         // Mission History button
         case 3:
@@ -619,11 +612,17 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 1:
-           // TODO: 선택 가능한 Daily Mission 보여주기
-            let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
-            vc.modalPresentationStyle = .overCurrentContext
+            if let missionType = vm.savedMissionType {
+                let vm = DailyRoutineMissionDetailViewViewModel(missionType: missionType)
+                let vc = DailyRoutineMissionDetailViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+            } else {
+                let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
+                vc.modalPresentationStyle = .overCurrentContext
 
-            self.present(vc, animated: false)
+                self.present(vc, animated: false)
+            }
             
         default:
             break
