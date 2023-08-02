@@ -66,6 +66,8 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         
         self.contentView.backgroundColor = .white
+        self.contentView.clipsToBounds = true
+        self.contentView.layer.cornerRadius = 30
         self.setUI()
         self.setLayout()
     }

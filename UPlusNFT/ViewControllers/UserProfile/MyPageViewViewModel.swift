@@ -102,7 +102,7 @@ extension MyPageViewViewModel {
             do {
                 let user = try UPlusUser.getCurrentUser()
                 self.savedMissionType = try await firestoreManager.getUserSelectedRoutineMission(userIndex: user.userIndex)
-                print("Tyep: \(self.savedMissionType)")
+               
                 if let savedType = self.savedMissionType {
                     self.getRoutineParticipationCount(type: savedType)
                 }

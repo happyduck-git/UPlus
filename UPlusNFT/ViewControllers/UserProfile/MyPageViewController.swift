@@ -37,6 +37,17 @@ final class MyPageViewController: UIViewController {
         return view
     }()
     
+    private let shadowView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 20)
+        view.layer.shadowOpacity = 0.3
+        view.layer.shadowRadius = 4.0
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let userProfileView: UserProfileView = {
         let profileView = UserProfileView()
         profileView.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +102,7 @@ final class MyPageViewController: UIViewController {
     init(vm: MyPageViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
-
+        
         self.bind()
         self.userProfileView.configure(with: vm)
     }
@@ -108,7 +119,6 @@ final class MyPageViewController: UIViewController {
         self.setLayout()
         self.setDelegate()
         
-//        self.vm.getRoutineParticipationCount()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -125,11 +135,11 @@ final class MyPageViewController: UIViewController {
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = backBtnImage
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
-
+    
     @objc func buttonDidTap(_ sender: UIButton) {
         
     }
-
+    
 }
 
 // MARK: - Bind with View Model
@@ -143,7 +153,7 @@ extension MyPageViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] mission in
                     guard let `self` = self,
-                    let collection = self.collectionView
+                          let collection = self.collectionView
                     else { return }
                     
                     if let mission = mission {
@@ -151,7 +161,7 @@ extension MyPageViewController {
                     }
                 }
                 .store(in: &bindings)
-                
+            
             self.vm.$weeklyMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] data in
@@ -166,7 +176,7 @@ extension MyPageViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     guard let `self` = self,
-                    let collection = self.collectionView
+                          let collection = self.collectionView
                     else { return }
                     
                     collection.reloadSections(IndexSet(integer: 4))
@@ -183,7 +193,7 @@ extension MyPageViewController {
 extension MyPageViewController {
     
     private func setUI() {
-       
+        
         let collectionView = self.createCollectionView()
         self.collectionView = collectionView
         collectionView.backgroundColor = .systemGray6
@@ -192,6 +202,7 @@ extension MyPageViewController {
                               self.containerView)
         
         self.containerView.addSubviews(self.whiteBackView,
+                                       self.shadowView,
                                        self.userProfileView,
                                        self.buttonStack)
         
@@ -201,10 +212,10 @@ extension MyPageViewController {
     
     private func setLayout() {
         let navHeight = self.navigationController?.navigationBar.frame.height ?? 0
-
+        
         guard let collectionView = self.collectionView else { return }
         collectionView.frame = view.bounds
-        collectionView.contentInset = UIEdgeInsets(top: self.initialHeight - (navHeight*1.5),
+        collectionView.contentInset = UIEdgeInsets(top: self.initialHeight - (navHeight*1.6),
                                                    left: 0,
                                                    bottom: 0,
                                                    right: 0)
@@ -224,6 +235,11 @@ extension MyPageViewController {
             self.userProfileView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.userProfileView.bottomAnchor.constraint(equalTo: self.buttonStack.topAnchor),
             
+            self.shadowView.topAnchor.constraint(equalTo: self.userProfileView.topAnchor),
+            self.shadowView.leadingAnchor.constraint(equalTo: self.userProfileView.leadingAnchor),
+            self.shadowView.trailingAnchor.constraint(equalTo: self.userProfileView.trailingAnchor),
+            self.userProfileView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.shadowView.bottomAnchor, multiplier: 3),
+            
             self.whiteBackView.topAnchor.constraint(equalTo: self.userProfileView.topAnchor),
             self.whiteBackView.leadingAnchor.constraint(equalTo: self.userProfileView.leadingAnchor),
             self.whiteBackView.trailingAnchor.constraint(equalTo: self.userProfileView.trailingAnchor),
@@ -234,7 +250,7 @@ extension MyPageViewController {
             self.buttonStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.buttonStack.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
         ])
-
+        
     }
     
     private func setNavigationItem() {
@@ -277,19 +293,20 @@ extension MyPageViewController {
 
 extension MyPageViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        print("Y OffSet: \(scrollView.contentOffset.y)")
-//        print("Min: \(self.initialHeight)")
+        //        print("Y OffSet: \(scrollView.contentOffset.y)")
+        //        print("Min: \(self.initialHeight)")
         
         if !isSet {
             self.initialTopOffset = scrollView.contentOffset.y
             self.isSet = true
         }
-
+        
         self.topConstraint?.constant = self.initialTopOffset - scrollView.contentOffset.y
-//        print("New top: \(self.initialTopOffset - scrollView.contentOffset.y)")
+        //        print("New top: \(self.initialTopOffset - scrollView.contentOffset.y)")
         let offset = -scrollView.contentOffset.y
         let newAlpha = (offset)/self.initialHeight
-
+        
+        self.shadowView.alpha = newAlpha
         self.userProfileView.alpha = newAlpha
     }
 }
@@ -360,7 +377,7 @@ extension MyPageViewController {
         case 1:
             return self.createRoutineMissionSectionLayout()
         case 2:
-            return self.weeklyMissionSectionLayout()
+            return self.createWeeklyMissionSectionLayout()
         case 3:
             return self.createHistorySectionLayout()
         default:
@@ -400,11 +417,13 @@ extension MyPageViewController {
         
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(0.9),
+                widthDimension: .fractionalWidth(1.0),
                 heightDimension: .fractionalHeight(0.15)
             ),
             subitems: [item]
         )
+        
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
         
@@ -417,13 +436,13 @@ extension MyPageViewController {
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top
         )
-    
+        
         section.boundarySupplementaryItems = [header]
         
         return section
     }
     
-    private func weeklyMissionSectionLayout() -> NSCollectionLayoutSection {
+    private func createWeeklyMissionSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -433,11 +452,12 @@ extension MyPageViewController {
         
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(0.9),
+                widthDimension: .fractionalWidth(1.0),
                 heightDimension: .fractionalHeight(0.15)
             ),
             subitems: [item]
         )
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
         
@@ -450,7 +470,7 @@ extension MyPageViewController {
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top
         )
-    
+        
         section.boundarySupplementaryItems = [header]
         return section
     }
@@ -498,16 +518,16 @@ extension MyPageViewController {
 }
 
 extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.vm.sections.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 2:
             // NOTE: self.vm.weeklyMissions.count 시 에러 확인
-//            return self.vm.weeklyMissions.count
+            //            return self.vm.weeklyMissions.count
             return 3
         case 4:
             return self.vm.isHistorySectionOpened ? 1 : 0
@@ -515,9 +535,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return 1
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
@@ -525,52 +545,57 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             }
             cell.configure(with: self.vm.missionViewModel)
             return cell
-
-        // Routine mission
+            
+            // Routine mission
         case 1:
-            if self.vm.savedMissionType == nil {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
-                    fatalError()
-                }
-
-                return cell
-            } else {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
-                    fatalError()
-                }
-                cell.bind(with: self.vm)
-                return cell
+            //            if self.vm.savedMissionType == nil {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
+                fatalError()
             }
-           
-        // Weekly mission
+            
+            return cell
+            //            } else {
+            //                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
+            //                    fatalError()
+            //                }
+            //                cell.bind(with: self.vm)
+            //                return cell
+            //            }
+            
+            // Weekly mission
         case 2:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
                 fatalError()
             }
             cell.resetCell()
-       
-            let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
-            let missionInfo = self.vm.weeklyMissions[weekCollection] ?? []
-            let begin = missionInfo[0].dateValue().monthDayFormat
-            let end = missionInfo[1].dateValue().monthDayFormat
-            let weekTotalPoint: Int64 = 100 // TODO: Query from DB
             
-            if missionInfo[0].dateValue() > Date() {
-                cell.configure(type: .close,
-                               title: weekCollection,
-                               period: begin + " - " + end,
-                               point: weekTotalPoint,
-                               openDate: begin)
-                return cell
+            if !self.vm.weeklyMissions.isEmpty {
+                let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
+                let missionInfo = self.vm.weeklyMissions[weekCollection] ?? []
+                let begin = missionInfo[0].dateValue().monthDayFormat
+                let end = missionInfo[1].dateValue().monthDayFormat
+                let weekTotalPoint: Int64 = 100 // TODO: Query from DB
+                
+                if missionInfo[0].dateValue() > Date() {
+                    cell.configure(type: .close,
+                                   title: weekCollection,
+                                   period: begin + " - " + end,
+                                   point: weekTotalPoint,
+                                   openDate: begin)
+                    return cell
+                } else {
+                    cell.configure(type: .open, // open
+                                   title: weekCollection,
+                                   period: begin + " - " + end,
+                                   point: weekTotalPoint)
+                    return cell
+                }
             } else {
-                cell.configure(type: .open, // open
-                               title: weekCollection,
-                               period: begin + " - " + end,
-                               point: weekTotalPoint)
                 return cell
             }
             
-        // Mission History button
+            
+            // Mission History button
         case 3:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else {
                 fatalError()
@@ -578,16 +603,16 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             
             cell.delegate = self
             return cell
-
+            
             // TODO: Calendar
         default:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
                 fatalError()
             }
-
+            
             return cell
         }
-
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -620,7 +645,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             } else {
                 let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
                 vc.modalPresentationStyle = .overCurrentContext
-
+                
                 self.present(vc, animated: false)
             }
             
@@ -628,7 +653,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             break
         }
     }
-
+    
 }
 
 extension MyPageViewController: SideMenuViewControllerDelegate {
@@ -651,44 +676,8 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             self.navigationItem.setRightBarButton(speakerItem, animated: true)
             self.navigationItem.title = SideMenuConstants.home
         case 1:
-            
-            // NOTE: Temporary cell view model.
-            let userEmail = Auth.auth().currentUser?.email ?? "username@gmail.com"
-            let username = userEmail.components(separatedBy: "@").first ?? "N/A"
-            let tempProfileImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
-            
-            let tempVM = MissionMainViewViewModel(profileImage: tempProfileImage,
-                                                  username: username,
-                                                  points: 10,
-                                                  maxPoints: 15,
-                                                  level: 1,
-                                                  numberOfMissions: 4,
-                                                  timeLeft: 12,
-                                                  dailyMissionCellVMList: [
-                                                    DailyMissionCollectionViewCellViewModel(
-                                                        missionTitle: "매일 6000보 걷기",
-                                                        missionImage: "https://i.seadn.io/gae/0Qx_dJjClFLvuYFGzVUpvrOyjMuWVZjyUAU7FPNHUkg2XQzhgEBrV2kTDD-k8l0RoUiEh3lT93dGRHmb_MA57vQ0z2ZI7AY06qM9qTs?auto=format&dpr=1&w=200",
-                                                        missionPoint: 1,
-                                                        missionCount: 15
-                                                    ),
-                                                    DailyMissionCollectionViewCellViewModel(
-                                                        missionTitle: "매일 6000보 걷기",
-                                                        missionImage: "https://i.seadn.io/gae/PYzUnkLUGXrZp0GHQvNSx8-UWdeus_UxkypDeXRWmroFRL_4eWbxm7LqJvQIUSUdXxHqNRSRWkyc_sWjFrPqAxzsgzY2f6be4x1b9Q?auto=format&dpr=1&w=200",
-                                                        missionPoint: 2,
-                                                        missionCount: 6
-                                                    ),
-                                                    DailyMissionCollectionViewCellViewModel(
-                                                        missionTitle: "매일 6000보 걷기",
-                                                        missionImage: "https://i.seadn.io/gae/hxqKVEpDu1GmI8OIVpUeQFdvqWd6HKUREfEt58lBvCBEtJrTgsIRKOk2UFYVUK8jvwz8ir6sEGir862LntFXXb_shyUXSkkTCagzfA?auto=format&dpr=1&w=200",
-                                                        missionPoint: 3,
-                                                        missionCount: 10
-                                                    )
-                                                  ]
-            )
-            let vc = MissionMainViewController(vm: tempVM)
-            self.addChildViewController(vc)
-            self.navigationController?.navigationBar.backgroundColor = .white
-            self.navigationItem.title = SideMenuConstants.mission
+            // TODO: Wallet VC
+            break
             
         case 2:
             let vm = RankingViewViewModel()
@@ -698,10 +687,8 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             self.navigationItem.title = RankingConstants.rank
             
         default:
-            let vc = EditUserInfoViewController()
-            
-            self.addChildViewController(vc)
-            self.navigationItem.title = SideMenuConstants.resetPassword
+            // TODO: Wallet VC
+            break
         }
         self.sideMenuVC?.dismiss(animated: true)
     }

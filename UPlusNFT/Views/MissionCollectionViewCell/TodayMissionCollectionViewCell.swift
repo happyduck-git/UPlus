@@ -19,21 +19,12 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    private let numberOfMissions: UILabel = {
-        let label = UILabel()
-        label.accessibilityIdentifier = "numberOfMissions"
-        label.textColor = .systemGray
-        label.font = .systemFont(ofSize: UPlusFont.head5)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+
     private let timeLabelcontainerView: UIView = {
         let view = UIView()
         view.accessibilityIdentifier = "TimeContainerView"
         view.clipsToBounds = true
-        view.backgroundColor = UPlusColor.grayBlue
+        view.backgroundColor = UPlusColor.grayMint
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -41,7 +32,7 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
     private let timeLabel: UILabel = {
         let label = UILabel()
         label.accessibilityIdentifier = "timeLabel"
-        label.textColor = .darkGray
+        label.textColor = UPlusColor.darkgrayMint
         label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -75,7 +66,6 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
 // MARK: - Configuration
 extension TodayMissionCollectionViewCell {
     func configure(with vm: MissionMainViewViewModel) {
-        self.numberOfMissions.text = String(describing: vm.numberOfMissions) + MissionConstants.missionUnit
         self.timeLabel.text = String(describing: vm.timeLeft) + MissionConstants.timeLeftSuffix
     }
 }
@@ -86,7 +76,6 @@ extension TodayMissionCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(
             missionLabel,
-            numberOfMissions,
             timeLabelcontainerView
         )
         self.timeLabelcontainerView.addSubview(timeLabel)
@@ -100,9 +89,6 @@ extension TodayMissionCollectionViewCell {
                                                   multiplier: 3.0),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.missionLabel.bottomAnchor,
                                          multiplier: 2.0),
-            
-            self.numberOfMissions.centerYAnchor.constraint(equalTo: self.missionLabel.centerYAnchor),
-            self.numberOfMissions.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionLabel.trailingAnchor, multiplier: 2.0),
             
             self.timeLabelcontainerView.centerYAnchor.constraint(equalTo: self.missionLabel.centerYAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.timeLabelcontainerView.trailingAnchor, multiplier: 2.0)

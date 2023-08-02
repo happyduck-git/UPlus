@@ -11,16 +11,16 @@ final class SideMenuViewViewModel {
     
     enum MenuType: Int, CaseIterable {
         case home
-        case mission
+        case wallet
         case rankBoard
-        case resetPassword
+        case notice
     }
     
     private let menuList: [MenuType: String] = [
-        .home: SFSymbol.circledPerson,
-        .mission: SFSymbol.mission,
-        .rankBoard: SFSymbol.medalFill,
-        .resetPassword: SFSymbol.medalFill
+        .home: ImageAsset.home,
+        .wallet: ImageAsset.wallet,
+        .rankBoard: ImageAsset.ranking,
+        .notice: ImageAsset.notice
     ]
     
     func numberOfMenu() -> Int {
@@ -32,12 +32,12 @@ final class SideMenuViewViewModel {
         switch type {
         case .home:
             key = SideMenuConstants.home
-        case .mission:
-            key = SideMenuConstants.mission
+        case .wallet:
+            key = SideMenuConstants.wallet
         case .rankBoard:
             key = SideMenuConstants.rankBoard
-        case .resetPassword:
-            key = SideMenuConstants.resetPassword
+        case .notice:
+            key = SideMenuConstants.notice
         }
         return [key: self.menuList[type] ?? "n/a"]
     }
@@ -56,8 +56,8 @@ final class SideMenuViewViewModel {
         switch type {
         case .home:
             key = SideMenuConstants.home
-        case .mission:
-            key = SideMenuConstants.mission
+        case .wallet:
+            key = SideMenuConstants.wallet
         case .rankBoard:
             key = SideMenuConstants.rankBoard
         default:

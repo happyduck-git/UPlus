@@ -86,9 +86,11 @@ struct PostConstants {
 
 struct SideMenuConstants {
     static let home: String = "홈"
-    static let mission: String = "미션"
+    static let wallet: String = "월렛"
     static let rankBoard: String = "랭킹 게시판"
+    static let notice: String = "공지사항"
     static let resetPassword: String = "비밀번호 수정"
+    static let logout: String = "로그아웃"
 }
 
 struct MyPageConstants {
@@ -162,11 +164,7 @@ struct SFSymbol {
     
     static let circledCheckmark: String = "checkmark.circle"
     static let circleFilledCheckmark: String = "checkmark.circle.fill"
-    
-    static let mission: String = "figure.baseball"
-    static let circledPerson: String = "person.crop.circle"
-    static let medalFill: String = "medal.fill"
-    static let point: String = "parkingsign.circle.fill"
+
 }
 
 struct ImageAsset {
@@ -181,6 +179,15 @@ struct ImageAsset {
     static let arrowHeadDown: String = "arrow-head-down"
     static let arrowHeadUp: String = "arrow-head-up"
     static let arrowHeadRight: String = "arrow-head-right"
+    
+    /* Side Menu */
+    static let home: String = "home-mint"
+    static let wallet: String = "wallet-mint"
+    static let ranking: String = "tropy-mint"
+    static let notice: String = "speaker-mint"
+    
+    /* HomeVC */
+    static let questionBox: String = "question-box"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }

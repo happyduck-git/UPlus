@@ -23,7 +23,8 @@ struct UPlusColor {
     static let mint = UIColor(hex: 0x48DED5)
     static let deepBlue = UIColor(hex: 0x759FDE)
     static let myPageTopBarBlue = UIColor(hex: 0xB8EDF6)
-    static let grayBlue = UIColor(hex: 0xE4EFF0)
+    static let grayMint = UIColor(hex: 0xC5D9DB)
+    static let darkgrayMint = UIColor(hex: 0x778C8E)
     
     static let navy = UIColor(hex: 0x245B99)
     

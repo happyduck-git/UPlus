@@ -31,7 +31,9 @@ class MissionCollectionViewHeader: UICollectionReusableView {
         button.clipsToBounds = true
         button.setTitle(MissionConstants.details, for: .normal)
         button.backgroundColor = .white
-        button.setTitleColor(.darkGray, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .medium)
+        button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
+        button.setTitleColor(.systemGray, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
