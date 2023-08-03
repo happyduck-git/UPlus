@@ -36,21 +36,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
         return label
     }()
-    
-    private let arrowButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.arrowHeadRight)?.withTintColor(UPlusColor.mint, renderingMode: .alwaysOriginal), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let visualEffectView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .light)
-        let visualEffectView = UIVisualEffectView(effect: blurEffect)
-        
-        return visualEffectView
-    }()
-    
+  
     private let openDateLabel: UILabel = {
         let label = UILabel()
         label.isHidden = true
@@ -78,7 +64,6 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.visualEffectView.removeFromSuperview()
         self.openDateLabel.isHidden = true
     }
     
@@ -97,13 +82,11 @@ extension WeeklyMissionCollectionViewCell {
                    openDate: String? = nil) {
         switch type {
         case .open:
-            self.visualEffectView.removeFromSuperview()
             self.missionTitle.text = title
             self.missionDescription.text = "참여기간: " + period
             // TODO: Point 원형 뱃지 텍스트에 포인트 추가
             self.openDateLabel.isHidden = true
         case .close:
-            self.addBlurEffect()
             self.addOpenDateLabel()
             
             self.missionTitle.text = title
@@ -116,8 +99,7 @@ extension WeeklyMissionCollectionViewCell {
 // MARK: - Set UI & Layout
 extension WeeklyMissionCollectionViewCell {
     private func setUI() {
-        self.contentView.addSubviews(self.titleStack,
-                                     self.arrowButton)
+        self.contentView.addSubviews(self.titleStack)
         self.titleStack.addArrangedSubviews(self.missionTitle,
                                             self.missionDescription)
     }
@@ -127,21 +109,12 @@ extension WeeklyMissionCollectionViewCell {
             self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
             self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 2),
-            
-            self.arrowButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.titleStack.trailingAnchor, multiplier: 2),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.arrowButton.trailingAnchor, multiplier: 2),
-            self.arrowButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleStack.trailingAnchor, multiplier: 2)
         ])
         
         self.missionDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
-    
-    private func addBlurEffect() {
-        visualEffectView.frame = self.contentView.bounds
-        self.contentView.backgroundColor = UPlusColor.blurGray.withAlphaComponent(0.8)
-        self.contentView.addSubview(visualEffectView)
-    }
-    
+
     private func addOpenDateLabel() {
         self.openDateLabel.isHidden = false
         self.contentView.addSubview(openDateLabel)

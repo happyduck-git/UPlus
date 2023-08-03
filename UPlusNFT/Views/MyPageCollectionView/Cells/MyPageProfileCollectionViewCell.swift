@@ -108,9 +108,9 @@ extension MyPageProfileCollectionViewCell {
         
         vm.$todayRank2
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
+            .sink { [weak self]_  in
                 guard let `self` = self else { return }
-                self.userMissionDataView.rankingButton.setTitle(String(describing: $0) + "위", for: .normal)
+//                self.userMissionDataView.rankingButton.setTitle(String(describing: $0) + "위", for: .normal)
             }
             .store(in: &bindings)
     }

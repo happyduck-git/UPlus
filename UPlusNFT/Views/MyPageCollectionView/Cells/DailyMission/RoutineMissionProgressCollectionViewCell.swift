@@ -23,6 +23,15 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let pointLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.blue
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let numberOfParticipation: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.green
@@ -34,7 +43,9 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         self.contentView.backgroundColor = .white
+        self.contentView.clipsToBounds = true
         self.setUI()
         self.setLayout()
     }
@@ -66,6 +77,12 @@ extension RoutineMissionProgressCollectionViewCell {
             }
             .store(in: &bindings)
         
+        vm.$routinePoint
+            .receive(on: DispatchQueue.main)
+            .sink {
+                self.pointLabel.text = String(describing: $0) + MissionConstants.pointUnit
+            }
+            .store(in: &bindings)
     }
 }
 
@@ -73,19 +90,22 @@ extension RoutineMissionProgressCollectionViewCell {
 extension RoutineMissionProgressCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.title,
-                         self.numberOfParticipation)
+                                     self.pointLabel,
+                                     self.numberOfParticipation)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.title.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 1),
             self.title.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.title.trailingAnchor, multiplier: 1),
+            self.pointLabel.topAnchor.constraint(equalTo: self.title.topAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 1),
+            self.pointLabel.bottomAnchor.constraint(equalTo: self.title.bottomAnchor),
             
             self.numberOfParticipation.topAnchor.constraint(equalToSystemSpacingBelow: self.title.bottomAnchor, multiplier: 1),
             self.numberOfParticipation.leadingAnchor.constraint(equalTo: self.title.leadingAnchor),
             self.numberOfParticipation.trailingAnchor.constraint(equalTo: self.title.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 1)
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 5)
         ])
         
         self.numberOfParticipation.setContentHuggingPriority(.defaultHigh, for: .vertical)

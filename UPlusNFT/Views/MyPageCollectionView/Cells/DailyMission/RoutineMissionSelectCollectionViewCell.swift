@@ -78,9 +78,9 @@ extension RoutineMissionSelectCollectionViewCell {
             self.decoImage.heightAnchor.constraint(equalTo: self.decoImage.widthAnchor),
             self.decoImage.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             
-            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 3),
             self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.decoImage.trailingAnchor, multiplier: 2),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 2),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 3),
             
             self.arrowButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.titleStack.trailingAnchor, multiplier: 2),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.arrowButton.trailingAnchor, multiplier: 2),

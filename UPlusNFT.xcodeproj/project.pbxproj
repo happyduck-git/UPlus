@@ -93,6 +93,7 @@
 		9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */; };
 		9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */; };
 		939194702A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */; };
+		939194722A7B22360035FEB1 /* DailyRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194712A7B22360035FEB1 /* DailyRankView.swift */; };
 		93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */; };
 		93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED802A6A54D900C2287D /* MyPageViewController.swift */; };
 		93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */; };
@@ -236,6 +237,7 @@
 		9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewController.swift; sourceTree = "<group>"; };
 		9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewModel.swift; sourceTree = "<group>"; };
 		9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionProgressCollectionViewCell.swift; sourceTree = "<group>"; };
+		939194712A7B22360035FEB1 /* DailyRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRankView.swift; sourceTree = "<group>"; };
 		93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED802A6A54D900C2287D /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -330,12 +332,12 @@
 			path = UserProfile;
 			sourceTree = "<group>";
 		};
-		2417A59F2A67C93800AEC530 /* SingUpView */ = {
+		2417A59F2A67C93800AEC530 /* SignUpView */ = {
 			isa = PBXGroup;
 			children = (
 				2417A5A02A67C96900AEC530 /* InformationInputView.swift */,
 			);
-			path = SingUpView;
+			path = SignUpView;
 			sourceTree = "<group>";
 		};
 		24542D562A70E8BF00F82CEA /* Loading */ = {
@@ -646,7 +648,7 @@
 			children = (
 				93A2ED982A6E1C8B00C2287D /* RankingView */,
 				93A2ED822A6A580300C2287D /* MyPageCollectionView */,
-				2417A59F2A67C93800AEC530 /* SingUpView */,
+				2417A59F2A67C93800AEC530 /* SignUpView */,
 				93E0138D2A6527D60005E342 /* MissionCollectionViewCell */,
 				932C34D02A53ADBA0032192A /* CampaignCollectionViewCell */,
 				249F59F82A530A71008CF6BE /* CampaignView */,
@@ -683,6 +685,7 @@
 				93A2ED852A6A5AB900C2287D /* Cells */,
 				93A2ED862A6A5ADE00C2287D /* UserMissionDataView.swift */,
 				93D174912A7796C100F5B1B1 /* UserProfileView.swift */,
+				939194712A7B22360035FEB1 /* DailyRankView.swift */,
 			);
 			path = MyPageCollectionView;
 			sourceTree = "<group>";
@@ -930,6 +933,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				939194722A7B22360035FEB1 /* DailyRankView.swift in Sources */,
 				932C34CB2A5254A70032192A /* Date+Extention.swift in Sources */,
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,

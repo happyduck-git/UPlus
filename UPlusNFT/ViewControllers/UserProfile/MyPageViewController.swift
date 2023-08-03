@@ -21,7 +21,7 @@ final class MyPageViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - Dynamic Constraints
-    private var initialHeight: CGFloat = 660
+    private var initialHeight: CGFloat = 680
     private var topOffset: CGFloat = 0.0
     private var initialTopOffset: CGFloat = 0.0
     private var isSet: Bool = false
@@ -30,6 +30,8 @@ final class MyPageViewController: UIViewController {
     private var heightConstraint: NSLayoutConstraint?
     
     // MARK: - UI Elements
+    private let loadingVC = LoadingViewController()
+    
     private let containerView: PassThroughView = {
         let view = PassThroughView()
         view.backgroundColor = UPlusColor.gradientMediumBlue
@@ -37,8 +39,8 @@ final class MyPageViewController: UIViewController {
         return view
     }()
     
-    private let shadowView: UIView = {
-        let view = UIView()
+    private let shadowView: PassThroughView = {
+        let view = PassThroughView()
         view.backgroundColor = .white
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 20)
@@ -429,7 +431,7 @@ extension MyPageViewController {
         
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.1)
+            heightDimension: .fractionalHeight(0.09)
         )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
@@ -548,19 +550,19 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             
             // Routine mission
         case 1:
-            //            if self.vm.savedMissionType == nil {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
-                fatalError()
+            if self.vm.savedMissionType == nil {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
+                    fatalError()
+                }
+                
+                return cell
+            } else {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
+                    fatalError()
+                }
+                cell.bind(with: self.vm)
+                return cell
             }
-            
-            return cell
-            //            } else {
-            //                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
-            //                    fatalError()
-            //                }
-            //                cell.bind(with: self.vm)
-            //                return cell
-            //            }
             
             // Weekly mission
         case 2:
@@ -640,12 +642,12 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             if let missionType = vm.savedMissionType {
                 let vm = DailyRoutineMissionDetailViewViewModel(missionType: missionType)
                 let vc = DailyRoutineMissionDetailViewController(vm: vm)
-                
+
                 self.show(vc, sender: self)
             } else {
                 let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
                 vc.modalPresentationStyle = .overCurrentContext
-                
+                vc.delegate = self
                 self.present(vc, animated: false)
             }
             
@@ -697,5 +699,22 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
 extension MyPageViewController: MissionHistoryButtonCollectionViewCellDelegate {
     func showMissionButtonDidTap(isOpened: Bool) {
         self.vm.isHistorySectionOpened = isOpened
+    }
+}
+
+extension MyPageViewController: RoutineSelectBottomSheetViewControllerDelegate {
+    func routineSelected() {
+        self.addChildViewController(self.loadingVC)
+        
+        Task {
+
+            await self.vm.getSelectedRoutine()
+            
+            DispatchQueue.main.async {
+                self.loadingVC.removeViewController()
+                guard let collection = self.collectionView else { return }
+                collection.reloadSections(IndexSet(integer: 1))
+            }
+        }
     }
 }

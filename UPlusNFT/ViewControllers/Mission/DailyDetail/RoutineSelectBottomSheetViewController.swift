@@ -9,10 +9,17 @@ import UIKit
 import FirebaseFirestore
 import Combine
 
+protocol RoutineSelectBottomSheetViewControllerDelegate: AnyObject {
+    func routineSelected()
+}
+
 final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
     
     // MARK: - Dependency
     private let vm: MyPageViewViewModel
+    
+    // MARK: - Delegate
+    weak var delegate: RoutineSelectBottomSheetViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -164,7 +171,13 @@ extension RoutineSelectBottomSheetViewController {
                     guard let `self` = self,
                           let selectedMission = self.vm.selectedMission
                     else { return }
-                    self.vm.saveSelectedMission(selectedMission)
+                    
+                    Task {
+                        await self.vm.saveSelectedMission(selectedMission)
+                        self.dismiss(animated: true)
+                        self.delegate?.routineSelected()
+                    }
+                    
                 }
                 .store(in: &bindings)
         }

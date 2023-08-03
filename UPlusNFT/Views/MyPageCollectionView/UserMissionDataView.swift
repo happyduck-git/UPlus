@@ -7,13 +7,58 @@
 
 import UIKit
 
-class UserMissionDataView: UIView {
+final class UserMissionDataView: PassThroughView {
 
+    private let levelTitle: UILabel = {
+        let label = UILabel()
+        label.text = "일반인"
+        label.textColor = UPlusColor.greenNavy
+        label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let infoButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
+        button.setTitle("레벨 등급 안내", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .regular)
+        button.setTitleColor(.systemGray, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let levelLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Lv.1"
+        label.textColor = UPlusColor.gradientDeepBlue
+        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let pointImage: UIImageView = {
+       let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.point)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let pointLabel: UILabel = {
+        let label = UILabel()
+        label.text = "0/480"
+        label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
+        label.textColor = UPlusColor.deepGreen
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let levelDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "다음 레벨까지 3P 남았어요"
+        label.text = "다음 레벨 업까지 120P"
         label.font = .systemFont(ofSize: UPlusFont.subTitle3)
-        label.textColor = UPlusColor.pointCirclePink
+        label.textColor = UPlusColor.lightGreen
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -22,77 +67,20 @@ class UserMissionDataView: UIView {
         let bar = UIProgressView()
         bar.clipsToBounds = true
         bar.progressViewStyle = .default
-        bar.progressTintColor = UPlusColor.pointCirclePink
-        bar.trackTintColor = .systemGray
+        bar.progressTintColor = UPlusColor.mint
+        bar.trackTintColor = UPlusColor.gageBarBackgroudBlue
         bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()
-    
-    private let pointImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.pointSticker)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let pointLabel: UILabel = {
-        let label = UILabel()
-        label.text = "12"
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
-        label.textColor = UPlusColor.pointCirclePink
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let rankingView: UIView = {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGray4
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let rankStackView: UIStackView = {
-       let stack = UIStackView()
-        stack.distribution = .fillProportionally
-        stack.axis = .horizontal
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-    
-    private let rankingTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "일일랭킹"
-        label.textColor = UPlusColor.rankYellow
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let rankingImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.trophy)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    let rankingButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("13위", for: .normal)
-        button.setTitleColor(UPlusColor.rankBrown, for: .normal)
-        button.semanticContentAttribute = .forceRightToLeft
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+
     
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = UPlusColor.lightBlue
+        self.backgroundColor = UPlusColor.lightBlue.withAlphaComponent(0.5)
         self.layer.borderColor = UIColor.white.cgColor
-        self.layer.borderWidth = 8.0
+        self.layer.borderWidth = 5.0
         self.setUI()
         self.setLayout()
 
@@ -105,9 +93,7 @@ class UserMissionDataView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.levelProgressBar.setProgress(0.7, animated: true)
-        DispatchQueue.main.async {
-            self.rankingView.layer.cornerRadius = self.rankingView.frame.height / 2
-        }
+        
     }
     
 }
@@ -115,55 +101,46 @@ class UserMissionDataView: UIView {
 extension UserMissionDataView {
     func configure(vm: MyPageViewViewModel) {
         self.pointLabel.text = String(describing: vm.user.userTotalPoint ?? 0)
-        self.rankingButton.setTitle(String(describing: vm.todayRank) + "위", for: .normal)
     }
 }
 
 extension UserMissionDataView {
     private func setUI() {
-        self.addSubviews(levelDescriptionLabel,
-                         levelProgressBar,
-                         pointImageView,
+        self.addSubviews(levelTitle,
+                         infoButton,
+                         levelLabel,
+                         pointImage,
                          pointLabel,
-                         rankingView)
-        self.rankingView.addSubview(rankStackView)
-        self.rankStackView.addArrangedSubviews(rankingTitleLabel,
-                                               rankingImageView,
-                                               rankingButton)
+                         levelDescriptionLabel,
+                         levelProgressBar)
     }
     
     private func setLayout() {
     
         NSLayoutConstraint.activate([
-            self.levelDescriptionLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 2),
-            self.levelDescriptionLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.levelDescriptionLabel.trailingAnchor, multiplier: 2),
+            self.levelTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 2),
+            self.levelTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
+            self.infoButton.topAnchor.constraint(equalTo: self.levelTitle.topAnchor),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.infoButton.trailingAnchor, multiplier: 2),
             
-            self.levelProgressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.levelDescriptionLabel.bottomAnchor, multiplier: 2),
-            self.levelProgressBar.leadingAnchor.constraint(equalTo: self.levelDescriptionLabel.leadingAnchor),
-            self.levelProgressBar.trailingAnchor.constraint(equalTo: self.levelDescriptionLabel.trailingAnchor),
-           
-            self.pointImageView.leadingAnchor.constraint(equalTo: self.levelDescriptionLabel.leadingAnchor),
-            self.pointImageView.widthAnchor.constraint(equalTo: self.pointImageView.heightAnchor),
-            self.pointImageView.centerYAnchor.constraint(equalTo: self.rankingView.centerYAnchor),
+            self.levelLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.levelTitle.bottomAnchor, multiplier: 1),
+            self.levelLabel.leadingAnchor.constraint(equalTo: self.levelTitle.leadingAnchor),
             
-            self.pointLabel.centerYAnchor.constraint(equalTo: self.rankingView.centerYAnchor),
-            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointImageView.trailingAnchor, multiplier: 1),
+            self.pointImage.topAnchor.constraint(equalToSystemSpacingBelow: self.levelLabel.bottomAnchor, multiplier: 1),
+            self.pointImage.leadingAnchor.constraint(equalTo: self.levelTitle.leadingAnchor),
+            self.pointLabel.topAnchor.constraint(equalTo: self.pointImage.topAnchor),
+            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointImage.trailingAnchor, multiplier: 1),
+            self.levelDescriptionLabel.topAnchor.constraint(equalTo: self.pointImage.topAnchor),
+            self.levelDescriptionLabel.trailingAnchor.constraint(equalTo: self.infoButton.trailingAnchor),
             
-            self.rankingView.topAnchor.constraint(equalToSystemSpacingBelow: self.levelProgressBar.bottomAnchor, multiplier: 2),
-            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.rankingView.bottomAnchor, multiplier: 2),
-            self.rankingView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 5),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rankingView.trailingAnchor, multiplier: 8)
+            self.levelProgressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.levelDescriptionLabel.bottomAnchor, multiplier: 1),
+            self.levelProgressBar.leadingAnchor.constraint(equalTo: self.levelTitle.leadingAnchor),
+            self.levelProgressBar.trailingAnchor.constraint(equalTo: self.infoButton.trailingAnchor),
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelProgressBar.bottomAnchor, multiplier: 2)
         ])
-        
-        NSLayoutConstraint.activate([
-            self.rankStackView.topAnchor.constraint(equalToSystemSpacingBelow: self.rankingView.topAnchor, multiplier: 1),
-            self.rankStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.rankingView.leadingAnchor, multiplier: 1),
-            self.rankingView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rankStackView.trailingAnchor, multiplier: 1),
-            self.rankingView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.rankStackView.bottomAnchor, multiplier: 1)
-        ])
-        
-        self.levelProgressBar.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//        self.levelTitle.setContentHuggingPriority(.defaultHigh, for: .vertical)
+//        self.levelLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.levelProgressBar.setContentHuggingPriority(.defaultLow, for: .vertical)
     }
 
 }

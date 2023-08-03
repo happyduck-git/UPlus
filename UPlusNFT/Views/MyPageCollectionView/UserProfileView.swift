@@ -9,7 +9,7 @@ import UIKit
 import Nuke
 import Combine
 
-final class UserProfileView: UIView {
+final class UserProfileView: PassThroughView {
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -36,24 +36,17 @@ final class UserProfileView: UIView {
         return label
     }()
     
-    private let levelLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Lv.1"
-        label.textColor = UPlusColor.pointGagePink
-        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let infoButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let dailyRankView: DailyRankView = {
+       let view = DailyRankView()
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let userMissionDataView: UserMissionDataView = {
         let view = UserMissionDataView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -79,7 +72,6 @@ final class UserProfileView: UIView {
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
         self.setGradientLayer()
-        
     }
 
 }
@@ -115,9 +107,9 @@ extension UserProfileView {
         
         vm.$todayRank2
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
+            .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                self.userMissionDataView.rankingButton.setTitle(String(describing: $0) + "위", for: .normal)
+//                self.userMissionDataView.rankingButton.setTitle(String(describing: $0) + "위", for: .normal)
             }
             .store(in: &bindings)
     }
@@ -134,8 +126,7 @@ extension UserProfileView {
     private func setUI() {
         self.addSubviews(profileImage,
                          usernameLabel,
-                         levelLabel,
-                         infoButton,
+                         dailyRankView,
                          userMissionDataView)
     }
     
@@ -148,15 +139,14 @@ extension UserProfileView {
 
             self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 4),
             self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
-            self.levelLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 1),
-            self.levelLabel.bottomAnchor.constraint(equalTo: self.usernameLabel.bottomAnchor),
-            
-            self.infoButton.centerYAnchor.constraint(equalTo: self.usernameLabel.centerYAnchor),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.infoButton.trailingAnchor, multiplier: 2),
+           
+            self.dailyRankView.topAnchor.constraint(equalTo: self.usernameLabel.topAnchor),
+            self.dailyRankView.bottomAnchor.constraint(equalTo: self.usernameLabel.bottomAnchor),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.dailyRankView.trailingAnchor, multiplier: 2),
             
             self.userMissionDataView.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 2),
             self.userMissionDataView.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor),
-            self.userMissionDataView.trailingAnchor.constraint(equalTo: self.infoButton.trailingAnchor),
+            self.userMissionDataView.trailingAnchor.constraint(equalTo: self.dailyRankView.trailingAnchor),
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.userMissionDataView.bottomAnchor, multiplier: 4)
         ])
         
@@ -167,6 +157,7 @@ extension UserProfileView {
         
         DispatchQueue.main.async {
             self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
+            self.dailyRankView.layer.cornerRadius = self.dailyRankView.frame.height / 2
         }
     }
 }
