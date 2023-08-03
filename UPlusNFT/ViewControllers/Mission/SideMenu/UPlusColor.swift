@@ -39,6 +39,7 @@ struct UPlusColor {
     
     static let greenMint = UIColor(hex: 0x59E3C2)
     static let lightGreen = UIColor(hex: 0x20A19B)
+    static let lightGreen2 = UIColor(hex: 0x27A79F)
     static let green = UIColor(hex: 0x2F9A94)
     static let deepGreen = UIColor(hex: 0x337C79)
 }

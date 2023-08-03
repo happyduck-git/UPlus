@@ -639,7 +639,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 1:
-            if let missionType = vm.savedMissionType {
+            if let missionType = self.vm.savedMissionType {
                 let vm = DailyRoutineMissionDetailViewViewModel(missionType: missionType)
                 let vc = DailyRoutineMissionDetailViewController(vm: vm)
 
@@ -650,7 +650,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 vc.delegate = self
                 self.present(vc, animated: false)
             }
+        case 2:
+            let vm = WeeklyMissionOverViewViewModel()
+            let vc = WeeklyMissionOverViewViewController(vm: vm)
             
+            self.present(vc, animated: true)
         default:
             break
         }

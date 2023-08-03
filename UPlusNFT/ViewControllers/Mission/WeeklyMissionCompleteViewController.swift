@@ -96,13 +96,14 @@ extension WeeklyMissionCompleteViewController {
                 // TODO: 정답인 경우 firestore 저장
                 Task {
                     do {
+                        let user = try UPlusUser.getCurrentUser()
                         // 1. user 참여 document array item append
                     
                         // 2. mission 내 mission_user_state_map에 저장
                         print("PostId: \(self.vm.dataSource.postId ?? "n/a")")
                         try await self.firestoreManager.saveUserState(postId: self.vm.dataSource.postId ?? "n/a",
-                                                            userIndex: 0,
-                                                            state: .successed)
+                                                                      userIndex: user.userIndex,
+                                                                      state: .successed)
                     }
                     catch {
                         print("")

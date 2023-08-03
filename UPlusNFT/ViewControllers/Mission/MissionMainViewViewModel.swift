@@ -56,9 +56,6 @@ final class MissionMainViewViewModel {
     /* Long Term Mission Section */
     let longTermMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
     
-    /* Sudden Mission Section */
-    @Published var suddenMissions: [SuddenMission] = []
-    
     init(profileImage: String,
          username: String,
          points: Int64,
@@ -80,6 +77,7 @@ final class MissionMainViewViewModel {
     
 }
 
+/* NOT IN USE */
 // MARK: - Fetch Data from Firestore
 extension MissionMainViewViewModel {
     
@@ -113,16 +111,5 @@ extension MissionMainViewViewModel {
             }
         }
     }
-    
-    func getSuddenMission() {
-        Task {
-            do {
-                self.suddenMissions = try await self.firestoreManager.getSuddenMission()
-            }
-            catch {
-                print("Error fetching Sudden Missions -- \(error)")
-            }
-        }
-    }
-  
+
 }

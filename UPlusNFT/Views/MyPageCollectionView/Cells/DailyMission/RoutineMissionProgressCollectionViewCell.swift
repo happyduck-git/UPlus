@@ -46,6 +46,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
         
         self.contentView.backgroundColor = .white
         self.contentView.clipsToBounds = true
+        self.contentView.layer.cornerRadius = 30
         self.setUI()
         self.setLayout()
     }

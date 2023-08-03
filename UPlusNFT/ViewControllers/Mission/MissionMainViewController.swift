@@ -42,7 +42,6 @@ class MissionMainViewController: UIViewController {
         self.setDelegate()
         
         self.vm.getWeeklyMission()
-        self.vm.getSuddenMission()
         self.bind()
     }
 
@@ -81,14 +80,6 @@ extension MissionMainViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     self.collectionView?.reloadSections(IndexSet(integer: 2))
-                }
-                .store(in: &bindings)
-            
-            self.vm.$suddenMissions
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
-                    guard let `self` = self else { return }
-                    self.collectionView?.reloadSections(IndexSet(integer: 4))
                 }
                 .store(in: &bindings)
             

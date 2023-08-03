@@ -94,6 +94,9 @@
 		9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */; };
 		939194702A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */; };
 		939194722A7B22360035FEB1 /* DailyRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194712A7B22360035FEB1 /* DailyRankView.swift */; };
+		939194742A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194732A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift */; };
+		939194762A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194752A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift */; };
+		939194782A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194772A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift */; };
 		93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */; };
 		93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED802A6A54D900C2287D /* MyPageViewController.swift */; };
 		93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */; };
@@ -238,6 +241,9 @@
 		9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewModel.swift; sourceTree = "<group>"; };
 		9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionProgressCollectionViewCell.swift; sourceTree = "<group>"; };
 		939194712A7B22360035FEB1 /* DailyRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRankView.swift; sourceTree = "<group>"; };
+		939194732A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewViewController.swift; sourceTree = "<group>"; };
+		939194752A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewViewModel.swift; sourceTree = "<group>"; };
+		939194772A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewTableViewHeader.swift; sourceTree = "<group>"; };
 		93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED802A6A54D900C2287D /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -728,6 +734,8 @@
 				93E013AF2A6909A10005E342 /* WeeklyChoiceQuizMissionDetailViewController.swift */,
 				93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */,
 				93E013B12A690E9A0005E342 /* WeeklyMissionDetailViewViewModel.swift */,
+				939194732A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift */,
+				939194752A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift */,
 			);
 			path = WeeklyDetail;
 			sourceTree = "<group>";
@@ -806,6 +814,7 @@
 				93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */,
 				24542D4C2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift */,
 				93D1748F2A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift */,
+				939194772A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift */,
 			);
 			path = MissionCollectionViewCell;
 			sourceTree = "<group>";
@@ -960,6 +969,7 @@
 				936F882D2A4D0C710062E759 /* WritePostViewController.swift in Sources */,
 				24542D602A7113BD00F82CEA /* TotalRankCollectionViewCell.swift in Sources */,
 				93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */,
+				939194742A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift in Sources */,
 				93E013AC2A68C2350005E342 /* GoodWorkerMission.swift in Sources */,
 				93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */,
 				2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */,
@@ -991,6 +1001,7 @@
 				249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */,
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
+				939194782A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift in Sources */,
 				939194702A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift in Sources */,
 				24DB21812A77F54C00AE0174 /* PassThroughView.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
@@ -1039,6 +1050,7 @@
 				247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
 				932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */,
+				939194762A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift in Sources */,
 				244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */,
 				93A2ED952A6E12A000C2287D /* UPlusUser.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
