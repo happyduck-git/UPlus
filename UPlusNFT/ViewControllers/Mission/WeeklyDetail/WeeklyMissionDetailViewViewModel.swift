@@ -11,6 +11,7 @@ import Combine
 final class WeeklyMissionDetailViewViewModel {
     
     let dataSource: WeeklyQuizMission
+    let numberOfWeek: Int
     
     /* Choice Quiz */
     @Published var circleButtonDidTap: Bool = false
@@ -22,8 +23,10 @@ final class WeeklyMissionDetailViewViewModel {
     @Published var textExists: Bool = false
     
     
-    init(dataSource: WeeklyQuizMission) {
+    init(dataSource: WeeklyQuizMission,
+         numberOfWeek: Int) {
         self.dataSource = dataSource
+        self.numberOfWeek = numberOfWeek
     }
     
 }

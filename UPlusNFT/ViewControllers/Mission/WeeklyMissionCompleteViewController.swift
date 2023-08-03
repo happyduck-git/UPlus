@@ -93,20 +93,28 @@ extension WeeklyMissionCompleteViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
+                
+                let dataSource = self.vm.dataSource
+                guard let questionId = dataSource.postId,
+                      let missionType = MissionType(rawValue: dataSource.missionSubTopicType) else {
+                    return
+                }
                 // TODO: 정답인 경우 firestore 저장
                 Task {
                     do {
                         let user = try UPlusUser.getCurrentUser()
-                        // 1. user 참여 document array item append
-                    
-                        // 2. mission 내 mission_user_state_map에 저장
-                        print("PostId: \(self.vm.dataSource.postId ?? "n/a")")
-                        try await self.firestoreManager.saveUserState(postId: self.vm.dataSource.postId ?? "n/a",
-                                                                      userIndex: user.userIndex,
-                                                                      state: .successed)
+  
+                        try await self.firestoreManager
+                            .saveParticipatedMission(userIndex: user.userIndex,
+                                                     questionId: questionId,
+                                                     week: self.vm.numberOfWeek,
+                                                     date: Date().yearMonthDateFormat,
+                                                     missionType: missionType,
+                                                     point: dataSource.missionRewardPoint,
+                                                     state: .successed)
                     }
                     catch {
-                        print("")
+                        print("Error saving mission and user data -- \(error)")
                     }
                 }
             }

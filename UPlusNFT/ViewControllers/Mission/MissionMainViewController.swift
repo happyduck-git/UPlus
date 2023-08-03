@@ -421,7 +421,9 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 2:
-            let vm = WeeklyMissionDetailViewViewModel(dataSource: self.vm.weeklyMissions[indexPath.item])
+            
+            let vm = WeeklyMissionDetailViewViewModel(dataSource: self.vm.weeklyMissions[indexPath.item],
+                                                      numberOfWeek: 1)
             
             switch vm.dataSource.missionFormatType {
             case MissionFormatType.choiceQuiz.rawValue:

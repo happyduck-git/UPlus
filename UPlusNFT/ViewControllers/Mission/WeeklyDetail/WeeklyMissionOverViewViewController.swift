@@ -121,7 +121,8 @@ extension WeeklyMissionOverViewViewController {
         let vm = self.vm.missions[indexPath.row]
         let missionType = MissionFormatType(rawValue: vm.missionFormatType)
         
-        let cellVM = WeeklyMissionDetailViewViewModel(dataSource: vm)
+        let cellVM = WeeklyMissionDetailViewViewModel(dataSource: vm,
+                                                      numberOfWeek: self.vm.numberOfWeek)
         self.navigationController?.modalPresentationStyle = .overCurrentContext
         
         switch missionType {

@@ -95,7 +95,7 @@ extension FirestoreManager {
         let today = Date()
         
         let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
-            .whereField("user_point_time", isEqualTo: today.yearMonthDateFormat)
+            .whereField("user_point_time", isEqualTo: today.yearMonthDateWithDashFormat)
             .order(by: "user_point_count", descending: true)
             .getDocuments()
             .documents
@@ -118,7 +118,7 @@ extension FirestoreManager {
         let today = Date()
         
         let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
-            .whereField("user_point_time", isEqualTo: today.yearMonthDateFormat)
+            .whereField("user_point_time", isEqualTo: today.yearMonthDateWithDashFormat)
             .order(by: "user_point_count", descending: true)
             .getDocuments()
             .documents
@@ -277,8 +277,73 @@ extension FirestoreManager {
     }
     
 }
+
 /* uplus_missions_v3 - Setters */
 extension FirestoreManager {
+    
+    /// When a user submitted a mission answer, save data to related documents.
+    /// - Parameters:
+    ///   - userIndex: User index.
+    ///   - questionId: Question document id.
+    ///   - week: Number of current week.
+    ///   - date: YYYYmmdd format date string.
+    ///   - missionType: Mission type.
+    ///   - point: Point the user gets from the mission.
+    ///   - state: Mission completion state.
+    func saveParticipatedMission(userIndex: Int64,
+                                 questionId: String,
+                                 week: Int,
+                                 date: String,
+                                 missionType: MissionType,
+                                 point: Int64,
+                                 state: MissionAnswerState) async throws {
+        
+        let batch = self.db.batch()
+        
+        // 1. Save to missions collection
+        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let missionDocPath = threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(weekCollection)
+            .document(questionId)
+        
+        batch.setData(
+            [
+                String(describing: userIndex): state.rawValue
+            ],
+            forDocument: missionDocPath,
+            merge: true)
+        
+        // 2. Save to user_type_mission_array_map
+        let userDocPath = threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+        
+        batch.setData(
+            [
+                FirestoreConstants.userTotalPoint: FieldValue.increment(point),
+                FirestoreConstants.userTypeMissionArrayMap: [
+                    missionType.rawValue: missionDocPath
+                ]
+            ],
+            forDocument: userDocPath,
+            merge: true)
+        
+        let pointHistoryDocPath = userDocPath.collection(FirestoreConstants.userPointHistory)
+            .document(date)
+        // 3. Save to user_point_history
+        batch.setData(
+            [
+                FirestoreConstants.userPointCount: FieldValue.increment(point),
+                FirestoreConstants.userPointMissions: FieldValue.arrayUnion([missionDocPath]),
+                FirestoreConstants.userPointTime: date
+            ],
+            forDocument: pointHistoryDocPath,
+            merge: true)
+        
+        try await batch.commit()
+    }
     
     func saveDailyMissionPhoto(userIndex: Int64,
                                missionType: MissionType,
@@ -428,17 +493,6 @@ extension FirestoreManager {
         return users
     }
     
-    // MARK: - Setters
-    func saveUserState(postId: String,
-                       userIndex: Int64,
-                       state: MissionAnswerState) async throws {
-        
-        try await threadsSetCollectionPath2
-            .document(FirestoreConstants.missions)
-            .collection(FirestoreConstants.dailyAttendanceMission)
-            .document(postId)
-            .updateData([FirestoreConstants.missionUserStateMap : [userIndex: state.rawValue]])
-    }
 }
 
 

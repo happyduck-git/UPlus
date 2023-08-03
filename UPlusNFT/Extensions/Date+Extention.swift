@@ -14,7 +14,7 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
-    var yearMonthDateFormat: String {
+    var yearMonthDateWithDashFormat: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.string(from: self)
@@ -25,4 +25,9 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    var yearMonthDateFormat: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        return dateFormatter.string(from: self)
+    }
 }
