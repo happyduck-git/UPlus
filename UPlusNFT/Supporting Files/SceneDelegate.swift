@@ -11,13 +11,13 @@ import FirebaseFirestore
 import OSLog
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     private let logger = Logger()
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - Window Cycle
     var window: UIWindow?
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -25,69 +25,37 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.overrideUserInterfaceStyle = .light
         
-        /* Checking DailyRoutineDetailVC */
-        /*
-        let vm = DailyRoutineMissionDetailViewViewModel()
-        let vc = DailyRoutineMissionDetailViewController(vm: vm)
-        
-        window?.rootViewController = UINavigationController(rootViewController: vc)
-        */
-        
-        if Auth.auth().currentUser != nil {
+        if let user = Auth.auth().currentUser {
             logger.info("User is logged in.")
-
-            setBasicUserInfo()
-
-            let loginVM = LoginViewViewModel()
-            let loginVC = LoginViewController(vm: loginVM)
-
-            guard let data = UserDefaults.standard.object(forKey: UserDefaultsConstants.currentUser) as? Data,
-                  let user = try? JSONDecoder().decode(UPlusUser.self, from: data)
-            else {
-                print("Error getting saved user info from UserDefaults")
-                return
+            
+            Task {
+                await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
+                let userInfo = try UPlusUser.getCurrentUser()
+                let nft = await self.getMemberNft(userIndex: userInfo.userIndex,
+                                            isVip: userInfo.userHasVipNft)
+                
+                let loginVM = LoginViewViewModel()
+                let loginVC = LoginViewController(vm: loginVM)
+                
+                let missionVM = MissionMainViewViewModel(profileImage: nft,
+                                                      username: userInfo.userNickname,
+                                                      points: userInfo.userTotalPoint ?? 0,
+                                                      maxPoints: 15,
+                                                      level: 1,
+                                                      numberOfMissions: Int64(userInfo.userTypeMissionArrayMap?.values.count ?? 0),
+                                                      timeLeft: 12)
+                
+                let vm = MyPageViewViewModel(user: userInfo,
+                                             isJustRegistered: false,
+                                             isVip: userInfo.userHasVipNft,
+                                             todayRank: UPlusServiceInfoConstant.totalMembers,
+                                             missionViewModel: missionVM)
+                let myPageVC = MyPageViewController(vm: vm)
+                
+                loginVC.navigationController?.addChild(myPageVC)
+                window?.rootViewController = UINavigationController(rootViewController: myPageVC)
             }
-            // NOTE: Temporary cell view model.
-            let userEmail = Auth.auth().currentUser?.email ?? "username@gmail.com"
-            let username = userEmail.components(separatedBy: "@").first ?? "N/A"
-            let tempProfileImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
-            let tempVM = MissionMainViewViewModel(profileImage: tempProfileImage,
-                                                  username: username,
-                                                  points: 10,
-                                                  maxPoints: 15,
-                                                  level: 1,
-                                                  numberOfMissions: 4,
-                                                  timeLeft: 12,
-                                                  dailyMissionCellVMList: [
-                                                    DailyMissionCollectionViewCellViewModel(
-                                                        missionTitle: "매일 6000보 걷기",
-                                                        missionImage: "https://i.seadn.io/gae/0Qx_dJjClFLvuYFGzVUpvrOyjMuWVZjyUAU7FPNHUkg2XQzhgEBrV2kTDD-k8l0RoUiEh3lT93dGRHmb_MA57vQ0z2ZI7AY06qM9qTs?auto=format&dpr=1&w=200",
-                                                        missionPoint: 1,
-                                                        missionCount: 15
-                                                    ),
-                                                    DailyMissionCollectionViewCellViewModel(
-                                                        missionTitle: "매일 6000보 걷기",
-                                                        missionImage: "https://i.seadn.io/gae/PYzUnkLUGXrZp0GHQvNSx8-UWdeus_UxkypDeXRWmroFRL_4eWbxm7LqJvQIUSUdXxHqNRSRWkyc_sWjFrPqAxzsgzY2f6be4x1b9Q?auto=format&dpr=1&w=200",
-                                                        missionPoint: 2,
-                                                        missionCount: 6
-                                                    ),
-                                                    DailyMissionCollectionViewCellViewModel(
-                                                        missionTitle: "매일 6000보 걷기",
-                                                        missionImage: "https://i.seadn.io/gae/hxqKVEpDu1GmI8OIVpUeQFdvqWd6HKUREfEt58lBvCBEtJrTgsIRKOk2UFYVUK8jvwz8ir6sEGir862LntFXXb_shyUXSkkTCagzfA?auto=format&dpr=1&w=200",
-                                                        missionPoint: 3,
-                                                        missionCount: 10
-                                                    )
-                                                  ]
-            )
             
-            
-            let vm = MyPageViewViewModel(user: user,
-                                         todayRank: UPlusServiceInfoConstant.totalMembers,
-                                         missionViewModel: tempVM)
-            let myPageVC = MyPageViewController(vm: vm)
-
-            loginVC.navigationController?.addChild(myPageVC)
-            window?.rootViewController = UINavigationController(rootViewController: myPageVC)
             
         } else {
             logger.info("User is not logged in.")
@@ -95,48 +63,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let loginVC = LoginViewController(vm: loginVM)
             window?.rootViewController = UINavigationController(rootViewController: loginVC)
         }
-          
-        /*
-        // Check SignupCompelete VC
-        let vm = SignUpViewViewModel()
-        vm.welcomeNftImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200" //Temp
-        let vc = SignUpCompleteViewController(vm: vm)
-        
-        window?.rootViewController = UINavigationController(rootViewController: vc)
-        */
         
         window?.makeKeyAndVisible()
         
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
     }
-
+    
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
     }
-
+    
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
     }
-
+    
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
     }
-
+    
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         /// 이메일에서 sigin in 확인 후 앱으로 돌아온 후
         guard let webpageURL = userActivity.webpageURL else { return }
@@ -147,33 +106,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
     }
-
+    
 }
 
-/// Save basic user login information.
 extension SceneDelegate {
-    private func setBasicUserInfo() {
-        Task {
-            do {
-                let userEmail = Auth.auth().currentUser?.email ?? FirestoreConstants.noUserEmail
-                let currentUser = try await firestoreManager.getCurrentUserInfo(email: userEmail)
-                
-                if let encodedUserData = try? JSONEncoder().encode(currentUser) {
-                    UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
-                    print("User Info Result: \(currentUser)")
-                } else {
-                    print("Error encoding user data")
-                }
-
-            }
-            catch {
-                switch error {
-                case FirestoreErorr.userNotFound:
-                    print("User not found -- \(error)")
-                default:
-                    print("Error fetching user -- \(error)")
-                }
+    /// Save basic user login information.
+    private func setBasicUserInfo(email: String) async {
+        do {
+            try await UPlusUser.saveCurrentUser(email: email)
+        }
+        catch {
+            switch error {
+            case FirestoreError.userNotFound:
+                print("User not found -- \(error)")
+            default:
+                print("Error fetching user -- \(error)")
             }
         }
     }
+    
+    /// Get holding nft url string.
+    private func getMemberNft(userIndex: Int64, isVip: Bool) async -> String {
+        do {
+            return try await self.firestoreManager.getMemberNft(userIndex: userIndex,
+                                               isVip: isVip)
+        }
+        catch {
+            print("Error fetching hold nft -- \(error)")
+            return String()
+        }
+        
+    }
+    
 }

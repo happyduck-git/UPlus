@@ -7,11 +7,16 @@
 
 import UIKit
 import FirebaseAuth
+import Combine
+import Nuke
 
-class SignUpCompleteViewController: UIViewController {
+final class SignUpCompleteViewController: UIViewController {
 
     //MARK: - Dependency
-    private let vm: SignUpViewViewModel
+    private let vm: SignUpCompleteViewViewModel
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
     private let greetingsLabel: UILabel = {
@@ -35,6 +40,7 @@ class SignUpCompleteViewController: UIViewController {
     
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .systemGray2
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -61,7 +67,7 @@ class SignUpCompleteViewController: UIViewController {
     }()
     
     //MARK: - Init
-    init(vm: SignUpViewViewModel) {
+    init(vm: SignUpCompleteViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
     }
@@ -77,20 +83,55 @@ class SignUpCompleteViewController: UIViewController {
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
-        self.configure(with: vm)
         self.setNavigationItem()
+        
+        self.bind()
     }
 
 }
 
 //MARK: - Private
 extension SignUpCompleteViewController {
-    @objc func welcomeDidTap() {
-        self.dismiss(animated: true)
+    @objc func cancelBtnDidTap() {
+        self.navigationController?.popViewController(animated: true)
         
-//        let vc = MyPageViewController()
-//        self.navigationController?.modalPresentationStyle = .fullScreen
-//        self.show(vc, sender: self)
+        do {
+            let user = try UPlusUser.getCurrentUser()
+            
+            guard let nftImage = self.vm.welcomeNftImage,
+                  let nickname = self.vm.nickname
+            else { return }
+            
+            let missionVM = MissionMainViewViewModel(profileImage: nftImage,
+                                                     username: nickname,
+                                                     points: user.userTotalPoint ?? 0,
+                                                     maxPoints: 15, // TODO: Level up까지 필요한 포인트
+                                                     level: 1, // TODO: 현재 Level
+                                                     numberOfMissions: Int64(user.userTypeMissionArrayMap?.values.count ?? 0),
+                                                     timeLeft: 12)
+
+
+            let vm = MyPageViewViewModel(user: user,
+                                         isJustRegistered: true,
+                                         isVip: user.userHasVipNft,
+                                         todayRank: UPlusServiceInfoConstant.totalMembers,
+                                         missionViewModel: missionVM)
+            let vc = MyPageViewController(vm: vm)
+            
+            self.navigationController?.modalPresentationStyle = .fullScreen
+            self.show(vc, sender: self)
+            
+        }
+        catch {
+            print("Error fetching current user -- \(error)")
+        }
+        
+    }
+    
+    @objc func welcomeDidTap() {
+        self.navigationController?.popViewController(animated: true)
+        // TODO: 웰컴 선물 받기 관련 가이드 정의 이후 action 구현
+
     }
 }
 
@@ -121,12 +162,12 @@ extension SignUpCompleteViewController {
             self.nftInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 4),
             self.nftInfoLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
+            self.welcomeGiftButton.topAnchor.constraint(equalToSystemSpacingBelow: self.nftInfoLabel.bottomAnchor, multiplier: 2),
             self.welcomeGiftButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-            self.welcomeGiftButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 14),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.welcomeGiftButton.trailingAnchor, multiplier: 2),
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.welcomeGiftButton.bottomAnchor, multiplier: 2)
         ])
-        
+        self.welcomeGiftButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
     
     private func setNavigationItem() {
@@ -141,18 +182,39 @@ extension SignUpCompleteViewController {
     }
 }
 
-//MARK: - Configure
+//MARK: - Configure & Bind
 extension SignUpCompleteViewController {
-    private func configure(with vm: SignUpViewViewModel) {
-        Task {
-            do {
-                let username = UserDefaults.standard.string(forKey: UserDefaultsConstants.username) ?? "username"
-                self.greetingsLabel.text = username + SignUpConstants.greetings
-                self.nftImageView.image = try await URL.urlToImage(URL(string:vm.welcomeNftImage))
-            }
-            catch {
-                print("Error fetching welcome nft image -- \(error.localizedDescription)")
-            }
+    
+    private func bind() {
+        func bindViewToViewModel() {
+            
         }
+        func bindViewModelToView() {
+            
+            self.vm.$nickname
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self,
+                          let nickname = $0 else { return }
+                    self.greetingsLabel.text = nickname + SignUpConstants.greetings
+                }
+                .store(in: &bindings)
+            
+            self.vm.$welcomeNftImage
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self,
+                          let image = $0,
+                          let url = URL(string: image) else { return }
+                    Task {
+                        self.nftImageView.image = try await ImagePipeline.shared.image(for: url)
+                    }
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
+
 }

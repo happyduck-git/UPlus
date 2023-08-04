@@ -21,14 +21,22 @@ struct UPlusUser: Codable {
     let userHasVipNft: Bool
     let userRewards: [DocumentReference]? // 사용자가 획득한 보상 아이템 다큐먼트를 배열로 갖는다.
     let userNfts: [DocumentReference]? //사용자가 획득한 NFT 다큐먼트를 배열로 갖는다.
-    let user_type_mission_array_map: [String: String]?
-    let userMissions: [String]? //사용자가 참여한 미션 다큐먼트를 배열로 갖는다.
+    let userTypeMissionArrayMap: [String: DocumentReference]? //사용자가 참여한 미션 다큐먼트를 map으로 갖는다.
     var userPointHistory: [PointHistory]?
     let userIsAdmin: Bool
     
 }
 
 extension UPlusUser {
+    
+    static func saveCurrentUser(email: String) async throws {
+        let currentUser = try await FirestoreManager.shared.getCurrentUserInfo(email: email)
+        
+        let encodedUserData = try JSONEncoder().encode(currentUser)
+        UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
+        print("User Info Saved: \(currentUser)")
+    }
+    
     static func getCurrentUser() throws -> Self {
         guard let data = UserDefaults.standard.object(forKey: UserDefaultsConstants.currentUser) as? Data,
               let user = try? JSONDecoder().decode(UPlusUser.self, from: data)

@@ -39,20 +39,21 @@ struct LoginConstants {
 }
 
 struct SignUpConstants {
-    static let emailLabel: String = "사내 이메일 인증"
+    static let emailComponent: String = "@"
+    static let emailLabel: String = "사내 이메일"
     static let passwordLabel: String = "비밀번호"
     static let passwordCheckLabel: String = "비밀번호 확인"
     static let nicknameLabel: String = "닉네임"
     static let register: String = "가입 완료하기"
     static let authenticate: String = "이메일 인증하기"
     static let authCompleted: String = "이메일 인증이 완료되었습니다."
-    static let emailSuffix: String = "@gmail.com" //"@uplus.net"
+    static let emailSuffix: String = "@platfarm.net" //"@uplus.net"
     static let deeplinkDomain: String = "https://DEV-LGUplus-NFT-Platfarm.firebaseapp.com"
-    static let emailRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
+    static let passwordRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
     static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.2
     static let sinUpSuccessLabel: String = "회원가입이 완료되었습다."
     static let emailCorrectFormat: String = "가입 가능한 이메일입니다."
-    static let passwordValidation: String = "비밀번호에 영문, 숫자를 포함해주세요."
+    static let passwordValidation: String = "비밀번호는 6자 이상 입력하여야 합니다."
     static let passwordCheckValidation: String = "비밀번호가 일치하지 않습니다."
     
     static let greetings: String = "님의\nNFT 멤버십이 시작됐어요"
@@ -210,6 +211,7 @@ struct FirestoreConstants {
     static let userSetCollection = "user_set"
     static let userEmail = "user_email"
     static let userUid = "user_uid"
+    static let userNickname = "user_nickname"
     static let userPointHistory = "user_point_history"
     static let userPointCount = "user_point_count"
     static let userPointMissions = "user_point_missions"
@@ -221,6 +223,7 @@ struct FirestoreConstants {
     static let configuration = "configuration"
     static let missions = "missions"
     static let nfts = "nfts"
+    static let nftSet = "nft_set"
     static let rewards = "rewards"
     static let rewardSetCollection = "reward_set"
     static let missionSetCollection = "mission_set"
@@ -230,6 +233,10 @@ struct FirestoreConstants {
     static let goodWorkerMission = "exp_good_worker_mission_set"
     static let suddenMission = "sudden_mission_set"
     static let missionTimelineMap = "missions_begin_end_time_map"
+    
+    /* Configuration */
+    static let accountableEmails = "accountable_emails"
+    static let vipNftHolderEmails = "vip_nft_holder_emails"
     
     /* User */
     static let urlPrefix = "https://platfarm.net/"

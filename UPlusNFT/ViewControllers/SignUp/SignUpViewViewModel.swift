@@ -12,37 +12,32 @@ import FirebaseAuth
 import FirebaseFirestore
 import OSLog
 
-class SignUpViewViewModel {
+final class SignUpViewViewModel {
     
     let logger = Logger()
     
     //MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
+    private let firebaseAuthManager = FirebaseAuthManager.shared
     
+    // MARK: - DataSource
     var fullEmail = ""
     @Published var email = "" {
         didSet {
-            fullEmail = self.email + "@gmail.com"
+            fullEmail = self.email + SignUpConstants.emailSuffix
         }
     }
     @Published var password = ""
     @Published var passwordCheck = ""
-//    @Published var nickname = ""
-    @Published var errorDescription = ""
-    var welcomeNftImage = ""
-    
-    var isAuthenticated = PassthroughSubject<Bool, Never>()
     var isUserCreated = PassthroughSubject<Bool, Never>()
     var isEmailSent = PassthroughSubject<Bool, Never>()
     
-    private(set) lazy var isEmailValid = $email.map {
-//        $0.hasSuffix(SignUpConstants.emailSuffix)
-        $0.count > 5 //TODO: 유효한 이메일 규칙 필요
-    }.eraseToAnyPublisher()
+    var errorDescription = ""
+    var isValidUser: Bool = false
+    var isVip: Bool = false
     
     private(set) lazy var isPasswordValid = $password.map {
-        let regex = SignUpConstants.emailRegex
-        if let range = $0.range(of: regex, options: .regularExpression) {
+        if $0.count >= 6 {
             return true
         } else {
             return false
@@ -53,91 +48,74 @@ class SignUpViewViewModel {
         .map {
             $0 == $1
         }.eraseToAnyPublisher()
-
-    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest3(isEmailValid, isPasswordValid, isPasswordSame)
+    
+    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest(isPasswordValid, isPasswordSame)
         .map {
-            return $0 && $1 && $2
+            return $0 && $1
         }.eraseToAnyPublisher()
     
-    // MARK: - Init
-    init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(emailAuthenticated), name: NSNotification.Name.signIn, object: nil)
-    }
+}
+
+// MARK: - Internal
+extension SignUpViewViewModel {
     
-    @objc private func emailAuthenticated() {
-        self.isAuthenticated.send(true)
-    }
-    
-    // MARK: - Internal
-    
-    func sendEmailValification() {
-        self.isEmailSent.send(true)
-        /*
-        let actionCodeSettings = ActionCodeSettings()
-        actionCodeSettings.url = URL(string: SignUpConstants.deeplinkDomain)
-        actionCodeSettings.handleCodeInApp = true
-        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return }
-        actionCodeSettings.setIOSBundleID(bundleIdentifier)
+    // MARK: - Create User
+    func createNewUser() async {
         
-        Task {
-            do {
-                try await Auth.auth()
-                    .sendSignInLink(
-                        toEmail: self.fullEmail,
-                        actionCodeSettings: actionCodeSettings
-                    )
-                self.logger.info("Successfully sent email sign in link to \(self.fullEmail).")
-                self.isEmailSent.send(true)
-            }
-            catch {
-                self.logger.error("Error sending sign in link: \(error.localizedDescription).")
-                self.isEmailSent.send(false)
-            }
-        }
-         */
-    }
-    
-    func createNewUser() {
-        Task {
-            do {
-                // 1. Create User Account
-                let createdAccount = try await Auth.auth()
-                    .createUser(
-                        withEmail: self.fullEmail,
-                        password: self.password
-                    )
-                // 2. Save userUId and creationTime to Firestore
+        do {
+            // 1. Find out if it is accountable.
+            let (isAccountable, isVip) = try await firestoreManager.isAccountable(email: self.fullEmail)
+            
+            if isAccountable {
+                
+                // 2. Create User Account
+                self.isValidUser = isAccountable
+                let createdAccount = try await firebaseAuthManager.createAccount(email: self.fullEmail,
+                                                                                 password: self.password)
+                
+                // 3. Save userUId and creationTime to Firestore
                 let uid = createdAccount.user.uid
                 let creationDate = createdAccount.user.metadata.creationDate ?? Date()
                 try await firestoreManager.saveUserInfo(email: self.fullEmail, uid: uid, creationTime: Timestamp(date: creationDate))
                 
-                self.logger.info("User created.")
-                
-                isUserCreated.send(true)
-            }
-            catch (let error) {
-                if error is AuthErrorCode {
-                    let err = error as? AuthErrorCode
-                    switch err {
-                    case .none:
-                        break
-                    case .some(let wrapped):
-                        self.logger.error("Error creating new user \(wrapped.localizedDescription)")
-                        switch wrapped.code {
-                        case .emailAlreadyInUse:
-                            self.errorDescription = "이미 등록된 이메일입니다."
-                        default:
-                            self.errorDescription = "\(wrapped.code)"
-                        }
-                        self.isUserCreated.send(false)
-                    }
-                } else {
-                    print("Error saving user info -- \(error)")
+                if isVip {
+                    self.isVip = isVip
                 }
                 
-                return
+                // 4. Save user info to UserDefaults
+                try await UPlusUser.saveCurrentUser(email: self.fullEmail)
+                
+                self.logger.info("User created.")
+                isUserCreated.send(true)
+                
+            } else {
+                self.errorDescription = "등록이 불가능한 이메일입니다."
+                isUserCreated.send(false)
             }
         }
+        catch (let error) {
+            if error is AuthErrorCode {
+                let err = error as? AuthErrorCode
+                switch err {
+                case .none:
+                    break
+                case .some(let wrapped):
+                    self.logger.error("Error creating new user \(wrapped.localizedDescription)")
+                    switch wrapped.code {
+                    case .emailAlreadyInUse:
+                        self.errorDescription = "이미 가입된 이메일입니다."
+                    default:
+                        self.errorDescription = String(describing: wrapped.code)
+                    }
+                    self.isUserCreated.send(false)
+                }
+            } else {
+                print("Error saving user info -- \(error)")
+            }
+            
+            return
+        }
+        
     }
     
 }

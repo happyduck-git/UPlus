@@ -97,6 +97,11 @@
 		939194742A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194732A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift */; };
 		939194762A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194752A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift */; };
 		939194782A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194772A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift */; };
+		9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194792A7C92BC0035FEB1 /* FirebaseAuthManager.swift */; };
+		9391947D2A7CB7B70035FEB1 /* UPlusNft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391947C2A7CB7B70035FEB1 /* UPlusNft.swift */; };
+		9391947F2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391947E2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift */; };
+		939194822A7CDEA30035FEB1 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194812A7CDEA30035FEB1 /* WalletViewController.swift */; };
+		939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194832A7CDF870035FEB1 /* WalletViewViewModel.swift */; };
 		93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */; };
 		93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED802A6A54D900C2287D /* MyPageViewController.swift */; };
 		93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */; };
@@ -244,6 +249,11 @@
 		939194732A7B46890035FEB1 /* WeeklyMissionOverViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewViewController.swift; sourceTree = "<group>"; };
 		939194752A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewViewModel.swift; sourceTree = "<group>"; };
 		939194772A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewTableViewHeader.swift; sourceTree = "<group>"; };
+		939194792A7C92BC0035FEB1 /* FirebaseAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthManager.swift; sourceTree = "<group>"; };
+		9391947C2A7CB7B70035FEB1 /* UPlusNft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UPlusNft.swift; sourceTree = "<group>"; };
+		9391947E2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCompleteViewViewModel.swift; sourceTree = "<group>"; };
+		939194812A7CDEA30035FEB1 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
+		939194832A7CDF870035FEB1 /* WalletViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED802A6A54D900C2287D /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -389,6 +399,7 @@
 			children = (
 				937C764E2A457B2E001024D0 /* FirestoreManager.swift */,
 				24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */,
+				939194792A7C92BC0035FEB1 /* FirebaseAuthManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -476,6 +487,7 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				939194802A7CDDBD0035FEB1 /* Wallet */,
 				24542D562A70E8BF00F82CEA /* Loading */,
 				93A2ED912A6E0E8D00C2287D /* Ranking */,
 				2417A59C2A67C4C600AEC530 /* UserProfile */,
@@ -516,6 +528,7 @@
 				930D96C82A4193A40007801A /* SignUpViewController.swift */,
 				930D96CA2A4194E50007801A /* SignUpViewViewModel.swift */,
 				93E013A22A667F100005E342 /* SignUpCompleteViewController.swift */,
+				9391947E2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -642,6 +655,7 @@
 		937C76502A457EF4001024D0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				9391947B2A7CB79E0035FEB1 /* Nfts */,
 				24542D5C2A71020500F82CEA /* UplusUser */,
 				24542D5B2A7101F200F82CEA /* Posts */,
 				93E013A42A68C0340005E342 /* Missions */,
@@ -683,6 +697,23 @@
 				9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */,
 			);
 			path = DailyMission;
+			sourceTree = "<group>";
+		};
+		9391947B2A7CB79E0035FEB1 /* Nfts */ = {
+			isa = PBXGroup;
+			children = (
+				9391947C2A7CB7B70035FEB1 /* UPlusNft.swift */,
+			);
+			path = Nfts;
+			sourceTree = "<group>";
+		};
+		939194802A7CDDBD0035FEB1 /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				939194812A7CDEA30035FEB1 /* WalletViewController.swift */,
+				939194832A7CDF870035FEB1 /* WalletViewViewModel.swift */,
+			);
+			path = Wallet;
 			sourceTree = "<group>";
 		};
 		93A2ED822A6A580300C2287D /* MyPageCollectionView */ = {
@@ -951,6 +982,7 @@
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				93A2EDCB2A725B4E00C2287D /* DailyRoutineMissionDetailViewController.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
+				939194822A7CDEA30035FEB1 /* WalletViewController.swift in Sources */,
 				937C765B2A492DE7001024D0 /* UICollectionReusableView+Extension.swift in Sources */,
 				24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */,
 				93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */,
@@ -958,6 +990,7 @@
 				244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
+				9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */,
 				93D1747E2A73806300F5B1B1 /* DailyRoutineMissionDetailViewViewModel.swift in Sources */,
 				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
@@ -974,6 +1007,7 @@
 				93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */,
 				2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
+				9391947F2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,
 				93E013952A66260A0005E342 /* MissionMainViewViewModel.swift in Sources */,
@@ -1035,6 +1069,7 @@
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
 				932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */,
 				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
+				9391947D2A7CB7B70035FEB1 /* UPlusNft.swift in Sources */,
 				9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */,
 				9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */,
 				93A2ED892A6A6C4100C2287D /* MyNftsCollectionViewCell.swift in Sources */,
@@ -1060,6 +1095,7 @@
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
+				939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */,
 				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
 				24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */,
 				93D174962A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift in Sources */,

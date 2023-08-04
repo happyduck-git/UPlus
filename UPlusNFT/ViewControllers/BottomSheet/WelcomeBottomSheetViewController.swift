@@ -141,7 +141,7 @@ extension WelcomeBottomSheetViewController {
 extension WelcomeBottomSheetViewController {
     
     @objc private func levelUpDidTap() {
-        
+        // TODO: Save VIP holder initial point to DB.
     }
     
 }

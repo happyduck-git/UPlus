@@ -57,19 +57,11 @@ final class LoginViewViewModel {
 
             do {
                 let userEmail = Auth.auth().currentUser?.email ?? FirestoreConstants.noUserEmail
-                let currentUser = try await FirestoreManager.shared.getCurrentUserInfo(email: userEmail)
-                
-                if let encodedUserData = try? JSONEncoder().encode(currentUser) {
-                    UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
-                    print("User Info Result: \(currentUser)")
-                } else {
-                    print("Error encoding user data -- \(errorDescription)")
-                }
-
+                try await UPlusUser.saveCurrentUser(email: userEmail)
             }
             catch {
                 switch error {
-                case FirestoreErorr.userNotFound:
+                case FirestoreError.userNotFound:
                     self.errorDescription = "가입되지 않은 사용자입니다."
                     print("User not found!")
                 default:

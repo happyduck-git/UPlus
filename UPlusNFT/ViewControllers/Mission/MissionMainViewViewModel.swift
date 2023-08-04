@@ -54,7 +54,7 @@ final class MissionMainViewViewModel {
     @Published var weeklyMissions: [WeeklyQuizMission] = []
     
     /* Long Term Mission Section */
-    let longTermMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
+    let longTermMissionCellVMList: [DailyMissionCollectionViewCellViewModel] = []
     
     init(profileImage: String,
          username: String,
@@ -62,8 +62,7 @@ final class MissionMainViewViewModel {
          maxPoints: Int64,
          level: Int64,
          numberOfMissions: Int64,
-         timeLeft: Int64,
-         dailyMissionCellVMList: [DailyMissionCollectionViewCellViewModel]
+         timeLeft: Int64
     ) {
         self.profileImage = profileImage
         self.username = username
@@ -72,7 +71,6 @@ final class MissionMainViewViewModel {
         self.level = level
         self.numberOfMissions = numberOfMissions
         self.timeLeft = timeLeft
-        self.longTermMissionCellVMList = dailyMissionCellVMList
     }
     
 }

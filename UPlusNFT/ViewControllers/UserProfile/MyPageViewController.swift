@@ -128,6 +128,19 @@ final class MyPageViewController: UIViewController {
         self.setNavigationItem()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // TODO: 회원가입 직후 & VIP holder일 때만 show.
+        if self.vm.isJustRegistered && self.vm.isVIP {
+            let vc = WelcomeBottomSheetViewController()
+            vc.modalPresentationStyle = .overCurrentContext
+
+            self.present(vc, animated: false)
+        }
+
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         

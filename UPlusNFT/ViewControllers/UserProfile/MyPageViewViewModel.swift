@@ -26,6 +26,10 @@ final class MyPageViewViewModel {
     let sections: [MyPageViewSectionType] = MyPageViewSectionType.allCases
     
     //MARK: - DataSource
+    /* Basic Data */
+    let isJustRegistered: Bool
+    let isVIP: Bool
+    
     /* MyPageVC */
     @Published var todayRank2: Int = UPlusServiceInfoConstant.totalMembers
     @Published var weeklyMissions: [String: [Timestamp]] = [:]
@@ -48,10 +52,14 @@ final class MyPageViewViewModel {
     let missionViewModel: MissionMainViewViewModel
     
     init(user: UPlusUser,
+         isJustRegistered: Bool,
+         isVip: Bool,
          todayRank: Int,
          missionViewModel: MissionMainViewViewModel
     ) {
         self.user = user
+        self.isJustRegistered = isJustRegistered
+        self.isVIP = isVip
         self.todayRank = todayRank
         self.missionViewModel = missionViewModel
         

@@ -9,11 +9,13 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
+import FirebaseAuth
 
-enum FirestoreErorr: Error {
+enum FirestoreError: Error {
     case documentNotFound
     case documentFoundToBeNil
     case userNotFound
+    case invalidEmail
 }
 
 final class FirestoreManager {
@@ -48,10 +50,39 @@ final class FirestoreManager {
     var queryDocumentSnapshot: QueryDocumentSnapshot?
 }
 
+/* Signup logic */
+extension FirestoreManager {
+
+    func isAccountable(email: String) async throws -> (isAccountable: Bool, isVip: Bool) {
+        let data = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.configuration)
+            .getDocument()
+            .data()
+        
+        let accountableEmails = data?[FirestoreConstants.accountableEmails] as? [String] ?? []
+        let vipEmails = data?[FirestoreConstants.vipNftHolderEmails] as? [String] ?? []
+        
+        // 1. Check is accountable
+        let isAccountable = accountableEmails.contains {
+            $0 == email
+        }
+        // 2. Check is vip
+        let isVip = vipEmails.contains {
+            $0 == email
+        }
+        
+        return (isAccountable, isVip)
+    }
+    
+}
+
 /* uplus_missions_v2 */
 //MARK: - UPlus Current User
 extension FirestoreManager {
     
+    /// Get user's document path that has been created before registring the account.
+    /// - Parameter email: User email.
+    /// - Returns: Document snapshot.
     private func getCurrentUserDocumentPath(email: String) async throws -> QueryDocumentSnapshot {
         let documents = try await threadsSetCollectionPath2
             .document(FirestoreConstants.users)
@@ -61,28 +92,51 @@ extension FirestoreManager {
             .documents
         
         guard let currentUserDoc = documents.first else {
-            throw FirestoreErorr.userNotFound
+            throw FirestoreError.userNotFound
         }
         
         return currentUserDoc
     }
     
+    // MARK: - Setters
+    
+    /// Save created account's information.
+    /// - Parameters:
+    ///   - email: User email.
+    ///   - uid: Auth user account.
+    ///   - creationTime: Account created time.
     func saveUserInfo(email: String, uid: String, creationTime: Timestamp) async throws {
         let currentUserDoc = try await self.getCurrentUserDocumentPath(email: email)
         
-        // Save User UID
         try await currentUserDoc.reference.setData([
             FirestoreConstants.userUid: uid,
             FirestoreConstants.accountCreationTime: creationTime
         ], merge: true)
     }
     
+    // MARK: - Getters
     func getCurrentUserInfo(email: String) async throws -> UPlusUser {
         let currentUserDoc = try await self.getCurrentUserDocumentPath(email: email)
         let decoder = Firestore.Decoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         return try currentUserDoc.data(as: UPlusUser.self, decoder: decoder)
+    }
+    
+    /// Fetch membership NFT image url of the user who finished the user registration.
+    /// - Parameter userIndex: User index.
+    /// - Returns: Nft image url string.
+    func getMemberNft(userIndex: Int64, isVip: Bool) async throws -> String {
+        
+        var docId: Int64 = isVip ? userIndex : (userIndex + 10_000)
+        
+        let doc = try await dummyCollection.document(FirestoreConstants.nfts)
+            .collection(FirestoreConstants.nftSet)
+            .document(String(describing: docId))
+            .getDocument()
+        
+        let nft = try doc.data(as: UPlusNft.self, decoder: self.decoder)
+        return nft.nftContentImageUrl
     }
     
 }
@@ -127,7 +181,7 @@ extension FirestoreManager {
 
         for doc in documents {
             
-            var point = try doc.data(as: PointHistory.self, decoder: self.decoder)
+            let point = try doc.data(as: PointHistory.self, decoder: self.decoder)
             
             guard let documentId = doc.reference.parent.parent?.documentID else {
                 continue
@@ -525,7 +579,7 @@ extension FirestoreManager {
         guard let lastSnapshot = lastDocumentSnapshot
         else {
             print("Last document found to be nil.")
-            throw FirestoreErorr.documentFoundToBeNil
+            throw FirestoreError.documentFoundToBeNil
         }
         
         let snapshots = try await threadsSetCollectionPath
@@ -606,7 +660,7 @@ extension FirestoreManager {
         guard let lastSnapshot = lastDocumentSnapshot
         else {
             print("Last document found to be nil.")
-            throw FirestoreErorr.documentFoundToBeNil
+            throw FirestoreError.documentFoundToBeNil
         }
         
         let snapshots = try await threadsSetCollectionPath.document(postId).collection(FirestoreConstants.commentSet)

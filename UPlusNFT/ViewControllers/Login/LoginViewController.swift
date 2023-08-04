@@ -78,16 +78,6 @@ class LoginViewController: UIViewController {
         return textField
     }()
 
-    private let keepMeSignedInButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(LoginConstants.keepSignedIn, for: .normal)
-        button.setTitleColor(.systemGray, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 13)
-        button.adjustsImageWhenHighlighted = false
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     private let credentialValidationText: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .thin)
@@ -204,14 +194,7 @@ extension LoginViewController {
             self.passwordTextField.textPublisher
                 .assign(to: \.password, on: viewModel)
                 .store(in: &bindings)
-            
-            self.keepMeSignedInButton.tapPublisher
-                .sink(receiveValue: { [weak self] in
-                    guard let `self` = self else { return }
-                    self.viewModel.isKeepMeSignedIntTapped = !self.viewModel.isKeepMeSignedIntTapped
-                })
-                .store(in: &bindings)
-            
+
             self.loginButton.tapPublisher
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
@@ -235,21 +218,6 @@ extension LoginViewController {
                         self.loginButton.isUserInteractionEnabled = false
                     }
                     self.credentialValidationText.text = ""
-                }
-                .store(in: &bindings)
-            
-            self.viewModel.$isKeepMeSignedIntTapped
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] isTapped in
-                    guard let `self` = self else { return }
-                    
-                    let color = isTapped ? UPlusColor.pointGagePink : .systemGray
-                    let image = isTapped ? SFSymbol.circleFilledCheckmark : SFSymbol.circledCheckmark
-                    self.keepMeSignedInButton.setTitleColor(color, for: .normal)
-                    self.keepMeSignedInButton.setImage(UIImage(systemName: image)?.withTintColor(color, renderingMode: .alwaysOriginal), for: .normal)
-                    
-                    // TODO: if isTapped { //UserDefaults에 상태 저장. => 앱 종료 시에 로그아웃 여부 결정. }
-                    
                 }
                 .store(in: &bindings)
             
@@ -280,29 +248,10 @@ extension LoginViewController {
                                                               maxPoints: 15,
                                                               level: 1,
                                                               numberOfMissions: 4,
-                                                              timeLeft: 12,
-                                                              dailyMissionCellVMList: [
-                                                                DailyMissionCollectionViewCellViewModel(
-                                                                    missionTitle: "매일 6000보 걷기",
-                                                                    missionImage: "https://i.seadn.io/gae/0Qx_dJjClFLvuYFGzVUpvrOyjMuWVZjyUAU7FPNHUkg2XQzhgEBrV2kTDD-k8l0RoUiEh3lT93dGRHmb_MA57vQ0z2ZI7AY06qM9qTs?auto=format&dpr=1&w=200",
-                                                                    missionPoint: 1,
-                                                                    missionCount: 15
-                                                                ),
-                                                                DailyMissionCollectionViewCellViewModel(
-                                                                    missionTitle: "매일 6000보 걷기",
-                                                                    missionImage: "https://i.seadn.io/gae/PYzUnkLUGXrZp0GHQvNSx8-UWdeus_UxkypDeXRWmroFRL_4eWbxm7LqJvQIUSUdXxHqNRSRWkyc_sWjFrPqAxzsgzY2f6be4x1b9Q?auto=format&dpr=1&w=200",
-                                                                    missionPoint: 2,
-                                                                    missionCount: 6
-                                                                ),
-                                                                DailyMissionCollectionViewCellViewModel(
-                                                                    missionTitle: "매일 6000보 걷기",
-                                                                    missionImage: "https://i.seadn.io/gae/hxqKVEpDu1GmI8OIVpUeQFdvqWd6HKUREfEt58lBvCBEtJrTgsIRKOk2UFYVUK8jvwz8ir6sEGir862LntFXXb_shyUXSkkTCagzfA?auto=format&dpr=1&w=200",
-                                                                    missionPoint: 3,
-                                                                    missionCount: 10
-                                                                )
-                                                              ]
-                        )
+                                                              timeLeft: 12)
                         let vm = MyPageViewViewModel(user: user,
+                                                     isJustRegistered: false,
+                                                     isVip: false, // TODO: Need to change logic
                                                      todayRank: self.viewModel.todayRank, missionViewModel: tempVM)
                         let myPageVC = MyPageViewController(vm: vm)
                         self.navigationController?.modalPresentationStyle = .fullScreen
@@ -334,7 +283,6 @@ extension LoginViewController {
             self.emailTextField,
             self.passwordTextField,
             self.credentialValidationText,
-            self.keepMeSignedInButton,
             self.changePasswordButton,
             self.loginButton,
             self.createAccountButton
@@ -366,12 +314,10 @@ extension LoginViewController {
             self.credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: self.passwordTextField.bottomAnchor, multiplier: 1),
             self.credentialValidationText.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
             
-            self.keepMeSignedInButton.topAnchor.constraint(equalToSystemSpacingBelow: self.credentialValidationText.bottomAnchor, multiplier: 1),
-            self.keepMeSignedInButton.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
-            self.changePasswordButton.topAnchor.constraint(equalTo: self.keepMeSignedInButton.topAnchor),
+            self.changePasswordButton.topAnchor.constraint(equalToSystemSpacingBelow: self.credentialValidationText.bottomAnchor, multiplier: 1),
             self.changePasswordButton.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
             
-            self.loginButton.topAnchor.constraint(equalToSystemSpacingBelow: self.keepMeSignedInButton.bottomAnchor, multiplier: 2),
+            self.loginButton.topAnchor.constraint(equalToSystemSpacingBelow: self.changePasswordButton.bottomAnchor, multiplier: 2),
             self.loginButton.leadingAnchor.constraint(equalTo: self.emailTextField.leadingAnchor),
             self.loginButton.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
             
@@ -384,7 +330,7 @@ extension LoginViewController {
             self.placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderLabel.bottomAnchor, multiplier: 1)
         ])
 
-        self.keepMeSignedInButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        self.changePasswordButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
 
     private func setDelegate() {
