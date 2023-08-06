@@ -65,7 +65,7 @@ final class MyPageViewViewModel {
         
         Task {
             async let _ = self.getSelectedRoutine()
-            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
+//            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
             async let _ = self.getMissionsTimeline()
         }
         
@@ -74,6 +74,8 @@ final class MyPageViewViewModel {
 
 //MARK: - Fetch Data from FireStore
 extension MyPageViewViewModel {
+    
+    // TODO: Need to fix logic
     func getTodayRank(of userIndex: String) async {
         
         do {
@@ -158,6 +160,9 @@ extension MyPageViewViewModel {
         }
     }
     
+    func getNft(reference: DocumentReference) async throws -> UPlusNft {
+        return try await self.firestoreManager.getNft(reference: reference)
+    }
 }
 
 //MARK: - Save Data to FireStore

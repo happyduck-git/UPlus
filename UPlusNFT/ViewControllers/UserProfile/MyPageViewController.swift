@@ -683,7 +683,7 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         for child in self.children {
             child.removeViewController()
         }
-        
+        print("Selected row: \(selectedRow)")
         switch selectedRow {
         case 0:
             
@@ -695,8 +695,10 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             self.navigationItem.setRightBarButton(speakerItem, animated: true)
             self.navigationItem.title = SideMenuConstants.home
         case 1:
-            // TODO: Wallet VC
-            break
+            let vm = WalletViewViewModel()
+            let vc = WalletViewController(vm: vm)
+            self.addChildViewController(vc)
+            self.navigationItem.title = WalletConstants.wallet
             
         case 2:
             let vm = RankingViewViewModel()

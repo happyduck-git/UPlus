@@ -84,20 +84,21 @@ extension UserProfileView {
         
         Task {
             do {
-                let imageString = vm.user.userNfts?.first?.documentID
-                ?? ImageAsset.dummyNftImageUrl
-                let url = URL(string: imageString)! // TODO: Optional 처리.
+                guard let ref = vm.user.userNfts?.first else { return }
+                let nft = try await vm.getNft(reference: ref)
+                let url = URL(string: nft.nftContentImageUrl)! // TODO: Optional 처리.
                 self.profileImage.image = try await ImagePipeline.shared.image(for: url)
-                self.usernameLabel.text = vm.user.userNickname
-                self.userMissionDataView.configure(vm: vm)
                 
-                self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
             }
             catch {
                 print("Error fetching profileImage -- \(error)")
+                self.profileImage.image = UIImage(systemName: SFSymbol.defaultProfile)?.withTintColor(.white, renderingMode: .alwaysOriginal)
             }
+            
         }
-        
+        self.usernameLabel.text = vm.user.userNickname
+        self.userMissionDataView.configure(vm: vm)
+        self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
     }
     
     

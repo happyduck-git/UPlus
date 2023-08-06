@@ -1,5 +1,5 @@
 //
-//  FirestoreManager.swift
+//  FirestoUPlusNftreManager.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/06/23.
@@ -76,7 +76,7 @@ extension FirestoreManager {
     
 }
 
-/* uplus_missions_v2 */
+/* uplus_missions_v3 */
 //MARK: - UPlus Current User
 extension FirestoreManager {
     
@@ -94,7 +94,6 @@ extension FirestoreManager {
         guard let currentUserDoc = documents.first else {
             throw FirestoreError.userNotFound
         }
-        
         return currentUserDoc
     }
     
@@ -117,10 +116,7 @@ extension FirestoreManager {
     // MARK: - Getters
     func getCurrentUserInfo(email: String) async throws -> UPlusUser {
         let currentUserDoc = try await self.getCurrentUserDocumentPath(email: email)
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
-        return try currentUserDoc.data(as: UPlusUser.self, decoder: decoder)
+        return try currentUserDoc.data(as: UPlusUser.self, decoder: self.decoder)
     }
     
     /// Fetch membership NFT image url of the user who finished the user registration.
@@ -128,7 +124,8 @@ extension FirestoreManager {
     /// - Returns: Nft image url string.
     func getMemberNft(userIndex: Int64, isVip: Bool) async throws -> String {
         
-        var docId: Int64 = isVip ? userIndex : (userIndex + 10_000)
+        // NOTE: nft index는 Alchemy에서 받아올 예정.
+        let docId: Int64 = isVip ? userIndex : (userIndex + 10_000)
         
         let doc = try await dummyCollection.document(FirestoreConstants.nfts)
             .collection(FirestoreConstants.nftSet)
@@ -137,6 +134,44 @@ extension FirestoreManager {
         
         let nft = try doc.data(as: UPlusNft.self, decoder: self.decoder)
         return nft.nftContentImageUrl
+    }
+    
+    
+    /// Get NFT document of a certain document reference.
+    /// - Parameter reference: DocumentReference.
+    /// - Returns: UPlusNft object.
+    func getNft(reference: DocumentReference) async throws -> UPlusNft {
+        let snapshot = try await reference.getDocument()
+        return try snapshot.data(as: UPlusNft.self, decoder: self.decoder)
+    }
+    
+    func getOwnedNfts(referenceList: [DocumentReference], completion: @escaping (Result<[UPlusNft], Error>) -> Void) {
+        var nfts: [UPlusNft] = []
+        let dispatchGroup = DispatchGroup()
+
+        for ref in referenceList {
+            dispatchGroup.enter()
+            ref.getDocument { (snapshot, error) in
+                defer { dispatchGroup.leave() }
+
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let snapshot = snapshot,
+                      let nft = try? snapshot.data(as: UPlusNft.self, decoder: self.decoder) else {
+                    completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to decode document"])))
+                    return
+                }
+
+                nfts.append(nft)
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            completion(.success(nfts))
+        }
     }
     
 }

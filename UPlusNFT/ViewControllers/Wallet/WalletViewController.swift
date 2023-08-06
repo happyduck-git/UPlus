@@ -15,12 +15,15 @@ final class WalletViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.backgroundColor = .systemYellow
     }
     
     // MARK: - Init
     init(vm: WalletViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        
     }
     
     required init?(coder: NSCoder) {

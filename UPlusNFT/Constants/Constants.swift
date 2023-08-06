@@ -135,6 +135,10 @@ struct RankingConstants {
     static let myRank: String = "내 순위"
 }
 
+struct WalletConstants {
+    static let wallet: String = "웰렛"
+}
+
 struct EditUserInfo {
     static let editVCTitle: String = "비밀번호 수정"
     static let confirm: String = "수정완료"
