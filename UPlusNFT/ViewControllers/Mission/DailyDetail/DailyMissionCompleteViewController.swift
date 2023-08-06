@@ -8,12 +8,19 @@
 import UIKit
 import Combine
 
-class DailyMissionCompleteViewController: UIViewController {
+protocol DailyMissionCompleteViewControllerDelegate: AnyObject {
+    func confirmButtonDidTap()
+}
+
+final class DailyMissionCompleteViewController: UIViewController {
     
     // MARK: - Dependency
     private let vm: DailyRoutineMissionDetailViewViewModel
     private let firestoreManager = FirestoreManager.shared
     
+    //MARK: - Delegate
+    weak var delegate: DailyMissionCompleteViewControllerDelegate?
+     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
@@ -51,7 +58,6 @@ class DailyMissionCompleteViewController: UIViewController {
         let button = UIButton()
         button.setTitle(MissionConstants.confirm, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
         button.backgroundColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -87,13 +93,20 @@ extension DailyMissionCompleteViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                // TODO: 정답인 경우 firestore 저장
+                
                 Task {
                     do {
+                        
                         // 1. user 참여 document array item append
                     
                         // 2. mission 내 mission_user_state_map에 저장
                         
+                        // 3. Notify delegate and back to DailyRoutineMissionDetailVC
+                        self.delegate?.confirmButtonDidTap()
+                        guard let vcs = self.navigationController?.viewControllers else { return }
+                        for vc in vcs where vc is DailyRoutineMissionDetailViewController {
+                            self.navigationController?.popToViewController(vc, animated: true)
+                        }
                     }
                     catch {
                         print("")
@@ -108,19 +121,6 @@ extension DailyMissionCompleteViewController {
 extension DailyMissionCompleteViewController {
     private func configure() {
         self.pointLabel.text = "10" + MissionConstants.redeemPointSuffix
-    }
-}
-
-// MARK: - Button Action
-extension DailyMissionCompleteViewController {
-    @objc private func confirmButtonDidTap() {
-        
-        guard let vcs = self.navigationController?.viewControllers else { return }
-        for vc in vcs where vc is MissionMainViewController {
-            self.navigationController?.popToViewController(vc, animated: true)
-        }
-        
-        // TODO: 수령한 Point DB에 저장.
     }
 }
 

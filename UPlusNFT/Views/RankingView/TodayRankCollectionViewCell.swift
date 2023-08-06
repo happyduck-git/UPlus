@@ -79,6 +79,16 @@ extension TodayRankCollectionViewCell {
                 }
             }
             .store(in: &bindings)
+        
+        // TODO: Header로 옮기기
+        vm.$yesterDayRankUserList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                // TODO: TableView Header에 표시 필요.
+                print("어제 랭커 " + ($0.first?.userEmail ?? "없음"))
+            }
+            .store(in: &bindings)
     }
 }
 

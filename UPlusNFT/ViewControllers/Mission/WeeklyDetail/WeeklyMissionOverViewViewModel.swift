@@ -1,3 +1,4 @@
+
 //
 //  WeeklyMissionOverViewViewModel.swift
 //  UPlusNFT
@@ -20,7 +21,24 @@ final class WeeklyMissionOverViewViewModel {
     var nftImage: UIImage? = nil
     
     /* Missions */
-    @Published var missions: [WeeklyQuizMission] = []
+    @Published var missions: [WeeklyQuizMission] = [] {
+        didSet {
+            do {
+                let user = try UPlusUser.getCurrentUser()
+                for mission in self.missions {
+                    let map = mission.missionUserStateMap ?? [:]
+                    let hasParticipated = map.contains { ele in
+                        ele.key == String(describing: user.userIndex)
+                    }
+                    self.participation[mission.missionId] = hasParticipated
+                }
+            }
+            catch {
+                print("Error getting user info from UserDefaults -- \(error)")
+            }
+        }
+    }
+    var participation: [Int64: Bool] = [:]
     
     private let dateFormatter: DateFormatter = {
        let dateFormatter = DateFormatter()
@@ -55,7 +73,7 @@ extension WeeklyMissionOverViewViewModel {
         return (day / 7) + 1
     }
     
-    private func getWeeklyMissionInfo(week: Int) {
+    func getWeeklyMissionInfo(week: Int) {
         Task {
             do {
                 self.missions = try await self.firestoreManager.getWeeklyMission(week: week)

@@ -403,7 +403,6 @@ extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionVi
                 
                 // 2. Show CompleteVC on complete.
                 let vc = DailyMissionCompleteViewController(vm: self.vm)
-                self.navigationController?.modalPresentationStyle = .fullScreen
                 self.show(vc, sender: self)
             }
             catch {

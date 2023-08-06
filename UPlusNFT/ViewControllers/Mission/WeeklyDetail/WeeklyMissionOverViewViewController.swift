@@ -98,9 +98,16 @@ extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-        let vm = self.vm.missions[indexPath.row]
+        // 1. Check if user has participated a cetain mission
+        let mission = self.vm.missions[indexPath.row]
+        let hasParticipated = self.vm.participation[mission.missionId] ?? false
         var config = cell.defaultContentConfiguration()
-        config.text = String(describing: vm.missionFormatType) + " : " + String(describing: vm.missionRewardPoint) + MissionConstants.pointUnit
+        
+        if hasParticipated {
+            config.text = "참여 완료"
+        } else {
+            config.text = String(describing: mission.missionFormatType) + " : " + String(describing: mission.missionRewardPoint) + MissionConstants.pointUnit
+        }
         cell.contentConfiguration = config
         
         return cell
@@ -118,22 +125,39 @@ extension WeeklyMissionOverViewViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let vm = self.vm.missions[indexPath.row]
-        let missionType = MissionFormatType(rawValue: vm.missionFormatType)
-        
-        let cellVM = WeeklyMissionDetailViewViewModel(dataSource: vm,
-                                                      numberOfWeek: self.vm.numberOfWeek)
-        self.navigationController?.modalPresentationStyle = .overCurrentContext
-        
-        switch missionType {
-        case .choiceQuiz:
-            let vc = WeeklyChoiceQuizMissionDetailViewController(vm: cellVM)
-            self.present(vc, animated: true)
-        case .answerQuiz:
-            let vc = WeeklyAnswerQuizMissionDetailViewController(vm: cellVM)
-            self.present(vc, animated: true)
-        default:
-            break
+        let mission = self.vm.missions[indexPath.row]
+        // 1. Check if user has participated a cetain mission
+        let hasParticipated = self.vm.participation[mission.missionId] ?? false
+        // 1-1. If so, ban selection.
+        if hasParticipated {
+            return
+        } else {
+            // 1-2. If not, allow selection.
+            let missionType = MissionFormatType(rawValue: mission.missionFormatType)
+            
+            let cellVM = WeeklyMissionDetailViewViewModel(dataSource: mission,
+                                                          numberOfWeek: self.vm.numberOfWeek)
+            self.navigationController?.modalPresentationStyle = .overCurrentContext
+            
+            switch missionType {
+            case .choiceQuiz:
+                let vc = WeeklyChoiceQuizMissionDetailViewController(vm: cellVM)
+                vc.delegate = self
+                self.show(vc, sender: self)
+            case .answerQuiz:
+                let vc = WeeklyAnswerQuizMissionDetailViewController(vm: cellVM)
+                self.show(vc, sender: self)
+            default:
+                break
+            }
         }
+    }
+}
+
+extension WeeklyMissionOverViewViewController: WeeklyChoiceQuizMissionDetailViewControllerDelegate {
+    func answerDidSaved() {
+        print("Answer did saved called from WMOVVC.")
+        self.vm.getWeeklyMissionInfo(week: self.vm.numberOfWeek)
+        self.tableView.reloadData()
     }
 }

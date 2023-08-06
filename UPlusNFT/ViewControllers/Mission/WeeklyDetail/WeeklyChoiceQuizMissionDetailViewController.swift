@@ -8,10 +8,17 @@
 import UIKit
 import Combine
 
+protocol WeeklyChoiceQuizMissionDetailViewControllerDelegate: AnyObject {
+    func answerDidSaved()
+}
+
 final class WeeklyChoiceQuizMissionDetailViewController: UIViewController {
     
     // MARK: - Dependency
     private let vm: WeeklyMissionDetailViewViewModel
+    
+    //MARK: - Delegate
+    weak var delegate: WeeklyChoiceQuizMissionDetailViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -139,6 +146,7 @@ extension WeeklyChoiceQuizMissionDetailViewController {
                     if checkUserAnswer() {
                         print("Right answer submitted.")
                         let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                        vc.delegate = self
                         navigationController?.modalPresentationStyle = .fullScreen
                         self.show(vc, sender: self)
                     } else {
@@ -195,8 +203,8 @@ extension WeeklyChoiceQuizMissionDetailViewController {
     private func configure() {
         self.quizLabel.text = vm.dataSource.missionContentTitle
         
-        self.xMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[0] ?? "X", for: .normal)
-        self.circleMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[1] ?? "O", for: .normal)
+        self.circleMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[0] ?? "O", for: .normal)
+        self.xMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[1] ?? "X", for: .normal)
     }
 }
 
@@ -243,4 +251,10 @@ extension WeeklyChoiceQuizMissionDetailViewController {
         }
     }
     
+}
+
+extension WeeklyChoiceQuizMissionDetailViewController: WeeklyMissionCompleteViewControllerDelegate {
+    func answerDidSaved() {
+        self.delegate?.answerDidSaved()
+    }
 }

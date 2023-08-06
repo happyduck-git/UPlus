@@ -40,14 +40,15 @@ extension DailyRoutineMissionDetailViewViewModel {
         }
     }
     
-    /*
-    func getUserParticipation() {
-        self.athleteMissions.filter { mission in
-            guard let userStateMap = mission.missionUserStateMap,
-                  let participation = userStateMap["user-index"]
-            else { return false }
-            
+    func saveRoutineParticipation() {
+        /*
+        Task {
+            do {
+                self.firestoreManager.saveDailyMissionPhoto(userIndex: <#T##Int64#>, missionType: <#T##MissionType#>, image: <#T##Data#>)
+            }
+            catch {
+            }
         }
+         */
     }
-    */
 }

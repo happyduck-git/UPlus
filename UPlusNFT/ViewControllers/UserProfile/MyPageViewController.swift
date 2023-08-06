@@ -666,8 +666,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         case 2:
             let vm = WeeklyMissionOverViewViewModel()
             let vc = WeeklyMissionOverViewViewController(vm: vm)
-            
-            self.present(vc, animated: true)
+
+            self.show(vc, sender: self)
         default:
             break
         }

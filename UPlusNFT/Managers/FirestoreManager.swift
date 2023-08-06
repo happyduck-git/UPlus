@@ -184,7 +184,7 @@ extension FirestoreManager {
         let today = Date()
         
         let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
-            .whereField("user_point_time", isEqualTo: today.yearMonthDateWithDashFormat)
+//            .whereField("user_point_time", isEqualTo: today.yearMonthDateFormat)
             .order(by: "user_point_count", descending: true)
             .getDocuments()
             .documents
@@ -252,21 +252,24 @@ extension FirestoreManager {
         
     
     func getAllUserTotalPoint() async throws -> [UPlusUser] {
-        
         let documents = try await self.dummyCollection
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
             .order(by: "user_total_point", descending: true)
             .getDocuments()
             .documents
-        
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
+     
         var users: [UPlusUser] = []
+        
         for doc in documents {
-            let userData = try doc.data(as: UPlusUser.self, decoder: decoder)
-            users.append(userData)
+            do {
+                let userData = try doc.data(as: UPlusUser.self, decoder: self.decoder)
+                users.append(userData)
+            }
+            catch {
+                print("Error decoding UPlusUser -- \(error)")
+                continue
+            }
         }
         print("Total point 개수: \(documents.count)")
         return users
@@ -398,7 +401,7 @@ extension FirestoreManager {
         
         batch.setData(
             [
-                String(describing: userIndex): state.rawValue
+                FirestoreConstants.missionUserStateMap: [String(describing: userIndex): state.rawValue]
             ],
             forDocument: missionDocPath,
             merge: true)

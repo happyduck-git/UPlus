@@ -14,16 +14,25 @@ enum MissionAnswerState: String {
     case failed
 }
 
-class WeeklyMissionCompleteViewController: UIViewController {
+protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
+    func answerDidSaved()
+}
+
+final class WeeklyMissionCompleteViewController: UIViewController {
     
     // MARK: - Dependency
     private let vm: WeeklyMissionDetailViewViewModel
     private let firestoreManager = FirestoreManager.shared
     
+    //MARK: - Delegate
+    weak var delegate: WeeklyMissionCompleteViewControllerDelegate?
+    
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
+    private let loadingVC = LoadingViewController()
+    
     private let resultLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 40, weight: .bold)
@@ -57,7 +66,6 @@ class WeeklyMissionCompleteViewController: UIViewController {
         let button = UIButton()
         button.setTitle(MissionConstants.confirm, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
         button.backgroundColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -94,12 +102,14 @@ extension WeeklyMissionCompleteViewController {
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
                 
+                self.addChildViewController(self.loadingVC)
+                
                 let dataSource = self.vm.dataSource
                 guard let questionId = dataSource.postId,
                       let missionType = MissionType(rawValue: dataSource.missionSubTopicType) else {
                     return
                 }
-                // TODO: 정답인 경우 firestore 저장
+                
                 Task {
                     do {
                         let user = try UPlusUser.getCurrentUser()
@@ -112,6 +122,15 @@ extension WeeklyMissionCompleteViewController {
                                                      missionType: missionType,
                                                      point: dataSource.missionRewardPoint,
                                                      state: .successed)
+                        self.delegate?.answerDidSaved()
+                        self.loadingVC.removeViewController()
+                        
+                        guard let vcs = self.navigationController?.viewControllers else { return }
+                        
+                        for vc in vcs where vc is WeeklyMissionOverViewViewController {
+                            self.navigationController?.popToViewController(vc, animated: true)
+                        }
+                        
                     }
                     catch {
                         print("Error saving mission and user data -- \(error)")
@@ -126,19 +145,6 @@ extension WeeklyMissionCompleteViewController {
 extension WeeklyMissionCompleteViewController {
     private func configure() {
         self.pointLabel.text = String(describing: self.vm.dataSource.missionRewardPoint) + MissionConstants.redeemPointSuffix
-    }
-}
-
-// MARK: - Button Action
-extension WeeklyMissionCompleteViewController {
-    @objc private func confirmButtonDidTap() {
-        
-        guard let vcs = self.navigationController?.viewControllers else { return }
-        for vc in vcs where vc is MissionMainViewController {
-            self.navigationController?.popToViewController(vc, animated: true)
-        }
-        
-        // TODO: 수령한 Point DB에 저장.
     }
 }
 

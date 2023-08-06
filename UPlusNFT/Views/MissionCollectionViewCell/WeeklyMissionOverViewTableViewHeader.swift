@@ -115,7 +115,7 @@ extension WeeklyMissionOverViewTableViewHeader {
             
             self.missionDaysLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 1),
             self.missionDaysLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.bottomAnchor, multiplier: 2)
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.missionDaysLabel.bottomAnchor, multiplier: 2)
         ])
     }
 }
