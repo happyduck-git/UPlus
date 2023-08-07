@@ -12,5 +12,5 @@ struct Reward: Codable, Hashable {
      let rewardType: String
      let rewardName: String?
      let rewardImagePath: String?
-     let rewardUser: String? // 보상 아이템을 획득한 사용자의 다큐먼트
+//     let rewardUser: String? // NOT IN USE: 보상 아이템을 획득한 사용자의 다큐먼트
 }

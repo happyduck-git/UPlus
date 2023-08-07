@@ -1,15 +1,14 @@
 //
-//  ShortAnswerQuizMission.swift
+//  CommentCountMission.swift
 //  UPlusNFT
 //
-//  Created by HappyDuck on 2023/07/26.
+//  Created by Platfarm on 2023/08/07.
 //
 
 import Foundation
 import FirebaseFirestore
 
-struct ShortAnswerQuizMission: Mission {
-    var missionId: String
+struct CommentCountMission: Mission {
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
@@ -23,5 +22,6 @@ struct ShortAnswerQuizMission: Mission {
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
     
-    var missionAnswerQuizzes: [String] //  0번째 원소는 힌트 캡션 텍스트를, 1번째 원소는 정답 문구 텍스트
+    var commentCountMap: [String: Int64]?
+    var comment_user_recents: [[Any]]?
 }

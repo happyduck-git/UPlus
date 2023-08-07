@@ -102,6 +102,12 @@
 		9391947F2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391947E2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift */; };
 		939194822A7CDEA30035FEB1 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194812A7CDEA30035FEB1 /* WalletViewController.swift */; };
 		939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194832A7CDF870035FEB1 /* WalletViewViewModel.swift */; };
+		939194862A80822F0035FEB1 /* ContentReadOnlyMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194852A80822F0035FEB1 /* ContentReadOnlyMission.swift */; };
+		939194882A80827F0035FEB1 /* MediaShareMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194872A80827F0035FEB1 /* MediaShareMission.swift */; };
+		9391948A2A8082E00035FEB1 /* GovernanceMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194892A8082E00035FEB1 /* GovernanceMission.swift */; };
+		9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391948B2A8089E10035FEB1 /* CommentCountMission.swift */; };
+		9391948F2A80A24E0035FEB1 /* WalletCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */; };
+		939194912A80C2720035FEB1 /* RoutineMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194902A80C2720035FEB1 /* RoutineMission.swift */; };
 		93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */; };
 		93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED802A6A54D900C2287D /* MyPageViewController.swift */; };
 		93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */; };
@@ -254,6 +260,12 @@
 		9391947E2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCompleteViewViewModel.swift; sourceTree = "<group>"; };
 		939194812A7CDEA30035FEB1 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		939194832A7CDF870035FEB1 /* WalletViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewViewModel.swift; sourceTree = "<group>"; };
+		939194852A80822F0035FEB1 /* ContentReadOnlyMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentReadOnlyMission.swift; sourceTree = "<group>"; };
+		939194872A80827F0035FEB1 /* MediaShareMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaShareMission.swift; sourceTree = "<group>"; };
+		939194892A8082E00035FEB1 /* GovernanceMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GovernanceMission.swift; sourceTree = "<group>"; };
+		9391948B2A8089E10035FEB1 /* CommentCountMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountMission.swift; sourceTree = "<group>"; };
+		9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCollectionViewCell.swift; sourceTree = "<group>"; };
+		939194902A80C2720035FEB1 /* RoutineMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMission.swift; sourceTree = "<group>"; };
 		93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED802A6A54D900C2287D /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -666,6 +678,7 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9391948D2A80A22A0035FEB1 /* WalletCollectionViewCell */,
 				93A2ED982A6E1C8B00C2287D /* RankingView */,
 				93A2ED822A6A580300C2287D /* MyPageCollectionView */,
 				2417A59F2A67C93800AEC530 /* SignUpView */,
@@ -714,6 +727,14 @@
 				939194832A7CDF870035FEB1 /* WalletViewViewModel.swift */,
 			);
 			path = Wallet;
+			sourceTree = "<group>";
+		};
+		9391948D2A80A22A0035FEB1 /* WalletCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */,
+			);
+			path = WalletCollectionViewCell;
 			sourceTree = "<group>";
 		};
 		93A2ED822A6A580300C2287D /* MyPageCollectionView */ = {
@@ -862,6 +883,11 @@
 				24542D4E2A70AAE800F82CEA /* PhotoAuthMission.swift */,
 				24542D502A70AC0800F82CEA /* ChoiceQuizMission.swift */,
 				24542D522A70AC7A00F82CEA /* ShortAnswerQuizMission.swift */,
+				939194852A80822F0035FEB1 /* ContentReadOnlyMission.swift */,
+				939194872A80827F0035FEB1 /* MediaShareMission.swift */,
+				939194892A8082E00035FEB1 /* GovernanceMission.swift */,
+				9391948B2A8089E10035FEB1 /* CommentCountMission.swift */,
+				939194902A80C2720035FEB1 /* RoutineMission.swift */,
 			);
 			path = Missions;
 			sourceTree = "<group>";
@@ -987,6 +1013,7 @@
 				24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */,
 				93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */,
 				930D96DA2A44057C0007801A /* ResetPasswordViewController.swift in Sources */,
+				939194912A80C2720035FEB1 /* RoutineMission.swift in Sources */,
 				244BBB102A5543CD006C33D2 /* DefaultCollectionViewCell.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
@@ -1014,6 +1041,7 @@
 				93E013A62A68C0460005E342 /* WeeklyQuizMission.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
+				939194882A80827F0035FEB1 /* MediaShareMission.swift in Sources */,
 				93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */,
 				93D174862A738C1000F5B1B1 /* StampCollectionViewCell.swift in Sources */,
 				2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */,
@@ -1032,6 +1060,7 @@
 				93E013AA2A68C20E0005E342 /* EnvironmentalistMission.swift in Sources */,
 				930D96E12A4516630007801A /* UIButton+Extension.swift in Sources */,
 				932C34CD2A5260410032192A /* User.swift in Sources */,
+				9391948A2A8082E00035FEB1 /* GovernanceMission.swift in Sources */,
 				249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */,
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
@@ -1046,6 +1075,7 @@
 				932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */,
 				2417A5A12A67C96900AEC530 /* InformationInputView.swift in Sources */,
 				24542D552A70DE7D00F82CEA /* MyPageViewViewModel.swift in Sources */,
+				9391948F2A80A24E0035FEB1 /* WalletCollectionViewCell.swift in Sources */,
 				932C34E22A5BCE0B0032192A /* CampaignCommentEditView.swift in Sources */,
 				2417A59E2A67C4E500AEC530 /* EditUserInfoViewController.swift in Sources */,
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
@@ -1066,6 +1096,7 @@
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
+				9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */,
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
 				932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */,
 				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
@@ -1077,6 +1108,7 @@
 				2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */,
 				93D174922A7796C100F5B1B1 /* UserProfileView.swift in Sources */,
 				93A2ED9A2A6E1C9D00C2287D /* RankingMenuBar.swift in Sources */,
+				939194862A80822F0035FEB1 /* ContentReadOnlyMission.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				93D1748C2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,

@@ -9,8 +9,15 @@ import Foundation
 import FirebaseFirestore
 
 enum UPlusNftType: String {
-    case level = "avatar__level_%"
-    case auth = "exp_auth__athlete"
+    case avatar
+    case expAuth = "exp_auth"
+    case journeyAuth = "journey_auth"
+    case raffle
+}
+
+enum UPlusNftDetailType: String {
+    case avatar = "avatar__level_%"
+    case athlete = "exp_auth__athlete"
     case goodWorker = "exp_auth__good_worker"
     case environmentalist = "exp_auth__environmentalist"
     case journey = "journey_auth__%"

@@ -25,12 +25,14 @@ final class FirestoreManager {
     
     private init() {
         self.decoder.keyDecodingStrategy = .convertFromSnakeCase
+        self.encoder.keyEncodingStrategy = .convertToSnakeCase
     }
     
     //MARK: - Property
 
     // Decoder
     private let decoder = Firestore.Decoder()
+    private let encoder = Firestore.Encoder()
     
     // Database
     private let db = Firestore.firestore()
@@ -171,6 +173,35 @@ extension FirestoreManager {
 
         dispatchGroup.notify(queue: .main) {
             completion(.success(nfts))
+        }
+    }
+    
+    func getOwnedRewards(referenceList: [DocumentReference], completion: @escaping (Result<[Reward], Error>) -> Void) {
+        var rewards: [Reward] = []
+        let dispatchGroup = DispatchGroup()
+        
+        for ref in referenceList {
+            dispatchGroup.enter()
+            ref.getDocument { (snapshot, error) in
+                defer { dispatchGroup.leave() }
+                
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let snapshot = snapshot,
+                      let reward = try? snapshot.data(as: Reward.self, decoder: self.decoder) else {
+                    completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to decode document"])))
+                    return
+                }
+
+                rewards.append(reward)
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            completion(.success(rewards))
         }
     }
     
@@ -449,23 +480,36 @@ extension FirestoreManager {
         let uploadMetadata = StorageMetadata()
         uploadMetadata.contentType = "image/jpeg"
         
-        uploadRef.putData(image, metadata: uploadMetadata) { metadata, error in
-            
-            guard error == nil else {
-                print("Error uploading image to Firebase Storage. --- " + String(describing: error?.localizedDescription))
-                return
-            }
-            guard metadata != nil else {
-                print("Metadata found to be nil.")
-                return
-            }
-            
-            // 2. Save photo paths to dataBase
-                // 2-1. upload하는 날짜에 해당하는 mission document path에 mission_photo_task_set collection 생성(혹은 생성된 collection이용)
-                // 2-2. 미션 참여자 index를 document-id로 사용.
-                // 2-3. mission photo task 저장
-            
-        }
+        let metadata = try await uploadRef.putDataAsync(image, metadata: uploadMetadata)
+        
+        // 2. Save user state and mission_photo_task to missions.
+        let participationDate = Date()
+
+        try await self.threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(missionType.storagePathFolderName)
+            .document(participationDate.yearMonthDateFormat)
+            .setData(
+                [
+                    FirestoreConstants.missionUserStateMap: [userIndex: MissionUserState.pending.rawValue]
+                ],
+                merge: true)
+        
+        let userDocRef = threadsSetCollectionPath2.document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+        
+        let photoTask = MissionPhotoTask(missionPhotoTaskUser: userDocRef,
+                                         missionPhotoTaskImagePath: path,
+                                         missionPhotoTaskTime: Timestamp(date: participationDate))
+        
+        try self.threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(missionType.storagePathFolderName)
+            .document(participationDate.yearMonthDateFormat)
+            .collection(FirestoreConstants.missionPhotoTaskSet)
+            .document(String(describing: userIndex))
+            .setData(from: photoTask, merge: true)
         
     }
     
