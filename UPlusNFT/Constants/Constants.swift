@@ -92,6 +92,7 @@ struct SideMenuConstants {
     static let notice: String = "공지사항"
     static let resetPassword: String = "비밀번호 수정"
     static let logout: String = "로그아웃"
+    static let manager: String = "매니저"
 }
 
 struct MyPageConstants {

@@ -14,13 +14,15 @@ final class SideMenuViewViewModel {
         case wallet
         case rankBoard
         case notice
+        case manager
     }
     
     private let menuList: [MenuType: String] = [
         .home: ImageAsset.home,
         .wallet: ImageAsset.wallet,
         .rankBoard: ImageAsset.ranking,
-        .notice: ImageAsset.notice
+        .notice: ImageAsset.notice,
+        .manager: ImageAsset.pointSticker
     ]
     
     func numberOfMenu() -> Int {
@@ -38,6 +40,8 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.rankBoard
         case .notice:
             key = SideMenuConstants.notice
+        case .manager:
+            key = SideMenuConstants.manager
         }
         return [key: self.menuList[type] ?? "n/a"]
     }
@@ -60,6 +64,8 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.wallet
         case .rankBoard:
             key = SideMenuConstants.rankBoard
+        case .manager:
+            key = SideMenuConstants.manager
         default:
             key = SideMenuConstants.resetPassword
         }

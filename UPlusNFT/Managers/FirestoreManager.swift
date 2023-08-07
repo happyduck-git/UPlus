@@ -1392,3 +1392,35 @@ extension FirestoreManager {
     }
     
 }
+
+// MARK: - Manager
+extension FirestoreManager {
+    func createRoutineMission(
+        date: Date,
+        rewardPoint: Int64,
+        startTime: Date,
+        formatType: MissionFormatType,
+        subTopicType: MissionType,
+        topicType: MissionTopicType,
+        avatarLevel: Int64
+    ) throws {
+        
+        let mission = RoutineMission(missionId: date.yearMonthDateFormat,
+                                     missionTopicType: topicType.rawValue,
+                                     missionSubTopicType: subTopicType.rawValue,
+                                     missionFormatType: formatType.rawValue,
+                                     missionSubFormatType: MissionSubFormatType.photoAuth.rawValue,
+                                     missionCreationTime: Timestamp(date: date),
+                                     missionRewardPoint: rewardPoint,
+                                     missionPermitAvatarLevel: avatarLevel)
+        
+        
+        try threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(subTopicType.storagePathFolderName)
+            .document(date.yearMonthDateFormat)
+            .setData(from: mission,
+                     merge: true,
+                     encoder: self.encoder)
+    }
+}

@@ -706,7 +706,9 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             
             self.addChildViewController(vc)
             self.navigationItem.title = RankingConstants.rank
-            
+        case 4:
+            let vc = ManagerViewController()
+            self.addChildViewController(vc)
         default:
             // TODO: Wallet VC
             break
