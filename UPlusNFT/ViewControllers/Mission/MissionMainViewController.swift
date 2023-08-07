@@ -470,9 +470,3 @@ extension MissionMainViewController: MyPageViewControllerDelegate {
 
 */
 
-// MARK: - Preview
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        EditUserInfoViewController().toPreview()
-    }
-}

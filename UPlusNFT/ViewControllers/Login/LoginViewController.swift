@@ -238,21 +238,12 @@ extension LoginViewController {
                             print("Error getting saved user info from UserDefaults")
                             return
                         }
-                        // NOTE: Temporary cell view model.
-                        let userEmail = Auth.auth().currentUser?.email ?? "username@gmail.com"
-                        let username = userEmail.components(separatedBy: "@").first ?? "N/A"
-                        let tempProfileImage = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
-                        let tempVM = MissionMainViewViewModel(profileImage: tempProfileImage,
-                                                              username: username,
-                                                              points: 10,
-                                                              maxPoints: 15,
-                                                              level: 1,
-                                                              numberOfMissions: 4,
-                                                              timeLeft: 12)
+                        
+                       
                         let vm = MyPageViewViewModel(user: user,
                                                      isJustRegistered: false,
                                                      isVip: false, // TODO: Need to change logic
-                                                     todayRank: self.viewModel.todayRank, missionViewModel: tempVM)
+                                                     todayRank: self.viewModel.todayRank)
                         let myPageVC = MyPageViewController(vm: vm)
                         self.navigationController?.modalPresentationStyle = .fullScreen
                         self.show(myPageVC, sender: self)

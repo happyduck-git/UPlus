@@ -164,6 +164,18 @@ extension MyPageViewController {
             
         }
         func bindViewModelToView() {
+            self.vm.$missionViewModel
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] mission in
+                    guard let `self` = self,
+                          let collection = self.collectionView
+                    else { return }
+                    print("MIssion: \(mission)")
+                    collection.reloadSections(IndexSet(integer: 0))
+                    
+                }
+                .store(in: &bindings)
+            
             self.vm.$savedMissionType
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] mission in
@@ -558,7 +570,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
                 fatalError()
             }
-            cell.configure(with: self.vm.missionViewModel)
+            guard let vm = self.vm.missionViewModel else {
+                return cell
+            }
+            
+            cell.configure(with: vm)
             return cell
             
             // Routine mission
@@ -715,7 +731,8 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
     }
     
     func resetPasswordDidTap() {
-        let vc = EditUserInfoViewController()
+        let vm = EditUserInfoViewViewModel()
+        let vc = EditUserInfoViewController(vm: vm)
         self.addChildViewController(vc)
         self.sideMenuVC?.dismiss(animated: true)
     }

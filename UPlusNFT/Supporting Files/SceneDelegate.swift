@@ -31,25 +31,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             Task {
                 await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
                 let userInfo = try UPlusUser.getCurrentUser()
-                let nft = await self.getMemberNft(userIndex: userInfo.userIndex,
-                                            isVip: userInfo.userHasVipNft)
-                
+
                 let loginVM = LoginViewViewModel()
                 let loginVC = LoginViewController(vm: loginVM)
-                
-                let missionVM = MissionMainViewViewModel(profileImage: nft,
-                                                      username: userInfo.userNickname,
-                                                      points: userInfo.userTotalPoint ?? 0,
-                                                      maxPoints: 15,
-                                                      level: 1,
-                                                      numberOfMissions: Int64(userInfo.userTypeMissionArrayMap?.values.count ?? 0),
-                                                      timeLeft: 12)
-                
+
                 let vm = MyPageViewViewModel(user: userInfo,
                                              isJustRegistered: false,
                                              isVip: userInfo.userHasVipNft,
-                                             todayRank: UPlusServiceInfoConstant.totalMembers,
-                                             missionViewModel: missionVM)
+                                             todayRank: UPlusServiceInfoConstant.totalMembers)
                 let myPageVC = MyPageViewController(vm: vm)
                 
                 loginVC.navigationController?.addChild(myPageVC)
@@ -123,19 +112,6 @@ extension SceneDelegate {
                 print("Error fetching user -- \(error)")
             }
         }
-    }
-    
-    /// Get holding nft url string.
-    private func getMemberNft(userIndex: Int64, isVip: Bool) async -> String {
-        do {
-            return try await self.firestoreManager.getMemberNft(userIndex: userIndex,
-                                               isVip: isVip)
-        }
-        catch {
-            print("Error fetching hold nft -- \(error)")
-            return String()
-        }
-        
     }
     
 }
