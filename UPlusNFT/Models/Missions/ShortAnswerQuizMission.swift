@@ -13,7 +13,7 @@ struct ShortAnswerQuizMission: Mission {
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
-    var missionSubFormatType: String
+    var missionSubFormatType: String?
     var missionContentTitle: String?
     var missionContentText: String?
     var missionContentImagePaths: [String]?

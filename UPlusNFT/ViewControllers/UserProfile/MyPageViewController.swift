@@ -713,6 +713,12 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         }
         self.sideMenuVC?.dismiss(animated: true)
     }
+    
+    func resetPasswordDidTap() {
+        let vc = EditUserInfoViewController()
+        self.addChildViewController(vc)
+        self.sideMenuVC?.dismiss(animated: true)
+    }
 }
 
 extension MyPageViewController: MissionHistoryButtonCollectionViewCellDelegate {

@@ -108,6 +108,7 @@
 		9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391948B2A8089E10035FEB1 /* CommentCountMission.swift */; };
 		9391948F2A80A24E0035FEB1 /* WalletCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */; };
 		939194912A80C2720035FEB1 /* RoutineMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194902A80C2720035FEB1 /* RoutineMission.swift */; };
+		939194982A80ED920035FEB1 /* EditUserInfoViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */; };
 		93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */; };
 		93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED802A6A54D900C2287D /* MyPageViewController.swift */; };
 		93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */; };
@@ -266,6 +267,7 @@
 		9391948B2A8089E10035FEB1 /* CommentCountMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountMission.swift; sourceTree = "<group>"; };
 		9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCollectionViewCell.swift; sourceTree = "<group>"; };
 		939194902A80C2720035FEB1 /* RoutineMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMission.swift; sourceTree = "<group>"; };
+		939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED802A6A54D900C2287D /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 				93A2ED8D2A6E025000C2287D /* RewardsViewController.swift */,
 				93A2ED8F2A6E0BD000C2287D /* RewardsViewViewModel.swift */,
 				24542D542A70DE7D00F82CEA /* MyPageViewViewModel.swift */,
+				939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -1069,6 +1072,7 @@
 				24DB21812A77F54C00AE0174 /* PassThroughView.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				93A2ED872A6A5ADE00C2287D /* UserMissionDataView.swift in Sources */,
+				939194982A80ED920035FEB1 /* EditUserInfoViewViewModel.swift in Sources */,
 				93D1748A2A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift in Sources */,
 				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
 				93A2ED8E2A6E025000C2287D /* RewardsViewController.swift in Sources */,

@@ -7,9 +7,16 @@
 
 import UIKit
 import SwiftUI
+import Combine
 
 class EditUserInfoViewController: UIViewController {
 
+    // MARK: - Dependency
+    private let vm: EditUserInfoViewViewModel
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
     //MARK: - UI Elements
     private let emailView: InformationInputView = {
         let inputView = InformationInputView(type: .email)
@@ -49,22 +56,76 @@ class EditUserInfoViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Init
+    init(vm: EditUserInfoViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = .white
         self.title = EditUserInfo.editVCTitle
+        
         self.setUI()
         self.setLayout()
+        self.configure()
+        self.bind()
     }
 
 }
 
 extension EditUserInfoViewController {
+    private func bind() {
+        func bindViewToViewModel() {
+            self.newPasswordView.textField.textPublisher
+                .assign(to: \.newPassword, on: self.vm)
+                .store(in: &bindings)
+        }
+        func bindViewModelToView() {
+            
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+}
+
+extension EditUserInfoViewController {
     @objc private func editConfirmDidTap() {
-        // TODO: 수정 완료 이후 action 구현필요.
-        print("Need to define action for `수정하기` button.")
+        
+        Task {
+            do {
+                try await self.vm.updatePassword(newPassword: self.vm.newPassword)
+            }
+            catch {
+                print("Error updating password -- \(error)")
+            }
+        }
+    }
+    
+    private func updatePassword() {
+        
+    }
+}
+
+// MARK: - Configure
+extension EditUserInfoViewController {
+    private func configure() {
+        do {
+            let user = try UPlusUser.getCurrentUser()
+            self.emailView.setPlaceHolder(user.userNickname)
+        }
+        catch {
+            // TODO: 유저정보 에러 Alert.
+        }
+        
     }
 }
 

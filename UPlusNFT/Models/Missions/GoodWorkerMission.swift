@@ -20,7 +20,7 @@ struct GoodWorkerMission: Codable, Hashable, Mission, DailyMission {
     var missionEndTime: Timestamp?
     var missionRewardPoint: Int64
     var missionSubTopicType: String
-    var missionSubFormatType: String
+    var missionSubFormatType: String?
     var missionContentImagePaths: [String]?
     var missionUserStateMap: [String : String]?
     var missionPermitAvatarLevel: Int64

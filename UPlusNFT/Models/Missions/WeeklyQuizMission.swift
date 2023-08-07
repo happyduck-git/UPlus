@@ -105,7 +105,7 @@ protocol Mission {
     var missionTopicType: String { get set }
     var missionSubTopicType: String { get set }
     var missionFormatType: String { get set }
-    var missionSubFormatType: String { get set }
+    var missionSubFormatType: String? { get set }
     var missionContentTitle: String? { get set }
     var missionContentText: String? { get set }
     var missionContentImagePaths: [String]? { get set }
@@ -121,7 +121,7 @@ struct WeeklyQuizMission: Codable, Mission, WeeklyMission {
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
-    var missionSubFormatType: String
+    var missionSubFormatType: String?
     var missionContentTitle: String?
     var missionContentText: String?
     var missionContentImagePaths: [String]?

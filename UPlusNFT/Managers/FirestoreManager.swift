@@ -491,7 +491,7 @@ extension FirestoreManager {
             .document(participationDate.yearMonthDateFormat)
             .setData(
                 [
-                    FirestoreConstants.missionUserStateMap: [userIndex: MissionUserState.pending.rawValue]
+                    FirestoreConstants.missionUserStateMap: [String(describing: userIndex): MissionUserState.pending.rawValue]
                 ],
                 merge: true)
         
@@ -528,6 +528,23 @@ extension FirestoreManager {
 extension FirestoreManager {
     
     // MARK: - Get Missions
+    
+    /*
+    func getRoutineMission(type: MissionType) async throws -> [RoutineMission] {
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+            .collection(type.storagePathFolderName)
+            .getDocuments()
+            .documents
+        
+        var missions: [RoutineMission] = []
+        
+        for doc in documents {
+            missions.append(try doc.data(as: RoutineMission.self, decoder: self.decoder))
+        }
+        return missions
+    }
+    */
+    
     func getAthleteMission() async throws -> [AthleteMission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(FirestoreConstants.athleteMission)
