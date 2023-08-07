@@ -10,6 +10,7 @@ import UIKit
 enum ManagerSection: String, CaseIterable {
     case dailyMission = "루틴미션"
     case weeklyMission = "여정미션"
+    case missionPermit = "미션 상태 변경"
 }
 
 final class ManagerViewController: UIViewController {
@@ -49,9 +50,12 @@ extension ManagerViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
+        let row = indexPath.row
+        if row == 0 {
             let vc = ManagerRoutineMissionViewController()
             self.show(vc, sender: self)
+        } else if row == 2 {
+            
         }
     }
 }
