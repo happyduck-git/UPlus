@@ -170,9 +170,7 @@ extension MyPageViewController {
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-                    print("MIssion: \(mission)")
                     collection.reloadSections(IndexSet(integer: 0))
-                    
                 }
                 .store(in: &bindings)
             

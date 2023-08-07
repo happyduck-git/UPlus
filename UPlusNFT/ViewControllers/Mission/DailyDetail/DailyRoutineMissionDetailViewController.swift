@@ -39,7 +39,6 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     
     // MARK: - Init
     init(vm: DailyRoutineMissionDetailViewViewModel) {
-        print("Init")
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         
