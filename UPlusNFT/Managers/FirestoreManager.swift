@@ -488,7 +488,7 @@ extension FirestoreManager {
     ///   - missionType: Mission type.
     ///   - point: Point the user gets from the mission.
     ///   - state: Mission completion state.
-    func saveParticipatedMission(userIndex: Int64,
+    func saveParticipatedWeeklyMission(userIndex: Int64,
                                  questionId: String,
                                  week: Int,
                                  date: String,
@@ -543,7 +543,7 @@ extension FirestoreManager {
         try await batch.commit()
     }
     
-    func saveDailyMissionPhoto(userIndex: Int64,
+    func saveParticipatedDailyMission(userIndex: Int64,
                                missionType: MissionType,
                                image: Data) async throws {
         
@@ -643,7 +643,7 @@ extension FirestoreManager {
             .document(FirestoreConstants.missions)
             .collection(MissionType.eventMission.storagePathFolderName)
             .document(eventId)
-        
+        print("Event -- \(eventDocPath.path)")
         var status: MissionUserState = .succeeded
         
         switch type {
@@ -731,21 +731,19 @@ extension FirestoreManager {
             [
                 FirestoreConstants.userPointTime: today,
                 FirestoreConstants.userPointCount: FieldValue.increment(Int64(point)),
-                FirestoreConstants.userPointMissions: FieldValue.arrayUnion([userDocRef])
+                FirestoreConstants.userPointMissions: FieldValue.arrayUnion([eventDocPath])
             ],
             forDocument: userPointDocPath,
             merge: true
         )
         
         var dailyPointHistory = (user.userPointHistory ?? [])
-        print("History: \(dailyPointHistory)")
+
         let filtered = dailyPointHistory.filter {
             $0.userPointTime == today
         }.first
         let todayPrevPoint = filtered?.userPointCount ?? 0
         let todayNewPoint = todayPrevPoint + point
-        print("Today prev point: \(todayPrevPoint)")
-        print("Today new point: \(todayNewPoint)")
         
         batch.setData(
             [

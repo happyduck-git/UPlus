@@ -115,7 +115,7 @@ extension WeeklyMissionCompleteViewController {
                         let user = try UPlusUser.getCurrentUser()
   
                         try await self.firestoreManager
-                            .saveParticipatedMission(userIndex: user.userIndex,
+                            .saveParticipatedWeeklyMission(userIndex: user.userIndex,
                                                      questionId: dataSource.missionId,
                                                      week: self.vm.numberOfWeek,
                                                      date: Date().yearMonthDateFormat,

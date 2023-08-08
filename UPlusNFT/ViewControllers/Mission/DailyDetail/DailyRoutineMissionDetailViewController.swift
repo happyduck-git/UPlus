@@ -405,7 +405,7 @@ extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionVi
                 guard let imageData = self.vm.selectedImage?.jpegData(compressionQuality: 0.75) else {
                     return
                 }
-                try await self.firestoreManager.saveDailyMissionPhoto(userIndex: user.userIndex,
+                try await self.firestoreManager.saveParticipatedDailyMission(userIndex: user.userIndex,
                                                                       missionType: self.vm.missionType,
                                                                       image: imageData)
                 
