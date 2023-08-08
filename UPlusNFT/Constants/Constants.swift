@@ -321,6 +321,16 @@ struct FirestoreConstants {
     static let missionFormatType = "mission_format_type"
     static let missionSubFormatType = "mission_sub_format_type"
     
+    /* Event */
+    static let governanceElectionUserMap = "governance_election_user_map"
+    static let shareMediaOnSlackDownloadedUsers = "share_media_on_slack_downloaded_users"
+    
+    static let commentCountMap = "comment_count_map"
+    static let commentUserRecents = "comment_user_recents"
+    static let dailyPointHistorySet = "daily_point_history_set"
+    static let pointHistoryUserCountMap = "point_history_user_count_map"
+    static let usersPointUserCountMap = "users_point_user_count_map"
+    
     /* Reward */
     static let rewardUser = "reward_user"
 }

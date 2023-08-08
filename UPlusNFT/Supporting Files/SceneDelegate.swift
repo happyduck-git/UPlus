@@ -30,6 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             Task {
                 await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
+                print("Setbasicinfo")
                 let userInfo = try UPlusUser.getCurrentUser()
 
                 let loginVM = LoginViewViewModel()

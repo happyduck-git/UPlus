@@ -100,12 +100,12 @@ protocol Mission {
     var missionTopicType: String { get set }
     var missionSubTopicType: String { get set }
     var missionFormatType: String { get set }
-    var missionSubFormatType: String? { get set }
+    var missionSubFormatType: String { get set }
     var missionContentTitle: String? { get set }
     var missionContentText: String? { get set }
     var missionContentImagePaths: [String]? { get set }
     var missionCreationTime: Timestamp { get set }
-    var missionStartTime: Timestamp? { get set } //주간 퀴즈미션 weekly_quiz 은 항상 일요일
+    var missionStartTime: Timestamp { get set } //주간 퀴즈미션 weekly_quiz 은 항상 일요일
     var missionUserStateMap: [String: String]? { get set }
     var missionRewardPoint: Int64 { get set }
     var missionPermitAvatarLevel: Int64 { get set }
@@ -116,12 +116,12 @@ struct WeeklyQuizMission: Codable, Mission {
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
-    var missionSubFormatType: String?
+    var missionSubFormatType: String
     var missionContentTitle: String?
     var missionContentText: String?
     var missionContentImagePaths: [String]?
     var missionCreationTime: Timestamp
-    var missionStartTime: Timestamp?
+    var missionStartTime: Timestamp
     var missionUserStateMap: [String : String]?
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64

@@ -70,11 +70,11 @@ final class MyPageViewViewModel {
         self.todayRank = todayRank
         
         Task {
-            async let _ = self.getSelectedRoutine()
-            async let _ = self.createMissionMainViewViewModel()
+            await self.getSelectedRoutine()
+            await self.createMissionMainViewViewModel()
 //            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
-            async let _ = self.getMissionsTimeline()
-            async let _ = self.getEventMission()
+            await self.getMissionsTimeline()
+            await self.getEventMission()
         }
         
     }
@@ -168,15 +168,13 @@ extension MyPageViewViewModel {
         }
     }
     
-    func getEventMission() {
-        Task {
-            do {
-                self.eventMissions = try await self.firestoreManager.getEvent()
-                print("Mssioon; \(eventMissions.count)")
-            }
-            catch {
-                print("Error fetching event missions -- \(error)")
-            }
+    func getEventMission() async {
+        do {
+            self.eventMissions = try await self.firestoreManager.getEvent()
+            print("Mssioon; \(eventMissions.count)")
+        }
+        catch {
+            print("Error fetching event missions -- \(error)")
         }
     }
     

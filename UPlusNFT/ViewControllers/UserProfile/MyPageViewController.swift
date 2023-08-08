@@ -209,7 +209,18 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
-            self.vm.eventMissions
+            self.vm.$eventMissions
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] data in
+                    guard let `self` = self,
+                          let collection = self.collectionView
+                    else { return }
+                    if self.screenToShow == 1 {
+                        print("Reloaded")
+                        collection.reloadData()
+                    }
+                }
+                .store(in: &bindings)
                 
             
             self.vm.$isHistorySectionOpened
@@ -375,6 +386,7 @@ extension MyPageViewController {
             forCellWithReuseIdentifier: UICollectionViewCell.identifier
         )
         
+        // Mission Cells
         collectionView.register(
             TodayMissionCollectionViewCell.self,
             forCellWithReuseIdentifier: TodayMissionCollectionViewCell.identifier
@@ -405,6 +417,12 @@ extension MyPageViewController {
             forCellWithReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier
         )
         
+        // Event Cell
+        collectionView.register(
+            EventCollectionViewCell.self,
+            forCellWithReuseIdentifier: EventCollectionViewCell.identifier
+        )
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
@@ -426,6 +444,7 @@ extension MyPageViewController {
         
     }
     
+    // Missions
     private func createTodayMissionSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
@@ -555,6 +574,27 @@ extension MyPageViewController {
         return section
     }
     
+    // Event
+    private func createEventSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.1)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(1.0)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        return section
+    }
 }
 
 extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -583,6 +623,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return 1
             }
         } else {
+            print("Itmes: \(self.vm.eventMissions.count)")
             return self.vm.eventMissions.count
         }
     }
@@ -669,8 +710,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return cell
             }
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
-            cell.backgroundColor = .blue
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventCollectionViewCell.identifier, for: indexPath) as? EventCollectionViewCell else {
+                fatalError()
+            }
+            cell.configure(with: self.vm.eventMissions[indexPath.item])
+            
             return cell
         }
         
@@ -719,7 +763,42 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 break
             }
         } else {
+            // Temp: 관련된 값 저장
+            print("Event tapped!")
+            Task {
+                let mission = self.vm.eventMissions[indexPath.item]
+                let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
+                
+                var selectedIndex: Int?
+                var comment: String?
+                
+                switch type {
+                case .governanceElection:
+                    selectedIndex = 1 // NOTE: DEMO
+                case .commentCount:
+                    comment = "Demo comment입니다." // NOTE: DEMO
+                default:
+                   break
+                }
+                do {
+                    try await FirestoreManager.shared.saveParticipatedEventMission(
+                        type: type,
+                        eventId: mission.missionId,
+                        selectedIndex: selectedIndex,
+                        comment: comment,
+                        point: mission.missionRewardPoint
+                    )
+                }
+                catch {
+                    print("Error saving participated event -- \(error)")
+                }
+            }
+            
+            /*
             // TODO: event tap 시 실행될 detail VC 전환.
+            let vc = EventDetailViewController()
+            self.show(vc, sender: self)
+             */
         }
     }
     

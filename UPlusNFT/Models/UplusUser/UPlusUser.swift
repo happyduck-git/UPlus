@@ -17,11 +17,11 @@ struct UPlusUser: Codable {
     let userNickname: String
     let userWalletAddress: String?
     let userAccountCreationTime: Timestamp?
-    let userTotalPoint: Int64?
+    var userTotalPoint: Int64?
     let userHasVipNft: Bool
     let userRewards: [DocumentReference]? // 사용자가 획득한 보상 아이템 다큐먼트를 배열로 갖는다.
     let userNfts: [DocumentReference]? //사용자가 획득한 NFT 다큐먼트를 배열로 갖는다.
-    let userTypeMissionArrayMap: [String: DocumentReference]? //사용자가 참여한 미션 다큐먼트를 map으로 갖는다.
+    let userTypeMissionArrayMap: [String: [DocumentReference]]? //사용자가 참여한 미션 다큐먼트를 map으로 갖는다.
     var userPointHistory: [PointHistory]?
     let userIsAdmin: Bool
     
@@ -31,7 +31,7 @@ extension UPlusUser {
     
     static func saveCurrentUser(email: String) async throws {
         let currentUser = try await FirestoreManager.shared.getCurrentUserInfo(email: email)
-        
+        print("currentUser: \(currentUser)")
         let codablePointHistory = currentUser.userPointHistory?.map { pointHistory in
             SwiftPointHistory(
                 userIndex: pointHistory.userIndex,
@@ -42,6 +42,9 @@ extension UPlusUser {
         }
         
         // Convert UPlusUser to SwiftUPlusUser
+        let path = currentUser.userTypeMissionArrayMap?.mapValues({ refList in
+            refList.map{ $0.path }
+        })
             let codableUser = SwiftUPlusUser(
                 userIndex: currentUser.userIndex,
                 userUid: currentUser.userUid,
@@ -53,16 +56,18 @@ extension UPlusUser {
                 userHasVipNft: currentUser.userHasVipNft,
                 userRewards: currentUser.userRewards?.map { $0.path },
                 userNfts: currentUser.userNfts?.map { $0.path },
-                userTypeMissionArrayMap: currentUser.userTypeMissionArrayMap?.mapValues { $0.path },
+                userTypeMissionArrayMap: path,
                 userPointHistory: codablePointHistory,
                 userIsAdmin: currentUser.userIsAdmin
             )
+        print("User: \(codableUser)")
         
         let encodedUserData = try JSONEncoder().encode(codableUser)
         UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
         #if DEBUG
         print("User Info Saved: \(codableUser)")
         #endif
+        
     }
     
     static func getCurrentUser() throws -> Self {
@@ -72,11 +77,58 @@ extension UPlusUser {
             print("Error getting saved user info from UserDefaults")
             throw UPlusUserError.noUserSaved
         }
+
+        return UPlusUser.convertToUPlusUser(user)
+    }
+    
+    static func updateUser(_ user: Self) throws {
+        let codableUser = user.convertToSwiftUser()
+        let encodedUserData = try JSONEncoder().encode(codableUser)
+        UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
+        #if DEBUG
+        print("User Info Updated: \(codableUser)")
+        #endif
+    }
+    
+    private func convertToSwiftUser() -> SwiftUPlusUser {
+        let codablePointHistory = self.userPointHistory?.map { pointHistory in
+            SwiftPointHistory(
+                userIndex: pointHistory.userIndex,
+                userPointTime: pointHistory.userPointTime,
+                userPointCount: pointHistory.userPointCount,
+                userPointMissions: pointHistory.userPointMissions?.map { $0.path }
+            )
+        }
+        
+        let path = self.userTypeMissionArrayMap?.mapValues({ refList in
+            refList.map{ $0.path }
+        })
+        
+        // Convert UPlusUser to SwiftUPlusUser
+        return SwiftUPlusUser(
+            userIndex: self.userIndex,
+            userUid: self.userUid,
+            userEmail: self.userEmail,
+            userNickname: self.userNickname,
+            userWalletAddress: self.userWalletAddress,
+            userAccountCreationTime: self.userAccountCreationTime,
+            userTotalPoint: self.userTotalPoint,
+            userHasVipNft: self.userHasVipNft,
+            userRewards: self.userRewards?.map { $0.path },
+            userNfts: self.userNfts?.map { $0.path },
+            userTypeMissionArrayMap: path,
+            userPointHistory: codablePointHistory,
+            userIsAdmin: self.userIsAdmin
+        )
+    }
+    
+    private static func convertToUPlusUser(_ user: SwiftUPlusUser) -> UPlusUser {
         
         let firestore = Firestore.firestore()
         let userRewards = user.userRewards?.map { firestore.document($0) }
         let userNfts = user.userNfts?.map { firestore.document($0) }
-        let userTypeMissionArrayMap = user.userTypeMissionArrayMap?.compactMapValues({ firestore.document($0)
+        let userTypeMissionArrayMap = user.userTypeMissionArrayMap?.compactMapValues({ refList in
+            refList.map { firestore.document($0) }
         })
         let pointHistory = user.userPointHistory?.map { swiftPointHistory in
             PointHistory(
@@ -87,7 +139,7 @@ extension UPlusUser {
             )
         }
         
-        let currentUser = UPlusUser(
+        return UPlusUser(
                 userIndex: user.userIndex,
                 userUid: user.userUid,
                 userEmail: user.userEmail,
@@ -102,8 +154,6 @@ extension UPlusUser {
                 userPointHistory: pointHistory,
                 userIsAdmin: user.userIsAdmin
             )
-
-        return currentUser
     }
     
     enum UPlusUserError: Error {
@@ -122,7 +172,7 @@ struct SwiftUPlusUser: Codable {
     let userHasVipNft: Bool
     let userRewards: [String]?
     let userNfts: [String]?
-    let userTypeMissionArrayMap: [String: String]?
+    let userTypeMissionArrayMap: [String: [String]]?
     var userPointHistory: [SwiftPointHistory]?
     let userIsAdmin: Bool
 }
@@ -134,8 +184,8 @@ struct PointHistory: Codable {
     var userIndex: String?
     
     let userPointTime: String //사용자가 포인트를 획득한 날짜를 가리킨다. 날짜와는 다르게 시각은 항상 00시 00분을 가리킨다.
-    let userPointCount: Int64 //사용자가 해당일 획득한 포인트의 총량을 가리킨다.
-    let userPointMissions: [DocumentReference]?
+    var userPointCount: Int64 //사용자가 해당일 획득한 포인트의 총량을 가리킨다.
+    var userPointMissions: [DocumentReference]?
 }
 
 // 누적 랭킹: userPointHistory.map { //upserPointCount 총합 } 반영
