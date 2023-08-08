@@ -41,7 +41,6 @@ class MissionMainViewController: UIViewController {
         self.setLayout()
         self.setDelegate()
         
-        self.vm.getWeeklyMission()
         self.bind()
     }
 

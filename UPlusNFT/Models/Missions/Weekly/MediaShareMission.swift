@@ -1,14 +1,14 @@
 //
-//  EnvironmentalistMission.swift
+//  MediaShareMission.swift
 //  UPlusNFT
 //
-//  Created by Platfarm on 2023/07/20.
+//  Created by Platfarm on 2023/08/07.
 //
 
 import Foundation
 import FirebaseFirestore
 
-struct EnvironmentalistMission: Codable, Mission, DailyMission {
+struct MediaShareMission: Mission, Codable {
     var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
@@ -19,7 +19,9 @@ struct EnvironmentalistMission: Codable, Mission, DailyMission {
     var missionContentImagePaths: [String]?
     var missionCreationTime: Timestamp
     var missionStartTime: Timestamp?
-    var missionRewardPoint: Int64
     var missionUserStateMap: [String : String]?
+    var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
+    
+    var shareMediaOnSlackDownloadedUsers: [Int64]?
 }

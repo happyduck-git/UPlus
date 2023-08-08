@@ -370,24 +370,68 @@ extension FirestoreManager {
     }
     
     /* Weekly Mission */
-    func getWeeklyMission(week: Int) async throws -> [WeeklyQuizMission] {
+    func getWeeklyMission(week: Int) async throws -> [any Mission] {
         
-        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+//        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let weekCollection = String(format: "weekly_quiz__%d__mission_set", 1)
         
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(weekCollection)
             .getDocuments()
             .documents
         
-        var missions: [WeeklyQuizMission] = []
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        var missions: [any Mission] = []
         
         for doc in documents {
-            var data = try doc.data(as: WeeklyQuizMission.self, decoder: decoder)
-            data.postId = doc.documentID
-            missions.append(data)
+            let data = doc.data()
+            let type = data[FirestoreConstants.missionFormatType] as? String ?? "n/a"
+           
+            let formatType = MissionFormatType(rawValue: type)
+            switch formatType {
+            case .choiceQuiz:
+                missions.append(try doc.data(as: ChoiceQuizMission.self, decoder: self.decoder))
+            case .answerQuiz:
+                missions.append(try doc.data(as: ShortAnswerQuizMission.self, decoder: self.decoder))
+            case .contentReadOnly:
+                missions.append(try doc.data(as: ContentReadOnlyMission.self, decoder: self.decoder))
+
+            default:
+                break
+            }
+            
         }
+      
+        return missions
+    }
+    
+    func getEvent() async throws -> [any Mission] {
+    
+        let documents = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(MissionType.eventMission.storagePathFolderName)
+            .getDocuments()
+            .documents
+        
+        var missions: [any Mission] = []
+        
+        for doc in documents {
+            let data = doc.data()
+            let type = data[FirestoreConstants.missionFormatType] as? String ?? "n/a"
+           
+            let formatType = MissionFormatType(rawValue: type)
+            switch formatType {
+            case .contentReadOnly:
+                missions.append(try doc.data(as: ContentReadOnlyMission.self, decoder: self.decoder))
+            case .shareMediaOnSlack:
+                missions.append(try doc.data(as: MediaShareMission.self, decoder: self.decoder))
+            case .governanceElection:
+                missions.append(try doc.data(as: GovernanceMission.self, decoder: self.decoder))
+            default:
+                break
+            }
+            
+        }
+      
         return missions
     }
     
@@ -589,22 +633,6 @@ extension FirestoreManager {
         
         for doc in documents {
             missions.append(try doc.data(as: GoodWorkerMission.self, decoder: decoder))
-        }
-        return missions
-    }
-    
-    func getSuddenMission() async throws -> [SuddenMission] {
-        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
-            .collection(FirestoreConstants.suddenMission)
-            .getDocuments()
-            .documents
-        
-        var missions: [SuddenMission] = []
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
-        for doc in documents {
-            missions.append(try doc.data(as: SuddenMission.self, decoder: decoder))
         }
         return missions
     }

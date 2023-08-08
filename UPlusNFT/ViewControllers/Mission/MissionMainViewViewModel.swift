@@ -75,39 +75,3 @@ final class MissionMainViewViewModel {
     
 }
 
-/* NOT IN USE */
-// MARK: - Fetch Data from Firestore
-extension MissionMainViewViewModel {
-    
-    
-    /// Calculate current number of week from the service start date.
-    /// - Returns: Number of week.
-    private func getNumberOfWeek() -> Int {
-        let currentDate = Date()
-        
-        guard let startDate = self.dateFormatter.date(from: UPlusServiceInfoConstant.startDay) else {
-            return 0
-        }
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: startDate, to: currentDate)
-        
-        guard let day = components.day else {
-            return 0
-        }
-        
-        return (day / 7) + 1
-    }
-    
-    func getWeeklyMission() {
-        Task {
-            do {
-                let week = self.getNumberOfWeek()
-                self.weeklyMissions = try await self.firestoreManager.getWeeklyMission(week: week)
-            }
-            catch {
-                print("Error fetching Daily Attendance Missions -- \(error)")
-            }
-        }
-    }
-
-}

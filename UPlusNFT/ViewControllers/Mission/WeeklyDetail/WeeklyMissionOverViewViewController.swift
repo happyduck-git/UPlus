@@ -59,7 +59,7 @@ extension WeeklyMissionOverViewViewController {
             
         }
         func bindViewModelToView() {
-            self.vm.$missions
+            self.vm.$anyMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
@@ -93,14 +93,14 @@ extension WeeklyMissionOverViewViewController {
 extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.vm.missions.count
+        return self.vm.anyMissions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         // 1. Check if user has participated a cetain mission
-        let mission = self.vm.missions[indexPath.row]
-        let hasParticipated = self.vm.participation[mission.missionId] ?? false
+        let mission = self.vm.anyMissions[indexPath.row]
+        let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
         var config = cell.defaultContentConfiguration()
         
         if hasParticipated {
@@ -124,15 +124,32 @@ extension WeeklyMissionOverViewViewController {
 extension WeeklyMissionOverViewViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let anyMission = self.vm.anyMissions[indexPath.row]
         
-        let mission = self.vm.missions[indexPath.row]
+        if anyMission is ShortAnswerQuizMission {
+            let mission = anyMission as! ShortAnswerQuizMission
+            print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+            
+        } else if anyMission is ChoiceQuizMission {
+            let mission = anyMission as! ChoiceQuizMission
+            print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+            
+        } else if anyMission is ContentReadOnlyMission {
+            let mission = anyMission as! ContentReadOnlyMission
+            print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+        }
+        
+/*
+//        let mission = self.vm.missions[indexPath.row]
         // 1. Check if user has participated a cetain mission
-        let hasParticipated = self.vm.participation[mission.missionId] ?? false
+        let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
         // 1-1. If so, ban selection.
         if hasParticipated {
             return
         } else {
             // 1-2. If not, allow selection.
+            let anytype = MissionFormatType(rawValue: anyMission.missionFormatType)
+            
             let missionType = MissionFormatType(rawValue: mission.missionFormatType)
             
             let cellVM = WeeklyMissionDetailViewViewModel(dataSource: mission,
@@ -150,7 +167,9 @@ extension WeeklyMissionOverViewViewController {
             default:
                 break
             }
+ 
         }
+ */
     }
 }
 

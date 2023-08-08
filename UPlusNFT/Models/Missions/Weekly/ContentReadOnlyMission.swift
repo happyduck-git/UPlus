@@ -1,14 +1,14 @@
 //
-//  ChoiceQuizMission.swift
+//  ContentReadOnlyMission.swift
 //  UPlusNFT
 //
-//  Created by HappyDuck on 2023/07/26.
+//  Created by Platfarm on 2023/08/07.
 //
 
 import Foundation
 import FirebaseFirestore
 
-struct ChoiceQuizMission: Mission {
+struct ContentReadOnlyMission: Mission, Codable {
     var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
@@ -22,7 +22,4 @@ struct ChoiceQuizMission: Mission {
     var missionUserStateMap: [String : String]?
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
-    
-    let missionChoiceQuizCaptions: [String]
-    let missionChoiceQuizRightOrder: Int64
 }

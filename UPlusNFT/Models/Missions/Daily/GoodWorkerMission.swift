@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct GoodWorkerMission: Codable, Hashable, Mission, DailyMission {
+struct GoodWorkerMission: Codable, Hashable, Mission {
     var missionId: String
     var missionTopicType: String
     var missionFormatType: String

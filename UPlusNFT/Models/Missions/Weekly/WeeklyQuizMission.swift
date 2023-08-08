@@ -21,6 +21,8 @@ enum MissionType: String {
     
     var storagePathFolderName: String {
         switch self {
+        case .eventMission:
+            return "event__mission_set"
         default:
             return self.rawValue + "__mission_set"
         }
@@ -93,15 +95,8 @@ enum MissionUserState: String {
     case failed
 }
 
-protocol WeeklyMission {
-    var missionId: Int64 { get set } // document ID와 동일. missionTopicType과 복합된 고유한 키값.
-}
-
-protocol DailyMission {
-    var missionId: String { get set } // document ID와 동일. missionTopicType과 복합된 고유한 키값.
-}
-
 protocol Mission {
+    var missionId: String { get set }
     var missionTopicType: String { get set }
     var missionSubTopicType: String { get set }
     var missionFormatType: String { get set }
@@ -116,8 +111,8 @@ protocol Mission {
     var missionPermitAvatarLevel: Int64 { get set }
 }
 
-struct WeeklyQuizMission: Codable, Mission, WeeklyMission {
-    var missionId: Int64
+struct WeeklyQuizMission: Codable, Mission {
+    var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
@@ -131,7 +126,6 @@ struct WeeklyQuizMission: Codable, Mission, WeeklyMission {
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
     
-    var postId: String?
     // 객관식
     let missionChoiceQuizCaptions: [String]?
     let missionChoiceQuizRightOrder: Int64?

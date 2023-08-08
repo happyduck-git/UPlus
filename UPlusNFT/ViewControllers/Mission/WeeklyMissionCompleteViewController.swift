@@ -105,8 +105,8 @@ extension WeeklyMissionCompleteViewController {
                 self.addChildViewController(self.loadingVC)
                 
                 let dataSource = self.vm.dataSource
-                guard let questionId = dataSource.postId,
-                      let missionType = MissionType(rawValue: dataSource.missionSubTopicType) else {
+               
+               guard let missionType = MissionType(rawValue: dataSource.missionSubTopicType) else {
                     return
                 }
                 
@@ -116,7 +116,7 @@ extension WeeklyMissionCompleteViewController {
   
                         try await self.firestoreManager
                             .saveParticipatedMission(userIndex: user.userIndex,
-                                                     questionId: questionId,
+                                                     questionId: dataSource.missionId,
                                                      week: self.vm.numberOfWeek,
                                                      date: Date().yearMonthDateFormat,
                                                      missionType: missionType,

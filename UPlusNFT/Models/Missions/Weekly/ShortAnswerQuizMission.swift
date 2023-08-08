@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct ShortAnswerQuizMission: Mission {
+struct ShortAnswerQuizMission: Mission, Codable {
     var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String

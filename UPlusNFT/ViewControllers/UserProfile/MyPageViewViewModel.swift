@@ -15,7 +15,7 @@ final class MyPageViewViewModel {
     private let firestoreManager = FirestoreManager.shared
     
     //MARK: - Sections
-    enum MyPageViewSectionType: String, CaseIterable {
+    enum MyPageViewMissionSectionType: String, CaseIterable {
         case today
         case routine = "루틴 미션"
         case weekly = "여정 미션"
@@ -23,7 +23,12 @@ final class MyPageViewViewModel {
         case calendar
     }
     
-    let sections: [MyPageViewSectionType] = MyPageViewSectionType.allCases
+    enum MyPageViewEventSectionType: CaseIterable {
+        case mission
+    }
+    
+    let missionSections: [MyPageViewMissionSectionType] = MyPageViewMissionSectionType.allCases
+    let eventSections: [MyPageViewEventSectionType] = MyPageViewEventSectionType.allCases
     
     //MARK: - DataSource
     /* Basic Data */
@@ -38,6 +43,9 @@ final class MyPageViewViewModel {
     @Published var savedMissionType: MissionType?
     @Published var routineParticipationCount: Int = 0
     @Published var routinePoint: Int64 = 0
+    
+    /* Event tap */
+    @Published var eventMissions: [any Mission] = []
     
     /* Mission Select BottomVC */
     @Published var topButton: Bool = false
@@ -66,6 +74,7 @@ final class MyPageViewViewModel {
             async let _ = self.createMissionMainViewViewModel()
 //            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
             async let _ = self.getMissionsTimeline()
+            async let _ = self.getEventMission()
         }
         
     }
@@ -155,6 +164,18 @@ extension MyPageViewViewModel {
             }
             catch {
                 print("Error fetching participation count: \(error)")
+            }
+        }
+    }
+    
+    func getEventMission() {
+        Task {
+            do {
+                self.eventMissions = try await self.firestoreManager.getEvent()
+                print("Mssioon; \(eventMissions.count)")
+            }
+            catch {
+                print("Error fetching event missions -- \(error)")
             }
         }
     }

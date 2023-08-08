@@ -1,5 +1,5 @@
 //
-//  MediaShareMission.swift
+//  GovernanceMission.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/08/07.
@@ -8,7 +8,8 @@
 import Foundation
 import FirebaseFirestore
 
-struct MediaShareMission: Mission {
+struct GovernanceMission: Mission, Codable {
+    var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
@@ -21,5 +22,7 @@ struct MediaShareMission: Mission {
     var missionUserStateMap: [String : String]?
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
-    var shareMediaOnSlackDownloadedUsers: [Int64]?
+    
+    var governance_election_captions: [String]
+    var governance_election_users: [[DocumentReference]]?
 }
