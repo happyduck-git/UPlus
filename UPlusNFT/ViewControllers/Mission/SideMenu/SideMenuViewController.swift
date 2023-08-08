@@ -10,6 +10,7 @@ import FirebaseAuth
 
 protocol SideMenuViewControllerDelegate: AnyObject {
     func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int)
+    func resetPasswordDidTap()
 }
 
 final class SideMenuViewController: UIViewController {
@@ -74,8 +75,7 @@ final class SideMenuViewController: UIViewController {
 
 extension SideMenuViewController {
     @objc private func openResetPasswordVC() {
-        let vc = EditUserInfoViewController()
-        self.show(vc, sender: self)
+        self.delegate?.resetPasswordDidTap()
     }
     
     @objc private func userLogOut() {

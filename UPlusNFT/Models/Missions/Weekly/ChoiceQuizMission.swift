@@ -1,18 +1,19 @@
 //
-//  MediaShareMission.swift
+//  ChoiceQuizMission.swift
 //  UPlusNFT
 //
-//  Created by Platfarm on 2023/08/07.
+//  Created by HappyDuck on 2023/07/26.
 //
 
 import Foundation
 import FirebaseFirestore
 
-struct MediaShareMission: Mission {
+struct ChoiceQuizMission: Mission, Codable {
+    var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
-    var missionSubFormatType: String
+    var missionSubFormatType: String?
     var missionContentTitle: String?
     var missionContentText: String?
     var missionContentImagePaths: [String]?
@@ -21,5 +22,7 @@ struct MediaShareMission: Mission {
     var missionUserStateMap: [String : String]?
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
-    var shareMediaOnSlackDownloadedUsers: [Int64]?
+    
+    let missionChoiceQuizCaptions: [String]
+    let missionChoiceQuizRightOrder: Int64
 }

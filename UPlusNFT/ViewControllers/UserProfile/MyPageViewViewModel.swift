@@ -15,7 +15,7 @@ final class MyPageViewViewModel {
     private let firestoreManager = FirestoreManager.shared
     
     //MARK: - Sections
-    enum MyPageViewSectionType: String, CaseIterable {
+    enum MyPageViewMissionSectionType: String, CaseIterable {
         case today
         case routine = "루틴 미션"
         case weekly = "여정 미션"
@@ -23,7 +23,12 @@ final class MyPageViewViewModel {
         case calendar
     }
     
-    let sections: [MyPageViewSectionType] = MyPageViewSectionType.allCases
+    enum MyPageViewEventSectionType: CaseIterable {
+        case mission
+    }
+    
+    let missionSections: [MyPageViewMissionSectionType] = MyPageViewMissionSectionType.allCases
+    let eventSections: [MyPageViewEventSectionType] = MyPageViewEventSectionType.allCases
     
     //MARK: - DataSource
     /* Basic Data */
@@ -39,6 +44,9 @@ final class MyPageViewViewModel {
     @Published var routineParticipationCount: Int = 0
     @Published var routinePoint: Int64 = 0
     
+    /* Event tap */
+    @Published var eventMissions: [any Mission] = []
+    
     /* Mission Select BottomVC */
     @Published var topButton: Bool = false
     @Published var midButton: Bool = false
@@ -49,24 +57,24 @@ final class MyPageViewViewModel {
     //MARK: - Properties
     let user: UPlusUser
     let todayRank: Int
-    let missionViewModel: MissionMainViewViewModel
+    @Published var missionViewModel: MissionMainViewViewModel?
     
     init(user: UPlusUser,
          isJustRegistered: Bool,
          isVip: Bool,
-         todayRank: Int,
-         missionViewModel: MissionMainViewViewModel
+         todayRank: Int
     ) {
         self.user = user
         self.isJustRegistered = isJustRegistered
         self.isVIP = isVip
         self.todayRank = todayRank
-        self.missionViewModel = missionViewModel
         
         Task {
             async let _ = self.getSelectedRoutine()
+            async let _ = self.createMissionMainViewViewModel()
 //            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
             async let _ = self.getMissionsTimeline()
+            async let _ = self.getEventMission()
         }
         
     }
@@ -160,8 +168,54 @@ extension MyPageViewViewModel {
         }
     }
     
+    func getEventMission() {
+        Task {
+            do {
+                self.eventMissions = try await self.firestoreManager.getEvent()
+                print("Mssioon; \(eventMissions.count)")
+            }
+            catch {
+                print("Error fetching event missions -- \(error)")
+            }
+        }
+    }
+    
     func getNft(reference: DocumentReference) async throws -> UPlusNft {
         return try await self.firestoreManager.getNft(reference: reference)
+    }
+    
+    func createMissionMainViewViewModel() async {
+        do {
+            let userInfo = try UPlusUser.getCurrentUser()
+            let nft = await self.getMemberNft(userIndex: userInfo.userIndex,
+                                        isVip: userInfo.userHasVipNft)
+            
+            self.missionViewModel = MissionMainViewViewModel(
+                profileImage: nft,
+                username: userInfo.userNickname,
+                points: userInfo.userTotalPoint ?? 0,
+                maxPoints: 15,
+                level: 1,
+                numberOfMissions: Int64(userInfo.userTypeMissionArrayMap?.values.count ?? 0),
+                timeLeft: 12
+            )
+        }
+        catch {
+            print("Error creating mission main view model -- \(error)")
+        }
+        
+    }
+    
+    private func getMemberNft(userIndex: Int64, isVip: Bool) async -> String {
+        do {
+            return try await self.firestoreManager.getMemberNft(userIndex: userIndex,
+                                               isVip: isVip)
+        }
+        catch {
+            print("Error fetching hold nft -- \(error)")
+            return String()
+        }
+        
     }
 }
 

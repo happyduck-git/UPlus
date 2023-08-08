@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct GoodWorkerMission: Codable, Hashable, Mission, DailyMission {
+struct GoodWorkerMission: Codable, Hashable, Mission {
     var missionId: String
     var missionTopicType: String
     var missionFormatType: String
@@ -20,7 +20,7 @@ struct GoodWorkerMission: Codable, Hashable, Mission, DailyMission {
     var missionEndTime: Timestamp?
     var missionRewardPoint: Int64
     var missionSubTopicType: String
-    var missionSubFormatType: String
+    var missionSubFormatType: String?
     var missionContentImagePaths: [String]?
     var missionUserStateMap: [String : String]?
     var missionPermitAvatarLevel: Int64

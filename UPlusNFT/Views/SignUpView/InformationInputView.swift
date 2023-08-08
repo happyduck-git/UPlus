@@ -34,7 +34,7 @@ class InformationInputView: UIView {
         return label
     }()
     
-    private let textField: UITextField = {
+    let textField: UITextField = {
         let txtField = UITextField()
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect

@@ -14,6 +14,7 @@ final class MyPageViewController: UIViewController {
     // MARK: - Dependency
     private let vm: MyPageViewViewModel
     private var sideMenuVC: SideMenuViewController?
+    
     // MARK: - Side Menu Controller Manager
     private lazy var slideInTransitioningDelegate = SideMenuPresentationManager()
     
@@ -30,6 +31,8 @@ final class MyPageViewController: UIViewController {
     private var heightConstraint: NSLayoutConstraint?
     
     // MARK: - UI Elements
+    private var screenToShow: Int = 0
+    
     private let loadingVC = LoadingViewController()
     
     private let containerView: PassThroughView = {
@@ -152,7 +155,16 @@ final class MyPageViewController: UIViewController {
     }
     
     @objc func buttonDidTap(_ sender: UIButton) {
-        
+        self.screenToShow = sender.tag
+        switch sender.tag {
+        case 0:
+            collectionView?.reloadData()
+            return
+        case 1:
+            collectionView?.reloadData()
+        default:
+            return
+        }
     }
     
 }
@@ -164,6 +176,16 @@ extension MyPageViewController {
             
         }
         func bindViewModelToView() {
+            self.vm.$missionViewModel
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] mission in
+                    guard let `self` = self,
+                          let collection = self.collectionView
+                    else { return }
+                    collection.reloadSections(IndexSet(integer: 0))
+                }
+                .store(in: &bindings)
+            
             self.vm.$savedMissionType
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] mission in
@@ -186,6 +208,9 @@ extension MyPageViewController {
                     collection.reloadSections(IndexSet(integer: 2))
                 }
                 .store(in: &bindings)
+            
+            self.vm.eventMissions
+                
             
             self.vm.$isHistorySectionOpened
                 .receive(on: DispatchQueue.main)
@@ -535,96 +560,117 @@ extension MyPageViewController {
 extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return self.vm.sections.count
+        switch self.screenToShow {
+        case 0:
+            return self.vm.missionSections.count
+        case 1:
+            return self.vm.eventSections.count
+        default:
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch section {
-        case 2:
-            // NOTE: self.vm.weeklyMissions.count 시 에러 확인
-            //            return self.vm.weeklyMissions.count
-            return 3
-        case 4:
-            return self.vm.isHistorySectionOpened ? 1 : 0
-        default:
-            return 1
+        if self.screenToShow == 0 {
+            switch section {
+            case 2:
+                // NOTE: self.vm.weeklyMissions.count 시 에러 확인
+                //            return self.vm.weeklyMissions.count
+                return 3
+            case 4:
+                return self.vm.isHistorySectionOpened ? 1 : 0
+            default:
+                return 1
+            }
+        } else {
+            return self.vm.eventMissions.count
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        switch indexPath.section {
-        case 0:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
-                fatalError()
-            }
-            cell.configure(with: self.vm.missionViewModel)
-            return cell
-            
-            // Routine mission
-        case 1:
-            if self.vm.savedMissionType == nil {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
+        if self.screenToShow == 0{
+            switch indexPath.section {
+            case 0:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
                     fatalError()
                 }
-                
-                return cell
-            } else {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
-                    fatalError()
+                guard let vm = self.vm.missionViewModel else {
+                    return cell
                 }
-                cell.bind(with: self.vm)
-                return cell
-            }
-            
-            // Weekly mission
-        case 2:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
-                fatalError()
-            }
-            cell.resetCell()
-            
-            if !self.vm.weeklyMissions.isEmpty {
-                let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
-                let missionInfo = self.vm.weeklyMissions[weekCollection] ?? []
-                let begin = missionInfo[0].dateValue().monthDayFormat
-                let end = missionInfo[1].dateValue().monthDayFormat
-                let weekTotalPoint: Int64 = 100 // TODO: Query from DB
                 
-                if missionInfo[0].dateValue() > Date() {
-                    cell.configure(type: .close,
-                                   title: weekCollection,
-                                   period: begin + " - " + end,
-                                   point: weekTotalPoint,
-                                   openDate: begin)
+                cell.configure(with: vm)
+                return cell
+                
+                // Routine mission
+            case 1:
+                if self.vm.savedMissionType == nil {
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
+                        fatalError()
+                    }
+                    
                     return cell
                 } else {
-                    cell.configure(type: .open, // open
-                                   title: weekCollection,
-                                   period: begin + " - " + end,
-                                   point: weekTotalPoint)
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
+                        fatalError()
+                    }
+                    cell.bind(with: self.vm)
                     return cell
                 }
-            } else {
+                
+                // Weekly mission
+            case 2:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
+                    fatalError()
+                }
+                cell.resetCell()
+                
+                if !self.vm.weeklyMissions.isEmpty {
+                    let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
+                    let missionInfo = self.vm.weeklyMissions[weekCollection] ?? []
+                    let begin = missionInfo[0].dateValue().monthDayFormat
+                    let end = missionInfo[1].dateValue().monthDayFormat
+                    let weekTotalPoint: Int64 = 100 // TODO: Query from DB
+                    
+                    if missionInfo[0].dateValue() > Date() {
+                        cell.configure(type: .close,
+                                       title: weekCollection,
+                                       period: begin + " - " + end,
+                                       point: weekTotalPoint,
+                                       openDate: begin)
+                        return cell
+                    } else {
+                        cell.configure(type: .open, // open
+                                       title: weekCollection,
+                                       period: begin + " - " + end,
+                                       point: weekTotalPoint)
+                        return cell
+                    }
+                } else {
+                    return cell
+                }
+                
+                
+                // Mission History button
+            case 3:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else {
+                    fatalError()
+                }
+                
+                cell.delegate = self
+                return cell
+                
+                // TODO: Calendar
+            default:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
+                    fatalError()
+                }
+                
                 return cell
             }
-            
-            
-            // Mission History button
-        case 3:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else {
-                fatalError()
-            }
-            
-            cell.delegate = self
-            return cell
-            
-            // TODO: Calendar
-        default:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
-                fatalError()
-            }
-            
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
+            cell.backgroundColor = .blue
             return cell
         }
         
@@ -640,7 +686,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             ) as? MissionCollectionViewHeader else {
                 return UICollectionReusableView()
             }
-            header.configure(headerText: vm.sections[indexPath.section].rawValue,
+            header.configure(headerText: vm.missionSections[indexPath.section].rawValue,
                              buttonTitle: "자세히 보기")
             return header
             
@@ -650,26 +696,30 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 1:
-            if let missionType = self.vm.savedMissionType {
-                let vm = DailyRoutineMissionDetailViewViewModel(missionType: missionType)
-                let vc = DailyRoutineMissionDetailViewController(vm: vm)
+        if self.screenToShow == 0 {
+            switch indexPath.section {
+            case 1:
+                if let missionType = self.vm.savedMissionType {
+                    let vm = DailyRoutineMissionDetailViewViewModel(missionType: missionType)
+                    let vc = DailyRoutineMissionDetailViewController(vm: vm)
+
+                    self.show(vc, sender: self)
+                } else {
+                    let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
+                    vc.modalPresentationStyle = .overCurrentContext
+                    vc.delegate = self
+                    self.present(vc, animated: false)
+                }
+            case 2:
+                let vm = WeeklyMissionOverViewViewModel()
+                let vc = WeeklyMissionOverViewViewController(vm: vm)
 
                 self.show(vc, sender: self)
-            } else {
-                let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
-                vc.modalPresentationStyle = .overCurrentContext
-                vc.delegate = self
-                self.present(vc, animated: false)
+            default:
+                break
             }
-        case 2:
-            let vm = WeeklyMissionOverViewViewModel()
-            let vc = WeeklyMissionOverViewViewController(vm: vm)
-
-            self.show(vc, sender: self)
-        default:
-            break
+        } else {
+            // TODO: event tap 시 실행될 detail VC 전환.
         }
     }
     
@@ -713,6 +763,13 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             // TODO: Wallet VC
             break
         }
+        self.sideMenuVC?.dismiss(animated: true)
+    }
+    
+    func resetPasswordDidTap() {
+        let vm = EditUserInfoViewViewModel()
+        let vc = EditUserInfoViewController(vm: vm)
+        self.addChildViewController(vc)
         self.sideMenuVC?.dismiss(animated: true)
     }
 }

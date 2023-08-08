@@ -156,6 +156,7 @@ final class ResetPasswordViewController: UIViewController {
                 }
             }
             .store(in: &bindings)
+            
         }
         
         bindViewToViewModel()

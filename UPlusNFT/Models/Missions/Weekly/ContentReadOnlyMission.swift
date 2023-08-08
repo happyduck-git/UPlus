@@ -8,11 +8,12 @@
 import Foundation
 import FirebaseFirestore
 
-struct ContentReadOnlyMission: Mission {
+struct ContentReadOnlyMission: Mission, Codable {
+    var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
-    var missionSubFormatType: String
+    var missionSubFormatType: String?
     var missionContentTitle: String?
     var missionContentText: String?
     var missionContentImagePaths: [String]?

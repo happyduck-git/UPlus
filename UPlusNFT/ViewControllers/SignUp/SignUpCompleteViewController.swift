@@ -97,25 +97,11 @@ extension SignUpCompleteViewController {
         
         do {
             let user = try UPlusUser.getCurrentUser()
-            
-            guard let nftImage = self.vm.welcomeNftImage,
-                  let nickname = self.vm.nickname
-            else { return }
-            
-            let missionVM = MissionMainViewViewModel(profileImage: nftImage,
-                                                     username: nickname,
-                                                     points: user.userTotalPoint ?? 0,
-                                                     maxPoints: 15, // TODO: Level up까지 필요한 포인트
-                                                     level: 1, // TODO: 현재 Level
-                                                     numberOfMissions: Int64(user.userTypeMissionArrayMap?.values.count ?? 0),
-                                                     timeLeft: 12)
-
 
             let vm = MyPageViewViewModel(user: user,
                                          isJustRegistered: true,
                                          isVip: user.userHasVipNft,
-                                         todayRank: UPlusServiceInfoConstant.totalMembers,
-                                         missionViewModel: missionVM)
+                                         todayRank: UPlusServiceInfoConstant.totalMembers)
             let vc = MyPageViewController(vm: vm)
             
             self.navigationController?.modalPresentationStyle = .fullScreen

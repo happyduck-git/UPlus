@@ -94,32 +94,36 @@ final class WeeklyAnswerQuizMissionDetailViewController: UIViewController {
 extension WeeklyAnswerQuizMissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.vm.dataSource.missionAnswerQuizCaption?.count ?? 0
+        let dataSource = self.vm.dataSource as! ShortAnswerQuizMission
+        return dataSource.missionAnswerQuizzes.count
          
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let dataSource = self.vm.dataSource as! ShortAnswerQuizMission
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyAnswerQuizMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyAnswerQuizMissionCollectionViewCell,
-              let quizCaption = self.vm.dataSource.missionAnswerQuizCaption
-              
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyAnswerQuizMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyAnswerQuizMissionCollectionViewCell
         else {
             fatalError()
         }
 
+        let quizCaption = dataSource.missionAnswerQuizzes
+        
         let index = quizCaption.index(quizCaption.startIndex, offsetBy: indexPath.item)
         let char = quizCaption[index]
         
-        cell.configure(with: char)
+//        cell.configure(with: char)
         
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let numberOfCells = self.vm.dataSource.missionAnswerQuizCaption?.count ?? 0
-        return CGSize(width: self.quizCaptionCollections.frame.width / CGFloat(numberOfCells) - CGFloat(2*numberOfCells), height: self.quizCaptionCollections.frame.height / 3.0)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        
+//        let dataSource = self.vm.dataSource as! ShortAnswerQuizMission
+//        
+//        let numberOfCells = dataSource
+//        return CGSize(width: self.quizCaptionCollections.frame.width / CGFloat(numberOfCells) - CGFloat(2*numberOfCells), height: self.quizCaptionCollections.frame.height / 3.0)
+//    }
 }
 
 extension WeeklyAnswerQuizMissionDetailViewController {
@@ -182,8 +186,10 @@ extension WeeklyAnswerQuizMissionDetailViewController {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    let answer = self.vm.dataSource.missionAnswerQuizRightAnswer ?? "no-answer"
-                    if answer == self.anwerInputTextField.text {
+                    let dataSource = self.vm.dataSource as! ShortAnswerQuizMission
+                    
+                    let answer = dataSource.missionAnswerQuizzes
+                    if answer[1] == self.anwerInputTextField.text {
                         // TODO: Show 정답 View Controller
                         print("정답입니다.")
                     } else {

@@ -319,6 +319,8 @@ struct FirestoreConstants {
     static let missionUserStateMap = "mission_user_state_map"
     static let dailyExpAthleteMissionSet = "daily_exp__athlete__mission_set"
     static let missionPhotoTaskSet = "mission_photo_task_set"
+    static let missionFormatType = "mission_format_type"
+    static let missionSubFormatType = "mission_sub_format_type"
     
     /* Reward */
     static let rewardUser = "reward_user"

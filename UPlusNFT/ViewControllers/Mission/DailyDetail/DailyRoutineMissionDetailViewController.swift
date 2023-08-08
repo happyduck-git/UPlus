@@ -16,6 +16,8 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - UI Elements
+    private let loadingVC = LoadingViewController()
+    
     private var collectionView: UICollectionView?
     private var buttonSectionHeight: CGFloat = 0.2
     
@@ -39,6 +41,9 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     init(vm: DailyRoutineMissionDetailViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        
+        self.vm.delegate = self
+        self.vm.getAtheleteMissions()
     }
     
     required init?(coder: NSCoder) {
@@ -48,15 +53,18 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = .systemGray4
+        
         self.setUI()
         self.setLayout()
         self.setDelegate()
         
-        self.vm.getAtheleteMissions()
+        self.addChildViewController(self.loadingVC)
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+    }
     private func setUI() {
         let collectionView = self.createCollectionView()
         self.collectionView = collectionView
@@ -414,6 +422,13 @@ extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionVi
     
 }
 
+extension DailyRoutineMissionDetailViewController: DailyRoutineMissionDetailViewViewModelDelegate {
+    func didRecieveMission() {
+        DispatchQueue.main.async {
+            self.loadingVC.removeViewController()
+        }
+    }
+}
 /*
  
  Task {

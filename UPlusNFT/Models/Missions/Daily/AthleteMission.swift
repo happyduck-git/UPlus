@@ -1,5 +1,5 @@
 //
-//  EnvironmentalistMission.swift
+//  AthleteMission.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/20.
@@ -8,12 +8,12 @@
 import Foundation
 import FirebaseFirestore
 
-struct EnvironmentalistMission: Codable, Mission, DailyMission {
+struct AthleteMission: Codable, Mission {
     var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
     var missionFormatType: String
-    var missionSubFormatType: String
+    var missionSubFormatType: String?
     var missionContentTitle: String?
     var missionContentText: String?
     var missionContentImagePaths: [String]?

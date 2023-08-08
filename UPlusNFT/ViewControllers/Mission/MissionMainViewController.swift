@@ -41,7 +41,6 @@ class MissionMainViewController: UIViewController {
         self.setLayout()
         self.setDelegate()
         
-        self.vm.getWeeklyMission()
         self.bind()
     }
 
@@ -470,9 +469,3 @@ extension MissionMainViewController: MyPageViewControllerDelegate {
 
 */
 
-// MARK: - Preview
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        EditUserInfoViewController().toPreview()
-    }
-}

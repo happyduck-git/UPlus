@@ -8,10 +8,17 @@
 import UIKit.UIImage
 import Combine
 
+protocol DailyRoutineMissionDetailViewViewModelDelegate: AnyObject {
+    func didRecieveMission()
+}
+
 final class DailyRoutineMissionDetailViewViewModel {
     
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
+    
+    //MARK: - Delegate
+    weak var delegate: DailyRoutineMissionDetailViewViewModelDelegate?
     
     // MARK: - DataSource
     var missionType: MissionType
@@ -33,6 +40,7 @@ extension DailyRoutineMissionDetailViewViewModel {
         Task {
             do {
                 self.athleteMissions = try await self.firestoreManager.getAthleteMission()
+                self.delegate?.didRecieveMission()
             }
             catch {
                 print("Error fetching athelete missions -- \(error)")

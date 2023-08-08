@@ -194,7 +194,9 @@ extension WeeklyChoiceQuizMissionDetailViewController {
 extension WeeklyChoiceQuizMissionDetailViewController {
 
     private func checkUserAnswer() -> Bool {
-        return self.vm.dataSource.missionChoiceQuizRightOrder == self.vm.selectedAnswer ? true : false
+        let dataSource = self.vm.dataSource as! ChoiceQuizMission
+        
+        return dataSource.missionChoiceQuizRightOrder == self.vm.selectedAnswer ? true : false
     }
     
 }
@@ -203,8 +205,9 @@ extension WeeklyChoiceQuizMissionDetailViewController {
     private func configure() {
         self.quizLabel.text = vm.dataSource.missionContentTitle
         
-        self.circleMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[0] ?? "O", for: .normal)
-        self.xMarkButton.setTitle(vm.dataSource.missionChoiceQuizCaptions?[1] ?? "X", for: .normal)
+        let dataSource = self.vm.dataSource as! ChoiceQuizMission
+        self.circleMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[0] ?? "O", for: .normal)
+        self.xMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[1] ?? "X", for: .normal)
     }
 }
 

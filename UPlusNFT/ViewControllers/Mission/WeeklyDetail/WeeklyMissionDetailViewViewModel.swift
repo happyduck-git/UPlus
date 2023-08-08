@@ -10,7 +10,9 @@ import Combine
 
 final class WeeklyMissionDetailViewViewModel {
     
-    let dataSource: WeeklyQuizMission
+//    let dataSource: WeeklyQuizMission
+    let dataSource: any Mission
+    
     let numberOfWeek: Int
     
     /* Choice Quiz */
@@ -23,7 +25,7 @@ final class WeeklyMissionDetailViewViewModel {
     @Published var textExists: Bool = false
     
     
-    init(dataSource: WeeklyQuizMission,
+    init(dataSource: any Mission,
          numberOfWeek: Int) {
         self.dataSource = dataSource
         self.numberOfWeek = numberOfWeek
