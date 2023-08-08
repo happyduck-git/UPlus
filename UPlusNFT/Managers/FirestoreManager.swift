@@ -1438,7 +1438,7 @@ extension FirestoreManager {
     
 }
 
-// MARK: - Manager
+// MARK: - Mission Manager
 extension FirestoreManager {
     func createRoutineMission(
         date: Date,
@@ -1456,6 +1456,7 @@ extension FirestoreManager {
                                      missionFormatType: formatType.rawValue,
                                      missionSubFormatType: MissionSubFormatType.photoAuth.rawValue,
                                      missionCreationTime: Timestamp(date: date),
+                                     missionStartTime: Timestamp(date: date),
                                      missionRewardPoint: rewardPoint,
                                      missionPermitAvatarLevel: avatarLevel)
         
@@ -1468,4 +1469,97 @@ extension FirestoreManager {
                      merge: true,
                      encoder: self.encoder)
     }
+    
+    func createEventMission(missionId: String,
+                                 rewardPoint: Int64,
+                                 formatType: MissionFormatType,
+                                 subFormatType: MissionSubFormatType,
+                                 governanceElectionCaptions: [String]?,
+                                 avatarLevel: Int64,
+                                 creationTime: Date) throws {
+        
+        let creationTime = Timestamp(date: creationTime)
+        
+        switch formatType {
+        case .contentReadOnly:
+            let readMission = ContentReadOnlyMission(missionId: missionId,
+                                                     missionTopicType: MissionTopicType.eventMission.rawValue,
+                                                     missionSubTopicType: MissionType.eventMission.rawValue,
+                                                     missionFormatType: formatType.rawValue,
+                                                     missionSubFormatType: subFormatType.rawValue,
+                                                     missionContentTitle: "컨텐츠 열람형 미션 제목 " + missionId,
+                                                     missionContentText: "컨텐츠 열람형 미션 컨텐츠 " + missionId,
+                                                     missionCreationTime: creationTime,
+                                                     missionStartTime: creationTime,
+                                                     missionRewardPoint: rewardPoint,
+                                                     missionPermitAvatarLevel: avatarLevel)
+            try threadsSetCollectionPath2
+                .document(FirestoreConstants.missions)
+                .collection(MissionType.eventMission.storagePathFolderName)
+                .document(missionId)
+                .setData(from: readMission, encoder: self.encoder)
+            
+        case .shareMediaOnSlack:
+            let slackMission = MediaShareMission(missionId: missionId,
+                                                 missionTopicType: MissionTopicType.eventMission.rawValue,
+                                                 missionSubTopicType: MissionType.eventMission.rawValue,
+                                                 missionFormatType: formatType.rawValue,
+                                                 missionSubFormatType: subFormatType.rawValue,
+                                                 missionContentTitle: "슬랙 공유 이벤트 미션 제목 " + missionId,
+                                                 missionContentText: "슬랙 공유 이벤트 미션 컨텐츠" + missionId,
+                                                 missionCreationTime: creationTime,
+                                                 missionStartTime: creationTime,
+                                                 missionRewardPoint: rewardPoint,
+                                                 missionPermitAvatarLevel: avatarLevel)
+            
+            try threadsSetCollectionPath2
+                .document(FirestoreConstants.missions)
+                .collection(MissionType.eventMission.storagePathFolderName)
+                .document(missionId)
+                .setData(from: slackMission, encoder: self.encoder)
+        case .governanceElection:
+            let governanceMission = GovernanceMission(missionId: missionId,
+                                                      missionTopicType: MissionTopicType.eventMission.rawValue,
+                                                      missionSubTopicType: MissionType.eventMission.rawValue,
+                                                      missionFormatType: formatType.rawValue,
+                                                      missionSubFormatType: subFormatType.rawValue,
+                                                      missionContentTitle: "거버넌스 이벤트 미션 제목 " + missionId,
+                                                      missionContentText: "거버넌스 이벤트 미션 컨텐츠" + missionId,
+                                                      missionCreationTime: creationTime,
+                                                      missionStartTime: creationTime,
+                                                      missionRewardPoint: rewardPoint,
+                                                      missionPermitAvatarLevel: avatarLevel,
+                                                      governance_election_captions: governanceElectionCaptions ?? [])
+            
+            try threadsSetCollectionPath2
+                .document(FirestoreConstants.missions)
+                .collection(MissionType.eventMission.storagePathFolderName)
+                .document(missionId)
+                .setData(from: governanceMission, encoder: self.encoder)
+            
+        case .commentCount:
+            let commentMission = CommentCountMission(missionId: missionId,
+                                                     missionTopicType: MissionTopicType.eventMission.rawValue,
+                                                     missionSubTopicType: MissionType.eventMission.rawValue,
+                                                     missionFormatType: formatType.rawValue,
+                                                     missionSubFormatType: subFormatType.rawValue,
+                                                     missionContentTitle: "코멘트 이벤트 미션 제목 " + missionId,
+                                                     missionContentText: "코멘트 이벤트 미션 컨텐츠" + missionId,
+                                                     missionCreationTime: creationTime,
+                                                     missionStartTime: creationTime,
+                                                     missionRewardPoint: rewardPoint,
+                                                     missionPermitAvatarLevel: avatarLevel)
+            
+            try threadsSetCollectionPath2
+                .document(FirestoreConstants.missions)
+                .collection(MissionType.eventMission.storagePathFolderName)
+                .document(missionId)
+                .setData(from: commentMission, encoder: self.encoder)
+        default:
+            break
+        }
+        
+    }
+    
+    
 }

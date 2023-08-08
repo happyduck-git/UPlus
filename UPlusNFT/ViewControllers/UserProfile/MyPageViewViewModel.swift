@@ -74,7 +74,7 @@ final class MyPageViewViewModel {
             async let _ = self.createMissionMainViewViewModel()
 //            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
             async let _ = self.getMissionsTimeline()
-            async let _ = self.getEventMission()
+//            async let _ = self.getEventMission()
         }
         
     }

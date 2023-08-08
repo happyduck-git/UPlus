@@ -111,6 +111,7 @@
 		939194942A80D1730035FEB1 /* ManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194932A80D1730035FEB1 /* ManagerViewController.swift */; };
 		939194962A80D3100035FEB1 /* ManagerRoutineMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194952A80D3100035FEB1 /* ManagerRoutineMissionViewController.swift */; };
 		939194982A80ED920035FEB1 /* EditUserInfoViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */; };
+		9391949D2A81F3010035FEB1 /* ManagerEventMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391949C2A81F3010035FEB1 /* ManagerEventMissionViewController.swift */; };
 		93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */; };
 		93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED802A6A54D900C2287D /* MyPageViewController.swift */; };
 		93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */; };
@@ -272,6 +273,7 @@
 		939194932A80D1730035FEB1 /* ManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerViewController.swift; sourceTree = "<group>"; };
 		939194952A80D3100035FEB1 /* ManagerRoutineMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerRoutineMissionViewController.swift; sourceTree = "<group>"; };
 		939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewViewModel.swift; sourceTree = "<group>"; };
+		9391949C2A81F3010035FEB1 /* ManagerEventMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerEventMissionViewController.swift; sourceTree = "<group>"; };
 		93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED802A6A54D900C2287D /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -751,10 +753,11 @@
 			children = (
 				939194932A80D1730035FEB1 /* ManagerViewController.swift */,
 				939194952A80D3100035FEB1 /* ManagerRoutineMissionViewController.swift */,
+				9391949C2A81F3010035FEB1 /* ManagerEventMissionViewController.swift */,
 			);
 			path = Manager;
-            sourceTree = "<group>";
-        };
+			sourceTree = "<group>";
+		};
 		939194992A81BB7D0035FEB1 /* Weekly */ = {
 			isa = PBXGroup;
 			children = (
@@ -1063,6 +1066,7 @@
 				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */,
+				9391949D2A81F3010035FEB1 /* ManagerEventMissionViewController.swift in Sources */,
 				93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */,
 				93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */,
 				93A2EDC22A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift in Sources */,
