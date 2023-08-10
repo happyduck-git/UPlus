@@ -1,5 +1,5 @@
 //
-//  ChoiceQuizzesViewViewModel.swift
+//  ChoiceQuizzOXViewViewModel.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/20.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class ChoiceQuizzesViewViewModel {
+final class ChoiceQuizzOXViewViewModel {
     
     let mission: any Mission
     

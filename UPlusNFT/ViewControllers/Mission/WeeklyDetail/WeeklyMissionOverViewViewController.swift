@@ -135,13 +135,13 @@ extension WeeklyMissionOverViewViewController {
             switch subFormatType {
             
             case .answerQuizSingular:
-                let vm = AnswerQuizSingularViewViewModel(mission: mission)
+                let vm = AnswerQuizSingularViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = AnswerQuizSingularViewController(vm: vm)
                 
                 self.show(vc, sender: self)
                 
             case .answerQuizPlural:
-                let vm = AnswerQuizPluralViewViewModel(mission: mission)
+                let vm = AnswerQuizPluralViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = AnswerQuizPluralViewController(vm: vm)
                 
                 self.show(vc, sender: self)
@@ -159,19 +159,20 @@ extension WeeklyMissionOverViewViewController {
             switch subFormatType {
     
             case .choiceQuizOX:
-                let vm = ChoiceQuizzesViewViewModel(dataSource: mission, numberOfWeek: 1)
+                let vm = ChoiceQuizzOXViewViewModel(dataSource: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizOXViewController(vm: vm)
+                vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
             case .choiceQuizMore:
-                let vm = ChoiceQuizMoreViewViewModel(mission: mission)
+                let vm = ChoiceQuizMoreViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizMoreViewController(vm: vm)
                 
                 self.show(vc, sender: self)
 
             case .choiceQuizVideo:
-                let vm = ChoiceQuizVideoViewViewModel(mission: mission)
+                let vm = ChoiceQuizVideoViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizVideoViewController(vm: vm)
                 
                 self.show(vc, sender: self)
@@ -182,14 +183,14 @@ extension WeeklyMissionOverViewViewController {
             
         } else if anyMission is ContentReadOnlyMission {
             let mission = anyMission as! ContentReadOnlyMission
-            print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+            
             guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
                 return
             }
             
             switch subFormatType {
             case .contentReadOnly:
-                let vm = ContentReadOnlyMissionViewViewModel(mission: mission)
+                let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = ContentReadOnlyMissionViewController(vm: vm)
                 
                 self.show(vc, sender: self)
@@ -252,8 +253,6 @@ extension WeeklyMissionOverViewViewController {
 
 extension WeeklyMissionOverViewViewController: ChoiceQuizOXViewControllerDelegate {
     func answerDidSaved() {
-        print("Answer did saved called from WMOVVC.")
         self.vm.getWeeklyMissionInfo(week: self.vm.week)
-        self.tableView.reloadData()
     }
 }

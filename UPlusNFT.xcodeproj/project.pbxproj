@@ -57,6 +57,8 @@
 		249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */; };
 		249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F92A530B59008CF6BE /* CampaignView.swift */; };
 		249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */; };
+		24A254702A853F9B0034534A /* UPlusColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A2546F2A853F9B0034534A /* UPlusColor.swift */; };
+		24A254722A853FA80034534A /* UPlusFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A254712A853FA80034534A /* UPlusFont.swift */; };
 		24DB21812A77F54C00AE0174 /* PassThroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DB21802A77F54C00AE0174 /* PassThroughView.swift */; };
 		24DB21AD2A82F8E000AE0174 /* NFTServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DB21AC2A82F8E000AE0174 /* NFTServiceManager.swift */; };
 		930D96A22A416AC30007801A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A12A416AC30007801A /* AppDelegate.swift */; };
@@ -174,8 +176,6 @@
 		93E013912A6619F80005E342 /* TodayMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */; };
 		93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */; };
 		93E013952A66260A0005E342 /* MissionMainViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */; };
-		93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013962A664E6F0005E342 /* UPlusFont.swift */; };
-		93E013992A66527F0005E342 /* UPlusColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013982A66527F0005E342 /* UPlusColor.swift */; };
 		93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */; };
 		93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139C2A666E070005E342 /* UIStackView+Extension.swift */; };
 		93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */; };
@@ -187,7 +187,7 @@
 		93E013AC2A68C2350005E342 /* GoodWorkerMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */; };
 		93E013AE2A68C4FE0005E342 /* SuddenMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AD2A68C4FE0005E342 /* SuddenMission.swift */; };
 		93E013B02A6909A10005E342 /* ChoiceQuizOXViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AF2A6909A10005E342 /* ChoiceQuizOXViewController.swift */; };
-		93E013B22A690E9A0005E342 /* ChoiceQuizzesViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B12A690E9A0005E342 /* ChoiceQuizzesViewViewModel.swift */; };
+		93E013B22A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B12A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift */; };
 		93E013B42A691F450005E342 /* WeeklyMissionCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -242,6 +242,8 @@
 		249F59F62A52F4F7008CF6BE /* PostDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewHeader.swift; sourceTree = "<group>"; };
 		249F59F92A530B59008CF6BE /* CampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignView.swift; sourceTree = "<group>"; };
 		249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignPostViewController.swift; sourceTree = "<group>"; };
+		24A2546F2A853F9B0034534A /* UPlusColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UPlusColor.swift; sourceTree = "<group>"; };
+		24A254712A853FA80034534A /* UPlusFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UPlusFont.swift; sourceTree = "<group>"; };
 		24DB21802A77F54C00AE0174 /* PassThroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughView.swift; sourceTree = "<group>"; };
 		24DB21AC2A82F8E000AE0174 /* NFTServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTServiceManager.swift; sourceTree = "<group>"; };
 		930D969E2A416AC30007801A /* UPlusNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPlusNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -357,8 +359,6 @@
 		93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionProfileCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewViewModel.swift; sourceTree = "<group>"; };
-		93E013962A664E6F0005E342 /* UPlusFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UPlusFont.swift; path = UPlusNFT/ViewControllers/Mission/SideMenu/UPlusFont.swift; sourceTree = SOURCE_ROOT; };
-		93E013982A66527F0005E342 /* UPlusColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UPlusColor.swift; path = UPlusNFT/ViewControllers/Mission/SideMenu/UPlusColor.swift; sourceTree = SOURCE_ROOT; };
 		93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuizMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E0139C2A666E070005E342 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionViewHeader.swift; sourceTree = "<group>"; };
@@ -370,7 +370,7 @@
 		93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoodWorkerMission.swift; sourceTree = "<group>"; };
 		93E013AD2A68C4FE0005E342 /* SuddenMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuddenMission.swift; sourceTree = "<group>"; };
 		93E013AF2A6909A10005E342 /* ChoiceQuizOXViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceQuizOXViewController.swift; sourceTree = "<group>"; };
-		93E013B12A690E9A0005E342 /* ChoiceQuizzesViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceQuizzesViewViewModel.swift; sourceTree = "<group>"; };
+		93E013B12A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceQuizzOXViewViewModel.swift; sourceTree = "<group>"; };
 		93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionCompleteViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -462,7 +462,7 @@
 			isa = PBXGroup;
 			children = (
 				93E013AF2A6909A10005E342 /* ChoiceQuizOXViewController.swift */,
-				93E013B12A690E9A0005E342 /* ChoiceQuizzesViewViewModel.swift */,
+				93E013B12A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift */,
 			);
 			path = OXChoice;
 			sourceTree = "<group>";
@@ -833,8 +833,8 @@
 		937C764D2A457B1F001024D0 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				93E013962A664E6F0005E342 /* UPlusFont.swift */,
-				93E013982A66527F0005E342 /* UPlusColor.swift */,
+				24A254712A853FA80034534A /* UPlusFont.swift */,
+				24A2546F2A853F9B0034534A /* UPlusColor.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1260,6 +1260,7 @@
 				2402695E2A8480EA00850E65 /* MissionHistoryDetailCollectionViewCell.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				9391947F2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift in Sources */,
+				24A254702A853F9B0034534A /* UPlusColor.swift in Sources */,
 				240269612A84CE8B00850E65 /* LuniverseServiceManager.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				2402693B2A83C01100850E65 /* ShareMediaOnSlackMissionViewViewModel.swift in Sources */,
@@ -1270,7 +1271,6 @@
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
 				240269472A83DEB300850E65 /* ChoiceQuizVideoViewController.swift in Sources */,
 				939194882A80827F0035FEB1 /* MediaShareMission.swift in Sources */,
-				93E013972A664E6F0005E342 /* UPlusFont.swift in Sources */,
 				93D174862A738C1000F5B1B1 /* StampCollectionViewCell.swift in Sources */,
 				2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */,
 				93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */,
@@ -1321,7 +1321,6 @@
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
 				93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
-				93E013992A66527F0005E342 /* UPlusColor.swift in Sources */,
 				93E013B02A6909A10005E342 /* ChoiceQuizOXViewController.swift in Sources */,
 				93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */,
 				93D174822A7382BA00F5B1B1 /* DailyRoutineMissionStampCollectionViewCell.swift in Sources */,
@@ -1339,6 +1338,7 @@
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
 				9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */,
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
+				24A254722A853FA80034534A /* UPlusFont.swift in Sources */,
 				240269632A84D1AD00850E65 /* NetworkServiceManager.swift in Sources */,
 				932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */,
 				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
@@ -1383,7 +1383,7 @@
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				240269442A83C37B00850E65 /* CommentCountMissionViewViewModel.swift in Sources */,
 				247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */,
-				93E013B22A690E9A0005E342 /* ChoiceQuizzesViewViewModel.swift in Sources */,
+				93E013B22A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift in Sources */,
 				240269302A83B21500850E65 /* ContentReadOnlyMissionViewController.swift in Sources */,
 				24542D4D2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift in Sources */,
 				93E013AE2A68C4FE0005E342 /* SuddenMission.swift in Sources */,

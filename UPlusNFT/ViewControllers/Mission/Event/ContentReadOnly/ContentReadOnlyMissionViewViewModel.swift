@@ -11,11 +11,14 @@ import Combine
 final class ContentReadOnlyMissionViewViewModel {
     
     let mission: ContentReadOnlyMission
+    let numberOfWeek: Int
     
     @Published var imageUrls: [URL] = []
     
-    init(mission: ContentReadOnlyMission) {
+    init(mission: ContentReadOnlyMission, numberOfWeek: Int) {
         self.mission = mission
+        self.numberOfWeek = numberOfWeek
+        
         self.getImageUrls()
     }
 }

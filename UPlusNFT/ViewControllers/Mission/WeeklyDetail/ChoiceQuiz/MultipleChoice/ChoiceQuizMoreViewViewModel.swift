@@ -9,11 +9,14 @@ import Foundation
 
 final class ChoiceQuizMoreViewViewModel {
     let mission: ChoiceQuizMission
+    let numberOfWeek: Int
     
     @Published var imageUrls: [URL] = []
     
-    init(mission: ChoiceQuizMission) {
+    init(mission: ChoiceQuizMission, numberOfWeek: Int) {
         self.mission = mission
+        self.numberOfWeek = numberOfWeek
+        
         self.getImageUrls()
     }
 }
@@ -34,4 +37,6 @@ extension ChoiceQuizMoreViewViewModel {
             }
         }
     }
+    
+    
 }

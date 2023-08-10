@@ -10,8 +10,10 @@ import Combine
 
 final class AnswerQuizSingularViewViewModel {
     let mission: ShortAnswerQuizMission
+    let numberOfWeek: Int
     
-    init(mission: ShortAnswerQuizMission) {
+    init(mission: ShortAnswerQuizMission, numberOfWeek: Int) {
         self.mission = mission
+        self.numberOfWeek = numberOfWeek
     }
 }

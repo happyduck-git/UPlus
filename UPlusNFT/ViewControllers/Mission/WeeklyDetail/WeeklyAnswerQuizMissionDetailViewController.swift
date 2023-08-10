@@ -11,13 +11,13 @@ import Combine
 final class WeeklyAnswerQuizMissionDetailViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: ChoiceQuizzesViewViewModel
+    private let vm: ChoiceQuizzOXViewViewModel
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - Init
-    init(vm: ChoiceQuizzesViewViewModel) {
+    init(vm: ChoiceQuizzOXViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         

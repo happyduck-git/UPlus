@@ -43,5 +43,12 @@ extension ChoiceQuizMoreViewController {
                 self.label.text = "Captions:\n" + String(describing: self.vm.mission.missionChoiceQuizCaptions) + "\n" + "ImageUrls:\n" + String(describing: $0)
             }.store(in: &bindings)
        
+        
+        self.submitButton.tapPublisher
+            .receive(on: RunLoop.current)
+            .sink { _ in
+                // TODO: 정답 확인
+                
+            }.store(in: &bindings)
     }
 }

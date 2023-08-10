@@ -21,7 +21,7 @@ protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
 final class WeeklyMissionCompleteViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: ChoiceQuizzesViewViewModel
+    private let vm: ChoiceQuizzOXViewViewModel
     private let firestoreManager = FirestoreManager.shared
     
     //MARK: - Delegate
@@ -72,7 +72,7 @@ final class WeeklyMissionCompleteViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: ChoiceQuizzesViewViewModel) {
+    init(vm: ChoiceQuizzOXViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.configure()

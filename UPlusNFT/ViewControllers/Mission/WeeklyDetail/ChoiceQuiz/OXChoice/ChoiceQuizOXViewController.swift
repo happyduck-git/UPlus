@@ -15,7 +15,7 @@ protocol ChoiceQuizOXViewControllerDelegate: AnyObject {
 final class ChoiceQuizOXViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: ChoiceQuizzesViewViewModel
+    private let vm: ChoiceQuizzOXViewViewModel
     
     //MARK: - Delegate
     weak var delegate: ChoiceQuizOXViewControllerDelegate?
@@ -81,7 +81,7 @@ final class ChoiceQuizOXViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: ChoiceQuizzesViewViewModel) {
+    init(vm: ChoiceQuizzOXViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
     }

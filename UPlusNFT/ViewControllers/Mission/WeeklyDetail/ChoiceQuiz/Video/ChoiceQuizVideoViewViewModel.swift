@@ -11,12 +11,15 @@ import Combine
 final class ChoiceQuizVideoViewViewModel {
     
     let mission: ChoiceQuizMission
+    let numberOfWeek: Int
     
     @Published var imageUrls: [URL] = []
     
     //MARK: - Init
-    init(mission: ChoiceQuizMission) {
+    init(mission: ChoiceQuizMission, numberOfWeek: Int) {
         self.mission = mission
+        self.numberOfWeek = numberOfWeek
+        
         self.getImageUrls()
     }
     

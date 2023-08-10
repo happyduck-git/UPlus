@@ -41,41 +41,16 @@ final class WeeklyMissionOverViewViewModel {
             }
         }
     }
-    
-    private let dateFormatter: DateFormatter = {
-       let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }()
-    
+
     // MARK: - Init
     init(week: Int) {
         self.week = week
-//        self.numberOfWeek = self.getNumberOfWeek()
         self.getWeeklyMissionInfo(week: week)
     }
     
 }
 
 extension WeeklyMissionOverViewViewModel {
-    
-    /// Calculate current number of week from the service start date.
-    /// - Returns: Number of week.
-    private func getNumberOfWeek() -> Int {
-        let currentDate = Date()
-        
-        guard let startDate = self.dateFormatter.date(from: UPlusServiceInfoConstant.startDay) else {
-            return 0
-        }
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: startDate, to: currentDate)
-        
-        guard let day = components.day else {
-            return 0
-        }
-        
-        return (day / 7) + 1
-    }
     
     func getWeeklyMissionInfo(week: Int) {
         Task {
