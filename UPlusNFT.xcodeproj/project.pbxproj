@@ -59,6 +59,7 @@
 		249F59FD2A53175F008CF6BE /* CampaignPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */; };
 		24A254702A853F9B0034534A /* UPlusColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A2546F2A853F9B0034534A /* UPlusColor.swift */; };
 		24A254722A853FA80034534A /* UPlusFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A254712A853FA80034534A /* UPlusFont.swift */; };
+		24A254752A854D5A0034534A /* EnvironmentConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A254742A854D5A0034534A /* EnvironmentConfig.swift */; };
 		24DB21812A77F54C00AE0174 /* PassThroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DB21802A77F54C00AE0174 /* PassThroughView.swift */; };
 		24DB21AD2A82F8E000AE0174 /* NFTServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DB21AC2A82F8E000AE0174 /* NFTServiceManager.swift */; };
 		930D96A22A416AC30007801A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A12A416AC30007801A /* AppDelegate.swift */; };
@@ -244,6 +245,8 @@
 		249F59FC2A53175F008CF6BE /* CampaignPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignPostViewController.swift; sourceTree = "<group>"; };
 		24A2546F2A853F9B0034534A /* UPlusColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UPlusColor.swift; sourceTree = "<group>"; };
 		24A254712A853FA80034534A /* UPlusFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UPlusFont.swift; sourceTree = "<group>"; };
+		24A254732A8547F80034534A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		24A254742A854D5A0034534A /* EnvironmentConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentConfig.swift; sourceTree = "<group>"; };
 		24DB21802A77F54C00AE0174 /* PassThroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughView.swift; sourceTree = "<group>"; };
 		24DB21AC2A82F8E000AE0174 /* NFTServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTServiceManager.swift; sourceTree = "<group>"; };
 		930D969E2A416AC30007801A /* UPlusNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPlusNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -655,6 +658,7 @@
 				930D96B72A416E7C0007801A /* ViewControllers */,
 				930D96D12A42D0900007801A /* UPlusNFT.entitlements */,
 				930D96AF2A416AC40007801A /* Info.plist */,
+				24A254732A8547F80034534A /* Config.xcconfig */,
 			);
 			path = UPlusNFT;
 			sourceTree = "<group>";
@@ -835,6 +839,7 @@
 			children = (
 				24A254712A853FA80034534A /* UPlusFont.swift */,
 				24A2546F2A853F9B0034534A /* UPlusColor.swift */,
+				24A254742A854D5A0034534A /* EnvironmentConfig.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1332,6 +1337,7 @@
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
 				93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */,
 				24542D512A70AC0800F82CEA /* ChoiceQuizMission.swift in Sources */,
+				24A254752A854D5A0034534A /* EnvironmentConfig.swift in Sources */,
 				2402695A2A846BF700850E65 /* AnswerQuizPluralViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */,
@@ -1413,6 +1419,7 @@
 /* Begin XCBuildConfiguration section */
 		930D96B02A416AC40007801A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24A254732A8547F80034534A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1473,6 +1480,7 @@
 		};
 		930D96B12A416AC40007801A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24A254732A8547F80034534A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1527,6 +1535,7 @@
 		};
 		930D96B32A416AC40007801A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24A254732A8547F80034534A /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1558,6 +1567,7 @@
 		};
 		930D96B42A416AC40007801A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24A254732A8547F80034534A /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

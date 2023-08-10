@@ -23,15 +23,15 @@ final class LuniverseServiceManager {
     
     //MARK: - X-Keys
     private let xNodeIdKey = "X-NODE-ID"
-    private let xNodeIdValue = "1691631530682617449"
+    private let xNodeIdValue = EnvironmentConfig.xNodeId
     private let xKeyIdKey = "X-Key-ID"
-    private let xKeyIdValue = "5qainm3y2fssbf3j65rqentgrkpcrgfgxrb6s7aivmf3nwgbresw9v593gbhudwb"
+    private let xKeyIdValue = EnvironmentConfig.xKeyId
     private let xKeySecretKey = "X-Key-Secret"
-    private let xKeySecretValue = "HLxGuKTrsbUr6cekwRYcZuiwxKcRej3Fn3GWkSXuLLGGhVEx2y36az9SN2TP8x79XKWYrb2nbEvQwThH94isfWg7bAg2sN3gCZ4LTEVdqZCJjKksacq4Tcbzx9urV3zV"
+    private let xKeySecretValue = EnvironmentConfig.xKeySecretValue
     
     //MARK: - NFT Contract
     private let contractAddressKey = "contractAddress"
-    private let contractAddressValue = "0xaab65f4b433ead72c9f0275a6419ba1f413b3fa7"
+    private let contractAddressValue = EnvironmentConfig.uplusContractAddress
     private let ownerAddressKey = "ownerAddress"
 }
 

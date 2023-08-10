@@ -37,5 +37,15 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UPLUS_NFT_ACCESS_CODE</key>
+	<string>$(UPLUS_NFT_ACCESS_CODE)</string>
+	<key>UPLUS_NFT_CONTRACT_ADDRESS_VALUE</key>
+	<string>$(UPLUS_NFT_CONTRACT_ADDRESS_VALUE)</string>
+	<key>X_KEY_ID_VALUE</key>
+	<string>$(X_KEY_ID_VALUE)</string>
+	<key>X_KEY_SECRET_VALUE</key>
+	<string>$(X_KEY_SECRET_VALUE)</string>
+	<key>X_NODE_ID_VALUE</key>
+	<string>$(X_NODE_ID_VALUE)</string>
 </dict>
 </plist>

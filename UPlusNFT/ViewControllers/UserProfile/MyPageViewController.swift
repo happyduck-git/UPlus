@@ -836,7 +836,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             switch type {
             case .contentReadOnly:
                 guard let mission = mission as? ContentReadOnlyMission else { return }
-                let vm = ContentReadOnlyMissionViewViewModel(mission: mission)
+                let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: 0)
                 let vc = ContentReadOnlyMissionViewController(vm: vm)
                 self.show(vc, sender: self)
                 

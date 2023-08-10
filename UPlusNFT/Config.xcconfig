@@ -1,0 +1,20 @@
+//
+//  Config.xcconfig
+//  UPlusNFT
+//
+//  Created by HappyDuck on 2023/08/11.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// Common
+UPLUS_NFT_CONTRACT_ADDRESS_VALUE = 0xaab65f4b433ead72c9f0275a6419ba1f413b3fa7
+
+// Luniverse
+X_NODE_ID_VALUE = 1691631530682617449
+X_KEY_ID_VALUE = 5qainm3y2fssbf3j65rqentgrkpcrgfgxrb6s7aivmf3nwgbresw9v593gbhudwb
+X_KEY_SECRET_VALUE = HLxGuKTrsbUr6cekwRYcZuiwxKcRej3Fn3GWkSXuLLGGhVEx2y36az9SN2TP8x79XKWYrb2nbEvQwThH94isfWg7bAg2sN3gCZ4LTEVdqZCJjKksacq4Tcbzx9urV3zV
+
+// NFT Service
+UPLUS_NFT_ACCESS_CODE = c2b79418-febc-4758-9172-b27a3b354705

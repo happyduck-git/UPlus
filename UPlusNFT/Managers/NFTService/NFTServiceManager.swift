@@ -16,13 +16,13 @@ final class NFTServiceManager {
     
     //MARK: - URL Constant
     private let baseUrl = "https://its-test.gall3ry.io/nft-infra"
-    private let accessCode = "Bearer c2b79418-febc-4758-9172-b27a3b354705"
+    private let accessCode = "Bearer " + EnvironmentConfig.uplusAccessCode
     private let jsonKey = "application/json"
     private let headerFieldAuthorization = "Authorization"
     private let headerFieldContentType = "Content-Type"
     
     //MARK: - NFT Contract
-    private let contractAddress = "0xaab65f4b433ead72c9f0275a6419ba1f413b3fa7"
+    private let contractAddress = EnvironmentConfig.uplusContractAddress
 }
 
 extension NFTServiceManager {
