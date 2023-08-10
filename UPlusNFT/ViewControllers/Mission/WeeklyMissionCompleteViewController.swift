@@ -21,7 +21,7 @@ protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
 final class WeeklyMissionCompleteViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: WeeklyMissionDetailViewViewModel
+    private let vm: ChoiceQuizzesViewViewModel
     private let firestoreManager = FirestoreManager.shared
     
     //MARK: - Delegate
@@ -72,7 +72,7 @@ final class WeeklyMissionCompleteViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: WeeklyMissionDetailViewViewModel) {
+    init(vm: ChoiceQuizzesViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.configure()
@@ -104,7 +104,7 @@ extension WeeklyMissionCompleteViewController {
                 
                 self.addChildViewController(self.loadingVC)
                 
-                let dataSource = self.vm.dataSource
+                let dataSource = self.vm.mission
                
                guard let missionType = MissionType(rawValue: dataSource.missionSubTopicType) else {
                     return
@@ -112,16 +112,15 @@ extension WeeklyMissionCompleteViewController {
                 
                 Task {
                     do {
-                        let user = try UPlusUser.getCurrentUser()
-  
                         try await self.firestoreManager
-                            .saveParticipatedWeeklyMission(userIndex: user.userIndex,
-                                                     questionId: dataSource.missionId,
-                                                     week: self.vm.numberOfWeek,
-                                                     date: Date().yearMonthDateFormat,
-                                                     missionType: missionType,
-                                                     point: dataSource.missionRewardPoint,
-                                                     state: .successed)
+                            .saveParticipatedWeeklyMission(
+                                questionId: dataSource.missionId,
+                                week: self.vm.numberOfWeek,
+                                today: Date().yearMonthDateFormat,
+                                missionType: missionType,
+                                point: dataSource.missionRewardPoint,
+                                state: .successed
+                            )
                         self.delegate?.answerDidSaved()
                         self.loadingVC.removeViewController()
                         
@@ -131,10 +130,28 @@ extension WeeklyMissionCompleteViewController {
                             self.navigationController?.popToViewController(vc, animated: true)
                         }
                         
+                        // Weekly mission 완료 상태 확인
+                        self.vm.weeklyMissionCompletion = try await self.firestoreManager
+                            .checkWeeklyMissionSetCompletion(
+                                week: self.vm.numberOfWeek
+                            )
+ 
                     }
                     catch {
                         print("Error saving mission and user data -- \(error)")
                     }
+                }
+            }
+            .store(in: &bindings)
+        
+        self.vm.$weeklyMissionCompletion
+            .receive(on: RunLoop.current)
+            .sink {
+                if $0 {
+                    // TODO: 여정인증서 NFT 발급 요청(NFT 서비스 인프라).
+                    
+                } else {
+                    print("아직 주간 여정을 모두 마치지 않았습니다.")
                 }
             }
             .store(in: &bindings)
@@ -144,7 +161,7 @@ extension WeeklyMissionCompleteViewController {
 // MARK: - Configure with View Model
 extension WeeklyMissionCompleteViewController {
     private func configure() {
-        self.pointLabel.text = String(describing: self.vm.dataSource.missionRewardPoint) + MissionConstants.redeemPointSuffix
+        self.pointLabel.text = String(describing: self.vm.mission.missionRewardPoint) + MissionConstants.redeemPointSuffix
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  DailyQuizMissionDetailViewController.swift
+//  ChoiceQuizOXViewController.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/20.
@@ -8,17 +8,17 @@
 import UIKit
 import Combine
 
-protocol WeeklyChoiceQuizMissionDetailViewControllerDelegate: AnyObject {
+protocol ChoiceQuizOXViewControllerDelegate: AnyObject {
     func answerDidSaved()
 }
 
-final class WeeklyChoiceQuizMissionDetailViewController: UIViewController {
+final class ChoiceQuizOXViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: WeeklyMissionDetailViewViewModel
+    private let vm: ChoiceQuizzesViewViewModel
     
     //MARK: - Delegate
-    weak var delegate: WeeklyChoiceQuizMissionDetailViewControllerDelegate?
+    weak var delegate: ChoiceQuizOXViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -81,7 +81,7 @@ final class WeeklyChoiceQuizMissionDetailViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: WeeklyMissionDetailViewViewModel) {
+    init(vm: ChoiceQuizzesViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
     }
@@ -106,7 +106,7 @@ final class WeeklyChoiceQuizMissionDetailViewController: UIViewController {
 }
 
 // MARK: - Bind
-extension WeeklyChoiceQuizMissionDetailViewController {
+extension ChoiceQuizOXViewController {
 
     private func bind() {
         func bindViewToViewModel() {
@@ -191,28 +191,28 @@ extension WeeklyChoiceQuizMissionDetailViewController {
 }
 
 // MARK: - Private
-extension WeeklyChoiceQuizMissionDetailViewController {
+extension ChoiceQuizOXViewController {
 
     private func checkUserAnswer() -> Bool {
-        let dataSource = self.vm.dataSource as! ChoiceQuizMission
+        let dataSource = self.vm.mission as! ChoiceQuizMission
         
         return dataSource.missionChoiceQuizRightOrder == self.vm.selectedAnswer ? true : false
     }
     
 }
 
-extension WeeklyChoiceQuizMissionDetailViewController {
+extension ChoiceQuizOXViewController {
     private func configure() {
-        self.quizLabel.text = vm.dataSource.missionContentTitle
+        self.quizLabel.text = vm.mission.missionContentTitle
         
-        let dataSource = self.vm.dataSource as! ChoiceQuizMission
+        let dataSource = self.vm.mission as! ChoiceQuizMission
         self.circleMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[0] ?? "O", for: .normal)
         self.xMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[1] ?? "X", for: .normal)
     }
 }
 
 // MARK: - Set UI & Layout
-extension WeeklyChoiceQuizMissionDetailViewController {
+extension ChoiceQuizOXViewController {
     
     private func setUI() {
         self.view.addSubviews(titleLabel,
@@ -256,7 +256,7 @@ extension WeeklyChoiceQuizMissionDetailViewController {
     
 }
 
-extension WeeklyChoiceQuizMissionDetailViewController: WeeklyMissionCompleteViewControllerDelegate {
+extension ChoiceQuizOXViewController: WeeklyMissionCompleteViewControllerDelegate {
     func answerDidSaved() {
         self.delegate?.answerDidSaved()
     }

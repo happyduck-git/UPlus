@@ -29,9 +29,9 @@ struct UPlusUser: Codable {
 
 extension UPlusUser {
     
-    static func saveCurrentUser(email: String) async throws {
+    static func saveCurrentUser(email: String) async throws -> Self {
         let currentUser = try await FirestoreManager.shared.getCurrentUserInfo(email: email)
-        print("currentUser: \(currentUser)")
+
         let codablePointHistory = currentUser.userPointHistory?.map { pointHistory in
             SwiftPointHistory(
                 userIndex: pointHistory.userIndex,
@@ -60,14 +60,13 @@ extension UPlusUser {
                 userPointHistory: codablePointHistory,
                 userIsAdmin: currentUser.userIsAdmin
             )
-        print("User: \(codableUser)")
-        
         let encodedUserData = try JSONEncoder().encode(codableUser)
         UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
         #if DEBUG
         print("User Info Saved: \(codableUser)")
         #endif
         
+        return currentUser
     }
     
     static func getCurrentUser() throws -> Self {

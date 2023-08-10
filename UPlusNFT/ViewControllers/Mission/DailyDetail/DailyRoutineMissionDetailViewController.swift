@@ -401,13 +401,13 @@ extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionVi
         Task {
             do {
                 // 1. Save image to Storage
-                let user = try UPlusUser.getCurrentUser()
                 guard let imageData = self.vm.selectedImage?.jpegData(compressionQuality: 0.75) else {
                     return
                 }
-                try await self.firestoreManager.saveParticipatedDailyMission(userIndex: user.userIndex,
-                                                                      missionType: self.vm.missionType,
-                                                                      image: imageData)
+                try await self.firestoreManager.saveParticipatedDailyMission(
+                    missionType: self.vm.missionType,
+                    image: imageData
+                )
                 
                 // 2. Show CompleteVC on complete.
                 let vc = DailyMissionCompleteViewController(vm: self.vm)

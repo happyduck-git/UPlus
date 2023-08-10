@@ -133,10 +133,11 @@ final class MyPageViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        // TODO: 회원가입 직후 & VIP holder일 때만 show.
+
         if self.vm.isJustRegistered && self.vm.isVIP {
-            let vc = WelcomeBottomSheetViewController()
+            let vm = WelcomeBottomSheetViewViewModel()
+            let vc = WelcomeBottomSheetViewController(vm: vm)
+            vc.delegate = self
             vc.modalPresentationStyle = .overCurrentContext
 
             self.present(vc, animated: false)
@@ -193,7 +194,7 @@ extension MyPageViewController {
                           let collection = self.collectionView
                     else { return }
                     
-                    if let mission = mission {
+                    if let _ = mission {
                         collection.reloadSections(IndexSet(integer: 1))
                     }
                 }
@@ -225,14 +226,34 @@ extension MyPageViewController {
             
             self.vm.$isHistorySectionOpened
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
+                .sink { [weak self]  in
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-                    
-                    collection.reloadSections(IndexSet(integer: 4))
+                    if $0 && !self.vm.isPointHistoryFetched {
+                        self.vm.isPointHistoryFetched = true
+                        Task {
+                            await self.vm.fetchPointHistory()
+                            self.vm.isPointHistoryFetched = false
+                        }
+                    }
+//                    collection.reloadSections(IndexSet(integer: 4))
+//                    collection.reloadSections(IndexSet(integer: 5))
+                    collection.reloadData()
                 }
                 .store(in: &bindings)
+            
+            self.vm.$participatedMissions
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] missions in
+                    guard let `self` = self,
+                          let collection = self.collectionView
+                    else { return }
+                    print("Missions fetched: \(missions)")
+                    collection.reloadSections(IndexSet(integer: 5))
+                }
+                .store(in: &bindings)
+            
         }
         
         bindViewToViewModel()
@@ -417,6 +438,11 @@ extension MyPageViewController {
             forCellWithReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier
         )
         
+        collectionView.register(
+            MissionHistoryDetailCollectionViewCell.self,
+            forCellWithReuseIdentifier: MissionHistoryDetailCollectionViewCell.identifier
+        )
+        
         // Event Cell
         collectionView.register(
             EventCollectionViewCell.self,
@@ -437,9 +463,13 @@ extension MyPageViewController {
         case 2:
             return self.createWeeklyMissionSectionLayout()
         case 3:
+            return self.createHistoryButtonSectionLayout()
+        case 4:
+            return self.createCalendarSectionLayout()
+        case 5:
             return self.createHistorySectionLayout()
         default:
-            return self.calendarSectionLayout()
+            return self.createCalendarSectionLayout()
         }
         
     }
@@ -534,7 +564,27 @@ extension MyPageViewController {
         return section
     }
     
-    private func calendarSectionLayout() -> NSCollectionLayoutSection {
+    private func createHistoryButtonSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(0.08)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
+    private func createCalendarSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -565,7 +615,7 @@ extension MyPageViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.08)
+                heightDimension: .fractionalHeight(0.1)
             ),
             subitems: [item]
         )
@@ -619,6 +669,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return 3
             case 4:
                 return self.vm.isHistorySectionOpened ? 1 : 0
+            case 5:
+                return self.vm.isHistorySectionOpened ? self.vm.participatedMissions.count : 0
             default:
                 return 1
             }
@@ -702,12 +754,26 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return cell
                 
                 // TODO: Calendar
-            default:
+            case 4:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
                     fatalError()
                 }
                 
                 return cell
+                
+            case 5:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryDetailCollectionViewCell.identifier, for: indexPath) as? MissionHistoryDetailCollectionViewCell else {
+                    fatalError()
+                }
+               
+                let data = self.vm.participatedMissions[indexPath.item]
+                
+                cell.configure(title: data)
+                
+                return cell
+                
+            default:
+                return UICollectionViewCell()
             }
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventCollectionViewCell.identifier, for: indexPath) as? EventCollectionViewCell else {
@@ -755,7 +821,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     self.present(vc, animated: false)
                 }
             case 2:
-                let vm = WeeklyMissionOverViewViewModel()
+                let vm = WeeklyMissionOverViewViewModel(week: indexPath.item + 1)
                 let vc = WeeklyMissionOverViewViewController(vm: vm)
 
                 self.show(vc, sender: self)
@@ -763,42 +829,68 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 break
             }
         } else {
-            // Temp: 관련된 값 저장
-            print("Event tapped!")
-            Task {
-                let mission = self.vm.eventMissions[indexPath.item]
-                let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
-                
-                var selectedIndex: Int?
-                var comment: String?
-                
-                switch type {
-                case .governanceElection:
-                    selectedIndex = 1 // NOTE: DEMO
-                case .commentCount:
-                    comment = "Demo comment입니다." // NOTE: DEMO
-                default:
-                   break
-                }
-                do {
-                    try await FirestoreManager.shared.saveParticipatedEventMission(
-                        type: type,
-                        eventId: mission.missionId,
-                        selectedIndex: selectedIndex,
-                        comment: comment,
-                        point: mission.missionRewardPoint
-                    )
-                }
-                catch {
-                    print("Error saving participated event -- \(error)")
-                }
-            }
+            // Temp: 해당 화면 보여주기
+            let mission = self.vm.eventMissions[indexPath.item]
+            let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
             
-            /*
-            // TODO: event tap 시 실행될 detail VC 전환.
-            let vc = EventDetailViewController()
-            self.show(vc, sender: self)
-             */
+            switch type {
+            case .contentReadOnly:
+                guard let mission = mission as? ContentReadOnlyMission else { return }
+                let vm = ContentReadOnlyMissionViewViewModel(mission: mission)
+                let vc = ContentReadOnlyMissionViewController(vm: vm)
+                self.show(vc, sender: self)
+                
+            case .shareMediaOnSlack:
+                guard let mission = mission as? MediaShareMission else { return }
+                let vm = ShareMediaOnSlackMissionViewViewModel(mission: mission)
+                let vc = ShareMediaOnSlackMissionViewController(vm: vm)
+                self.show(vc, sender: self)
+                
+            case .governanceElection:
+                guard let mission = mission as? GovernanceMission else { return }
+                let vm = GovernanceElectionMissionViewViewModel(mission: mission)
+                let vc = GovernanceElectionMissionViewController(vm: vm)
+                self.show(vc, sender: self)
+                
+            case .commentCount:
+                guard let mission = mission as? CommentCountMission else { return }
+                let vm = CommentCountMissionViewViewModel(mission: mission)
+                let vc = CommentCountMissionViewController(vm: vm)
+                self.show(vc, sender: self)
+                
+            default:
+                break
+            }
+
+//            Task {
+//                let mission = self.vm.eventMissions[indexPath.item]
+//                let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
+//
+//                var selectedIndex: Int?
+//                var comment: String?
+//
+//                switch type {
+//                case .governanceElection:
+//                    selectedIndex = 1 // NOTE: DEMO
+//                case .commentCount:
+//                    comment = "Demo comment입니다." // NOTE: DEMO
+//                default:
+//                   break
+//                }
+//                do {
+//                    try await FirestoreManager.shared.saveParticipatedEventMission(
+//                        type: type,
+//                        eventId: mission.missionId,
+//                        selectedIndex: selectedIndex,
+//                        comment: comment,
+//                        point: mission.missionRewardPoint
+//                    )
+//                }
+//                catch {
+//                    print("Error saving participated event -- \(error)")
+//                }
+//            }
+
         }
     }
     
@@ -849,6 +941,11 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         self.addChildViewController(vc)
         self.sideMenuVC?.dismiss(animated: true)
     }
+    
+    func signOutDidTap() {
+        self.sideMenuVC?.dismiss(animated: false)
+        self.navigationController?.popViewController(animated: true)
+    }
 }
 
 extension MyPageViewController: MissionHistoryButtonCollectionViewCellDelegate {
@@ -872,4 +969,16 @@ extension MyPageViewController: RoutineSelectBottomSheetViewControllerDelegate {
             }
         }
     }
+}
+
+extension MyPageViewController: WelcomeBottomSheetViewControllerDelegate {
+
+    func userVipPointSaveStatus(status: Bool) {
+        if status {
+            self.vm.saveUserToUserDefaults()
+        } else {
+            // TODO: VIP Point 저장에 실패한 경우
+        }
+    }
+    
 }

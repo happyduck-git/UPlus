@@ -47,9 +47,9 @@ extension RankingViewViewModel {
                 var todayRankList: [UPlusUser] = []
                 var yesterdayRankList: [UPlusUser] = []
                 
-                let currentDate = Date()
+                let today = Date()
                 let calendar = Calendar.current
-                guard let yesterday = calendar.date(byAdding: .day, value: -1, to: currentDate) else {
+                guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
                     return
                 }
                 
@@ -60,32 +60,37 @@ extension RankingViewViewModel {
                     for point in points {
                         let index = point.userIndex ?? "no-user-index"
                         
-                        if String(describing: userIndex) == index {
-                            var user = user
+                        var tempUser = user
                         
+                        if String(describing: userIndex) == index {
+                            
                             if user.userPointHistory == nil {
-                                user.userPointHistory = [point]
+                                tempUser.userPointHistory = [point]
                             } else {
-                                user.userPointHistory?.append(point)
+                                tempUser.userPointHistory?.append(point)
+                            }
+                            
+                            /* 어제, 오늘 점수 리스트 */
+                            if point.userPointTime == today.yearMonthDateFormat {
+                                // Today's points
+                                todayRankList.append(tempUser)
+                                
+                            } else if point.userPointTime == yesterday.yearMonthDateFormat {
+                                // Yesterday's points
+                                yesterdayRankList.append(tempUser)
+                            } else {
+                                continue
                             }
                         }
                         
-                        /* 어제, 오늘 점수 리스트 */
-                        if point.userPointTime == currentDate.yearMonthDateFormat {
-                            // Today's points
-                            todayRankList.append(user)
-                            
-                        } else if point.userPointTime == yesterday.yearMonthDateFormat {
-                            // Yesterday's points
-                            yesterdayRankList.append(user)
-                        } else {
-                            continue
-                        }
                     }
                     
                 }
                 
-                self.todayRankList = todayRankList
+                let sorted = todayRankList.sorted { $0.userPointHistory?.first?.userPointCount ?? 0 > $1.userPointHistory?.first?.userPointCount ?? 0 }
+
+                self.todayRankList = sorted
+                
                 self.yesterDayRankUserList = yesterdayRankList
                 
                 /* 오늘 점수 랭킹 */

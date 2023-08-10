@@ -6,9 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 final class UserMissionDataView: PassThroughView {
 
+    private var bindings = Set<AnyCancellable>()
+    
+    //MARK: - UI Elements
+    
     private let levelTitle: UILabel = {
         let label = UILabel()
         label.text = "일반인"
@@ -47,7 +52,6 @@ final class UserMissionDataView: PassThroughView {
     
     private let pointLabel: UILabel = {
         let label = UILabel()
-        label.text = "0/480"
         label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
         label.textColor = UPlusColor.deepGreen
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -100,7 +104,26 @@ final class UserMissionDataView: PassThroughView {
 
 extension UserMissionDataView {
     func configure(vm: MyPageViewViewModel) {
+        
         self.pointLabel.text = String(describing: vm.user.userTotalPoint ?? 0)
+        
+        self.bind(with: vm)
+    }
+    
+    private func bind(with vm: MyPageViewViewModel) {
+        
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        vm.$newPoint
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                if vm.isVIP && vm.isJustRegistered {
+                    self.pointLabel.text = String(describing: $0)
+                }
+            }
+            .store(in: &bindings)
     }
 }
 

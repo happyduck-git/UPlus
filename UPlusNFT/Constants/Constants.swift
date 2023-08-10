@@ -8,7 +8,7 @@
 import Foundation
 
 struct UPlusServiceInfoConstant {
-    static let startDay: String = "2023-07-26"
+    static let startDay: String = "2023-07-31"
     static let totalMembers: Int = 700
 }
 
@@ -47,7 +47,7 @@ struct SignUpConstants {
     static let register: String = "가입 완료하기"
     static let authenticate: String = "이메일 인증하기"
     static let authCompleted: String = "이메일 인증이 완료되었습니다."
-    static let emailSuffix: String = "@platfarm.net" //"@uplus.net"
+    static let emailSuffix: String = "@platfarm.net" //"@platfarm.net" //"@gmail.com" //"@uplus.net"
     static let deeplinkDomain: String = "https://DEV-LGUplus-NFT-Platfarm.firebaseapp.com"
     static let passwordRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
     static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.2
@@ -60,6 +60,8 @@ struct SignUpConstants {
     static let desctiptions: String = "서태호와 함께 멤버십을 즐겨보세요"
     static let nftInfo: String = "서태호 NFT는 한 사람 당 하나만 발급받을 수 있어요."
     static let redeemGift: String = "웰컴 선물 받기"
+    
+    static let vipHolderInitialPoint: Int64 = 400
 }
 
 struct ResetPasswordConstants {
@@ -208,6 +210,8 @@ struct FirebaseAuthConstants {
 }
 
 struct FirestoreConstants {
+    static let nftImagePathSuffix = "dev_threads2/nfts/nft_set/"
+    
     static let devThreads = "dev_threads"
     static let threads = "threads"
     static let threadSetCollection = "thread_set"
@@ -320,6 +324,8 @@ struct FirestoreConstants {
     static let missionPhotoTaskSet = "mission_photo_task_set"
     static let missionFormatType = "mission_format_type"
     static let missionSubFormatType = "mission_sub_format_type"
+    static let missionContentTitle = "mission_content_title"
+    static let missionRewardPoint = "mission_reward_point"
     
     /* Event */
     static let governanceElectionUserMap = "governance_election_user_map"

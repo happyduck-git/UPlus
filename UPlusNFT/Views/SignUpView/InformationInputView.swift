@@ -49,7 +49,7 @@ class InformationInputView: UIView {
     
     private let placeHolderLabel: UILabel = {
         let label = UILabel()
-        label.text = "@lguplus.net"
+        label.text = "@uplus.net"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

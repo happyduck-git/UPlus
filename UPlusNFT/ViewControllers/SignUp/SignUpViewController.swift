@@ -8,10 +8,20 @@
 import UIKit
 import Combine
 
+protocol SignUpViewControllerDelegate: AnyObject {
+    func signupDidComplete()
+}
+
 final class SignUpViewController: UIViewController {
     
+    //MARK: - Dependency
     private var signupVM: SignUpViewViewModel
+    
+    //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
+    
+    //MARK: - Delegate
+    weak var delegate: SignUpViewControllerDelegate?
     
     // MARK: - UI Elements
     private let emailTitleLabel: UILabel = {
@@ -29,7 +39,7 @@ final class SignUpViewController: UIViewController {
     
     private let placeHolderLabel: UILabel = {
         let label = UILabel()
-        label.text = "@lguplus.net"
+        label.text = "@uplus.net"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -332,11 +342,15 @@ final class SignUpViewController: UIViewController {
                     guard let `self` = self else { return }
                     if valid {
                        
+                        // Request a single NFT to NFT Service.
+                        self.signupVM.requestToCreateNewUserNft()
+                        
                         let vm = SignUpCompleteViewViewModel()
                         let vc = SignUpCompleteViewController(vm: vm)
                         
+                        vc.delegate = self
                         self.navigationController?.pushViewController(vc, animated: true)
-                        
+                    
                     } else {
                         self.emailValidationText.textColor = .systemRed
                         self.emailValidationText.text = self.signupVM.errorDescription
@@ -366,5 +380,11 @@ extension SignUpViewController {
     
     @objc private func cancelButtonDidTap() {
         self.navigationController?.popViewController(animated: true)
+    }
+}
+
+extension SignUpViewController: SignUpCompleteViewControllerDelegate {
+    func welcomeButtonDidTap() {
+        self.delegate?.signupDidComplete()
     }
 }

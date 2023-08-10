@@ -44,7 +44,7 @@ class LoginViewController: UIViewController {
     
     private let placeHolderLabel: UILabel = {
         let label = UILabel()
-        label.text = "@lguplus.net"
+        label.text = "@uplus.net"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -225,31 +225,38 @@ extension LoginViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
-                    self.loadingVC.removeViewController()
                     
                     if value {
-                        
-                        self.emailTextField.text = ""
-                        self.passwordTextField.text = ""
-                        
-                        guard let data = UserDefaults.standard.object(forKey: UserDefaultsConstants.currentUser) as? Data,
-                              let user = try? JSONDecoder().decode(UPlusUser.self, from: data)
-                        else {
-                            print("Error getting saved user info from UserDefaults")
-                            return
+                        do {
+                            let user = try UPlusUser.getCurrentUser()
+                            self.passwordTextField.text = ""
+                            self.viewModel.password = ""
+                            
+                            let vm = MyPageViewViewModel(user: user,
+                                                         isJustRegistered: false,
+                                                         isVip: false, // TODO: Need to change logic
+                                                         todayRank: self.viewModel.todayRank)
+                            let myPageVC = MyPageViewController(vm: vm)
+                            
+                            self.loadingVC.removeViewController()
+                            self.show(myPageVC, sender: self)
                         }
-                        
-                       
-                        let vm = MyPageViewViewModel(user: user,
-                                                     isJustRegistered: false,
-                                                     isVip: false, // TODO: Need to change logic
-                                                     todayRank: self.viewModel.todayRank)
-                        let myPageVC = MyPageViewController(vm: vm)
-                        self.navigationController?.modalPresentationStyle = .fullScreen
-                        self.show(myPageVC, sender: self)
+                        catch {
+                            print("Error getting saved user info from UserDefaults -- \(error)")
+                            self.loadingVC.removeViewController()
+                            let action = UIAlertAction(title: "확인", style: .default)
+                            let alert = UIAlertController(
+                                title: "로그인 실패",
+                                message: "로그인에 실패하였습니다. 잠시 후 다시 시도해주시기 바랍니다.",
+                                preferredStyle: .alert
+                            )
+                            alert.addAction(action)
+                            self.show(alert, sender: self)
+                        }
                         
                     } else {
                         self.credentialValidationText.text = viewModel.errorDescription
+                        self.loadingVC.removeViewController()
                     }
                 }
                 .store(in: &bindings)
@@ -341,6 +348,7 @@ extension LoginViewController {
     @objc private func openSignUpVC() {
         let vm = SignUpViewViewModel()
         let vc = SignUpViewController(vm: vm)
+        vc.delegate = self
         self.navigationController?.modalPresentationStyle = .fullScreen
         self.show(vc, sender: self)
     }
@@ -369,4 +377,25 @@ extension LoginViewController {
 // MARK: - UITextFieldDelegate
 extension LoginViewController: UITextFieldDelegate {
     
+}
+
+extension LoginViewController: SignUpViewControllerDelegate {
+    func signupDidComplete() {
+        
+        do {
+            let user = try UPlusUser.getCurrentUser()
+            
+            let vm = MyPageViewViewModel(user: user,
+                                         isJustRegistered: true,
+                                         isVip: user.userHasVipNft,
+                                         todayRank: 0)
+            let myPageVC = MyPageViewController(vm: vm)
+            self.navigationController?.pushViewController(myPageVC, animated: true)
+            
+        }
+        catch {
+            print("Error getting saved user info from UserDefaults -- \(error)")
+        }
+        
+    }
 }

@@ -6,8 +6,22 @@
 //
 
 import UIKit
+import Combine
 
-class WelcomeBottomSheetViewController: BottomSheetViewController {
+protocol WelcomeBottomSheetViewControllerDelegate: AnyObject {
+    func userVipPointSaveStatus(status: Bool)
+}
+
+final class WelcomeBottomSheetViewController: BottomSheetViewController {
+    
+    //MARK: - Dependency
+    private let vm: WelcomeBottomSheetViewViewModel
+    
+    //MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    //MARK: - Delegate
+    weak var delegate: WelcomeBottomSheetViewControllerDelegate?
     
     //MARK: - UI Elements
     private let greetingsLabel: UILabel = {
@@ -49,7 +63,7 @@ class WelcomeBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.textColor = .darkGray
         label.textAlignment = .center
-        label.text = "+ 추가 보상"
+        label.text = "400P 추가 보상"
         label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -59,7 +73,7 @@ class WelcomeBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.textColor = .black
         label.textAlignment = .center
-        label.text = "갓생 미션 1일 PASS권"
+        label.text = "400P 추가 보상"
         label.font = .systemFont(ofSize: UPlusFont.head2, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -76,6 +90,16 @@ class WelcomeBottomSheetViewController: BottomSheetViewController {
         return button
     }()
     
+    //MARK: - Init
+    init(vm: WelcomeBottomSheetViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     //MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -83,7 +107,21 @@ class WelcomeBottomSheetViewController: BottomSheetViewController {
         
         self.setUI()
         self.setLayout()
-        
+        self.bind()
+    }
+    
+}
+
+extension WelcomeBottomSheetViewController {
+
+    private func bind() {
+        self.vm.saveStatus
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                self.delegate?.userVipPointSaveStatus(status: $0)
+            }
+            .store(in: &bindings)
     }
     
 }
@@ -132,6 +170,7 @@ extension WelcomeBottomSheetViewController {
         ])
         
     }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.levelUpButton.layer.cornerRadius = self.levelUpButton.frame.height / 7
@@ -141,7 +180,11 @@ extension WelcomeBottomSheetViewController {
 extension WelcomeBottomSheetViewController {
     
     @objc private func levelUpDidTap() {
-        // TODO: Save VIP holder initial point to DB.
+        Task {
+            await self.vm.saveVipInitialPoint()
+        }
+        
+        self.dismissView()
     }
     
 }

@@ -16,11 +16,11 @@ enum UPlusNftType: String {
 }
 
 enum UPlusNftDetailType: String {
-    case avatar = "avatar__level_%"
+    case avatar = "avatar__level_%d"
     case athlete = "exp_auth__athlete"
     case goodWorker = "exp_auth__good_worker"
     case environmentalist = "exp_auth__environmentalist"
-    case journey = "journey_auth__%"
+    case journey = "journey_auth__%d"
     case raffle
 }
 

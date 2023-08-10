@@ -29,21 +29,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             logger.info("User is logged in.")
             
             Task {
-                await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
-                print("Setbasicinfo")
-                let userInfo = try UPlusUser.getCurrentUser()
+                    await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
+                    let userInfo = try UPlusUser.getCurrentUser()
+                    
+                    let loginVM = LoginViewViewModel()
+                    let loginVC = LoginViewController(vm: loginVM)
 
-                let loginVM = LoginViewViewModel()
-                let loginVC = LoginViewController(vm: loginVM)
-
-                let vm = MyPageViewViewModel(user: userInfo,
-                                             isJustRegistered: false,
-                                             isVip: userInfo.userHasVipNft,
-                                             todayRank: UPlusServiceInfoConstant.totalMembers)
-                let myPageVC = MyPageViewController(vm: vm)
-                
-                loginVC.navigationController?.addChild(myPageVC)
-                window?.rootViewController = UINavigationController(rootViewController: myPageVC)
+                    let vm = MyPageViewViewModel(user: userInfo,
+                                                 isJustRegistered: false,
+                                                 isVip: userInfo.userHasVipNft,
+                                                 todayRank: UPlusServiceInfoConstant.totalMembers)
+                    let myPageVC = MyPageViewController(vm: vm)
+                    
+                    let navVC = UINavigationController(rootViewController: loginVC)
+         
+                    navVC.pushViewController(myPageVC, animated: false)
+                    window?.rootViewController = navVC
+                   
             }
             
             
@@ -103,7 +105,7 @@ extension SceneDelegate {
     /// Save basic user login information.
     private func setBasicUserInfo(email: String) async {
         do {
-            try await UPlusUser.saveCurrentUser(email: email)
+            let _ = try await UPlusUser.saveCurrentUser(email: email)
         }
         catch {
             switch error {

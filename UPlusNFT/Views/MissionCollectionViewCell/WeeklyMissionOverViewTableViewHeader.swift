@@ -76,7 +76,7 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
 // MARK: - Configure with View Model
 extension WeeklyMissionOverViewTableViewHeader {
     func configure(with vm: WeeklyMissionOverViewViewModel) {
-        self.themeLabel.text = "테마 " + String(describing: vm.numberOfWeek)
+        self.themeLabel.text = "테마 " + String(describing: vm.week)
         self.titleLabel.text = vm.title
         self.missionDaysLabel.text = vm.missionDays
     }

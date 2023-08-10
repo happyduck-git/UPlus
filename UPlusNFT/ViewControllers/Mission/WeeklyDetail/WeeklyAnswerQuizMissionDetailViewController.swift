@@ -11,13 +11,13 @@ import Combine
 final class WeeklyAnswerQuizMissionDetailViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: WeeklyMissionDetailViewViewModel
+    private let vm: ChoiceQuizzesViewViewModel
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - Init
-    init(vm: WeeklyMissionDetailViewViewModel) {
+    init(vm: ChoiceQuizzesViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         
@@ -94,13 +94,13 @@ final class WeeklyAnswerQuizMissionDetailViewController: UIViewController {
 extension WeeklyAnswerQuizMissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let dataSource = self.vm.dataSource as! ShortAnswerQuizMission
+        let dataSource = self.vm.mission as! ShortAnswerQuizMission
         return dataSource.missionAnswerQuizzes.count
          
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let dataSource = self.vm.dataSource as! ShortAnswerQuizMission
+        let dataSource = self.vm.mission as! ShortAnswerQuizMission
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyAnswerQuizMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyAnswerQuizMissionCollectionViewCell
         else {
@@ -186,7 +186,7 @@ extension WeeklyAnswerQuizMissionDetailViewController {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    let dataSource = self.vm.dataSource as! ShortAnswerQuizMission
+                    let dataSource = self.vm.mission as! ShortAnswerQuizMission
                     
                     let answer = dataSource.missionAnswerQuizzes
                     if answer[1] == self.anwerInputTextField.text {

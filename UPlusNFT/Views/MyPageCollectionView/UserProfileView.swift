@@ -81,23 +81,6 @@ extension UserProfileView {
     func configure(with vm: MyPageViewViewModel) {
         
         self.bind(with: vm)
-        
-        Task {
-            do {
-                guard let ref = vm.user.userNfts?.first else { return }
-                let nft = try await vm.getNft(reference: ref)
-                let url = URL(string: nft.nftContentImageUrl)! // TODO: Optional 처리.
-                self.profileImage.image = try await ImagePipeline.shared.image(for: url)
-                
-            }
-            catch {
-                print("Error fetching profileImage -- \(error)")
-                self.profileImage.image = UIImage(systemName: SFSymbol.defaultProfile)?.withTintColor(.white, renderingMode: .alwaysOriginal)
-            }
-            
-        }
-        self.usernameLabel.text = vm.user.userNickname
-        self.userMissionDataView.configure(vm: vm)
         self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
     }
     
@@ -113,6 +96,27 @@ extension UserProfileView {
 //                self.userMissionDataView.rankingButton.setTitle(String(describing: $0) + "위", for: .normal)
             }
             .store(in: &bindings)
+        
+        vm.$missionViewModel
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                guard let `self` = self,
+                      let image = result?.profileImage else { return }
+                Task {
+                    do {
+                        let url = URL(string: image)!
+                        self.profileImage.image = try await ImagePipeline.shared.image(for: url)
+                        
+                    }
+                    catch {
+                        print("Error converting profile image -- \(error)")
+                    }
+                }
+                self.usernameLabel.text = vm.user.userNickname
+                self.userMissionDataView.configure(vm: vm)
+            }
+            .store(in: &bindings)
+ 
     }
 
 }

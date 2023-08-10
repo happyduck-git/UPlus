@@ -20,6 +20,8 @@ final class SignUpViewViewModel {
     private let firestoreManager = FirestoreManager.shared
     private let firebaseAuthManager = FirebaseAuthManager.shared
     
+    private let nftServiceManager = NFTServiceManager.shared
+    
     // MARK: - DataSource
     var fullEmail = ""
     @Published var email = "" {
@@ -120,4 +122,21 @@ extension SignUpViewViewModel {
     
 }
 
-
+extension SignUpViewViewModel {
+    func requestToCreateNewUserNft() {
+        Task {
+            do {
+                let user = try UPlusUser.getCurrentUser()
+                let result = try await self.nftServiceManager.requestSingleNft(
+                    userIndex: user.userIndex,
+                    nftType: .avatar,
+                    level: user.userHasVipNft ? 1 : 2
+                )
+                print("Result of requesting nft: \(result)")
+            }
+            catch {
+                print("Error requesting new user nft -- \(error)")
+            }
+        }
+    }
+}

@@ -47,7 +47,8 @@ class MissionMainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let vc = WelcomeBottomSheetViewController()
+        let vm = WelcomeBottomSheetViewViewModel()
+        let vc = WelcomeBottomSheetViewController(vm: vm)
         vc.modalPresentationStyle = .overCurrentContext
 
         self.present(vc, animated: false)
@@ -421,12 +422,12 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         switch indexPath.section {
         case 2:
             
-            let vm = WeeklyMissionDetailViewViewModel(dataSource: self.vm.weeklyMissions[indexPath.item],
+            let vm = ChoiceQuizzesViewViewModel(dataSource: self.vm.weeklyMissions[indexPath.item],
                                                       numberOfWeek: 1)
             
-            switch vm.dataSource.missionFormatType {
+            switch vm.mission.missionFormatType {
             case MissionFormatType.choiceQuiz.rawValue:
-                let quizMissionDetailVC = WeeklyChoiceQuizMissionDetailViewController(vm: vm)
+                let quizMissionDetailVC = ChoiceQuizOXViewController(vm: vm)
                 self.show(quizMissionDetailVC, sender: self)
             case MissionFormatType.answerQuiz.rawValue:
                 // TODO: quiz type이 answer 형인 경우.

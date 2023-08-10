@@ -15,37 +15,19 @@ final class WeeklyMissionOverViewViewModel {
     private let firestoreManager = FirestoreManager.shared
 
     /* Header */
-    var numberOfWeek: Int = 1
+    var week: Int = 1
     var title: String = "UPlus 알아가기"
     var missionDays: String = "미션 참여 기간: 08.07 - 08.14"
     var nftImage: UIImage? = nil
     
     /* Missions */
-//    @Published var missions: [WeeklyQuizMission] = [] {
-//        didSet {
-//            do {
-//                let user = try UPlusUser.getCurrentUser()
-//                for mission in self.missions {
-//                    let map = mission.missionUserStateMap ?? [:]
-//                    let hasParticipated = map.contains { ele in
-//                        ele.key == String(describing: user.userIndex)
-//                    }
-//                    self.participation[mission.missionId] = hasParticipated
-//                }
-//            }
-//            catch {
-//                print("Error getting user info from UserDefaults -- \(error)")
-//            }
-//        }
-//    }
-//    var participation: [Int64: Bool] = [:]
-    
     var missionParticipation: [String: Bool] = [:]
-    @Published var anyMissions: [any Mission] = [] {
+    
+    @Published var weeklyMissions: [any Mission] = [] {
         didSet {
             do {
                 let user = try UPlusUser.getCurrentUser()
-                for mission in self.anyMissions {
+                for mission in self.weeklyMissions {
                     let map = mission.missionUserStateMap ?? [:]
                     let hasParticipated = map.contains { ele in
                         ele.key == String(describing: user.userIndex)
@@ -67,10 +49,10 @@ final class WeeklyMissionOverViewViewModel {
     }()
     
     // MARK: - Init
-    init() {
-        self.numberOfWeek = self.getNumberOfWeek()
-//        self.getWeeklyMissionInfo(week: self.numberOfWeek)
-        self.getAnyWeeklyMissions(week: self.numberOfWeek)
+    init(week: Int) {
+        self.week = week
+//        self.numberOfWeek = self.getNumberOfWeek()
+        self.getWeeklyMissionInfo(week: week)
     }
     
 }
@@ -96,24 +78,14 @@ extension WeeklyMissionOverViewViewModel {
     }
     
     func getWeeklyMissionInfo(week: Int) {
-//        Task {
-//            do {
-//                self.missions = try await self.firestoreManager.getWeeklyMission(week: week)
-//            }
-//            catch {
-//                print("Error fetching weekly mission data -- \(error)")
-//            }
-//        }
-    }
-    
-    func getAnyWeeklyMissions(week: Int) {
         Task {
             do {
-                self.anyMissions = try await self.firestoreManager.getWeeklyMission(week: week)
+                self.weeklyMissions = try await self.firestoreManager.getWeeklyMission(week: week)
             }
             catch {
                 print("Error fetching weekly mission data -- \(error)")
             }
         }
     }
+
 }

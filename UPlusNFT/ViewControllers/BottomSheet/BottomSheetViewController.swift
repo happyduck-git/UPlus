@@ -70,6 +70,10 @@ extension BottomSheetViewController {
     }
     
     @objc private func animateDismissView() {
+        self.dismissView()
+    }
+    
+    func dismissView() {
         // hide main container view by updating bottom constraint in animation block
         UIView.animate(withDuration: 0.3) {
             self.containerViewBottomConstraint?.constant = self.defaultHeight

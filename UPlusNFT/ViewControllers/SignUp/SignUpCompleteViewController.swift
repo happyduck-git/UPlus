@@ -10,10 +10,17 @@ import FirebaseAuth
 import Combine
 import Nuke
 
+protocol SignUpCompleteViewControllerDelegate: AnyObject {
+    func welcomeButtonDidTap()
+}
+
 final class SignUpCompleteViewController: UIViewController {
 
     //MARK: - Dependency
     private let vm: SignUpCompleteViewViewModel
+    
+    //MARK: - Delegate
+    weak var delegate: SignUpCompleteViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -115,9 +122,13 @@ extension SignUpCompleteViewController {
     }
     
     @objc func welcomeDidTap() {
-        self.navigationController?.popViewController(animated: true)
-        // TODO: 웰컴 선물 받기 관련 가이드 정의 이후 action 구현
-
+        guard let vcs = self.navigationController?.viewControllers else { return }
+        
+        for vc in vcs where vc is LoginViewController {
+            self.navigationController?.popToViewController(vc, animated: false)
+        }
+        
+        self.delegate?.welcomeButtonDidTap()
     }
 }
 
@@ -142,8 +153,8 @@ extension SignUpCompleteViewController {
           
             self.nftImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.descriptionLabel.bottomAnchor, multiplier: 4),
             self.nftImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.nftImageView.heightAnchor.constraint(equalTo: self.greetingsLabel.widthAnchor),
-            self.nftImageView.widthAnchor.constraint(equalTo: self.greetingsLabel.widthAnchor),
+            self.nftImageView.heightAnchor.constraint(equalToConstant: 200),
+            self.nftImageView.widthAnchor.constraint(equalToConstant: 200),
             
             self.nftInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 4),
             self.nftInfoLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),

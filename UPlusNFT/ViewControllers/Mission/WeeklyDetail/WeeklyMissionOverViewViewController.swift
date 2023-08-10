@@ -59,7 +59,7 @@ extension WeeklyMissionOverViewViewController {
             
         }
         func bindViewModelToView() {
-            self.vm.$anyMissions
+            self.vm.$weeklyMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
@@ -93,20 +93,20 @@ extension WeeklyMissionOverViewViewController {
 extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.vm.anyMissions.count
+        return self.vm.weeklyMissions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         // 1. Check if user has participated a cetain mission
-        let mission = self.vm.anyMissions[indexPath.row]
+        let mission = self.vm.weeklyMissions[indexPath.row]
         let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
         var config = cell.defaultContentConfiguration()
         
         if hasParticipated {
             config.text = "참여 완료"
         } else {
-            config.text = String(describing: mission.missionFormatType) + " : " + String(describing: mission.missionRewardPoint) + MissionConstants.pointUnit
+            config.text = String(describing: mission.missionSubFormatType) + " : " + String(describing: mission.missionRewardPoint) + MissionConstants.pointUnit
         }
         cell.contentConfiguration = config
         
@@ -124,19 +124,96 @@ extension WeeklyMissionOverViewViewController {
 extension WeeklyMissionOverViewViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let anyMission = self.vm.anyMissions[indexPath.row]
+        let anyMission = self.vm.weeklyMissions[indexPath.row]
         
         if anyMission is ShortAnswerQuizMission {
             let mission = anyMission as! ShortAnswerQuizMission
-            print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+            
+            guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
+                return
+            }
+            switch subFormatType {
+            
+            case .answerQuizSingular:
+                let vm = AnswerQuizSingularViewViewModel(mission: mission)
+                let vc = AnswerQuizSingularViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+                
+            case .answerQuizPlural:
+                let vm = AnswerQuizPluralViewViewModel(mission: mission)
+                let vc = AnswerQuizPluralViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+                
+            default:
+                break
+            }
             
         } else if anyMission is ChoiceQuizMission {
             let mission = anyMission as! ChoiceQuizMission
-            print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+            
+            guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
+                return
+            }
+            switch subFormatType {
+    
+            case .choiceQuizOX:
+                let vm = ChoiceQuizzesViewViewModel(dataSource: mission, numberOfWeek: 1)
+                let vc = ChoiceQuizOXViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+                
+            case .choiceQuizMore:
+                let vm = ChoiceQuizMoreViewViewModel(mission: mission)
+                let vc = ChoiceQuizMoreViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+
+            case .choiceQuizVideo:
+                let vm = ChoiceQuizVideoViewViewModel(mission: mission)
+                let vc = ChoiceQuizVideoViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+                
+            default:
+                break
+            }
             
         } else if anyMission is ContentReadOnlyMission {
             let mission = anyMission as! ContentReadOnlyMission
             print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+            guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
+                return
+            }
+            
+            switch subFormatType {
+            case .contentReadOnly:
+                let vm = ContentReadOnlyMissionViewViewModel(mission: mission)
+                let vc = ContentReadOnlyMissionViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+                
+            default:
+                break
+            }
+            
+            
+//            Task {
+//                do {
+//                    try await FirestoreManager.shared.saveParticipatedWeeklyMission(
+//                        questionId: mission.missionId,
+//                        week: 1,
+//                        today: Date().yearMonthDateFormat,
+//                        missionType: .weeklyQuiz1,
+//                        point: mission.missionRewardPoint,
+//                        state: .successed)
+//                    print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
+//                }
+//                catch {
+//                    print("Error saving weekly mission -- \(error)")
+//                }
+//            }
         }
         
 /*
@@ -173,10 +250,10 @@ extension WeeklyMissionOverViewViewController {
     }
 }
 
-extension WeeklyMissionOverViewViewController: WeeklyChoiceQuizMissionDetailViewControllerDelegate {
+extension WeeklyMissionOverViewViewController: ChoiceQuizOXViewControllerDelegate {
     func answerDidSaved() {
         print("Answer did saved called from WMOVVC.")
-        self.vm.getWeeklyMissionInfo(week: self.vm.numberOfWeek)
+        self.vm.getWeeklyMissionInfo(week: self.vm.week)
         self.tableView.reloadData()
     }
 }

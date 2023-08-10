@@ -1,5 +1,5 @@
 //
-//  DailyQuizMissionDetailViewViewModel.swift
+//  ChoiceQuizzesViewViewModel.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/20.
@@ -8,10 +8,9 @@
 import Foundation
 import Combine
 
-final class WeeklyMissionDetailViewViewModel {
+final class ChoiceQuizzesViewViewModel {
     
-//    let dataSource: WeeklyQuizMission
-    let dataSource: any Mission
+    let mission: any Mission
     
     let numberOfWeek: Int
     
@@ -24,10 +23,12 @@ final class WeeklyMissionDetailViewViewModel {
     /* Answer Quiz */
     @Published var textExists: Bool = false
     
+    /* WeeklyMission Completion */
+    @Published var weeklyMissionCompletion: Bool = false
     
     init(dataSource: any Mission,
          numberOfWeek: Int) {
-        self.dataSource = dataSource
+        self.mission = dataSource
         self.numberOfWeek = numberOfWeek
     }
     

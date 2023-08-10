@@ -42,7 +42,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
         label.isHidden = true
         label.numberOfLines = 2
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -89,8 +89,8 @@ extension WeeklyMissionCollectionViewCell {
         case .close:
             self.addOpenDateLabel()
             
-            self.missionTitle.text = title
-            self.missionDescription.text = "참여기간: " + period
+//            self.missionTitle.text = title
+//            self.missionDescription.text = "참여기간: " + period
             self.openDateLabel.text = "🔒\n" + (openDate ?? "08.28") + "에 오픈" 
         }
     }

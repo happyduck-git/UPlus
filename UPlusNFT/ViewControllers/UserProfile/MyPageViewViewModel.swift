@@ -21,6 +21,7 @@ final class MyPageViewViewModel {
         case weekly = "여정 미션"
         case button
         case calendar
+        case history
     }
     
     enum MyPageViewEventSectionType: CaseIterable {
@@ -34,6 +35,7 @@ final class MyPageViewViewModel {
     /* Basic Data */
     let isJustRegistered: Bool
     let isVIP: Bool
+    @Published var newPoint: Int64 = 0
     
     /* MyPageVC */
     @Published var todayRank2: Int = UPlusServiceInfoConstant.totalMembers
@@ -43,6 +45,32 @@ final class MyPageViewViewModel {
     @Published var savedMissionType: MissionType?
     @Published var routineParticipationCount: Int = 0
     @Published var routinePoint: Int64 = 0
+    
+    var isPointHistoryFetched: Bool = false
+    @Published var pointHistory: [PointHistory] = [] {
+        didSet {
+            for history in pointHistory {
+                let docRefs = history.userPointMissions ?? []
+
+                Task {
+                    do {
+                        var missions: [String] = []
+                        for docRef in docRefs {
+                            let data = try await docRef.getDocument().data()
+                            let title = data?[FirestoreConstants.missionContentTitle] as? String ?? "no-title"
+                            missions.append(title)
+                        }
+                        self.participatedMissions = missions
+                    }
+                    catch {
+                        print("Error getting data -- \(error)")
+                    }
+                }
+            }
+            
+        }
+    }
+    @Published var participatedMissions: [String] = []
     
     /* Event tap */
     @Published var eventMissions: [any Mission] = []
@@ -71,11 +99,16 @@ final class MyPageViewViewModel {
         
         Task {
             await self.getSelectedRoutine()
+            print("getSelectedRoutine finished")
             await self.createMissionMainViewViewModel()
+            print("createMissionMainViewViewModel finished")
 //            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
             await self.getMissionsTimeline()
+            print("getMissionsTimeline finished")
             await self.getEventMission()
+            print("getEventMission finished")
         }
+        
         
     }
 }
@@ -123,8 +156,7 @@ extension MyPageViewViewModel {
     func getSelectedRoutine() async {
         
         do {
-            let user = try UPlusUser.getCurrentUser()
-            self.savedMissionType = try await firestoreManager.getUserSelectedRoutineMission(userIndex: user.userIndex)
+            self.savedMissionType = try await firestoreManager.getUserSelectedRoutineMission(userIndex: self.user.userIndex)
             
             if let savedType = self.savedMissionType {
                 self.getRoutineParticipationCount(type: savedType)
@@ -140,8 +172,6 @@ extension MyPageViewViewModel {
     func getRoutineParticipationCount(type: MissionType) {
         Task {
             do {
-                let user = try UPlusUser.getCurrentUser()
-                
                 // 1. 선택한 루틴 미션DB 조회
                 let missions = try await self.firestoreManager.getRoutineMission(type: type)
                 let userMap = missions.compactMap { mission in
@@ -150,7 +180,7 @@ extension MyPageViewViewModel {
                 // 2. 참여 현황 조회
                 let currentUser = userMap.filter { map in
                     map.contains { ele in
-                        ele.key == String(describing: user.userIndex)
+                        ele.key == String(describing: self.user.userIndex)
                     }
                 }
                 self.routineParticipationCount = currentUser.count
@@ -178,43 +208,100 @@ extension MyPageViewViewModel {
         }
     }
     
-    func getNft(reference: DocumentReference) async throws -> UPlusNft {
-        return try await self.firestoreManager.getNft(reference: reference)
-    }
-    
     func createMissionMainViewViewModel() async {
         do {
-            let userInfo = try UPlusUser.getCurrentUser()
-            let nft = await self.getMemberNft(userIndex: userInfo.userIndex,
-                                        isVip: userInfo.userHasVipNft)
+            
+            /*
+            let nft = try await self.firestoreManager.getMemberNft(userIndex: self.user.userIndex,
+                                                                   isVip: self.user.userHasVipNft)
+            */
+            
+            let token = await self.getTopLevelNftToken() ?? "no-url"
+            let nftUrl = try await self.firestoreManager.getNftUrl(tokenId: token)
+            print("NFTURL: \(nftUrl)")
             
             self.missionViewModel = MissionMainViewViewModel(
-                profileImage: nft,
-                username: userInfo.userNickname,
-                points: userInfo.userTotalPoint ?? 0,
+                profileImage: nftUrl,
+                username: self.user.userNickname,
+                points: self.user.userTotalPoint ?? 0,
                 maxPoints: 15,
                 level: 1,
-                numberOfMissions: Int64(userInfo.userTypeMissionArrayMap?.values.count ?? 0),
+                numberOfMissions: Int64(self.user.userTypeMissionArrayMap?.values.count ?? 0),
                 timeLeft: 12
             )
         }
         catch {
-            print("Error creating mission main view model -- \(error)")
+            print("Error fetching hold nft -- \(error)")
         }
         
     }
     
-    private func getMemberNft(userIndex: Int64, isVip: Bool) async -> String {
+    func fetchPointHistory() async {
         do {
-            return try await self.firestoreManager.getMemberNft(userIndex: userIndex,
-                                               isVip: isVip)
+            self.pointHistory = try await self.firestoreManager.getAllParticipatedMissionHistory(user: self.user)
         }
         catch {
-            print("Error fetching hold nft -- \(error)")
-            return String()
+            print("Error fetching point history -- \(error)")
         }
-        
     }
+}
+
+extension MyPageViewViewModel {
+    
+    private func getTopLevelNftToken() async -> String? {
+        let tokens = await self.updateUserOwnedNft()
+        guard let topNft = tokens.last else { return nil }
+        
+        return topNft
+    }
+    
+    private func updateUserOwnedNft() async -> [String] {
+
+            do {
+                // 1. Fetch NFTs from Luniverse
+                    // token Id 확인
+                let token = try await LuniverseServiceManager.shared.requestAccessToken()
+                let nfts = try await LuniverseServiceManager.shared.requestNftList(authKey: token,
+                                                                                   walletAddress: self.user.userWalletAddress ?? "n/a")
+                
+                let nftTokens: [String] = nfts.data.items.map { $0.tokenId }.reversed()
+                
+                // 2. Fetch NFTs from Firestore
+                let savedNfts = user.userNfts ?? []
+                
+                let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
+                
+//                print("NFT tokens: \(nftTokens)")
+//                print("Saved tokens: \(savedTokens)")
+                
+                // 3. 1,2 array가 동일한지 확인
+                if !self.haveSameElements(nftTokens, savedTokens) {
+                    // 3-1. 동일하지 않다면, user_nfts의 reference 업데이트
+                    
+                    self.updateNftList(nfts: nftTokens)
+                }
+                
+                return nftTokens
+            }
+            catch {
+                print("Error requesting Luniverse access token -- \(error)")
+                return []
+            }
+   
+    }
+    
+    private func updateNftList(nfts: [String]) {
+        // user_nfts의 reference 업데이트
+        Task {
+            do {
+                
+            }
+            catch {
+                
+            }
+        }
+    }
+  
 }
 
 //MARK: - Save Data to FireStore
@@ -229,5 +316,33 @@ extension MyPageViewViewModel {
         catch {
             print("Error saving selected mission type -- \(error)")
         }
+    }
+}
+
+//MARK: - Save Data to FireStore
+extension MyPageViewViewModel {
+    func saveUserToUserDefaults() {
+        Task {
+            do {
+                let user = try await UPlusUser.saveCurrentUser(email: user.userEmail)
+                newPoint = user.userTotalPoint ?? 0
+            }
+            catch {
+                print("Error saving current user -- \(error)")
+            }
+        }
+    }
+}
+
+//MARK: - Utilities
+extension MyPageViewViewModel {
+    private func extractNumberString(from string: String) -> String? {
+        
+        let components = string.split(separator: "/")
+        return components.last.map { String($0) }
+    }
+    
+    private func haveSameElements(_ arr1: [String], _ arr2: [String]) -> Bool {
+        return Set(arr1) == Set(arr2)
     }
 }

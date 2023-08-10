@@ -11,6 +11,7 @@ import FirebaseAuth
 protocol SideMenuViewControllerDelegate: AnyObject {
     func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int)
     func resetPasswordDidTap()
+    func signOutDidTap()
 }
 
 final class SideMenuViewController: UIViewController {
@@ -81,9 +82,14 @@ extension SideMenuViewController {
     @objc private func userLogOut() {
         do {
             try Auth.auth().signOut()
+            self.delegate?.signOutDidTap()
         }
         catch {
-            let alert = UIAlertController(title: "로그아웃 실패", message: "로그아웃에 실패하였습니다. 잠시 후 다시 시도해주세요.", preferredStyle: .alert)
+            let alert = UIAlertController(
+                title: "로그아웃 실패",
+                message: "로그아웃에 실패하였습니다. 잠시 후 다시 시도해주세요.",
+                preferredStyle: .alert
+            )
         let action = UIAlertAction(title: "확인", style: .cancel)
         alert.addAction(action)
             
