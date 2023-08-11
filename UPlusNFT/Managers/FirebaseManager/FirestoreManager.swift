@@ -873,6 +873,7 @@ extension FirestoreManager {
         type: MissionFormatType,
         eventId: String,
         selectedIndex: Int?,
+        recentComments: [String],
         comment: String?,
         point: Int64
     ) async throws {
@@ -952,10 +953,14 @@ extension FirestoreManager {
                 print("Comment event에 제출된 답변이 없습니다.")
                 return
             }
+            
+            var recentComments: [String] = recentComments
+            recentComments.append(contentsOf: [user.userNickname, comment])
+            
             batch.setData(
                 [
                     FirestoreConstants.commentCountMap: [comment: FieldValue.increment(Int64(1))],
-                    FirestoreConstants.commentUserRecents: FieldValue.arrayUnion([user.userNickname, comment])
+                    FirestoreConstants.commentUserRecents: recentComments
                 ],
                 forDocument: eventDocPath,
                 merge: true

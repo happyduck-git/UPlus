@@ -80,10 +80,12 @@ extension CommentCountMissionViewViewModel {
     func saveComment() {
         Task {
             do {
+                print("Prev commts: \(mission.commentUserRecents ?? [])")
                 try await self.firestoreManager.saveParticipatedEventMission(
                     type: .commentCount,
                     eventId: mission.missionId,
                     selectedIndex: nil,
+                    recentComments: mission.commentUserRecents ?? [],
                     comment: self.comment,
                     point: mission.missionRewardPoint
                 )
