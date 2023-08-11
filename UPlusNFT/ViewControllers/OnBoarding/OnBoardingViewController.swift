@@ -6,8 +6,19 @@
 //
 
 import UIKit
+import Combine
+import FirebaseAuth
+import OSLog
 
-class OnBoardingViewController: UIViewController {
+final class OnBoardingViewController: UIViewController {
+    
+    private let logger = Logger()
+    
+    // MARK: - Dependency
+    private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
     private let logoImageView: UIImageView = {
@@ -31,7 +42,6 @@ class OnBoardingViewController: UIViewController {
         button.setImage(UIImage(systemName: SFSymbol.arrowRight)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
         button.setTitleColor(.darkGray, for: .normal)
-        button.addTarget(self, action: #selector(showMoreDidTap), for: .touchUpInside)
         button.backgroundColor = .clear
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -43,7 +53,6 @@ class OnBoardingViewController: UIViewController {
         button.clipsToBounds = true
         button.setTitleColor(.white, for: .normal)
         button.setTitle(OnBoardingConstants.start, for: .normal)
-        button.addTarget(self, action: #selector(startDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -55,6 +64,38 @@ class OnBoardingViewController: UIViewController {
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
+        self.setNavigationBar()
+        
+        self.bind()
+    }
+    
+}
+
+// MARK: - Bind
+extension OnBoardingViewController {
+ 
+    private func bind() {
+        func bindViewToViewModel() {
+            self.showMoreButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { _ in
+                    self.showMoreDidTap()
+                }
+                .store(in: &bindings)
+            
+            self.startButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { _ in
+                    self.startButtonDidTap()
+                }
+                .store(in: &bindings)
+        }
+        func bindViewModelToView() {
+            
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
     
 }
@@ -90,20 +131,65 @@ extension OnBoardingViewController {
         self.informationView.setContentHuggingPriority(.defaultLow, for: .vertical)
     }
     
+    private func setNavigationBar() {
+        self.navigationItem.backButtonTitle = " "
+    }
+    
 }
 
 //MARK: - Private
 extension OnBoardingViewController {
     
-    @objc private func showMoreDidTap() {
+    private func showMoreDidTap() {
         print("Need to define action for `PoC 소개 더 보기` button.")
     }
+
+    private func startButtonDidTap() {
+        
+        if let user = Auth.auth().currentUser {
+            logger.info("User is logged in.")
+            
+            Task {
+                await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
+                let userInfo = try UPlusUser.getCurrentUser()
+                
+                let loginVM = LoginViewViewModel()
+                let loginVC = LoginViewController(vm: loginVM)
+                
+                let vm = MyPageViewViewModel(user: userInfo,
+                                             isJustRegistered: false,
+                                             isVip: userInfo.userHasVipNft,
+                                             todayRank: UPlusServiceInfoConstant.totalMembers)
+                let myPageVC = MyPageViewController(vm: vm)
+  
+                self.navigationController?.pushViewController(loginVC, animated: false)
+                self.navigationController?.pushViewController(myPageVC, animated: true)
+            }
+            
+        } else {
+            logger.info("User is not logged in.")
+            let loginVM = LoginViewViewModel()
+            let loginVC = LoginViewController(vm: loginVM)
+            self.show(loginVC, sender: self)
+        }
+    }
     
-    @objc private func startDidTap() {
-        let loginVM = LoginViewViewModel()
-        let loginVC = LoginViewController(vm: loginVM)
-        navigationController?.modalPresentationStyle = .fullScreen
-        self.show(loginVC, sender: self)
+}
+
+extension OnBoardingViewController {
+    /// Save basic user login information.
+    private func setBasicUserInfo(email: String) async {
+        do {
+            let _ = try await UPlusUser.saveCurrentUser(email: email)
+        }
+        catch {
+            switch error {
+            case FirestoreError.userNotFound:
+                print("User not found -- \(error)")
+            default:
+                print("Error fetching user -- \(error)")
+            }
+        }
     }
     
 }

@@ -14,6 +14,8 @@ protocol MissionHistoryCalendarCollectionViewCellDelegate: AnyObject {
 
 final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
     
+    private var vm: MyPageViewViewModel?
+    
     // MARK: - Delegate
     weak var delegate: MissionHistoryCalendarCollectionViewCellDelegate?
     
@@ -47,11 +49,17 @@ final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
         self.setLayout()
         
         self.calendar.delegate = self
+        self.calendar.dataSource = self
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+}
+
+// MARK: - Configure
+extension MissionHistoryCalendarCollectionViewCell {
     
 }
 
@@ -74,10 +82,17 @@ extension MissionHistoryCalendarCollectionViewCell {
     }
 }
 
-extension MissionHistoryCalendarCollectionViewCell: FSCalendarDelegate, FSCalendarDelegateAppearance {
+extension MissionHistoryCalendarCollectionViewCell: FSCalendarDelegate, FSCalendarDelegateAppearance, FSCalendarDataSource {
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         self.delegate?.dateSelected(date)
     }
     
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        return 1
+    }
+    
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, eventDefaultColorsFor date: Date) -> [UIColor]? {
+        return [UPlusColor.mint]
+    }
 }

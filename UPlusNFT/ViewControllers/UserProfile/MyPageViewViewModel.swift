@@ -120,17 +120,16 @@ final class MyPageViewViewModel {
         
         Task {
             await self.getSelectedRoutine()
-            print("getSelectedRoutine finished")
+            
             await self.createMissionMainViewViewModel()
-            print("createMissionMainViewViewModel finished")
+            
 //            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
             await self.getMissionsTimeline()
-            print("getMissionsTimeline finished")
+            
             await self.getEventMission()
-            print("getEventMission finished")
+
         }
-        
-        
+
     }
 }
 

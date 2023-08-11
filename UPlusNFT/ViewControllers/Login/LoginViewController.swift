@@ -90,7 +90,6 @@ class LoginViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.setTitle(LoginConstants.loginButtonTitle, for: .normal)
-//        button.addTarget(self, action: #selector(loginUser), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.isUserInteractionEnabled = false
@@ -114,7 +113,6 @@ class LoginViewController: UIViewController {
     private lazy var changePasswordButton: UIButton = {
        let button = UIButton()
         button.setTitle(LoginConstants.changePassword, for: .normal)
-        button.addTarget(self, action: #selector(changePassword), for: .touchUpInside)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12.0)
         button.setUnderline(1.0)
@@ -124,7 +122,6 @@ class LoginViewController: UIViewController {
     
     private lazy var createAccountButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(openSignUpVC), for: .touchUpInside)
         button.setTitle(LoginConstants.singInButtonTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
@@ -196,6 +193,7 @@ extension LoginViewController {
                 .store(in: &bindings)
 
             self.loginButton.tapPublisher
+                .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
 
@@ -203,6 +201,25 @@ extension LoginViewController {
                     self.viewModel.login()
                 }
                 .store(in: &bindings)
+            
+            self.createAccountButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.openSignUpVC()
+                }
+                .store(in: &bindings)
+            
+            self.changePasswordButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.changePassword()
+                }
+                .store(in: &bindings)
+         
         }
         
         func bindViewModelToView() {
@@ -345,7 +362,7 @@ extension LoginViewController {
 //MARK: - Private
 extension LoginViewController {
     
-    @objc private func openSignUpVC() {
+    private func openSignUpVC() {
         let vm = SignUpViewViewModel()
         let vc = SignUpViewController(vm: vm)
         vc.delegate = self
@@ -353,11 +370,7 @@ extension LoginViewController {
         self.show(vc, sender: self)
     }
 
-//    @objc private func loginUser() {
-//        self.viewModel.login()
-//    }
-
-    @objc private func changePassword() {
+    private func changePassword() {
         let vm = ResetPasswordViewViewModel()
         let vc = ResetPasswordViewController(vm: vm)
         self.show(vc, sender: self)

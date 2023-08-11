@@ -12,9 +12,6 @@ import OSLog
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
-    private let logger = Logger()
-    private let firestoreManager = FirestoreManager.shared
-    
     // MARK: - Window Cycle
     var window: UIWindow?
     
@@ -25,37 +22,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.overrideUserInterfaceStyle = .light
         
-        if let user = Auth.auth().currentUser {
-            logger.info("User is logged in.")
-            
-            Task {
-                    await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
-                    let userInfo = try UPlusUser.getCurrentUser()
-                    
-                    let loginVM = LoginViewViewModel()
-                    let loginVC = LoginViewController(vm: loginVM)
+        let vc = OnBoardingViewController()
+        let navVC = UINavigationController(rootViewController: vc)
 
-                    let vm = MyPageViewViewModel(user: userInfo,
-                                                 isJustRegistered: false,
-                                                 isVip: userInfo.userHasVipNft,
-                                                 todayRank: UPlusServiceInfoConstant.totalMembers)
-                    let myPageVC = MyPageViewController(vm: vm)
-                    
-                    let navVC = UINavigationController(rootViewController: loginVC)
-         
-                    navVC.pushViewController(myPageVC, animated: false)
-                    window?.rootViewController = navVC
-                   
-            }
-            
-            
-        } else {
-            logger.info("User is not logged in.")
-            let loginVM = LoginViewViewModel()
-            let loginVC = LoginViewController(vm: loginVM)
-            window?.rootViewController = UINavigationController(rootViewController: loginVC)
-        }
-        
+        window?.rootViewController = navVC
         window?.makeKeyAndVisible()
         
     }
@@ -101,20 +71,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
 }
 
-extension SceneDelegate {
-    /// Save basic user login information.
-    private func setBasicUserInfo(email: String) async {
-        do {
-            let _ = try await UPlusUser.saveCurrentUser(email: email)
-        }
-        catch {
-            switch error {
-            case FirestoreError.userNotFound:
-                print("User not found -- \(error)")
-            default:
-                print("Error fetching user -- \(error)")
-            }
-        }
-    }
-    
-}
