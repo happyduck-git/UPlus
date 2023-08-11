@@ -91,7 +91,9 @@ struct SideMenuConstants {
     static let home: String = "홈"
     static let wallet: String = "월렛"
     static let rankBoard: String = "랭킹 게시판"
+    static let popGame: String = "팝 게임"
     static let notice: String = "공지사항"
+    static let faq: String = "FAQ 및 문의"
     static let resetPassword: String = "비밀번호 수정"
     static let logout: String = "로그아웃"
 }
@@ -125,6 +127,7 @@ struct MissionConstants {
     static let missionSuccess: String = "미션 성공\n정답"
     static let missionComplete: String = "미션 참여\n완료"
     static let redeemPointSuffix: String = " 받아요"
+    static let routineMissionLimit: Int = 15
     
     static let buttonBorderWidth: CGFloat = 2.0
 }
@@ -192,6 +195,7 @@ struct ImageAsset {
     static let wallet: String = "wallet-mint"
     static let ranking: String = "tropy-mint"
     static let notice: String = "speaker-mint"
+    static let questionCircle: String = "question-circle"
     
     /* HomeVC */
     static let questionBox: String = "question-box"
@@ -226,6 +230,7 @@ struct FirestoreConstants {
     static let userPointTime = "user_point_time"
     static let userTypeMissionArrayMap = "user_type_mission_array_map"
     static let userTotalPoint = "user_total_point"
+    static let userNfts = "user_nfts"
     static let accountCreationTime = "user_account_creation_time"
     static let devThreads2 = "dev_threads2"
     static let configuration = "configuration"
@@ -322,10 +327,12 @@ struct FirestoreConstants {
     static let missionUserStateMap = "mission_user_state_map"
     static let dailyExpAthleteMissionSet = "daily_exp__athlete__mission_set"
     static let missionPhotoTaskSet = "mission_photo_task_set"
+    static let missionTopicType = "mission_topic_type"
     static let missionFormatType = "mission_format_type"
     static let missionSubFormatType = "mission_sub_format_type"
     static let missionContentTitle = "mission_content_title"
     static let missionRewardPoint = "mission_reward_point"
+    static let missionsBeginEndTimeMap = "missions_begin_end_time_map"
     
     /* Event */
     static let governanceElectionUserMap = "governance_election_user_map"

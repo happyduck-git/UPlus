@@ -75,12 +75,7 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
 
 extension UploadPhotoButtonCollectionViewCell {
 
-    func configure(with vm: DailyRoutineMissionDetailViewViewModel) {
-        self.vm = vm
-        self.bind()
-    }
-    
-    private func bind() {
+    func bind(with vm: DailyRoutineMissionDetailViewViewModel) {
         
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
@@ -92,8 +87,7 @@ extension UploadPhotoButtonCollectionViewCell {
                 self.delegate?.uploadButtonDidTap()
             }
             .store(in: &bindings)
-        
-        guard let vm = vm else { return }
+
         vm.$selectedImage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] image in

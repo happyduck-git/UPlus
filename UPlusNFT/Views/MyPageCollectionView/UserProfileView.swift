@@ -29,7 +29,7 @@ final class UserProfileView: PassThroughView {
 
     private let usernameLabel: UILabel = {
         let label = UILabel()
-        label.text = "username"
+        label.text = " "
         label.textColor = .black
         label.font = .systemFont(ofSize: UPlusFont.main, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false

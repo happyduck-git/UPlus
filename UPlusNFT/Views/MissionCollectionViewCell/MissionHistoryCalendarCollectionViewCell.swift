@@ -8,7 +8,14 @@
 import UIKit
 import FSCalendar
 
+protocol MissionHistoryCalendarCollectionViewCellDelegate: AnyObject {
+    func dateSelected(_ date: Date)
+}
+
 final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Delegate
+    weak var delegate: MissionHistoryCalendarCollectionViewCellDelegate?
     
     // MARK: - UI Elements
     private let calendar: FSCalendar = {
@@ -17,16 +24,16 @@ final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
         calendar.clipsToBounds = true
         
         calendar.appearance.headerTitleColor = .black
-        calendar.appearance.headerDateFormat = "MM"
+        calendar.appearance.headerDateFormat = "M월"
         calendar.appearance.weekdayTextColor = .systemGray
         calendar.firstWeekday = 1
         calendar.locale = Locale.init(identifier: "en")
         
         let numOfDays = calendar.calendarWeekdayView.weekdayLabels.count
-        calendar.calendarWeekdayView.weekdayLabels[numOfDays - 2].textColor = UPlusColor.pointCirclePink
-        calendar.calendarWeekdayView.weekdayLabels[numOfDays - 1].textColor = UPlusColor.pointCirclePink
+        calendar.calendarWeekdayView.weekdayLabels[numOfDays - 2].textColor = UPlusColor.mint
+        calendar.calendarWeekdayView.weekdayLabels[numOfDays - 1].textColor = UPlusColor.mint
         calendar.placeholderType = .none
-        calendar.appearance.todayColor = UPlusColor.pointCirclePink
+        calendar.appearance.todayColor = UPlusColor.mint
         
         calendar.translatesAutoresizingMaskIntoConstraints = false
         return calendar
@@ -38,6 +45,8 @@ final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
         self.contentView.backgroundColor = .systemGray6
         self.setUI()
         self.setLayout()
+        
+        self.calendar.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -46,6 +55,7 @@ final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
     
 }
 
+// MARK: - Set UI & Layout
 extension MissionHistoryCalendarCollectionViewCell {
     private func setUI() {
         self.contentView.addSubview(calendar)
@@ -64,6 +74,10 @@ extension MissionHistoryCalendarCollectionViewCell {
     }
 }
 
-extension MissionHistoryCalendarCollectionViewCell: FSCalendarDelegateAppearance {
+extension MissionHistoryCalendarCollectionViewCell: FSCalendarDelegate, FSCalendarDelegateAppearance {
+    
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        self.delegate?.dateSelected(date)
+    }
     
 }

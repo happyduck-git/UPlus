@@ -13,14 +13,18 @@ final class SideMenuViewViewModel {
         case home
         case wallet
         case rankBoard
+        case popGame
         case notice
+        case faq
     }
     
     private let menuList: [MenuType: String] = [
         .home: ImageAsset.home,
         .wallet: ImageAsset.wallet,
+        .popGame: ImageAsset.ranking,
         .rankBoard: ImageAsset.ranking,
-        .notice: ImageAsset.notice
+        .notice: ImageAsset.notice,
+        .faq: ImageAsset.questionCircle
     ]
     
     func numberOfMenu() -> Int {
@@ -36,8 +40,12 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.wallet
         case .rankBoard:
             key = SideMenuConstants.rankBoard
+        case .popGame:
+            key = SideMenuConstants.popGame
         case .notice:
             key = SideMenuConstants.notice
+        case .faq:
+            key = SideMenuConstants.faq
         }
         return [key: self.menuList[type] ?? "n/a"]
     }
@@ -60,8 +68,12 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.wallet
         case .rankBoard:
             key = SideMenuConstants.rankBoard
+        case .popGame:
+            key = SideMenuConstants.popGame
+        case .notice:
+            key = SideMenuConstants.notice
         default:
-            key = SideMenuConstants.resetPassword
+            key = SideMenuConstants.faq
         }
         
         return (key, self.menuList[sectionType] ?? "n/a")

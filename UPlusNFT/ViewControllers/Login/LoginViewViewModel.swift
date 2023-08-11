@@ -57,7 +57,7 @@ final class LoginViewViewModel {
 
             do {
                 let userEmail = Auth.auth().currentUser?.email ?? FirestoreConstants.noUserEmail
-                try await UPlusUser.saveCurrentUser(email: userEmail)
+                let _ = try await UPlusUser.saveCurrentUser(email: userEmail)
             }
             catch {
                 switch error {

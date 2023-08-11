@@ -422,7 +422,7 @@ extension MissionMainViewController: UICollectionViewDelegate, UICollectionViewD
         switch indexPath.section {
         case 2:
             
-            let vm = ChoiceQuizzOXViewViewModel(dataSource: self.vm.weeklyMissions[indexPath.item],
+            let vm = ChoiceQuizzOXViewViewModel(mission: self.vm.weeklyMissions[indexPath.item],
                                                 numberOfWeek: indexPath.item + 1)
             
             switch vm.mission.missionFormatType {

@@ -6,9 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 final class DailyRoutainStampCollectionViewCellHeader: UICollectionViewCell {
     
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - UI Elements
     private let quizDescription: UILabel = {
         let label = UILabel()
         label.text = "갓생미션 인증서와 300만원 경품권을 받으세요!"
@@ -64,11 +69,21 @@ final class DailyRoutainStampCollectionViewCellHeader: UICollectionViewCell {
     }
 
 }
-
+// 
 // MARK: - Configure
 extension DailyRoutainStampCollectionViewCellHeader {
-    func configure(with vm: String) {
-        // TODO: Fill configuration function body
+    func bind(with vm: DailyRoutineMissionDetailViewViewModel) {
+        
+        bindings.forEach { $0.cancel() }
+        bindings.removeAll()
+        
+        vm.$daysLeft
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                self.eventLabel.text = "이벤트 기간 D-" + $0
+            }
+            .store(in: &bindings)
     }
 }
 

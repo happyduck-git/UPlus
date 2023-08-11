@@ -47,9 +47,11 @@ final class MyPageViewViewModel {
     @Published var routinePoint: Int64 = 0
     
     var isPointHistoryFetched: Bool = false
-    @Published var pointHistory: [PointHistory] = [] {
+    
+    // Total missions
+    @Published var pointHistory: [String: PointHistory] = [:] {
         didSet {
-            for history in pointHistory {
+            for history in pointHistory.values {
                 let docRefs = history.userPointMissions ?? []
 
                 Task {
@@ -71,6 +73,25 @@ final class MyPageViewViewModel {
         }
     }
     @Published var participatedMissions: [String] = []
+    
+    // Selected date's missions
+    @Published var selectedDatePointHistory: PointHistory? {
+        didSet {
+            Task {
+                let docs = selectedDatePointHistory?.userPointMissions ?? []
+                var info: [(type: MissionTopicType, title: String, point: Int64)?] = []
+                for doc in docs {
+                    info.append(try await self.firestoreManager.convertToMission(doc: doc))
+                }
+                self.selectedDateMissionInfo = info
+            }
+        }
+    }
+    
+    @Published var selectedDateMissionInfo: [(type: MissionTopicType, title: String, point: Int64)?] = []
+    
+    /* Calendar Cell */
+    var dateSelected = PassthroughSubject<Date,Never>()
     
     /* Event tap */
     @Published var eventMissions: [any Mission] = []
@@ -209,16 +230,9 @@ extension MyPageViewViewModel {
     }
     
     func createMissionMainViewViewModel() async {
-        do {
-            
-            /*
-            let nft = try await self.firestoreManager.getMemberNft(userIndex: self.user.userIndex,
-                                                                   isVip: self.user.userHasVipNft)
-            */
-            
+
             let token = await self.getTopLevelNftToken() ?? "no-url"
-            let nftUrl = try await self.firestoreManager.getNftUrl(tokenId: token)
-            print("NFTURL: \(nftUrl)")
+            let nftUrl = await self.firestoreManager.getNftUrl(tokenId: token)
             
             self.missionViewModel = MissionMainViewViewModel(
                 profileImage: nftUrl,
@@ -229,10 +243,6 @@ extension MyPageViewViewModel {
                 numberOfMissions: Int64(self.user.userTypeMissionArrayMap?.values.count ?? 0),
                 timeLeft: 12
             )
-        }
-        catch {
-            print("Error fetching hold nft -- \(error)")
-        }
         
     }
     
@@ -270,17 +280,12 @@ extension MyPageViewViewModel {
                 let savedNfts = user.userNfts ?? []
                 
                 let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
-                
-//                print("NFT tokens: \(nftTokens)")
-//                print("Saved tokens: \(savedTokens)")
-                
-                // 3. 1,2 array가 동일한지 확인
+ 
+                // API fetched NFTs & Firestore fetched NFTs 가 동일한지 확인
                 if !self.haveSameElements(nftTokens, savedTokens) {
-                    // 3-1. 동일하지 않다면, user_nfts의 reference 업데이트
-                    
-                    self.updateNftList(nfts: nftTokens)
+                    // 동일하지 않다면, user_nfts의 reference 업데이트
+                    self.updateNftList(nfts: nftTokens, userIndex: user.userIndex)
                 }
-                
                 return nftTokens
             }
             catch {
@@ -290,14 +295,14 @@ extension MyPageViewViewModel {
    
     }
     
-    private func updateNftList(nfts: [String]) {
-        // user_nfts의 reference 업데이트
+    // user_nfts의 reference 업데이트
+    private func updateNftList(nfts: [String], userIndex: Int64) {
         Task {
             do {
-                
+                try await firestoreManager.updateOwnedNfts(tokens: nfts, userIndex: userIndex)
             }
             catch {
-                
+                print("Error updating nft list -- \(error.localizedDescription)")
             }
         }
     }

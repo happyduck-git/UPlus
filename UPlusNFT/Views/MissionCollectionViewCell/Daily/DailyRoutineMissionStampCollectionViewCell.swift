@@ -85,6 +85,25 @@ extension DailyRoutineMissionStampCollectionViewCell {
                 self.stampCollectionView.reloadData()
             }
             .store(in: &self.bindings)
+        
+        vm.$successedMissionsCount
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                self.progressLabel.text = String(describing: $0) + " / " + String(describing: MissionConstants.routineMissionLimit)
+            }
+            .store(in: &self.bindings)
+        
+        vm.$isFinishedRoutines
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                if $0 {
+                    self.stampCollectionView.backgroundColor = UPlusColor.grayMint
+                }
+            }
+            .store(in: &bindings)
+        
     }
     
 }

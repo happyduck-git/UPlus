@@ -7,6 +7,7 @@
 
 import UIKit
 import PhotosUI
+import Combine
 
 final class DailyRoutineMissionDetailViewController: UIViewController {
     
@@ -14,6 +15,9 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     private let vm: DailyRoutineMissionDetailViewViewModel
     
     private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
     private let loadingVC = LoadingViewController()
@@ -61,10 +65,11 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
         
         self.addChildViewController(self.loadingVC)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
+  
+}
+
+// MARK: - Set UI & Layout & Delegate
+extension DailyRoutineMissionDetailViewController {
     private func setUI() {
         let collectionView = self.createCollectionView()
         self.collectionView = collectionView
@@ -241,7 +246,7 @@ extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UIC
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UploadPhotoButtonCollectionViewCell.identifier, for: indexPath) as? UploadPhotoButtonCollectionViewCell else {
                 fatalError()
             }
-            cell.configure(with: self.vm)
+            cell.bind(with: self.vm)
             cell.delegate = self
             return cell
         default:
@@ -261,6 +266,8 @@ extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UIC
                 return UICollectionReusableView()
             }
             
+            header.bind(with: self.vm)
+            
             return header
 
         case UICollectionView.elementKindSectionFooter:
@@ -272,6 +279,7 @@ extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UIC
                 return UICollectionReusableView()
             }
             
+            footer.bind(with: self.vm)
             footer.delegate = self
             return footer
             

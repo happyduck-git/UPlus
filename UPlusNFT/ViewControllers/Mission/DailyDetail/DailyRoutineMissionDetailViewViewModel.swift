@@ -24,8 +24,15 @@ final class DailyRoutineMissionDetailViewViewModel {
     var missionType: MissionType
     @Published var selectedImage: UIImage?
     
-    /* Athlete Mission */
-    @Published var athleteMissions: [AthleteMission] = []
+    /* Routine Mission */
+    @Published var daysLeft: String = ""
+    @Published var athleteMissions: [AthleteMission] = [] {
+        didSet {
+            self.successedMissionsCount = athleteMissions.count
+        }
+    }
+    @Published var isFinishedRoutines: Bool = false
+    @Published var successedMissionsCount: Int = 0
     
     // MARK: - Init
     init(missionType: MissionType) {
@@ -39,7 +46,18 @@ extension DailyRoutineMissionDetailViewViewModel {
     func getAtheleteMissions() {
         Task {
             do {
-                self.athleteMissions = try await self.firestoreManager.getAthleteMission()
+                let user = try UPlusUser.getCurrentUser()
+
+                let (daysLeft, missions) = try await self.firestoreManager.getRoutineMissionInfo(missionType: .dailyExpAthlete, userIndex: user.userIndex)
+                self.daysLeft = daysLeft
+                self.athleteMissions = missions
+                
+                if missions.count >= MissionConstants.routineMissionLimit {
+                    
+                    self.isFinishedRoutines = true
+                    //TODO: isFinishedRoutines bind하여 true인 경우 참여 버튼 비활성화.
+                }
+                
                 self.delegate?.didRecieveMission()
             }
             catch {
@@ -48,15 +66,4 @@ extension DailyRoutineMissionDetailViewViewModel {
         }
     }
     
-    func saveRoutineParticipation() {
-        /*
-        Task {
-            do {
-                self.firestoreManager.saveDailyMissionPhoto(userIndex: <#T##Int64#>, missionType: <#T##MissionType#>, image: <#T##Data#>)
-            }
-            catch {
-            }
-        }
-         */
-    }
 }

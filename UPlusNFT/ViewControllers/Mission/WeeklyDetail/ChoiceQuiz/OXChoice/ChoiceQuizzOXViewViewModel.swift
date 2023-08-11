@@ -26,9 +26,9 @@ final class ChoiceQuizzOXViewViewModel {
     /* WeeklyMission Completion */
     @Published var weeklyMissionCompletion: Bool = false
     
-    init(dataSource: any Mission,
+    init(mission: any Mission,
          numberOfWeek: Int) {
-        self.mission = dataSource
+        self.mission = mission
         self.numberOfWeek = numberOfWeek
     }
     

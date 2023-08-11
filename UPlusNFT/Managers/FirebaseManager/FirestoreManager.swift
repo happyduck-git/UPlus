@@ -224,16 +224,22 @@ extension FirestoreManager {
         return nft.nftContentImageUrl
     }
     
-    func getNftUrl(tokenId: String) async throws -> String {
-        let doc = try await threadsSetCollectionPath2
-            .document(FirestoreConstants.nfts)
-            .collection(FirestoreConstants.nftSet)
-            .document(String(describing: tokenId))
-            .getDocument()
-        
-        let nft = try doc.data(as: UPlusNft.self, decoder: self.decoder)
-       
-        return nft.nftContentImageUrl
+    func getNftUrl(tokenId: String) async -> String {
+        do {
+            let doc = try await threadsSetCollectionPath2
+                .document(FirestoreConstants.nfts)
+                .collection(FirestoreConstants.nftSet)
+                .document(String(describing: tokenId))
+                .getDocument()
+            
+            let nft = try doc.data(as: UPlusNft.self, decoder: self.decoder)
+           
+            return nft.nftContentImageUrl
+        }
+        catch {
+            print("Error fetching hold nft -- \(error)")
+            return "no-nft"
+        }
     }
     
     /// Get NFT document of a certain document reference.
@@ -437,12 +443,12 @@ extension FirestoreManager {
         return missions
     }
     
-    func getRoutineMission(type: MissionType) async throws -> [Mission] {
+    func getRoutineMission(type: MissionType) async throws -> [any Mission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(type.storagePathFolderName)
             .getDocuments()
             .documents
-        var missions: [Mission] = []
+        var missions: [any Mission] = []
         
         switch type {
         case .dailyExpAthlete:
@@ -464,11 +470,29 @@ extension FirestoreManager {
         return missions
     }
     
+    func convertToMission(doc: DocumentReference) async throws -> (type: MissionTopicType, title: String, point: Int64)? {
+        let doc = try await doc.getDocument()
+        let data = doc.data()
+        let type = data?[FirestoreConstants.missionTopicType] as? String ?? "n/a"
+        let topicType = MissionTopicType(rawValue: type) ?? .eventMission
+        
+        switch topicType {
+        case .dailyExp, .weeklyQuiz:
+            
+            let title = data?[FirestoreConstants.missionContentTitle] as? String ?? "미션 제목이 없습니다."
+            let point = data?[FirestoreConstants.missionRewardPoint] as? Int64 ?? 0
+            
+            return (topicType, title, point)
+      
+        default:
+            return nil
+        }
+    }
+    
     /* Weekly Mission */
     func getWeeklyMission(week: Int) async throws -> [any Mission] {
         
         let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
-//        let weekCollection = String(format: "weekly_quiz__%d__mission_set", 1)
         
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(weekCollection)
@@ -551,7 +575,7 @@ extension FirestoreManager {
         return data?[FirestoreConstants.missionTimelineMap] as? [String: [Timestamp]] ?? [:]
     }
     
-    func getAllParticipatedMissionHistory(user: UPlusUser) async throws -> [PointHistory] {
+    func getAllParticipatedMissionHistory(user: UPlusUser) async throws -> [String: PointHistory] {
         
         let docs = try await threadsSetCollectionPath2
             .document(FirestoreConstants.users)
@@ -561,23 +585,17 @@ extension FirestoreManager {
             .getDocuments()
             .documents
         
-        var history: [PointHistory] = []
+        var history: [String: PointHistory] = [:]
         for doc in docs {
-            history.append(try doc.data(as: PointHistory.self, decoder: self.decoder))
+            history[doc.documentID] = try doc.data(as: PointHistory.self, decoder: self.decoder)
         }
         
         return history
     }
     
-//    func getParticipatedMissionInfo(history: [PointHistory]) async throws -> [any Mission] {
-//        for ele in history {
-//            ele.userPointMissions
-//        }
-//    }
-    
 }
 
-/* uplus_missions_v3 - Setters */
+/* uplus_missions_v3 - Setters(Mission) */
 extension FirestoreManager {
     
     /// When a user submitted a mission answer, save data to related documents.
@@ -790,8 +808,10 @@ extension FirestoreManager {
             forDocument: missionDocRef,
             merge: true)
 
+        let ref = Storage.storage().reference(withPath: path)
+        
         let photoTask = MissionPhotoTask(missionPhotoTaskUser: userDocRef,
-                                         missionPhotoTaskImagePath: path, //TODO: gs:// 로 변경.
+                                         missionPhotoTaskImagePath: String(describing: ref), //TODO: gs:// 로 변경.
                                          missionPhotoTaskTime: Timestamp(date: participationDate))
         
         
@@ -1050,6 +1070,27 @@ extension FirestoreManager {
         user.userPointHistory = dailyPointHistory
         try UPlusUser.updateUser(user)
     }
+   
+    func checkWeeklyMissionSetCompletion(week: Int) async throws -> Bool {
+        let user = try UPlusUser.getCurrentUser()
+        
+        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let missionDocCounts = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(weekCollection)
+            .getDocuments()
+            .count
+        
+        let weekMissionKey = "weekly_quiz__%d"
+        let userSuccessedMissionCounts = user.userTypeMissionArrayMap?[weekMissionKey]?.count ?? 0
+        
+        return missionDocCounts == userSuccessedMissionCounts ? true : false
+    }
+    
+}
+
+/* uplus_missions_v3 - Mission Private */
+extension FirestoreManager {
     
     private func fetchCurrentUserPoint(
         userPointHistory: [PointHistory]?,
@@ -1096,22 +1137,44 @@ extension FirestoreManager {
         return dailyPointHistory
     }
    
-    func checkWeeklyMissionSetCompletion(week: Int) async throws -> Bool {
-        let user = try UPlusUser.getCurrentUser()
+}
+
+extension FirestoreManager {
+    
+    /// Update the user owned nft list after comparing to the nft list received from API.
+    /// - Parameter tokens: NFT token id list.
+    func updateOwnedNfts(tokens: [String], userIndex: Int64) async throws {
         
-        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
-        let missionDocCounts = try await threadsSetCollectionPath2
-            .document(FirestoreConstants.missions)
-            .collection(weekCollection)
-            .getDocuments()
-            .count
+        let paths = tokens.map { token in
+            self.generateDocPath(pathIds: [
+                FirestoreConstants.devThreads2,
+                FirestoreConstants.nfts,
+                FirestoreConstants.nftSet,
+                token
+            ])
+        }
+       
+        try await threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+            .setData(
+                [
+                    FirestoreConstants.userNfts: FieldValue.arrayUnion(paths)
+                ],
+                merge: true)
         
-        let weekMissionKey = "weekly_quiz__%d"
-        let userSuccessedMissionCounts = user.userTypeMissionArrayMap?[weekMissionKey]?.count ?? 0
-        
-        return missionDocCounts == userSuccessedMissionCounts ? true : false
     }
     
+    private func generateDocPath(pathIds: [String]) -> DocumentReference {
+        var pathString: String = ""
+        let divider: String = "/"
+        for pathId in pathIds {
+            pathString += divider
+            pathString += pathId
+        }
+        return Firestore.firestore().document(pathString)
+    }
 }
 
 /* uplus_missions_v2 */
@@ -1135,19 +1198,61 @@ extension FirestoreManager {
     }
     */
     
-    func getAthleteMission() async throws -> [AthleteMission] {
+    // NOTE: mission type이 한가지로 정해지면 missionType argument 삭제 가능.
+    func getRoutineMissionInfo(missionType: MissionType, userIndex: Int64) async throws -> (daysLeft: String, participatedMission: [AthleteMission]) {
+        
+        let daysLeft = try await self.getRoutineMissionPeriod(missonType: missionType)
+        let participatedMission = try await getParticipatedRoutineMissionList(userIndex: userIndex, missionType: missionType)
+        
+        return (daysLeft, participatedMission)
+    }
+    
+    private func getRoutineMissionPeriod(missonType: MissionType) async throws -> String {
+        let data = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .getDocument()
+            .data()
+        
+        let beginEndTime = data?[FirestoreConstants.missionsBeginEndTimeMap] as? [String: [Timestamp]]
+        let timeArray = beginEndTime?[missonType.storagePathFolderName]
+        let begin = Timestamp(date: Date())
+        let end = timeArray?[1] ?? Timestamp(date: Date())
+        
+        let daysLeft = self.daysBetween(from: begin, to: end)
+    
+        return String(describing: daysLeft)
+    }
+    
+    private func getParticipatedRoutineMissionList(userIndex: Int64, missionType: MissionType) async throws -> [AthleteMission] {
+        let data = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(String(describing: userIndex)))
+            .getDocument()
+            .data()
+        
+        var missions: [AthleteMission] = []
+        let map = data?[FirestoreConstants.userTypeMissionArrayMap] as? [String: [DocumentReference]]
+        let refList = map?[missionType.rawValue] ?? []
+        
+        for ref in refList {
+            await missions.append(try ref.getDocument().data(as: AthleteMission.self, decoder: self.decoder))
+        }
+        return missions
+    }
+    
+    func getAthleteMission(userIndex: Int64) async throws -> [AthleteMission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(FirestoreConstants.athleteMission)
             .getDocuments()
             .documents
         
         var missions: [AthleteMission] = []
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         for doc in documents {
-            missions.append(try doc.data(as: AthleteMission.self, decoder: decoder))
+            missions.append(try doc.data(as: AthleteMission.self, decoder: self.decoder))
         }
+
         return missions
     }
     
@@ -1220,6 +1325,20 @@ extension FirestoreManager {
         return users
     }
     
+}
+
+// MARK: - Utilities
+extension FirestoreManager {
+    private func daysBetween(from begin: Timestamp, to end: Timestamp) -> Int {
+        let calendar = Calendar.current
+
+        let date1 = calendar.startOfDay(for: begin.dateValue())
+        let date2 = calendar.startOfDay(for: end.dateValue())
+
+        let components = calendar.dateComponents([.day], from: date1, to: date2)
+        
+        return components.day ?? 0
+    }
 }
 
 

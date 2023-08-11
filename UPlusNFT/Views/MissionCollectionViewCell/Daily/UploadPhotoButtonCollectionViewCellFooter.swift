@@ -53,7 +53,6 @@ final class UploadPhotoButtonCollectionViewCellFooter: UICollectionViewCell {
         self.contentView.backgroundColor = .systemGray5
         self.setUI()
         self.setLayout()
-        self.bind()
     }
     
     required init?(coder: NSCoder) {
@@ -64,15 +63,40 @@ final class UploadPhotoButtonCollectionViewCellFooter: UICollectionViewCell {
 
 // MARK: - Bind
 extension UploadPhotoButtonCollectionViewCellFooter {
-    private func bind() {
-        self.confirmButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let `self` = self else { return }
-                self.delegate?.confirmDidTap()
-            }
-            .store(in: &bindings)
+    
+    func bind(with vm: DailyRoutineMissionDetailViewViewModel) {
+        
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        func bindViewToViewModel() {
+            self.confirmButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    self.delegate?.confirmDidTap()
+                }
+                .store(in: &bindings)
+        }
+        
+        func bindViewModelToView() {
+            vm.$isFinishedRoutines
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    if $0 {
+                        self.confirmButton.setTitle("루틴 완성!", for: .normal)
+                        self.confirmButton.backgroundColor = .systemGray
+                        self.isUserInteractionEnabled = false
+                    }
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
+
 }
 
 // MARK: - Set UI & Layout

@@ -159,7 +159,7 @@ extension WeeklyMissionOverViewViewController {
             switch subFormatType {
     
             case .choiceQuizOX:
-                let vm = ChoiceQuizzOXViewViewModel(dataSource: mission, numberOfWeek: self.vm.week)
+                let vm = ChoiceQuizzOXViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizOXViewController(vm: vm)
                 vc.delegate = self
                 

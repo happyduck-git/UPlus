@@ -250,10 +250,26 @@ extension MyPageViewController {
                           let collection = self.collectionView
                     else { return }
                     print("Missions fetched: \(missions)")
-                    collection.reloadSections(IndexSet(integer: 5))
+
                 }
                 .store(in: &bindings)
             
+            self.vm.dateSelected
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] date in
+                    guard let `self` = self else { return }
+                    self.vm.selectedDatePointHistory = self.vm.pointHistory[date.yearMonthDateFormat]
+                }
+                .store(in: &bindings)
+            
+            self.vm.$selectedDateMissionInfo
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] info in
+                    guard let `self` = self else { return }
+                    print("Info: \(info)")
+                    self.collectionView?.reloadSections(IndexSet(integer: 5))
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -670,7 +686,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             case 4:
                 return self.vm.isHistorySectionOpened ? 1 : 0
             case 5:
-                return self.vm.isHistorySectionOpened ? self.vm.participatedMissions.count : 0
+                return self.vm.isHistorySectionOpened ? self.vm.selectedDateMissionInfo.count : 0
             default:
                 return 1
             }
@@ -753,11 +769,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 cell.delegate = self
                 return cell
                 
-                // TODO: Calendar
             case 4:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
                     fatalError()
                 }
+                cell.delegate = self
                 
                 return cell
                 
@@ -766,9 +782,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     fatalError()
                 }
                
-                let data = self.vm.participatedMissions[indexPath.item]
+                let data = self.vm.selectedDateMissionInfo[indexPath.item]
                 
-                cell.configure(title: data)
+                cell.configure(title: data?.title ?? "no-title")
                 
                 return cell
                 
@@ -954,6 +970,13 @@ extension MyPageViewController: MissionHistoryButtonCollectionViewCellDelegate {
     }
 }
 
+extension MyPageViewController: MissionHistoryCalendarCollectionViewCellDelegate {
+    func dateSelected(_ date: Date) {
+        self.vm.dateSelected.send(date)
+    }
+}
+
+// NOTE: Routine selection logic will be deleted.
 extension MyPageViewController: RoutineSelectBottomSheetViewControllerDelegate {
     func routineSelected() {
         self.addChildViewController(self.loadingVC)

@@ -234,7 +234,7 @@ extension LoginViewController {
                             
                             let vm = MyPageViewViewModel(user: user,
                                                          isJustRegistered: false,
-                                                         isVip: false, // TODO: Need to change logic
+                                                         isVip: user.userHasVipNft,
                                                          todayRank: self.viewModel.todayRank)
                             let myPageVC = MyPageViewController(vm: vm)
                             
