@@ -11,6 +11,13 @@ import Combine
 
 final class MyPageViewViewModel {
     
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        formatter.dateFormat = "yyyyMMdd"
+        return formatter
+    }()
+
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
     
@@ -33,124 +40,98 @@ final class MyPageViewViewModel {
     
     //MARK: - DataSource
     /* Basic Data */
-    let isJustRegistered: Bool
-    let isVIP: Bool
+    typealias Membership = (isJustRegisterd: Bool, isVIP: Bool)
+    let user: UPlusUser
+    var memberShip: Membership
+    
+    @Published var userProfileViewModel: UserProfileViewViewModel?
     @Published var newPoint: Int64 = 0
+    @Published var rank: Int = UPlusServiceInfoConstant.totalMembers
     
-    /* MyPageVC */
-    @Published var todayRank2: Int = UPlusServiceInfoConstant.totalMembers
-    @Published var weeklyMissions: [String: [Timestamp]] = [:]
-    var dailyMissions: [String: [Timestamp]] = [:]
-    @Published var isHistorySectionOpened: Bool = false
-    @Published var savedMissionType: MissionType?
-    @Published var routineParticipationCount: Int = 0
-    @Published var routinePoint: Int64 = 0
-    
-    var isPointHistoryFetched: Bool = false
-    
-    // Total missions
-    @Published var pointHistory: [String: PointHistory] = [:] {
-        didSet {
-            for history in pointHistory.values {
-                let docRefs = history.userPointMissions ?? []
-
+    class MyPageMission {
+        
+        weak var parent: MyPageViewViewModel?
+        
+        @Published var weeklyMissions: [String: [Timestamp]] = [:]
+        var dailyMissions: [String: [Timestamp]] = [:]
+        @Published var isHistorySectionOpened: Bool = false
+        
+        @Published var savedMissionType: MissionType?
+        
+        @Published var routineParticipationCount: Int = 0
+        @Published var routinePoint: Int64 = 0
+        
+        /* Calendar Cell */
+        // Total missions
+        var isPointHistoryFetched: Bool = false
+        @Published var participatedHistory: [PointHistory] = []
+        @Published var participatedMissions: [any Mission] = []
+        @Published var missionDates: [String] = []
+        
+        // Selected date's missions
+        var isDateSelected: Bool = false
+        var dateSelected = PassthroughSubject<Date,Never>()
+        @Published var selectedDatePointHistory: PointHistory? {
+            didSet {
                 Task {
                     do {
-                        var missions: [String] = []
-                        for docRef in docRefs {
-                            let data = try await docRef.getDocument().data()
-                            let title = data?[FirestoreConstants.missionContentTitle] as? String ?? "no-title"
-                            missions.append(title)
-                        }
-                        self.participatedMissions = missions
+                        let docRefs = selectedDatePointHistory?.userPointMissions ?? []
+                        
+                        let results = try await parent?.convertToListOfMission(docRefs: docRefs)
+                        self.selectedDateMissions = results ?? []
                     }
                     catch {
-                        print("Error getting data -- \(error)")
+                        print("Error converting doc ref to Mission -- \(error)")
                     }
                 }
             }
-            
         }
-    }
-    @Published var participatedMissions: [String] = []
-    
-    // Selected date's missions
-    @Published var selectedDatePointHistory: PointHistory? {
-        didSet {
-            Task {
-                let docs = selectedDatePointHistory?.userPointMissions ?? []
-                var info: [(type: MissionTopicType, title: String, point: Int64)?] = []
-                for doc in docs {
-                    info.append(try await self.firestoreManager.convertToMission(doc: doc))
-                }
-                self.selectedDateMissionInfo = info
-            }
-        }
-    }
-    
-    @Published var selectedDateMissionInfo: [(type: MissionTopicType, title: String, point: Int64)?] = []
-    
-    /* Calendar Cell */
-    var dateSelected = PassthroughSubject<Date,Never>()
-    
-    /* Event tap */
-    @Published var eventMissions: [any Mission] = []
-    
-    /* Mission Select BottomVC */
-    @Published var topButton: Bool = false
-    @Published var midButton: Bool = false
-    @Published var bottomButton: Bool = false
-    @Published var buttonStatus: [Bool] = Array(repeating: false, count: 3)
-    @Published var selectedMission: MissionType?
-    
-    //MARK: - Properties
-    let user: UPlusUser
-    let todayRank: Int
-    @Published var missionViewModel: MissionMainViewViewModel?
-    
-    init(user: UPlusUser,
-         isJustRegistered: Bool,
-         isVip: Bool,
-         todayRank: Int
-    ) {
-        self.user = user
-        self.isJustRegistered = isJustRegistered
-        self.isVIP = isVip
-        self.todayRank = todayRank
         
+        @Published var selectedDateMissions: [any Mission] = []
+    }
+    
+    class MyPageEvent {
+        @Published var eventMissions: [any Mission] = []
+    }
+    
+    class MissionSelectBottomView {
+        /* Mission Select BottomVC */
+        @Published var topButton: Bool = false
+        @Published var midButton: Bool = false
+        @Published var bottomButton: Bool = false
+        @Published var buttonStatus: [Bool] = Array(repeating: false, count: 3)
+        @Published var selectedMission: MissionType?
+    }
+    
+    var mission = MyPageMission()
+    var event = MyPageEvent()
+    var bottomView = MissionSelectBottomView()
+    
+    //MARK: - Init
+    init(user: UPlusUser,
+         memberShip: Membership
+    ) {
+        
+        self.user = user
+        self.memberShip = memberShip
+        self.mission.parent = self
         Task {
             await self.getSelectedRoutine()
             
             await self.createMissionMainViewViewModel()
             
-//            async let _ = self.getTodayRank(of: String(describing: user.userIndex))
             await self.getMissionsTimeline()
             
             await self.getEventMission()
-
+            
+            await self.getTodayRank()
         }
-
+        
     }
 }
 
 //MARK: - Fetch Data from FireStore
 extension MyPageViewViewModel {
-    
-    // TODO: Need to fix logic
-    func getTodayRank(of userIndex: String) async {
-        
-        do {
-            let results = try await firestoreManager.getAllUserTodayPoint()
-            let rank = results.firstIndex {
-                return String(describing: $0.userIndex) == userIndex
-            } ?? (UPlusServiceInfoConstant.totalMembers - 1)
-            self.todayRank2 = rank + 1
-        }
-        catch {
-            print("Error getting today's points: \(error)")
-        }
-        
-    }
     
     /// Get Start and End Time Map for All Missions
     func getMissionsTimeline() async {
@@ -159,12 +140,12 @@ extension MyPageViewViewModel {
             let weeklyMissions = results.filter {
                 $0.key.hasPrefix("weekly")
             }
-            self.weeklyMissions = weeklyMissions
+            self.mission.weeklyMissions = weeklyMissions
             
             let dailyMissions = results.filter {
                 $0.key.hasPrefix("daily")
             }
-            self.dailyMissions = dailyMissions
+            self.mission.dailyMissions = dailyMissions
         }
         catch {
             print("Error fetching missions by date -- \(error)")
@@ -176,9 +157,9 @@ extension MyPageViewViewModel {
     func getSelectedRoutine() async {
         
         do {
-            self.savedMissionType = try await firestoreManager.getUserSelectedRoutineMission(userIndex: self.user.userIndex)
+            self.mission.savedMissionType = try await firestoreManager.getUserSelectedRoutineMission(userIndex: self.user.userIndex)
             
-            if let savedType = self.savedMissionType {
+            if let savedType = self.mission.savedMissionType {
                 self.getRoutineParticipationCount(type: savedType)
             }
         }
@@ -203,14 +184,14 @@ extension MyPageViewViewModel {
                         ele.key == String(describing: self.user.userIndex)
                     }
                 }
-                self.routineParticipationCount = currentUser.count
+                self.mission.routineParticipationCount = currentUser.count
                 
                 // 3. 전체 포인트 계산
                 let totalPoint = missions.reduce(0, {
                     $0 + $1.missionRewardPoint
                 })
                 
-                self.routinePoint = totalPoint
+                self.mission.routinePoint = totalPoint
             }
             catch {
                 print("Error fetching participation count: \(error)")
@@ -220,8 +201,8 @@ extension MyPageViewViewModel {
     
     func getEventMission() async {
         do {
-            self.eventMissions = try await self.firestoreManager.getEvent()
-            print("Mssioon; \(eventMissions.count)")
+            self.event.eventMissions = try await self.firestoreManager.getEvent()
+            print("Mssioon; \(self.event.eventMissions.count)")
         }
         catch {
             print("Error fetching event missions -- \(error)")
@@ -229,30 +210,64 @@ extension MyPageViewViewModel {
     }
     
     func createMissionMainViewViewModel() async {
-
-            let token = await self.getTopLevelNftToken() ?? "no-url"
-            let nftUrl = await self.firestoreManager.getNftUrl(tokenId: token)
-            
-            self.missionViewModel = MissionMainViewViewModel(
-                profileImage: nftUrl,
-                username: self.user.userNickname,
-                points: self.user.userTotalPoint ?? 0,
-                maxPoints: 15,
-                level: 1,
-                numberOfMissions: Int64(self.user.userTypeMissionArrayMap?.values.count ?? 0),
-                timeLeft: 12
-            )
+        
+        let token = await self.getTopLevelNftToken() ?? "no-url"
+        let nftUrl = await self.firestoreManager.getNftUrl(tokenId: token)
+        
+        self.userProfileViewModel = UserProfileViewViewModel(
+            profileImage: nftUrl,
+            username: self.user.userNickname,
+            points: self.user.userTotalPoint ?? 0,
+            maxPoints: 15,
+            level: 1,
+            timeLeft: 12
+        )
         
     }
     
     func fetchPointHistory() async {
         do {
-            self.pointHistory = try await self.firestoreManager.getAllParticipatedMissionHistory(user: self.user)
+            // 1. Fetch entire point hitory of the user.
+            let pointHistory = try await self.firestoreManager.getAllParticipatedMissionHistory(user: self.user)
+            self.mission.participatedHistory = pointHistory
+            
+            // 2. Parse mission doc references of each PointHistory.
+            var missions: [any Mission] = []
+            var dates: [String] = []
+            
+            for history in pointHistory {
+                let docRefs = history.userPointMissions ?? []
+                let date = history.userPointTime
+                
+                let results = try await self.convertToListOfMission(docRefs: docRefs)
+              
+                missions.append(contentsOf: results)
+                if results.count > 0 {
+                    dates.append(date)
+                }
+            }
+            self.mission.missionDates = dates
+            self.mission.participatedMissions = missions
+            
         }
         catch {
             print("Error fetching point history -- \(error)")
         }
     }
+    
+    func convertToListOfMission(docRefs: [DocumentReference]) async throws -> [any Mission] {
+        
+        var missions: [any Mission] = []
+       
+        for ref in docRefs {
+            guard let mission = try await self.firestoreManager.convertToMission(doc: ref) else {
+                continue
+            }
+            missions.append(mission)
+        }
+        return missions
+    }
+    
 }
 
 extension MyPageViewViewModel {
@@ -265,33 +280,33 @@ extension MyPageViewViewModel {
     }
     
     private func updateUserOwnedNft() async -> [String] {
-
-            do {
-                // 1. Fetch NFTs from Luniverse
-                    // token Id 확인
-                let token = try await LuniverseServiceManager.shared.requestAccessToken()
-                let nfts = try await LuniverseServiceManager.shared.requestNftList(authKey: token,
-                                                                                   walletAddress: self.user.userWalletAddress ?? "n/a")
-                
-                let nftTokens: [String] = nfts.data.items.map { $0.tokenId }.reversed()
-                
-                // 2. Fetch NFTs from Firestore
-                let savedNfts = user.userNfts ?? []
-                
-                let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
- 
-                // API fetched NFTs & Firestore fetched NFTs 가 동일한지 확인
-                if !self.haveSameElements(nftTokens, savedTokens) {
-                    // 동일하지 않다면, user_nfts의 reference 업데이트
-                    self.updateNftList(nfts: nftTokens, userIndex: user.userIndex)
-                }
-                return nftTokens
+        
+        do {
+            // 1. Fetch NFTs from Luniverse
+            // token Id 확인
+            let token = try await LuniverseServiceManager.shared.requestAccessToken()
+            let nfts = try await LuniverseServiceManager.shared.requestNftList(authKey: token,
+                                                                               walletAddress: self.user.userWalletAddress ?? "n/a")
+            
+            let nftTokens: [String] = nfts.data.items.map { $0.tokenId }.reversed()
+            
+            // 2. Fetch NFTs from Firestore
+            let savedNfts = user.userNfts ?? []
+            
+            let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
+            
+            // API fetched NFTs & Firestore fetched NFTs 가 동일한지 확인
+            if !self.haveSameElements(nftTokens, savedTokens) {
+                // 동일하지 않다면, user_nfts의 reference 업데이트
+                self.updateNftList(nfts: nftTokens, userIndex: user.userIndex)
             }
-            catch {
-                print("Error requesting Luniverse access token -- \(error)")
-                return []
-            }
-   
+            return nftTokens
+        }
+        catch {
+            print("Error requesting Luniverse access token -- \(error)")
+            return []
+        }
+        
     }
     
     // user_nfts의 reference 업데이트
@@ -305,7 +320,7 @@ extension MyPageViewViewModel {
             }
         }
     }
-  
+    
 }
 
 //MARK: - Save Data to FireStore
@@ -323,6 +338,23 @@ extension MyPageViewViewModel {
     }
 }
 
+extension MyPageViewViewModel {
+    func getTodayRank() async {
+ 
+        do {
+            let history = try await FirestoreActor.shared.getTodayPointHistory()
+            let rank = history.firstIndex {
+                $0.userIndex == String(describing: self.user.userIndex)
+            }
+            guard let rnk = rank else { return }
+            self.rank = rnk + 1
+        }
+        catch {
+            print("Error fething today point -- \(error)")
+        }
+         
+    }
+}
 //MARK: - Save Data to FireStore
 extension MyPageViewViewModel {
     func saveUserToUserDefaults() {
@@ -350,3 +382,4 @@ extension MyPageViewViewModel {
         return Set(arr1) == Set(arr2)
     }
 }
+

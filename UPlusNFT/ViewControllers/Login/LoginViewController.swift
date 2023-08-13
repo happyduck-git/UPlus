@@ -250,9 +250,7 @@ extension LoginViewController {
                             self.viewModel.password = ""
                             
                             let vm = MyPageViewViewModel(user: user,
-                                                         isJustRegistered: false,
-                                                         isVip: user.userHasVipNft,
-                                                         todayRank: self.viewModel.todayRank)
+                                                         memberShip: (false, user.userHasVipNft))
                             let myPageVC = MyPageViewController(vm: vm)
                             
                             self.loadingVC.removeViewController()
@@ -399,9 +397,7 @@ extension LoginViewController: SignUpViewControllerDelegate {
             let user = try UPlusUser.getCurrentUser()
             
             let vm = MyPageViewViewModel(user: user,
-                                         isJustRegistered: true,
-                                         isVip: user.userHasVipNft,
-                                         todayRank: 0)
+                                         memberShip: (true, user.userHasVipNft))
             let myPageVC = MyPageViewController(vm: vm)
             self.navigationController?.pushViewController(myPageVC, animated: true)
             

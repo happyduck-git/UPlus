@@ -39,7 +39,6 @@ final class TotalRankCollectionViewCell: UICollectionViewCell {
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         self.setUI()
         self.setLayout()
         self.setDelegate()
@@ -68,14 +67,21 @@ extension TotalRankCollectionViewCell {
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
         
-        vm.$totalRankUserList
+        vm.$totalRankerList
             .receive(on: DispatchQueue.main)
-            .sink { [weak self]in
+            .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                if !$0.isEmpty {
-                    self.rankTableView.reloadData()
-                    self.spinner.stopAnimating()
-                }
+                self.rankTableView.reloadData()
+                self.spinner.stopAnimating()
+                
+            }
+            .store(in: &bindings)
+        
+        vm.$top3RankUserList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                print("Top3: \($0)")
             }
             .store(in: &bindings)
     }
@@ -104,12 +110,12 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let vm = self.vm else { return 0 }
-        return vm.totalRankUserList.count
+        return vm.totalRankerList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let vm = self.vm else { fatalError() }
-        let cellVM = vm.totalRankUserList[indexPath.row]
+        let cellVM = vm.totalRankerList[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         var config = cell.defaultContentConfiguration()

@@ -55,6 +55,14 @@ final class DailyRankView: UIView {
     }
 }
 
+//MARK: - Configure
+extension DailyRankView {
+    func configure(rank: Int) {
+        self.rankingButton.setTitle(String(describing: rank) + "위", for: .normal)
+    }
+}
+
+//MARK: - Set UI & Layout
 extension DailyRankView {
     private func setUI() {
         self.addSubview(self.rankStackView)

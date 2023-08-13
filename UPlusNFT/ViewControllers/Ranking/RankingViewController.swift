@@ -49,7 +49,10 @@ class RankingViewController: UIViewController {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         
-        self.vm.getUserPoints()
+//        self.vm.getUserPoints()
+        Task {
+            self.vm.totakRankerFetched = await self.vm.getAllUserTotalPoint()
+        }
     }
     
     required init?(coder: NSCoder) {

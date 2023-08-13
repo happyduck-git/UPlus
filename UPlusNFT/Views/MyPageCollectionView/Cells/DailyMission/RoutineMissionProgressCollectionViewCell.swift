@@ -64,21 +64,21 @@ extension RoutineMissionProgressCollectionViewCell {
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
         
-        vm.$savedMissionType
+        vm.mission.$savedMissionType
             .receive(on: DispatchQueue.main)
             .sink {
                 self.title.text = $0?.displayName ?? "걷기 루틴 미션"
             }
             .store(in: &bindings)
         
-        vm.$routineParticipationCount
+        vm.mission.$routineParticipationCount
             .receive(on: DispatchQueue.main)
             .sink {
                 self.numberOfParticipation.text = String(describing: $0) + "회"
             }
             .store(in: &bindings)
         
-        vm.$routinePoint
+        vm.mission.$routinePoint
             .receive(on: DispatchQueue.main)
             .sink {
                 self.pointLabel.text = String(describing: $0) + MissionConstants.pointUnit

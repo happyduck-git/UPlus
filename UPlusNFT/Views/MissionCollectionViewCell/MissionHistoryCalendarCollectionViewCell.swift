@@ -7,6 +7,7 @@
 
 import UIKit
 import FSCalendar
+import Combine
 
 protocol MissionHistoryCalendarCollectionViewCellDelegate: AnyObject {
     func dateSelected(_ date: Date)
@@ -18,6 +19,9 @@ final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Delegate
     weak var delegate: MissionHistoryCalendarCollectionViewCellDelegate?
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
     private let calendar: FSCalendar = {
@@ -60,7 +64,22 @@ final class MissionHistoryCalendarCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Configure
 extension MissionHistoryCalendarCollectionViewCell {
-    
+    func bind(with vm: MyPageViewViewModel) {
+        
+        self.vm = vm
+        
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        self.vm?.mission.$missionDates
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] date in
+                guard let `self` = self else { return }
+                self.calendar.reloadData()
+            }
+            .store(in: &bindings)
+        
+    }
 }
 
 // MARK: - Set UI & Layout
@@ -89,10 +108,17 @@ extension MissionHistoryCalendarCollectionViewCell: FSCalendarDelegate, FSCalend
     }
     
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
-        return 1
+        let missionDates = self.vm?.mission.missionDates ?? []
+        
+        if missionDates.contains(date.localDate().yearMonthDateFormat) {
+            return 1
+        } else {
+            return 0
+        }
     }
     
     func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, eventDefaultColorsFor date: Date) -> [UIColor]? {
         return [UPlusColor.mint]
     }
 }
+

@@ -119,7 +119,7 @@ extension UserMissionDataView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
-                if vm.isVIP && vm.isJustRegistered {
+                if vm.memberShip.isVIP && vm.memberShip.isJustRegisterd {
                     self.pointLabel.text = String(describing: $0)
                 }
             }

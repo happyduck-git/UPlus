@@ -14,15 +14,18 @@ final class RankingViewViewModel {
     
     private let currentUser: UPlusUser?
     
-    @Published var todayRankList: [UPlusUser] = []
-    @Published var totalRankUserList: [UPlusUser] = []
-    @Published var yesterDayRankUserList: [UPlusUser] = []
+    @Published var totakRankerFetched: Bool = false
+    
+    @Published var todayRankerList: [UPlusUser] = []
+    @Published var totalRankerList: [UPlusUser] = []
+    @Published var yesterdayRankerList: [UPlusUser] = []
     @Published var top3RankUserList: [UPlusUser] = []
     
     @Published var currentUserTodayRank: UPlusUser?
     @Published var currentUserTotalRank: UPlusUser?
     
     init() {
+
         do {
             self.currentUser = try UPlusUser.getCurrentUser()
         }
@@ -31,90 +34,104 @@ final class RankingViewViewModel {
             self.currentUser = nil
             return
         }
+        
     }
     
 }
 
 extension RankingViewViewModel {
     
-    func getUserPoints() {
-        Task {
-            do {
-                let points = try await self.firestoreManager.getTodayPointHistoryPoint()
-                let totalUsers = try await self.firestoreManager.getAllUserTotalPoint()
-                self.totalRankUserList = totalUsers
-                
-                var todayRankList: [UPlusUser] = []
-                var yesterdayRankList: [UPlusUser] = []
-                
-                let today = Date()
-                let calendar = Calendar.current
-                guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
-                    return
-                }
-                
-                /* 점수 리스트 */
-                for user in totalUsers {
-                    let userIndex = user.userIndex
-                    
-                    for point in points {
-                        let index = point.userIndex ?? "no-user-index"
-                        
-                        var tempUser = user
-                        
-                        if String(describing: userIndex) == index {
-                            
-                            if user.userPointHistory == nil {
-                                tempUser.userPointHistory = [point]
-                            } else {
-                                tempUser.userPointHistory?.append(point)
-                            }
-                            
-                            /* 어제, 오늘 점수 리스트 */
-                            if point.userPointTime == today.yearMonthDateFormat {
-                                // Today's points
-                                todayRankList.append(tempUser)
-                                
-                            } else if point.userPointTime == yesterday.yearMonthDateFormat {
-                                // Yesterday's points
-                                yesterdayRankList.append(tempUser)
-                            } else {
-                                continue
-                            }
-                        }
-                        
-                    }
-                    
-                }
-                
-                let sorted = todayRankList.sorted { $0.userPointHistory?.first?.userPointCount ?? 0 > $1.userPointHistory?.first?.userPointCount ?? 0 }
-
-                self.todayRankList = sorted
-                
-                self.yesterDayRankUserList = yesterdayRankList
-                
-                /* 오늘 점수 랭킹 */
-                let todayRank = self.todayRankList.filter {
-                    $0.userIndex == currentUser?.userIndex
-                }.first
-                
-                self.currentUserTodayRank = todayRank
-                
-                /* 누적 점수 랭킹 */
-                let totalRank = self.totalRankUserList.filter {
-                    $0.userIndex == currentUser?.userIndex
-                }.first
-                self.currentUserTotalRank = totalRank
-                
-                /* 누적 TOP3 */
-                self.top3RankUserList = self.getTopThreeRankers(list: self.todayRankList)
-            }
-            catch {
-                print("Error fetching -- \(error)")
-            }
+    func getAllUserTotalPoint() async -> Bool {
+        
+        do {
+            self.totalRankerList = try await self.firestoreManager.getAllUserTotalPoint()
+            return true
         }
+        catch {
+            print("Error fetching all user points -- \(error)")
+            return false
+        }
+        
     }
     
+    func getTodayRankers(totalRankerList: [UPlusUser]) async throws {
+        /*
+        let todayPointHistory = try await self.firestoreManager.getTodayPointHistory()
+        */
+        let todayPointHistory = try await FirestoreActor.shared.getTodayPointHistory()
+        
+        var rankerList: [UPlusUser] = []
+        
+        for point in todayPointHistory {
+            let index = point.userIndex ?? "no-user-index"
+            
+            for user in totalRankerList {
+                var tempUser = user
+                if String(describing: tempUser.userIndex) == index {
+                    
+                    if user.userPointHistory == nil {
+                        tempUser.userPointHistory = [point]
+                    } else {
+                        tempUser.userPointHistory?.append(point)
+                    }
+                    rankerList.append(tempUser)
+                }
+            }
+            
+        }
+                
+        self.todayRankerList = rankerList
+    }
+    
+    func getYesterdayRankers(totalRankerList: [UPlusUser]) async throws {
+        let yesterdayPointHistory = try await self.firestoreManager.getYesterdayPointHistory()
+        var rankerList: [UPlusUser] = []
+        
+        for point in yesterdayPointHistory {
+            let index = point.userIndex ?? "no-user-index"
+            
+            for user in totalRankerList {
+                var tempUser = user
+                if String(describing: tempUser.userIndex) == index {
+                    
+                    if user.userPointHistory == nil {
+                        tempUser.userPointHistory = [point]
+                    } else {
+                        tempUser.userPointHistory?.append(point)
+                    }
+                    rankerList.append(tempUser)
+                }
+            }
+            
+        }
+        
+        self.yesterdayRankerList = rankerList
+        
+    }
+    
+    func getRanking() {
+        
+        /* 오늘 점수 랭킹 */
+        let todayRank = self.todayRankerList.filter {
+            $0.userIndex == currentUser?.userIndex
+        }.first
+        
+        self.currentUserTodayRank = todayRank
+        
+        /* 누적 점수 랭킹 */
+        let totalRank = self.totalRankerList.filter {
+            $0.userIndex == currentUser?.userIndex
+        }.first
+        self.currentUserTotalRank = totalRank
+      
+        /* 누적 TOP3 */
+        self.top3RankUserList = self.getTopThreeRankers(list: self.totalRankerList)
+    }
+    
+}
+
+//MARK: - Private
+extension RankingViewViewModel {
     private func getTopThreeRankers(list: [UPlusUser]) -> [UPlusUser] {
         if list.count >= 3 {
             return Array(list[0...2])
@@ -123,3 +140,4 @@ extension RankingViewViewModel {
         }
     }
 }
+

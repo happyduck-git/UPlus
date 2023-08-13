@@ -48,6 +48,8 @@
 		24542D582A70E8E100F82CEA /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D572A70E8E100F82CEA /* LoadingViewController.swift */; };
 		24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */; };
 		24542D602A7113BD00F82CEA /* TotalRankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */; };
+		245E2DD22A87881600AAEFE6 /* Mission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245E2DD12A87881600AAEFE6 /* Mission.swift */; };
+		246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D72A891A8100CA7356 /* FirestoreActor.swift */; };
 		247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */; };
 		247FC60E2A678036001F3974 /* WelcomeBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */; };
 		247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */; };
@@ -171,12 +173,11 @@
 		93D174962A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174952A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
-		93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013862A6517AB0005E342 /* MissionMainViewController.swift */; };
 		93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013882A6518370005E342 /* SideMenuViewController.swift */; };
 		93E0138B2A651F730005E342 /* SideMenuPresentAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0138A2A651F730005E342 /* SideMenuPresentAnimator.swift */; };
 		93E013912A6619F80005E342 /* TodayMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */; };
 		93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */; };
-		93E013952A66260A0005E342 /* MissionMainViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */; };
+		93E013952A66260A0005E342 /* UserProfileViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013942A66260A0005E342 /* UserProfileViewViewModel.swift */; };
 		93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */; };
 		93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139C2A666E070005E342 /* UIStackView+Extension.swift */; };
 		93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */; };
@@ -186,7 +187,6 @@
 		93E013A82A68C1D70005E342 /* AthleteMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A72A68C1D70005E342 /* AthleteMission.swift */; };
 		93E013AA2A68C20E0005E342 /* EnvironmentalistMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013A92A68C20E0005E342 /* EnvironmentalistMission.swift */; };
 		93E013AC2A68C2350005E342 /* GoodWorkerMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */; };
-		93E013AE2A68C4FE0005E342 /* SuddenMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AD2A68C4FE0005E342 /* SuddenMission.swift */; };
 		93E013B02A6909A10005E342 /* ChoiceQuizOXViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013AF2A6909A10005E342 /* ChoiceQuizOXViewController.swift */; };
 		93E013B22A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B12A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift */; };
 		93E013B42A691F450005E342 /* WeeklyMissionCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */; };
@@ -234,6 +234,8 @@
 		24542D572A70E8E100F82CEA /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNftsCollectionViewHeader.swift; sourceTree = "<group>"; };
 		24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalRankCollectionViewCell.swift; sourceTree = "<group>"; };
+		245E2DD12A87881600AAEFE6 /* Mission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mission.swift; sourceTree = "<group>"; };
+		246BD1D72A891A8100CA7356 /* FirestoreActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreActor.swift; sourceTree = "<group>"; };
 		247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewController.swift; sourceTree = "<group>"; };
 		247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
@@ -356,12 +358,11 @@
 		93D174952A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionSelectCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
-		93E013862A6517AB0005E342 /* MissionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewController.swift; sourceTree = "<group>"; };
 		93E013882A6518370005E342 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		93E0138A2A651F730005E342 /* SideMenuPresentAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentAnimator.swift; sourceTree = "<group>"; };
 		93E013902A6619F80005E342 /* TodayMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013922A6622E20005E342 /* MissionProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionProfileCollectionViewCell.swift; sourceTree = "<group>"; };
-		93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionMainViewViewModel.swift; sourceTree = "<group>"; };
+		93E013942A66260A0005E342 /* UserProfileViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewViewModel.swift; sourceTree = "<group>"; };
 		93E0139A2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuizMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E0139C2A666E070005E342 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		93E0139E2A6671DB0005E342 /* MissionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionCollectionViewHeader.swift; sourceTree = "<group>"; };
@@ -371,7 +372,6 @@
 		93E013A72A68C1D70005E342 /* AthleteMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleteMission.swift; sourceTree = "<group>"; };
 		93E013A92A68C20E0005E342 /* EnvironmentalistMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentalistMission.swift; sourceTree = "<group>"; };
 		93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoodWorkerMission.swift; sourceTree = "<group>"; };
-		93E013AD2A68C4FE0005E342 /* SuddenMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuddenMission.swift; sourceTree = "<group>"; };
 		93E013AF2A6909A10005E342 /* ChoiceQuizOXViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceQuizOXViewController.swift; sourceTree = "<group>"; };
 		93E013B12A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceQuizzOXViewViewModel.swift; sourceTree = "<group>"; };
 		93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionCompleteViewController.swift; sourceTree = "<group>"; };
@@ -509,9 +509,8 @@
 			children = (
 				2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */,
 				93A2ED802A6A54D900C2287D /* MyPageViewController.swift */,
-				93A2ED8D2A6E025000C2287D /* RewardsViewController.swift */,
-				93A2ED8F2A6E0BD000C2287D /* RewardsViewViewModel.swift */,
 				24542D542A70DE7D00F82CEA /* MyPageViewViewModel.swift */,
+				93E013942A66260A0005E342 /* UserProfileViewViewModel.swift */,
 				939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */,
 			);
 			path = UserProfile;
@@ -551,6 +550,15 @@
 				93A2ED942A6E12A000C2287D /* UPlusUser.swift */,
 			);
 			path = UplusUser;
+			sourceTree = "<group>";
+		};
+		245E2DD32A87C7F200AAEFE6 /* Reward */ = {
+			isa = PBXGroup;
+			children = (
+				93A2ED8D2A6E025000C2287D /* RewardsViewController.swift */,
+				93A2ED8F2A6E0BD000C2287D /* RewardsViewViewModel.swift */,
+			);
+			path = Reward;
 			sourceTree = "<group>";
 		};
 		247FC60A2A677672001F3974 /* BottomSheet */ = {
@@ -614,6 +622,7 @@
 				24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */,
 				939194792A7C92BC0035FEB1 /* FirebaseAuthManager.swift */,
 				240269312A83B23E00850E65 /* FirebaseStorageManager.swift */,
+				246BD1D72A891A8100CA7356 /* FirestoreActor.swift */,
 			);
 			path = FirebaseManager;
 			sourceTree = "<group>";
@@ -677,6 +686,7 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				245E2DD32A87C7F200AAEFE6 /* Reward */,
 				939194802A7CDDBD0035FEB1 /* Wallet */,
 				24542D562A70E8BF00F82CEA /* Loading */,
 				93A2ED912A6E0E8D00C2287D /* Ranking */,
@@ -941,7 +951,6 @@
 				93E013A72A68C1D70005E342 /* AthleteMission.swift */,
 				93E013A92A68C20E0005E342 /* EnvironmentalistMission.swift */,
 				93E013AB2A68C2350005E342 /* GoodWorkerMission.swift */,
-				93E013AD2A68C4FE0005E342 /* SuddenMission.swift */,
 				939194902A80C2720035FEB1 /* RoutineMission.swift */,
 			);
 			path = Daily;
@@ -1068,8 +1077,6 @@
 				939194A12A82102C0035FEB1 /* Event */,
 				93D174772A733C5600F5B1B1 /* WeeklyDetail */,
 				93D174782A733C8500F5B1B1 /* DailyDetail */,
-				93E013862A6517AB0005E342 /* MissionMainViewController.swift */,
-				93E013942A66260A0005E342 /* MissionMainViewViewModel.swift */,
 				93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */,
 				2402694D2A84683E00850E65 /* BaseMissionViewController.swift */,
 			);
@@ -1115,6 +1122,7 @@
 			children = (
 				9391949A2A81BB830035FEB1 /* Daily */,
 				939194992A81BB7D0035FEB1 /* Weekly */,
+				245E2DD12A87881600AAEFE6 /* Mission.swift */,
 			);
 			path = Missions;
 			sourceTree = "<group>";
@@ -1251,7 +1259,6 @@
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */,
 				93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */,
-				93E013872A6517AB0005E342 /* MissionMainViewController.swift in Sources */,
 				93A2EDC22A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift in Sources */,
 				93A2ED972A6E17BC00C2287D /* RankingViewViewModel.swift in Sources */,
 				2402693D2A83C07600850E65 /* GovernanceElectionMissionViewViewModel.swift in Sources */,
@@ -1270,7 +1277,7 @@
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
 				2402693B2A83C01100850E65 /* ShareMediaOnSlackMissionViewViewModel.swift in Sources */,
 				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,
-				93E013952A66260A0005E342 /* MissionMainViewViewModel.swift in Sources */,
+				93E013952A66260A0005E342 /* UserProfileViewViewModel.swift in Sources */,
 				93E013A62A68C0460005E342 /* WeeklyQuizMission.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
@@ -1340,6 +1347,8 @@
 				24A254752A854D5A0034534A /* EnvironmentConfig.swift in Sources */,
 				2402695A2A846BF700850E65 /* AnswerQuizPluralViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
+				246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */,
+				245E2DD22A87881600AAEFE6 /* Mission.swift in Sources */,
 				93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
 				9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */,
@@ -1392,7 +1401,6 @@
 				93E013B22A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift in Sources */,
 				240269302A83B21500850E65 /* ContentReadOnlyMissionViewController.swift in Sources */,
 				24542D4D2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift in Sources */,
-				93E013AE2A68C4FE0005E342 /* SuddenMission.swift in Sources */,
 				93A2ED8C2A6DFECF00C2287D /* Reward.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,

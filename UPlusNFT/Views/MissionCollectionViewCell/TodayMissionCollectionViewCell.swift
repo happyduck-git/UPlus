@@ -65,7 +65,7 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Configuration
 extension TodayMissionCollectionViewCell {
-    func configure(with vm: MissionMainViewViewModel) {
+    func configure(with vm: UserProfileViewViewModel) {
         self.timeLabel.text = String(describing: vm.timeLeft) + MissionConstants.timeLeftSuffix
     }
 }

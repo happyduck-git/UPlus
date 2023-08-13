@@ -83,12 +83,6 @@ extension DailyQuizMissionCollectionViewCell {
             self.quizDescLabel.text = attVM.missionContentText ?? "No Content"
             self.pointLabel.text = String(describing: attVM.missionRewardPoint) + " " + MissionConstants.pointUnit
         }
-        
-        if let suddVM = vm as? SuddenMission {
-            self.quizTitleLabel.text = suddVM.missionContentTitle ?? "No Title"
-            self.quizDescLabel.text = suddVM.missionContentText ?? "No Content"
-            self.pointLabel.text = String(describing: suddVM.missionRewardPoint) + " " + MissionConstants.pointUnit
-        }
     }
 }
 

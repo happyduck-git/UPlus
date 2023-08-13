@@ -25,8 +25,7 @@ final class LoginViewViewModel {
     @Published var password: String = ""
     @Published var errorDescription: String = ""
     @Published var isKeepMeSignedIntTapped: Bool = false
-    @Published var todayRank: Int = UPlusServiceInfoConstant.totalMembers
-    
+
     let isLoginSuccess = PassthroughSubject<Bool, Never>()
     
     private(set) lazy var isCredentialNotEmpty = Publishers.CombineLatest($email, $password)
@@ -71,24 +70,4 @@ final class LoginViewViewModel {
 
     }
     
-}
-
-//MARK: - Fetch Data from FireStore
-extension LoginViewViewModel {
-    func getTodayRank(of userIndex: String) {
-        Task {
-            
-            do {
-                let results = try await firestoreManager.getAllUserTodayPoint()
-                let rank = results.firstIndex {
-                    return String(describing: $0.userIndex) == userIndex
-                } ?? (UPlusServiceInfoConstant.totalMembers - 1)
-                self.todayRank = rank + 1
-            }
-            catch {
-                print("Error getting today's points: \(error)")
-            }
-            
-        }
-    }
 }

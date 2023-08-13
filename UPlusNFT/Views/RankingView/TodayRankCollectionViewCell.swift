@@ -68,20 +68,34 @@ extension TodayRankCollectionViewCell {
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
         
-        vm.$todayRankList
-            .receive(on: DispatchQueue.main)
+        vm.$totakRankerFetched
+            .receive(on: RunLoop.current)
             .sink { [weak self] in
                 guard let `self` = self else { return }
-                
-                if !$0.isEmpty {
-                    self.spinner.stopAnimating()
-                    self.rankTableView.reloadData()
+                if $0 {
+                    Task {
+                        try await vm.getTodayRankers(totalRankerList: vm.totalRankerList)
+                        try await vm.getYesterdayRankers(totalRankerList: vm.totalRankerList)
+                        vm.getRanking()
+                    }
+                    
                 }
             }
             .store(in: &bindings)
         
+        vm.$todayRankerList
+            .receive(on: DispatchQueue.main)
+            .dropFirst(1)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+      
+                self.rankTableView.reloadData()
+                self.spinner.stopAnimating()
+            }
+            .store(in: &bindings)
+        
         // TODO: Header로 옮기기
-        vm.$yesterDayRankUserList
+        vm.$yesterdayRankerList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
@@ -115,12 +129,12 @@ extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let vm = self.vm else { return 0 }
-        return vm.todayRankList.count
+        return vm.todayRankerList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let vm = self.vm else { fatalError() }
-        let cellVM = vm.todayRankList[indexPath.row]
+        let cellVM = vm.todayRankerList[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         var config = cell.defaultContentConfiguration()

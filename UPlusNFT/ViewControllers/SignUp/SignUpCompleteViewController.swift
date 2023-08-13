@@ -106,9 +106,7 @@ extension SignUpCompleteViewController {
             let user = try UPlusUser.getCurrentUser()
 
             let vm = MyPageViewViewModel(user: user,
-                                         isJustRegistered: true,
-                                         isVip: user.userHasVipNft,
-                                         todayRank: UPlusServiceInfoConstant.totalMembers)
+                                         memberShip: (true, user.userHasVipNft))
             let vc = MyPageViewController(vm: vm)
             
             self.navigationController?.modalPresentationStyle = .fullScreen

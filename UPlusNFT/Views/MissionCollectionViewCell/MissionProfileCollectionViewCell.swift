@@ -10,7 +10,7 @@ import Nuke
 
 final class MissionProfileCollectionViewCell: UICollectionViewCell {
 
-    private var vm: MissionMainViewViewModel?
+    private var vm: UserProfileViewViewModel?
     
     //MARK: - Property
     private let levelUpNoticeLabel: UILabel = {
@@ -103,7 +103,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Configure
 extension MissionProfileCollectionViewCell {
-    func configure(with vm: MissionMainViewViewModel) {
+    func configure(with vm: UserProfileViewViewModel) {
         self.vm = vm
         
         Task {

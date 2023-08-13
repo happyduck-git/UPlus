@@ -73,7 +73,7 @@ extension RankBottomFlatSheetView {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     guard let `self` = self else { return }
-                    self.pointLabel.text = "Total Point: " + String(describing: $0?.userPointHistory?.first?.userPointCount ?? 0)
+                    self.pointLabel.text = "Total Point: " + String(describing: $0?.userTotalPoint ?? 0)
                 }
                 .store(in: &bindings)
         }

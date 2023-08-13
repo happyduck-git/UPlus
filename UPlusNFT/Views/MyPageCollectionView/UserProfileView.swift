@@ -88,16 +88,8 @@ extension UserProfileView {
     private func bind(with vm: MyPageViewViewModel) {
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
-        
-        vm.$todayRank2
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let `self` = self else { return }
-//                self.userMissionDataView.rankingButton.setTitle(String(describing: $0) + "위", for: .normal)
-            }
-            .store(in: &bindings)
-        
-        vm.$missionViewModel
+ 
+        vm.$userProfileViewModel
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 guard let `self` = self,
@@ -114,6 +106,14 @@ extension UserProfileView {
                 }
                 self.usernameLabel.text = vm.user.userNickname
                 self.userMissionDataView.configure(vm: vm)
+            }
+            .store(in: &bindings)
+ 
+        vm.$rank
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                self.dailyRankView.configure(rank: $0)
             }
             .store(in: &bindings)
  

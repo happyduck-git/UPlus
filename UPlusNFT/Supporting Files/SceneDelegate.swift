@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         window?.overrideUserInterfaceStyle = .light
-        
+ 
         let vc = OnBoardingViewController()
         let navVC = UINavigationController(rootViewController: vc)
 

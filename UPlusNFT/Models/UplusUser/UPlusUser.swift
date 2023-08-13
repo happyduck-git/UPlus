@@ -177,9 +177,7 @@ struct SwiftUPlusUser: Codable {
 }
 
 struct PointHistory: Codable {
-    
-    // 사용자가 일별로 획득한 포인트 량을 다큐먼트로 갖는다. 다큐먼트 ID는 YYYYMMDD와 같은 ID를 갖는다.
-    
+
     var userIndex: String?
     
     let userPointTime: String //사용자가 포인트를 획득한 날짜를 가리킨다. 날짜와는 다르게 시각은 항상 00시 00분을 가리킨다.

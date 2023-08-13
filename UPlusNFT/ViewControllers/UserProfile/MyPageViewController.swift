@@ -134,7 +134,7 @@ final class MyPageViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if self.vm.isJustRegistered && self.vm.isVIP {
+        if self.vm.memberShip.isVIP && self.vm.memberShip.isJustRegisterd {
             let vm = WelcomeBottomSheetViewViewModel()
             let vc = WelcomeBottomSheetViewController(vm: vm)
             vc.delegate = self
@@ -177,7 +177,9 @@ extension MyPageViewController {
             
         }
         func bindViewModelToView() {
-            self.vm.$missionViewModel
+            
+            
+            self.vm.$userProfileViewModel
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] mission in
                     guard let `self` = self,
@@ -187,7 +189,7 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
-            self.vm.$savedMissionType
+            self.vm.mission.$savedMissionType
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] mission in
                     guard let `self` = self,
@@ -200,7 +202,7 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
-            self.vm.$weeklyMissions
+            self.vm.mission.$weeklyMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] data in
                     guard let `self` = self,
@@ -210,7 +212,7 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
-            self.vm.$eventMissions
+            self.vm.event.$eventMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] data in
                     guard let `self` = self,
@@ -224,17 +226,17 @@ extension MyPageViewController {
                 .store(in: &bindings)
                 
             
-            self.vm.$isHistorySectionOpened
+            self.vm.mission.$isHistorySectionOpened
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self]  in
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-                    if $0 && !self.vm.isPointHistoryFetched {
-                        self.vm.isPointHistoryFetched = true
+                    if $0 && !self.vm.mission.isPointHistoryFetched {
+                        self.vm.mission.isPointHistoryFetched = true
                         Task {
                             await self.vm.fetchPointHistory()
-                            self.vm.isPointHistoryFetched = false
+                            self.vm.mission.isPointHistoryFetched = false
                         }
                     }
 //                    collection.reloadSections(IndexSet(integer: 4))
@@ -243,30 +245,36 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
-            self.vm.$participatedMissions
+            self.vm.mission.$participatedMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] missions in
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-                    print("Missions fetched: \(missions)")
-
+//                    print("Missions fetched: \(missions.count)")
+                    collection.reloadSections(IndexSet(integer: 5))
                 }
                 .store(in: &bindings)
             
-            self.vm.dateSelected
+            self.vm.mission.dateSelected
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] date in
                     guard let `self` = self else { return }
-                    self.vm.selectedDatePointHistory = self.vm.pointHistory[date.yearMonthDateFormat]
+                    if !self.vm.mission.isDateSelected {
+                        self.vm.mission.isDateSelected = true
+                    }
+                    let dateString = date.yearMonthDateFormat
+                    self.vm.mission.selectedDatePointHistory = self.vm.mission.participatedHistory.filter {
+                        $0.userPointTime == dateString
+                    }.first
                 }
                 .store(in: &bindings)
-            
-            self.vm.$selectedDateMissionInfo
+
+            self.vm.mission.$selectedDateMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] info in
                     guard let `self` = self else { return }
-                    print("Info: \(info)")
+//                    print("Missions by date: \(info)")
                     self.collectionView?.reloadSections(IndexSet(integer: 5))
                 }
                 .store(in: &bindings)
@@ -389,6 +397,10 @@ extension MyPageViewController {
             self.isSet = true
         }
         
+        if scrollView.contentOffset.y < self.initialTopOffset - 150 {
+            // TODO: Refresh indicator 나타내기. Luniverse API Call.
+        }
+        
         self.topConstraint?.constant = self.initialTopOffset - scrollView.contentOffset.y
         //        print("New top: \(self.initialTopOffset - scrollView.contentOffset.y)")
         let offset = -scrollView.contentOffset.y
@@ -411,7 +423,6 @@ extension MyPageViewController {
             frame: .zero,
             collectionViewLayout: layout
         )
-        
         // 1. Register header
         collectionView.register(MissionCollectionViewHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -684,15 +695,25 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 //            return self.vm.weeklyMissions.count
                 return 3
             case 4:
-                return self.vm.isHistorySectionOpened ? 1 : 0
+                return self.vm.mission.isHistorySectionOpened ? 1 : 0
             case 5:
-                return self.vm.isHistorySectionOpened ? self.vm.selectedDateMissionInfo.count : 0
+                var numberOfItems: Int = 0
+                
+                if self.vm.mission.isDateSelected { // 특정 날짜가 선택된 경우
+                    numberOfItems = self.vm.mission.selectedDateMissions.count
+                    
+                } else { // 날짜가 선택되지 않은 경우
+                    numberOfItems = self.vm.mission.participatedMissions.count
+                }
+                
+                return self.vm.mission.isHistorySectionOpened ? numberOfItems : 0
+                
             default:
                 return 1
             }
         } else {
-            print("Itmes: \(self.vm.eventMissions.count)")
-            return self.vm.eventMissions.count
+            print("Itmes: \(self.vm.event.eventMissions.count)")
+            return self.vm.event.eventMissions.count
         }
     }
     
@@ -704,7 +725,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
                     fatalError()
                 }
-                guard let vm = self.vm.missionViewModel else {
+                guard let vm = self.vm.userProfileViewModel else {
                     return cell
                 }
                 
@@ -713,7 +734,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 // Routine mission
             case 1:
-                if self.vm.savedMissionType == nil {
+                if self.vm.mission.savedMissionType == nil {
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
                         fatalError()
                     }
@@ -734,9 +755,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 cell.resetCell()
                 
-                if !self.vm.weeklyMissions.isEmpty {
+                if !self.vm.mission.weeklyMissions.isEmpty {
                     let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
-                    let missionInfo = self.vm.weeklyMissions[weekCollection] ?? []
+                    let missionInfo = self.vm.mission.weeklyMissions[weekCollection] ?? []
                     let begin = missionInfo[0].dateValue().monthDayFormat
                     let end = missionInfo[1].dateValue().monthDayFormat
                     let weekTotalPoint: Int64 = 100 // TODO: Query from DB
@@ -774,6 +795,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     fatalError()
                 }
                 cell.delegate = self
+                cell.bind(with: self.vm)
                 
                 return cell
                 
@@ -781,12 +803,18 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryDetailCollectionViewCell.identifier, for: indexPath) as? MissionHistoryDetailCollectionViewCell else {
                     fatalError()
                 }
-               
-                let data = self.vm.selectedDateMissionInfo[indexPath.item]
                 
-                cell.configure(title: data?.title ?? "no-title")
-                
-                return cell
+                if self.vm.mission.isDateSelected {
+                    let data = self.vm.mission.selectedDateMissions[indexPath.item]
+                    cell.configure(title: data.missionContentTitle ?? "no-title")
+                    
+                    return cell
+                } else {
+                    let data = self.vm.mission.participatedMissions[indexPath.item]
+                    cell.configure(title: data.missionContentTitle ?? "no-title")
+                    
+                    return cell
+                }
                 
             default:
                 return UICollectionViewCell()
@@ -795,7 +823,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventCollectionViewCell.identifier, for: indexPath) as? EventCollectionViewCell else {
                 fatalError()
             }
-            cell.configure(with: self.vm.eventMissions[indexPath.item])
+            cell.configure(with: self.vm.event.eventMissions[indexPath.item])
             
             return cell
         }
@@ -825,7 +853,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if self.screenToShow == 0 {
             switch indexPath.section {
             case 1:
-                if let missionType = self.vm.savedMissionType {
+                if let missionType = self.vm.mission.savedMissionType {
                     let vm = DailyRoutineMissionDetailViewViewModel(missionType: missionType)
                     let vc = DailyRoutineMissionDetailViewController(vm: vm)
 
@@ -846,7 +874,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             }
         } else {
             // Temp: 해당 화면 보여주기
-            let mission = self.vm.eventMissions[indexPath.item]
+            let mission = self.vm.event.eventMissions[indexPath.item]
             let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
             
             switch type {
@@ -877,35 +905,6 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             default:
                 break
             }
-
-//            Task {
-//                let mission = self.vm.eventMissions[indexPath.item]
-//                let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
-//
-//                var selectedIndex: Int?
-//                var comment: String?
-//
-//                switch type {
-//                case .governanceElection:
-//                    selectedIndex = 1 // NOTE: DEMO
-//                case .commentCount:
-//                    comment = "Demo comment입니다." // NOTE: DEMO
-//                default:
-//                   break
-//                }
-//                do {
-//                    try await FirestoreManager.shared.saveParticipatedEventMission(
-//                        type: type,
-//                        eventId: mission.missionId,
-//                        selectedIndex: selectedIndex,
-//                        comment: comment,
-//                        point: mission.missionRewardPoint
-//                    )
-//                }
-//                catch {
-//                    print("Error saving participated event -- \(error)")
-//                }
-//            }
 
         }
     }
@@ -966,13 +965,13 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
 
 extension MyPageViewController: MissionHistoryButtonCollectionViewCellDelegate {
     func showMissionButtonDidTap(isOpened: Bool) {
-        self.vm.isHistorySectionOpened = isOpened
+        self.vm.mission.isHistorySectionOpened = isOpened
     }
 }
 
 extension MyPageViewController: MissionHistoryCalendarCollectionViewCellDelegate {
     func dateSelected(_ date: Date) {
-        self.vm.dateSelected.send(date)
+        self.vm.mission.dateSelected.send(date)
     }
 }
 

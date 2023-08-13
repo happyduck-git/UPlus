@@ -136,7 +136,7 @@ extension RoutineSelectBottomSheetViewController {
                 .receive(on: DispatchQueue.main)
                 .sink {[weak self] _ in
                     guard let `self` = self else { return }
-                    self.vm.topButton.toggle()
+                    self.vm.bottomView.topButton.toggle()
                     self.topButton.layer.borderColor = UPlusColor.greenMint.cgColor
                     self.midButton.layer.borderColor = UIColor.systemGray.cgColor
                     self.bottomButton.layer.borderColor = UIColor.systemGray.cgColor
@@ -147,7 +147,7 @@ extension RoutineSelectBottomSheetViewController {
                 .receive(on: DispatchQueue.main)
                 .sink {[weak self] _ in
                     guard let `self` = self else { return }
-                    self.vm.midButton.toggle()
+                    self.vm.bottomView.midButton.toggle()
                     self.topButton.layer.borderColor = UIColor.systemGray.cgColor
                     self.midButton.layer.borderColor = UPlusColor.greenMint.cgColor
                     self.bottomButton.layer.borderColor = UIColor.systemGray.cgColor
@@ -158,7 +158,7 @@ extension RoutineSelectBottomSheetViewController {
                 .receive(on: DispatchQueue.main)
                 .sink {[weak self] _ in
                     guard let `self` = self else { return }
-                    self.vm.bottomButton.toggle()
+                    self.vm.bottomView.bottomButton.toggle()
                     self.topButton.layer.borderColor = UIColor.systemGray.cgColor
                     self.midButton.layer.borderColor = UIColor.systemGray.cgColor
                     self.bottomButton.layer.borderColor = UPlusColor.greenMint.cgColor
@@ -169,7 +169,7 @@ extension RoutineSelectBottomSheetViewController {
                 .receive(on: DispatchQueue.global())
                 .sink { [weak self] _ in
                     guard let `self` = self,
-                          let selectedMission = self.vm.selectedMission
+                          let selectedMission = self.vm.bottomView.selectedMission
                     else { return }
                     
                     Task {
@@ -182,42 +182,42 @@ extension RoutineSelectBottomSheetViewController {
                 .store(in: &bindings)
         }
         func bindViewModelToView() {
-            let keys = Array(self.vm.dailyMissions.keys)
+            let keys = Array(self.vm.mission.dailyMissions.keys)
     
-            self.vm.$topButton
+            self.vm.bottomView.$topButton
                 .receive(on: DispatchQueue.main)
                 .removeDuplicates()
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     if $0 {
-                        self.vm.midButton = !$0
-                        self.vm.bottomButton = !$0
-                        self.vm.selectedMission = MissionType(rawValue: keys[0].replacingOccurrences(of: "__mission_set", with: ""))
+                        self.vm.bottomView.midButton = !$0
+                        self.vm.bottomView.bottomButton = !$0
+                        self.vm.bottomView.selectedMission = MissionType(rawValue: keys[0].replacingOccurrences(of: "__mission_set", with: ""))
                     }
                 }
                 .store(in: &bindings)
             
-            self.vm.$midButton
+            self.vm.bottomView.$midButton
                 .receive(on: DispatchQueue.main)
                 .removeDuplicates()
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     if $0 {
-                        self.vm.topButton = !$0
-                        self.vm.bottomButton = !$0
-                        self.vm.selectedMission = MissionType(rawValue: keys[1].replacingOccurrences(of: "__mission_set", with: ""))
+                        self.vm.bottomView.topButton = !$0
+                        self.vm.bottomView.bottomButton = !$0
+                        self.vm.bottomView.selectedMission = MissionType(rawValue: keys[1].replacingOccurrences(of: "__mission_set", with: ""))
                     }
                 }
                 .store(in: &bindings)
             
-            self.vm.$bottomButton
+            self.vm.bottomView.$bottomButton
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     if $0 {
-                        self.vm.topButton = !$0
-                        self.vm.midButton = !$0
-                        self.vm.selectedMission = MissionType(rawValue: keys[2].replacingOccurrences(of: "__mission_set", with: ""))
+                        self.vm.bottomView.topButton = !$0
+                        self.vm.bottomView.midButton = !$0
+                        self.vm.bottomView.selectedMission = MissionType(rawValue: keys[2].replacingOccurrences(of: "__mission_set", with: ""))
                     }
                 }
                 .store(in: &bindings)
@@ -240,7 +240,7 @@ extension RoutineSelectBottomSheetViewController {
 // MARK: - Set UI & Layout
 extension RoutineSelectBottomSheetViewController {
     func configure() {
-        let keys = Array(self.vm.dailyMissions.keys)
+        let keys = Array(self.vm.mission.dailyMissions.keys)
         self.topButton.setTitle(keys[0], for: .normal)
         self.midButton.setTitle(keys[1], for: .normal)
         self.bottomButton.setTitle(keys[2], for: .normal)

@@ -312,12 +312,38 @@ extension FirestoreManager {
 
 //MARK: - Get Users Point
 extension FirestoreManager {
+    
+    func getTodayPointHistory() async throws -> [PointHistory] {
 
-    func getTodayPointHistoryPoint() async throws -> [PointHistory] {
+        let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
+            .whereField(FirestoreConstants.userPointTime, isEqualTo: Date().yearMonthDateFormat)
+            .order(by: FirestoreConstants.userPointCount, descending: true)
+            .getDocuments()
+            .documents
+        
+        var points: [PointHistory] = []
+        
+        for doc in documents {
+            var point = try doc.data(as: PointHistory.self, decoder: self.decoder)
+            point.userIndex = doc.reference.parent.parent?.documentID
+            points.append(point)
+        }
+        
+        return points
+        
+    }
+    
+    func getYesterdayPointHistory() async throws -> [PointHistory] {
+        
+        let today = Date()
+        let calendar = Calendar.current
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
+            return []
+        }
         
         let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
-//            .whereField("user_point_time", isEqualTo: today.yearMonthDateFormat)
-            .order(by: "user_point_count", descending: true)
+            .whereField(FirestoreConstants.userPointTime, isEqualTo: yesterday.yearMonthDateFormat)
+            .order(by: FirestoreConstants.userPointCount, descending: true)
             .getDocuments()
             .documents
         
@@ -332,43 +358,27 @@ extension FirestoreManager {
         return points
     }
     
-    // NOTE: Time consuming call... NOT IN USE.
-    func getAllUserTodayPoint() async throws -> [UPlusUser] {
-        let start = CFAbsoluteTimeGetCurrent()
-        
-        let today = Date()
+}
+
+//MARK: - Get Users Point
+extension FirestoreManager {
+
+    func getAllPointHistory() async throws -> [PointHistory] {
         
         let documents = try await self.db.collectionGroup(FirestoreConstants.userPointHistory)
-            .whereField("user_point_time", isEqualTo: today.yearMonthDateWithDashFormat)
-            .order(by: "user_point_count", descending: true)
+            .order(by: FirestoreConstants.userPointCount, descending: true)
             .getDocuments()
             .documents
         
-        var users: [UPlusUser] = []
+        var points: [PointHistory] = []
 
         for doc in documents {
-            
-            let point = try doc.data(as: PointHistory.self, decoder: self.decoder)
-            
-            guard let documentId = doc.reference.parent.parent?.documentID else {
-                continue
-            }
-            
-            do {
-                var user = try await self.getSingleUser(documentId)
-                user.userPointHistory = [point]
-                users.append(user)
-            }
-            catch {
-                print("Error fetching single user -- \(error)")
-            }
-         
+            var point = try doc.data(as: PointHistory.self, decoder: self.decoder)
+            point.userIndex = doc.reference.parent.parent?.documentID
+            points.append(point)
         }
-        
-        let end = CFAbsoluteTimeGetCurrent()
-        print("Time consumed: \(end - start) sec")
-        print("Today point 개수: \(documents.count)")
-        return users
+
+        return points
     }
     
     private func getSingleUser(_ userIndex: String) async throws -> UPlusUser {
@@ -382,12 +392,11 @@ extension FirestoreManager {
         return try document.data(as: UPlusUser.self, decoder: self.decoder)
     }
         
-    
     func getAllUserTotalPoint() async throws -> [UPlusUser] {
         let documents = try await self.threadsSetCollectionPath2
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
-            .order(by: "user_total_point", descending: true)
+            .order(by: FirestoreConstants.userTotalPoint, descending: true)
             .getDocuments()
             .documents
      
@@ -470,20 +479,17 @@ extension FirestoreManager {
         return missions
     }
     
-    func convertToMission(doc: DocumentReference) async throws -> (type: MissionTopicType, title: String, point: Int64)? {
+    func convertToMission(doc: DocumentReference) async throws -> (any Mission)? {
         let doc = try await doc.getDocument()
-        let data = doc.data()
-        let type = data?[FirestoreConstants.missionTopicType] as? String ?? "n/a"
+        let type = doc.data()?[FirestoreConstants.missionTopicType] as? String ?? "n/a"
         let topicType = MissionTopicType(rawValue: type) ?? .eventMission
         
         switch topicType {
-        case .dailyExp, .weeklyQuiz:
+        case .dailyExp:
+            return try doc.data(as: RoutineMission.self, decoder: self.decoder)
+        case .weeklyQuiz:
+            return try doc.data(as: MissionModel.self, decoder: self.decoder)
             
-            let title = data?[FirestoreConstants.missionContentTitle] as? String ?? "미션 제목이 없습니다."
-            let point = data?[FirestoreConstants.missionRewardPoint] as? Int64 ?? 0
-            
-            return (topicType, title, point)
-      
         default:
             return nil
         }
@@ -575,7 +581,10 @@ extension FirestoreManager {
         return data?[FirestoreConstants.missionTimelineMap] as? [String: [Timestamp]] ?? [:]
     }
     
-    func getAllParticipatedMissionHistory(user: UPlusUser) async throws -> [String: PointHistory] {
+    /// Fetch all the mission hitory that the user has participated.
+    /// - Parameter user: User.
+    /// - Returns: An array of PointHistory.
+    func getAllParticipatedMissionHistory(user: UPlusUser) async throws -> [PointHistory] {
         
         let docs = try await threadsSetCollectionPath2
             .document(FirestoreConstants.users)
@@ -585,14 +594,16 @@ extension FirestoreManager {
             .getDocuments()
             .documents
         
-        var history: [String: PointHistory] = [:]
+        var history: [PointHistory] = []
+
         for doc in docs {
-            history[doc.documentID] = try doc.data(as: PointHistory.self, decoder: self.decoder)
+            var data = try doc.data(as: PointHistory.self, decoder: self.decoder)
+            history.append(data)
         }
         
         return history
     }
-    
+ 
 }
 
 /* uplus_missions_v3 - Setters(Mission) */

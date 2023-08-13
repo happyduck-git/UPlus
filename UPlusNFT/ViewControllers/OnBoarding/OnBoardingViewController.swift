@@ -157,9 +157,7 @@ extension OnBoardingViewController {
                 let loginVC = LoginViewController(vm: loginVM)
                 
                 let vm = MyPageViewViewModel(user: userInfo,
-                                             isJustRegistered: false,
-                                             isVip: userInfo.userHasVipNft,
-                                             todayRank: UPlusServiceInfoConstant.totalMembers)
+                                             memberShip: (false, userInfo.userHasVipNft))
                 let myPageVC = MyPageViewController(vm: vm)
   
                 self.navigationController?.pushViewController(loginVC, animated: false)
