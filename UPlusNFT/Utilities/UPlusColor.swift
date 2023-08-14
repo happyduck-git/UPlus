@@ -24,7 +24,7 @@ struct UPlusColor {
     static let gradientLightBlue = UIColor(hex: 0xA5C7FA)
     static let gradientMediumBlue = UIColor(hex: 0x92F4EE)
     static let mint = UIColor(hex: 0x48DED5)
-    static let blue = UIColor(hex: 0x699BF7)
+    
     static let deepBlue = UIColor(hex: 0x759FDE)
     static let myPageTopBarBlue = UIColor(hex: 0xB8EDF6)
     static let grayMint = UIColor(hex: 0xC5D9DB)
@@ -42,4 +42,32 @@ struct UPlusColor {
     static let lightGreen2 = UIColor(hex: 0x27A79F)
     static let green = UIColor(hex: 0x2F9A94)
     static let deepGreen = UIColor(hex: 0x337C79)
+    
+    static let mint01 = UIColor(hex: 0xBFF4FF)
+    static let mint02 = UIColor(hex: 0x97F3F3)
+    static let mint03 = UIColor(hex: 0x59E3E3)
+    static let mint04 = UIColor(hex: 0x00A4AE)
+    static let mint05 = UIColor(hex: 0x066268)
+    
+    static let blue01 = UIColor(hex: 0xDCE8FF)
+    static let blue02 = UIColor(hex: 0xA8CBFF)
+    static let blue03 = UIColor(hex: 0x699BF7)
+    static let blue04 = UIColor(hex: 0x192D47)
+    
+    static let yellow01 = UIColor(hex: 0xFFC700)
+    static let orange01 = UIColor(hex: 0xFF612F)
+    static let orange02 = UIColor(hex: 0xFFE8E1)
+    
+    static let gray01 = UIColor(hex: 0xF1F3F5)
+    static let gray02 = UIColor(hex: 0xE4E7EA)
+    static let gray03 = UIColor(hex: 0xD6DCE2)
+    static let gray04 = UIColor(hex: 0xB3BDC9)
+    static let gray05 = UIColor(hex: 0x8A939D)
+    static let gray06 = UIColor(hex: 0x505B6A)
+    static let gray07 = UIColor(hex: 0x333D4B)
+    static let gray08 = UIColor(hex: 0x222529)
+    static let gray09 = UIColor(hex: 0x141415)
+    
+    static let gradient09deep = UIColor(hex: 0xA8CBFF)
+    static let gradient09light = UIColor(hex: 0xBFF4FF)
 }

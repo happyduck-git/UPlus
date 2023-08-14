@@ -29,7 +29,7 @@ final class MyPageProfileCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "username"
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.main, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

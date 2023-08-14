@@ -10,13 +10,6 @@ import FirebaseFirestore
 import Combine
 
 final class MyPageViewViewModel {
-    
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(abbreviation: "UTC")
-        formatter.dateFormat = "yyyyMMdd"
-        return formatter
-    }()
 
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
@@ -32,7 +25,9 @@ final class MyPageViewViewModel {
     }
     
     enum MyPageViewEventSectionType: CaseIterable {
-        case mission
+        case availableEvent
+        case level0event
+        case otherLevelEvent
     }
     
     let missionSections: [MyPageViewMissionSectionType] = MyPageViewMissionSectionType.allCases
@@ -91,7 +86,41 @@ final class MyPageViewViewModel {
     }
     
     class MyPageEvent {
-        @Published var eventMissions: [any Mission] = []
+        @Published var eventMissions: [any Mission] = [] {
+            didSet {
+                var dic: [Int64: [any Mission]] = [:]
+                for mission in eventMissions {
+                    if var array = dic[mission.missionPermitAvatarLevel] {
+                          // Key exists, append string to its array
+                          array.append(mission)
+                        dic[mission.missionPermitAvatarLevel] = array
+                      } else {
+                          // Key doesn't exist, create new key-value pair
+                          dic[mission.missionPermitAvatarLevel] = [mission]
+                      }
+                }
+                self.missionPerLevel = dic
+            }
+        }
+        
+        @Published var missionPerLevel: [Int64: [any Mission]] = [:] {
+            didSet {
+                self.level0Mission = missionPerLevel[0] ?? []
+                self.level1Mission = missionPerLevel[1] ?? []
+                self.level2Mission = missionPerLevel[2] ?? []
+                self.level3Mission = missionPerLevel[3] ?? []
+                self.level4Mission = missionPerLevel[4] ?? []
+                self.level5Mission = missionPerLevel[5] ?? []
+            }
+        }
+        
+        var level0Mission: [any Mission] = []
+        var level1Mission: [any Mission] = []
+        var level2Mission: [any Mission] = []
+        var level3Mission: [any Mission] = []
+        var level4Mission: [any Mission] = []
+        var level5Mission: [any Mission] = []
+        
     }
     
     class MissionSelectBottomView {
@@ -213,13 +242,14 @@ extension MyPageViewViewModel {
         
         let token = await self.getTopLevelNftToken() ?? "no-url"
         let nftUrl = await self.firestoreManager.getNftUrl(tokenId: token)
+        let level = self.getUserLevel()
         
         self.userProfileViewModel = UserProfileViewViewModel(
             profileImage: nftUrl,
             username: self.user.userNickname,
             points: self.user.userTotalPoint ?? 0,
             maxPoints: 15,
-            level: 1,
+            level: level,
             timeLeft: 12
         )
         
@@ -274,8 +304,11 @@ extension MyPageViewViewModel {
     
     private func getTopLevelNftToken() async -> String? {
         let tokens = await self.updateUserOwnedNft()
-        guard let topNft = tokens.last else { return nil }
+        guard let topNft = tokens.last,
+              let tokenNum = Int64(topNft)
+        else { return nil }
         
+        self.saveUserLevel(highestToken: tokenNum)
         return topNft
     }
     
@@ -355,7 +388,7 @@ extension MyPageViewViewModel {
          
     }
 }
-//MARK: - Save Data to FireStore
+//MARK: - Save Data to UserDefaults
 extension MyPageViewViewModel {
     func saveUserToUserDefaults() {
         Task {
@@ -368,6 +401,16 @@ extension MyPageViewViewModel {
             }
         }
     }
+    
+    private func saveUserLevel(highestToken: Int64) {
+        let level = NftLevel.level(forPoints: highestToken)
+        UserDefaults.standard.set(level, forKey: UserDefaultsConstants.level)
+    }
+    
+    func getUserLevel() -> Int64 {
+        return Int64(UserDefaults.standard.integer(forKey: UserDefaultsConstants.level))
+    }
+    
 }
 
 //MARK: - Utilities

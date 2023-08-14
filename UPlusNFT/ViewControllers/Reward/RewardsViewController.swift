@@ -26,6 +26,15 @@ final class RewardsViewController: UIViewController {
         return label
     }()
     
+    private let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.register(<#T##nib: UINib?##UINib?#>, forCellWithReuseIdentifier: <#T##String#>)
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        return collection
+    }()
+    
     // MARK: - Init
     init(vm: RewardsViewViewModel) {
         self.vm = vm
@@ -45,8 +54,6 @@ final class RewardsViewController: UIViewController {
         self.setUI()
         self.setLayout()
         self.bind()
-        
-        self.vm.getRewardsOwned(by: "0")
     }
 
 }

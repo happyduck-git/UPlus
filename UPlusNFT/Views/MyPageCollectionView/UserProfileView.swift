@@ -31,7 +31,7 @@ final class UserProfileView: PassThroughView {
         let label = UILabel()
         label.text = " "
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.main, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -125,7 +125,7 @@ extension UserProfileView {
     
     private func setGradientLayer() {
         gradientLayer.frame = self.bounds
-        gradientLayer.colors = [UPlusColor.gradientMediumBlue.cgColor, UPlusColor.gradientLightBlue.cgColor]
+        gradientLayer.colors = [UPlusColor.gradient09light.cgColor, UPlusColor.gradient09deep.cgColor]
     }
     
     private func setUI() {

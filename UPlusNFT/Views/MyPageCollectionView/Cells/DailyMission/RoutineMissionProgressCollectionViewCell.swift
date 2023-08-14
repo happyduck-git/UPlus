@@ -25,7 +25,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     
     private let pointLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UPlusColor.blue
+        label.textColor = UPlusColor.blue02
         label.textAlignment = .center
         label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false

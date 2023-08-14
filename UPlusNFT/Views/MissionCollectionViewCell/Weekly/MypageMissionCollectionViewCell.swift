@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
+final class MypageMissionCollectionViewCell: UICollectionViewCell {
     
     enum WeeklyCellType {
         case open
@@ -74,7 +74,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: - Configure with View Model
-extension WeeklyMissionCollectionViewCell {
+extension MypageMissionCollectionViewCell {
     func configure(type: WeeklyCellType,
                    title: String,
                    period: String,
@@ -97,7 +97,7 @@ extension WeeklyMissionCollectionViewCell {
 }
 
 // MARK: - Set UI & Layout
-extension WeeklyMissionCollectionViewCell {
+extension MypageMissionCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.titleStack)
         self.titleStack.addArrangedSubviews(self.missionTitle,

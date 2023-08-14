@@ -138,7 +138,9 @@
 		9391948F2A80A24E0035FEB1 /* WalletCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */; };
 		939194912A80C2720035FEB1 /* RoutineMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194902A80C2720035FEB1 /* RoutineMission.swift */; };
 		939194982A80ED920035FEB1 /* EditUserInfoViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */; };
-		939194A02A820C3B0035FEB1 /* EventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391949F2A820C3B0035FEB1 /* EventCollectionViewCell.swift */; };
+		939194A02A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391949F2A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift */; };
+		939194EC2A89CAAC0035FEB1 /* NftLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194EB2A89CAAC0035FEB1 /* NftLevel.swift */; };
+		939194EE2A89F1750035FEB1 /* UPlusLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194ED2A89F1750035FEB1 /* UPlusLevel.swift */; };
 		93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */; };
 		93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED802A6A54D900C2287D /* MyPageViewController.swift */; };
 		93A2ED842A6A583200C2287D /* MyPageProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */; };
@@ -169,8 +171,14 @@
 		93D1748E2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1748D2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift */; };
 		93D174902A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1748F2A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift */; };
 		93D174922A7796C100F5B1B1 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174912A7796C100F5B1B1 /* UserProfileView.swift */; };
-		93D174942A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174932A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift */; };
+		93D174942A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174932A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift */; };
 		93D174962A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174952A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift */; };
+		93DA58302A89FCF600525BEC /* WalletDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA582F2A89FCF600525BEC /* WalletDetailCollectionViewCell.swift */; };
+		93DA58342A8A07DC00525BEC /* WalletDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58332A8A07DC00525BEC /* WalletDetailViewController.swift */; };
+		93DA58362A8A102600525BEC /* NFTDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58352A8A102600525BEC /* NFTDetailViewController.swift */; };
+		93DA58382A8A18CE00525BEC /* GenerateLottieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58372A8A18CE00525BEC /* GenerateLottieViewController.swift */; };
+		93DA583B2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA583A2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift */; };
+		93DA583E2A8A30C600525BEC /* RankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA583D2A8A30C600525BEC /* RankCollectionViewCell.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013882A6518370005E342 /* SideMenuViewController.swift */; };
@@ -324,7 +332,9 @@
 		9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCollectionViewCell.swift; sourceTree = "<group>"; };
 		939194902A80C2720035FEB1 /* RoutineMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMission.swift; sourceTree = "<group>"; };
 		939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewViewModel.swift; sourceTree = "<group>"; };
-		9391949F2A820C3B0035FEB1 /* EventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCollectionViewCell.swift; sourceTree = "<group>"; };
+		9391949F2A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MypageEventCollectionViewCell.swift; sourceTree = "<group>"; };
+		939194EB2A89CAAC0035FEB1 /* NftLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLevel.swift; sourceTree = "<group>"; };
+		939194ED2A89F1750035FEB1 /* UPlusLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UPlusLevel.swift; sourceTree = "<group>"; };
 		93A2ED7E2A6A435900C2287D /* SideMenuViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewViewModel.swift; sourceTree = "<group>"; };
 		93A2ED802A6A54D900C2287D /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -354,8 +364,14 @@
 		93D1748D2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCompleteViewController.swift; sourceTree = "<group>"; };
 		93D1748F2A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionAndEventCollectionViewHeader.swift; sourceTree = "<group>"; };
 		93D174912A7796C100F5B1B1 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
-		93D174932A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionCollectionViewCell.swift; sourceTree = "<group>"; };
+		93D174932A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MypageMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93D174952A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionSelectCollectionViewCell.swift; sourceTree = "<group>"; };
+		93DA582F2A89FCF600525BEC /* WalletDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		93DA58332A8A07DC00525BEC /* WalletDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDetailViewController.swift; sourceTree = "<group>"; };
+		93DA58352A8A102600525BEC /* NFTDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTDetailViewController.swift; sourceTree = "<group>"; };
+		93DA58372A8A18CE00525BEC /* GenerateLottieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateLottieViewController.swift; sourceTree = "<group>"; };
+		93DA583A2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAddressBottomSheetViewController.swift; sourceTree = "<group>"; };
+		93DA583D2A8A30C600525BEC /* RankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013882A6518370005E342 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -567,6 +583,7 @@
 				247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */,
 				247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */,
 				247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */,
+				93DA583A2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -719,6 +736,8 @@
 			isa = PBXGroup;
 			children = (
 				930D96C52A41835B0007801A /* Constants.swift */,
+				939194EB2A89CAAC0035FEB1 /* NftLevel.swift */,
+				939194ED2A89F1750035FEB1 /* UPlusLevel.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -869,6 +888,7 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				93DA583C2A8A301400525BEC /* RewardView */,
 				9391948D2A80A22A0035FEB1 /* WalletCollectionViewCell */,
 				93A2ED982A6E1C8B00C2287D /* RankingView */,
 				93A2ED822A6A580300C2287D /* MyPageCollectionView */,
@@ -918,6 +938,9 @@
 			children = (
 				939194812A7CDEA30035FEB1 /* WalletViewController.swift */,
 				939194832A7CDF870035FEB1 /* WalletViewViewModel.swift */,
+				93DA58332A8A07DC00525BEC /* WalletDetailViewController.swift */,
+				93DA58352A8A102600525BEC /* NFTDetailViewController.swift */,
+				93DA58372A8A18CE00525BEC /* GenerateLottieViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -926,6 +949,7 @@
 			isa = PBXGroup;
 			children = (
 				9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */,
+				93DA582F2A89FCF600525BEC /* WalletDetailCollectionViewCell.swift */,
 			);
 			path = WalletCollectionViewCell;
 			sourceTree = "<group>";
@@ -967,7 +991,7 @@
 		9391949E2A820C1B0035FEB1 /* Event */ = {
 			isa = PBXGroup;
 			children = (
-				9391949F2A820C3B0035FEB1 /* EventCollectionViewCell.swift */,
+				9391949F2A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -1054,7 +1078,7 @@
 			isa = PBXGroup;
 			children = (
 				93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */,
-				93D174932A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift */,
+				93D174932A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift */,
 			);
 			path = Weekly;
 			sourceTree = "<group>";
@@ -1069,6 +1093,14 @@
 				93D1748B2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift */,
 			);
 			path = Daily;
+			sourceTree = "<group>";
+		};
+		93DA583C2A8A301400525BEC /* RewardView */ = {
+			isa = PBXGroup;
+			children = (
+				93DA583D2A8A30C600525BEC /* RankCollectionViewCell.swift */,
+			);
+			path = RewardView;
 			sourceTree = "<group>";
 		};
 		93E013812A6507B50005E342 /* Mission */ = {
@@ -1234,6 +1266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93DA58382A8A18CE00525BEC /* GenerateLottieViewController.swift in Sources */,
 				939194722A7B22360035FEB1 /* DailyRankView.swift in Sources */,
 				932C34CB2A5254A70032192A /* Date+Extention.swift in Sources */,
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
@@ -1270,6 +1303,7 @@
 				93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */,
 				2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */,
 				2402695E2A8480EA00850E65 /* MissionHistoryDetailCollectionViewCell.swift in Sources */,
+				939194EC2A89CAAC0035FEB1 /* NftLevel.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				9391947F2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift in Sources */,
 				24A254702A853F9B0034534A /* UPlusColor.swift in Sources */,
@@ -1308,7 +1342,7 @@
 				936F882F2A4D0DA20062E759 /* WritePostViewViewModel.swift in Sources */,
 				249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */,
 				939194782A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift in Sources */,
-				939194A02A820C3B0035FEB1 /* EventCollectionViewCell.swift in Sources */,
+				939194A02A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift in Sources */,
 				939194702A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift in Sources */,
 				240269682A84D90C00850E65 /* LuniverseNftListResponse.swift in Sources */,
 				24DB21812A77F54C00AE0174 /* PassThroughView.swift in Sources */,
@@ -1344,6 +1378,7 @@
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
 				93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */,
 				24542D512A70AC0800F82CEA /* ChoiceQuizMission.swift in Sources */,
+				93DA58362A8A102600525BEC /* NFTDetailViewController.swift in Sources */,
 				24A254752A854D5A0034534A /* EnvironmentConfig.swift in Sources */,
 				2402695A2A846BF700850E65 /* AnswerQuizPluralViewViewModel.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
@@ -1353,9 +1388,11 @@
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
 				9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */,
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
+				93DA58302A89FCF600525BEC /* WalletDetailCollectionViewCell.swift in Sources */,
 				24A254722A853FA80034534A /* UPlusFont.swift in Sources */,
 				240269632A84D1AD00850E65 /* NetworkServiceManager.swift in Sources */,
 				932C34E62A5D14B30032192A /* RecommentTextInputCollectionViewCell.swift in Sources */,
+				93DA58342A8A07DC00525BEC /* WalletDetailViewController.swift in Sources */,
 				932C34D82A53F5330032192A /* UIControl+Combine.swift in Sources */,
 				9391947D2A7CB7B70035FEB1 /* UPlusNft.swift in Sources */,
 				9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */,
@@ -1373,6 +1410,7 @@
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
 				247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
+				939194EE2A89F1750035FEB1 /* UPlusLevel.swift in Sources */,
 				932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */,
 				939194762A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift in Sources */,
 				244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */,
@@ -1381,12 +1419,13 @@
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				932C34E42A5BCE700032192A /* CampaignCommentDefaultView.swift in Sources */,
 				93D1748E2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift in Sources */,
-				93D174942A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift in Sources */,
+				93D174942A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift in Sources */,
 				240269322A83B23E00850E65 /* FirebaseStorageManager.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
 				939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */,
+				93DA583B2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift in Sources */,
 				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
 				24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */,
 				93D174962A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift in Sources */,
@@ -1397,6 +1436,7 @@
 				93A2ED932A6E0EA200C2287D /* RankingViewController.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				240269442A83C37B00850E65 /* CommentCountMissionViewViewModel.swift in Sources */,
+				93DA583E2A8A30C600525BEC /* RankCollectionViewCell.swift in Sources */,
 				247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */,
 				93E013B22A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift in Sources */,
 				240269302A83B21500850E65 /* ContentReadOnlyMissionViewController.swift in Sources */,

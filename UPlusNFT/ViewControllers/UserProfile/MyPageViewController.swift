@@ -37,7 +37,7 @@ final class MyPageViewController: UIViewController {
     
     private let containerView: PassThroughView = {
         let view = PassThroughView()
-        view.backgroundColor = UPlusColor.gradientMediumBlue
+        view.backgroundColor = UPlusColor.gradient09light
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -225,6 +225,12 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
                 
+            self.vm.event.$missionPerLevel
+                .receive(on: DispatchQueue.main)
+                .sink {
+                    print("Per level: \($0[0]?.count ?? 999)")
+                }
+                .store(in: &bindings)
             
             self.vm.mission.$isHistorySectionOpened
                 .receive(on: DispatchQueue.main)
@@ -451,8 +457,8 @@ extension MyPageViewController {
         )
         
         collectionView.register(
-            WeeklyMissionCollectionViewCell.self,
-            forCellWithReuseIdentifier: WeeklyMissionCollectionViewCell.identifier
+            MypageMissionCollectionViewCell.self,
+            forCellWithReuseIdentifier: MypageMissionCollectionViewCell.identifier
         )
         
         collectionView.register(
@@ -472,8 +478,8 @@ extension MyPageViewController {
         
         // Event Cell
         collectionView.register(
-            EventCollectionViewCell.self,
-            forCellWithReuseIdentifier: EventCollectionViewCell.identifier
+            MypageEventCollectionViewCell.self,
+            forCellWithReuseIdentifier: MypageEventCollectionViewCell.identifier
         )
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -517,6 +523,7 @@ extension MyPageViewController {
             ),
             subitems: [item]
         )
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
         
@@ -750,7 +757,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 // Weekly mission
             case 2:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageMissionCollectionViewCell.identifier, for: indexPath) as? MypageMissionCollectionViewCell else {
                     fatalError()
                 }
                 cell.resetCell()
@@ -820,10 +827,29 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return UICollectionViewCell()
             }
         } else {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventCollectionViewCell.identifier, for: indexPath) as? EventCollectionViewCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageEventCollectionViewCell.identifier, for: indexPath) as? MypageEventCollectionViewCell else {
                 fatalError()
             }
-            cell.configure(with: self.vm.event.eventMissions[indexPath.item])
+            cell.resetCell()
+            
+            let mission = self.vm.event.eventMissions[indexPath.item]
+
+            let participatedUsers = mission.missionUserStateMap ?? [:]
+            if participatedUsers.contains(where: { (key, _) in
+                key == String(describing: self.vm.user.userIndex)
+            }) { // 참여한 경우
+                cell.configure(type: .participated,
+                               mission: mission)
+                
+            } else { // 참여하지 않은 경우
+                if self.vm.getUserLevel() < mission.missionPermitAvatarLevel {
+                    cell.configure(type: .close,
+                                   mission: mission)
+                } else {
+                    cell.configure(type: .open,
+                                   mission: mission)
+                }
+            }
             
             return cell
         }

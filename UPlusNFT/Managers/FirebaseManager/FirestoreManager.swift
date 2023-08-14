@@ -953,7 +953,7 @@ extension FirestoreManager {
             
             batch.setData(
                 [
-                    FirestoreConstants.governanceElectionUserMap: [String(describing: selectedIndex): userDocRef]
+                    FirestoreConstants.governanceElectionUserMap: [String(describing: selectedIndex): FieldValue.arrayUnion([userDocRef])]
                 ],
                 forDocument: eventDocPath,
                 merge: true
@@ -1305,7 +1305,7 @@ extension FirestoreManager {
     }
     
     // MARK: - Get Rewards
-    func getRewardsOwned(by ownerIndex: String) async throws -> [Reward] {
+    func getRewardsOwned(by ownerIndex: Int64) async throws -> [Reward] {
         let documents = try await threadsSetCollectionPath2
             .document(FirestoreConstants.rewards)
             .collection(FirestoreConstants.rewardSetCollection)
@@ -1313,11 +1313,8 @@ extension FirestoreManager {
             .getDocuments()
             .documents
         
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
         let rewards = try documents.map { doc in
-            try doc.data(as: Reward.self, decoder: decoder)
+            try doc.data(as: Reward.self, decoder: self.decoder)
         }
 
         return rewards

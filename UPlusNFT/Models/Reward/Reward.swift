@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Reward: Codable, Hashable {
      let rewardIndex: Int64 // 다큐먼트의 ID와 동일
      let rewardType: String
      let rewardName: String?
      let rewardImagePath: String?
-//     let rewardUser: String? // NOT IN USE: 보상 아이템을 획득한 사용자의 다큐먼트
+     let rewardUser: [DocumentReference]?
 }

@@ -16,14 +16,5 @@ final class RewardsViewViewModel {
 }
 
 extension RewardsViewViewModel {
-    func getRewardsOwned(by ownerIndex: String) {
-        Task {
-            do {
-                self.rewards = try await self.firestoreManager.getRewardsOwned(by: ownerIndex)
-            }
-            catch {
-                print("Error fetching rewards -- \(error)")
-            }
-        }
-    }
+
 }

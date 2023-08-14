@@ -1,22 +1,28 @@
 //
-//  WalletCollectionViewCell.swift
+//  WalletDetailCollectionViewCell.swift
 //  UPlusNFT
 //
-//  Created by Platfarm on 2023/08/07.
+//  Created by Platfarm on 2023/08/14.
 //
 
 import UIKit
 import Nuke
 
-final class WalletCollectionViewCell: UICollectionViewCell {
-    
-    private var nftImageViewHeight: NSLayoutConstraint?
+final class WalletDetailCollectionViewCell: UICollectionViewCell {
     
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    
+    private let nftType: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.gray05
+         label.textAlignment = .center
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+     }()
     
     private let nftTitle: UILabel = {
        let label = UILabel()
@@ -25,14 +31,6 @@ final class WalletCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    private let levelLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UPlusColor.gray05
-         label.textAlignment = .center
-         label.translatesAutoresizingMaskIntoConstraints = false
-         return label
-     }()
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -53,13 +51,10 @@ final class WalletCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.nftImageViewHeight = self.nftImageView.heightAnchor.constraint(equalToConstant: self.contentView.frame.height / 1.5)
-        self.nftImageViewHeight?.isActive = true
     }
 }
-
 // MARK: - Configure
-extension WalletCollectionViewCell {
+extension WalletDetailCollectionViewCell {
     func configure(with data: UPlusNft) {
         Task {
             do {
@@ -70,23 +65,19 @@ extension WalletCollectionViewCell {
             catch {
                 print("Error fetching nft image -- \(error)")
             }
+            print("Type: \(data.nftDetailType)")
             self.nftTitle.text = data.nftDetailType
-        
-            let level = NftLevel.level(forPoints: data.nftTokenId)
-            if Range(0...5).contains(level) {
-                self.levelLabel.text = MissionConstants.levelPrefix + String(describing: level)
-            }
-            
+            self.nftType.text = data.nftType
         }
     }
 }
 
 // MARK: - Set UI & Layout
-extension WalletCollectionViewCell {
+extension WalletDetailCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.nftImageView,
                                      self.nftTitle,
-                                     self.levelLabel)
+                                     self.nftType)
     }
     
     private func setLayout() {
@@ -94,15 +85,16 @@ extension WalletCollectionViewCell {
             self.nftImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.nftImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.nftImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.nftImageView.heightAnchor.constraint(equalTo: self.nftImageView.widthAnchor),
             
-            self.nftTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 1),
-            self.nftTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftTitle.trailingAnchor, multiplier: 1),
+            self.nftType.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 1),
+            self.nftType.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftType.trailingAnchor, multiplier: 1),
             
-            self.levelLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.nftTitle.bottomAnchor, multiplier: 1),
-            self.levelLabel.leadingAnchor.constraint(equalTo: self.nftTitle.leadingAnchor),
-            self.levelLabel.trailingAnchor.constraint(equalTo: self.nftTitle.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelLabel.bottomAnchor, multiplier: 1)
+            self.nftTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.nftType.bottomAnchor, multiplier: 1),
+            self.nftTitle.leadingAnchor.constraint(equalTo: self.nftType.leadingAnchor),
+            self.nftTitle.trailingAnchor.constraint(equalTo: self.nftType.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.nftTitle.bottomAnchor, multiplier: 1)
         ])
     }
 }

@@ -9,9 +9,9 @@ import Foundation
 
 struct UPlusFont {
     
-    static let main: CGFloat = 36
+    static let missionTitle: CGFloat = 36
     
-    static let head1: CGFloat = 30
+    static let nickname: CGFloat = 30
     static let head2: CGFloat = 26
     static let head3: CGFloat = 24
     static let head4: CGFloat = 22
@@ -21,5 +21,5 @@ struct UPlusFont {
     static let subTitle1: CGFloat = 16
     static let subTitle2: CGFloat = 14
     static let subTitle3: CGFloat = 12
-    
+
 }

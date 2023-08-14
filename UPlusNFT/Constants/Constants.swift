@@ -18,6 +18,7 @@ struct UserDefaultsConstants {
     static let username: String = "username"
     static let profileImage: String = "profileImage"
     static let noUserFound: String = "no user found"
+    static let level: String = "level"
 }
 
 struct OnBoardingConstants {
@@ -47,7 +48,7 @@ struct SignUpConstants {
     static let register: String = "가입 완료하기"
     static let authenticate: String = "이메일 인증하기"
     static let authCompleted: String = "이메일 인증이 완료되었습니다."
-    static let emailSuffix: String = "@platfarm.net" //"@platfarm.net" //"@gmail.com" //"@uplus.net"
+    static let emailSuffix: String = "@gmail.com" //"@platfarm.net" //"@gmail.com" //"@uplus.net"
     static let deeplinkDomain: String = "https://DEV-LGUplus-NFT-Platfarm.firebaseapp.com"
     static let passwordRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
     static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.2
@@ -105,7 +106,6 @@ struct MyPageConstants {
 
 struct RewardsConstants {
     static let ownedRewards: String = "보유 경품"
-    static let rewardsUnit: String = "개"
 }
 
 struct MissionConstants {
@@ -142,6 +142,24 @@ struct RankingConstants {
 
 struct WalletConstants {
     static let wallet: String = "웰렛"
+    static let myNfts: String = "My NFTs"
+    static let showAll: String = "전체보기"
+    static let rewardsUnit: String = "개"
+    static let walletAddress: String = "내 지갑 주소"
+    static let copy: String = "복사하기"
+    static let warning: String = "주소 공유 시 주의사항 한 줄"
+    static let totalNfts: String = "총 %d개"
+    static let videoGenerateTitle: String = "NFT 이미지 자랑하기"
+    static let owner: String = "소유자"
+    static let idCard: String = "ID Card"
+}
+
+struct LottieConstants {
+    static let description: String = "%@ 님의 NFT를 주변에 자랑하세요!\n모두가 주목할 거예요. 🗝️"
+    static let idCard: String = "ID Card"
+    static let gif: String = "GIF"
+    static let download: String = "다운로드"
+    static let share: String = "공유하기"
 }
 
 struct EditUserInfo {
@@ -203,6 +221,9 @@ struct ImageAsset {
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
+    
+    /* WalletVC */
+    static let walletGray: String = "wallet-gray"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }

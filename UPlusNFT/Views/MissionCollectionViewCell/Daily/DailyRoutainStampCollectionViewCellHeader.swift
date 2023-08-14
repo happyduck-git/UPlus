@@ -31,7 +31,7 @@ final class DailyRoutainStampCollectionViewCellHeader: UICollectionViewCell {
         label.textColor = .black
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: UPlusFont.main, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

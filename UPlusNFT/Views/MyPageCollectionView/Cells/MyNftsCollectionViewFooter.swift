@@ -56,7 +56,7 @@ final class MyNftsCollectionViewFooter: UICollectionViewCell {
 extension MyNftsCollectionViewFooter {
     
     func configure(with vm: MyPageViewViewModel) {
-        self.button.setTitle(String(describing: vm.user.userRewards?.count ?? 0) + RewardsConstants.rewardsUnit, for: .normal)
+        self.button.setTitle(String(describing: vm.user.userRewards?.count ?? 0) + WalletConstants.rewardsUnit, for: .normal)
     }
 
     private func bind() {
