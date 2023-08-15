@@ -23,7 +23,7 @@ final class DailyRoutineMissionStampCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .white
         label.text = "참여 스탬프"
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -32,7 +32,7 @@ final class DailyRoutineMissionStampCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .white
         label.text = "6 / 15"
-        label.font = .systemFont(ofSize: UPlusFont.subTitle1, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

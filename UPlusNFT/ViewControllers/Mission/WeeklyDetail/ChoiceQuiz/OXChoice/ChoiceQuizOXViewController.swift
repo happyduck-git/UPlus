@@ -36,7 +36,6 @@ final class ChoiceQuizOXViewController: UIViewController {
     private let quizLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.text = "무너의 모티브는 오징어이다."
         label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -71,11 +70,25 @@ final class ChoiceQuizOXViewController: UIViewController {
         return button
     }()
     
+    private let answerInfoLabel: UILabel = {
+        let label = UILabel()
+        label.isHidden = true
+        label.clipsToBounds = true
+        label.layer.cornerRadius = 10.0
+        label.text = MissionConstants.reselect
+        label.textAlignment = .center
+        label.textColor = UPlusColor.orange01
+        label.backgroundColor = UPlusColor.orange02
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var checkAnswerButton: UIButton = {
         let button = UIButton()
         button.setTitle(MissionConstants.checkAnswer, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemGray
+        button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -116,9 +129,12 @@ extension ChoiceQuizOXViewController {
                     guard let `self` = self else { return }
                     
                     if !self.vm.circleButtonDidTap {
+                        self.answerInfoLabel.isHidden = true
                         self.vm.circleButtonDidTap = !self.vm.circleButtonDidTap
                         self.vm.xButtonDidTap = !self.vm.circleButtonDidTap
                         self.vm.selectedAnswer = Int64(self.circleMarkButton.tag)
+                        self.checkAnswerButton.isUserInteractionEnabled = true
+                        self.checkAnswerButton.backgroundColor = .black
                     }
                    
                 }
@@ -130,9 +146,12 @@ extension ChoiceQuizOXViewController {
                     guard let `self` = self else { return }
                     
                     if !self.vm.xButtonDidTap {
+                        self.answerInfoLabel.isHidden = true
                         self.vm.xButtonDidTap = !self.vm.xButtonDidTap
                         self.vm.circleButtonDidTap = !self.vm.xButtonDidTap
                         self.vm.selectedAnswer = Int64(self.xMarkButton.tag)
+                        self.checkAnswerButton.isUserInteractionEnabled = true
+                        self.checkAnswerButton.backgroundColor = .black
                     }
                     
                 }
@@ -150,8 +169,8 @@ extension ChoiceQuizOXViewController {
                         navigationController?.modalPresentationStyle = .fullScreen
                         self.show(vc, sender: self)
                     } else {
-                        // TODO: 오답인 경우 로직 추가 필요.
                         print("Wrong answer submitted.")
+                        self.answerInfoLabel.isHidden = false
                     }
                     
                 }
@@ -206,8 +225,8 @@ extension ChoiceQuizOXViewController {
         self.quizLabel.text = vm.mission.missionContentTitle
         
         let dataSource = self.vm.mission as! ChoiceQuizMission
-        self.circleMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[0] ?? "O", for: .normal)
-        self.xMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[1] ?? "X", for: .normal)
+        self.circleMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[0], for: .normal)
+        self.xMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[1], for: .normal)
     }
 }
 
@@ -215,13 +234,14 @@ extension ChoiceQuizOXViewController {
 extension ChoiceQuizOXViewController {
     
     private func setUI() {
-        self.view.addSubviews(titleLabel,
-                              quizLabel,
-                              stackView,
-                              checkAnswerButton)
+        self.view.addSubviews(self.titleLabel,
+                              self.quizLabel,
+                              self.stackView,
+                              self.answerInfoLabel,
+                              self.checkAnswerButton)
         
-        self.stackView.addArrangedSubviews(circleMarkButton,
-                                           xMarkButton)
+        self.stackView.addArrangedSubviews(self.circleMarkButton,
+                                           self.xMarkButton)
     }
     
     private func setLayout() {
@@ -237,7 +257,11 @@ extension ChoiceQuizOXViewController {
             self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stackView.trailingAnchor, multiplier: 2),
             self.stackView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 5),
             
-            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.stackView.bottomAnchor, multiplier: 10),
+            self.answerInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.stackView.bottomAnchor, multiplier: 8),
+            self.answerInfoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.answerInfoLabel.trailingAnchor, multiplier: 5),
+            
+            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.answerInfoLabel.bottomAnchor, multiplier: 2),
             self.checkAnswerButton.leadingAnchor.constraint(equalTo: self.stackView.leadingAnchor),
             self.checkAnswerButton.trailingAnchor.constraint(equalTo: self.stackView.trailingAnchor),
             self.checkAnswerButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 12),

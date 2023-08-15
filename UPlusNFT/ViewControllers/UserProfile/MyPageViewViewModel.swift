@@ -22,6 +22,7 @@ final class MyPageViewViewModel {
         case button
         case calendar
         case history
+        case test
     }
     
     enum MyPageViewEventSectionType: CaseIterable {

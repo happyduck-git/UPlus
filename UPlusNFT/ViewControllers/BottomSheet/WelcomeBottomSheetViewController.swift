@@ -29,7 +29,7 @@ final class WelcomeBottomSheetViewController: BottomSheetViewController {
         label.textColor = .black
         label.textAlignment = .center
         label.text = "서태호 홀더,\nsotitch 님만을 위한 특별 혜택"
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .heavy)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -64,7 +64,7 @@ final class WelcomeBottomSheetViewController: BottomSheetViewController {
         label.textColor = .darkGray
         label.textAlignment = .center
         label.text = "400P 추가 보상"
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

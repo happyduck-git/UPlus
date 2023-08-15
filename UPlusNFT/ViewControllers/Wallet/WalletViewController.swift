@@ -74,6 +74,7 @@ final class WalletViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = WalletConstants.wallet
         self.view.backgroundColor = .white
         
         self.setUI()
@@ -123,6 +124,10 @@ extension WalletViewController {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
+                    let vm = RewardsViewViewModel(rewards: self.vm.rewards)
+                    let vc = RewardsViewController(vm: vm)
+                    
+                    self.show(vc, sender: self)
                 }
                 .store(in: &bindings)
         }

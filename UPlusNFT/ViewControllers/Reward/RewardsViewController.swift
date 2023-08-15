@@ -30,9 +30,15 @@ final class RewardsViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.register(<#T##nib: UINib?##UINib?#>, forCellWithReuseIdentifier: <#T##String#>)
+        collection.register(RewardCollectionViewCell.self, forCellWithReuseIdentifier: RewardCollectionViewCell.identifier)
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
+    }()
+    
+    private let rewardInfoView: RewardInfoView = {
+        let view = RewardInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     // MARK: - Init
@@ -53,7 +59,8 @@ final class RewardsViewController: UIViewController {
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
-        self.bind()
+        self.setDelegate()
+        self.configure()
     }
 
 }
@@ -61,27 +68,78 @@ final class RewardsViewController: UIViewController {
 // MARK: - Set UI & Layout
 extension RewardsViewController {
     private func setUI() {
-        self.view.addSubview(self.rewardsOwnedLabel)
+        self.view.addSubviews(self.rewardsOwnedLabel,
+                              self.collectionView,
+                              self.rewardInfoView)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.rewardsOwnedLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
             self.rewardsOwnedLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rewardsOwnedLabel.trailingAnchor, multiplier: 2)
+            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rewardsOwnedLabel.trailingAnchor, multiplier: 2),
+            
+            self.collectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.rewardsOwnedLabel.bottomAnchor, multiplier: 3),
+            self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.rewardInfoView.topAnchor),
+
+            self.rewardInfoView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.rewardInfoView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.rewardInfoView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 4),
+            self.rewardInfoView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+    
+    private func setDelegate() {
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
     }
 }
 
 // MARK: - Bind with View Model
 extension RewardsViewController {
-    private func bind() {
-        self.vm.$rewards
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                guard let `self` = self else { return }
-                print("Rewards: \($0)")
-            }
-            .store(in: &bindings)
+    private func configure() {
+        self.rewardsOwnedLabel.text = String(format: WalletConstants.totalNfts, self.vm.rewards.count)
+        self.collectionView.reloadData()
+//        self.vm.$rewards
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] in
+//                guard let `self` = self else { return }
+//
+//                self.rewardsOwnedLabel.text = String(format: WalletConstants.totalNfts, $0.count)
+//                self.collectionView.reloadData()
+//
+//            }
+//            .store(in: &bindings)
+    }
+}
+
+extension RewardsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return self.vm.rewards.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RewardCollectionViewCell.identifier, for: indexPath) as? RewardCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        cell.layer.borderColor = UIColor.black.cgColor
+        cell.layer.borderWidth = 1.0
+        cell.configure(with: self.vm.rewards[indexPath.item])
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.rewardInfoView.configure(with: self.vm.rewards[indexPath.item])
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.view.frame.width / 2.5, height: self.view.frame.height / 5)
     }
 }

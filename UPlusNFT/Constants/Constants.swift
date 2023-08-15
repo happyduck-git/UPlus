@@ -106,6 +106,10 @@ struct MyPageConstants {
 
 struct RewardsConstants {
     static let ownedRewards: String = "보유 경품"
+    static let info: String = "경품 사용 안내"
+    static let usage: String = "사용 방법"
+    static let period: String = "경품 사용 기간"
+    static let empty: String = " "
 }
 
 struct MissionConstants {
@@ -124,11 +128,19 @@ struct MissionConstants {
     static let quizMission: String = "퀴즈 미션"
     static let checkAnswer: String = "정답 확인하기"
     static let confirm: String = "확인"
-    static let missionSuccess: String = "미션 성공\n정답"
-    static let missionComplete: String = "미션 참여\n완료"
-    static let redeemPointSuffix: String = " 받아요"
+    static let missionComplete: String = "미션 참여 완료"
+    static let redeemPoint: String = "%dP 포인트 받기"
     static let routineMissionLimit: Int = 15
+    static let numberOfTexts: String = "%d글자"
+    static let hintDescription: String = "밑줄에 들어갈 단어를 맞춰보세요"
     
+    static let watchVideo: String = "영상을 시청해주세요"
+    static let watchVideoDescription: String = "영상 시청 후 다음 페이지에서 답을 맞춰보세요."
+    static let next: String = "다음"
+    static let upload: String = "인증 사진 올리기"
+    static let submit: String = "제출하기"
+    
+    static let reselect: String = "앗! 다시 한번 선택해보세요"
     static let buttonBorderWidth: CGFloat = 2.0
 }
 
@@ -221,9 +233,15 @@ struct ImageAsset {
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
+    static let pointShadow: String = "point-shadow"
+    static let confetti: String = "confetti"
+    static let checkBlack: String = "check-black"
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"
+    
+    /* RewardVC */
+    static let bellGray: String = "bell-gray"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }

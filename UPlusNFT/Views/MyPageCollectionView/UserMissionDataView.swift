@@ -17,7 +17,7 @@ final class UserMissionDataView: PassThroughView {
         let button = UIButton()
         button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
         button.setTitle("레벨 등급 안내", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .regular)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.caption1, weight: .regular)
         button.setTitleColor(.systemGray, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -42,7 +42,7 @@ final class UserMissionDataView: PassThroughView {
     
     private let pointLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
         label.textColor = UPlusColor.deepGreen
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -51,7 +51,7 @@ final class UserMissionDataView: PassThroughView {
     private let levelDescriptionLabel: UILabel = {
         let label = UILabel()
         label.text = "다음 레벨 업까지 120P"
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3)
+        label.font = .systemFont(ofSize: UPlusFont.caption1)
         label.textColor = UPlusColor.lightGreen
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

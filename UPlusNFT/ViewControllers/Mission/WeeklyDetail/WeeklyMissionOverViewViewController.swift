@@ -199,55 +199,15 @@ extension WeeklyMissionOverViewViewController {
                 break
             }
             
+        } else if anyMission is PhotoAuthMission {
+            let mission = anyMission as! PhotoAuthMission
             
-//            Task {
-//                do {
-//                    try await FirestoreManager.shared.saveParticipatedWeeklyMission(
-//                        questionId: mission.missionId,
-//                        week: 1,
-//                        today: Date().yearMonthDateFormat,
-//                        missionType: .weeklyQuiz1,
-//                        point: mission.missionRewardPoint,
-//                        state: .successed)
-//                    print("MissionContentTitle: \(String(describing: mission.missionContentTitle))")
-//                }
-//                catch {
-//                    print("Error saving weekly mission -- \(error)")
-//                }
-//            }
+            let vm = PhotoAuthQuizViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+            let vc = PhotoAuthQuizViewController(vm: vm)
+            
+            self.show(vc, sender: self)
         }
         
-/*
-//        let mission = self.vm.missions[indexPath.row]
-        // 1. Check if user has participated a cetain mission
-        let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
-        // 1-1. If so, ban selection.
-        if hasParticipated {
-            return
-        } else {
-            // 1-2. If not, allow selection.
-            let anytype = MissionFormatType(rawValue: anyMission.missionFormatType)
-            
-            let missionType = MissionFormatType(rawValue: mission.missionFormatType)
-            
-            let cellVM = WeeklyMissionDetailViewViewModel(dataSource: mission,
-                                                          numberOfWeek: self.vm.numberOfWeek)
-            self.navigationController?.modalPresentationStyle = .overCurrentContext
-            
-            switch missionType {
-            case .choiceQuiz:
-                let vc = WeeklyChoiceQuizMissionDetailViewController(vm: cellVM)
-                vc.delegate = self
-                self.show(vc, sender: self)
-            case .answerQuiz:
-                let vc = WeeklyAnswerQuizMissionDetailViewController(vm: cellVM)
-                self.show(vc, sender: self)
-            default:
-                break
-            }
- 
-        }
- */
     }
 }
 

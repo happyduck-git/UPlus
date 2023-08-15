@@ -9,12 +9,10 @@ import Foundation
 
 final class RewardsViewViewModel {
     
-    private let firestoreManager = FirestoreManager.shared
+    let rewards: [Reward]
     
-    @Published var rewards: [Reward] = []
-    
+    init(rewards: [Reward]) {
+        self.rewards = rewards
+    }
 }
 
-extension RewardsViewViewModel {
-
-}

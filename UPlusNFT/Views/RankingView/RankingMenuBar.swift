@@ -38,7 +38,7 @@ final class RankingMenuBar: UIView {
     private let todayRankButton: UIButton = {
         let button = UIButton()
         button.setTitle(RankingConstants.todayRank, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle1, weight: .bold)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         button.setTitleColor(.black, for: .normal)
         return button
     }()
@@ -46,7 +46,7 @@ final class RankingMenuBar: UIView {
     private let totalRankButton: UIButton = {
         let button = UIButton()
         button.setTitle(RankingConstants.totalRank, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle1, weight: .bold)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         button.setTitleColor(.black, for: .normal)
         return button
     }()

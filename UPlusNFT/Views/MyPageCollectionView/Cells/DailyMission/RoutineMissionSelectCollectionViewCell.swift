@@ -29,7 +29,7 @@ final class RoutineMissionSelectCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "루틴 시작하기"
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         return label
     }()
     
@@ -37,7 +37,7 @@ final class RoutineMissionSelectCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "원하는 루틴 하나를 선택해보세요"
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         return label
     }()
     

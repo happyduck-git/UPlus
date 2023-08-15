@@ -17,7 +17,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.text = "다음 레벨 업까지\n미션 3개 남았어요!"
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -34,7 +34,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     private let levelLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -70,7 +70,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.text = "내 경험 인증서"
-        label.font = .systemFont(ofSize: UPlusFont.subTitle1, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

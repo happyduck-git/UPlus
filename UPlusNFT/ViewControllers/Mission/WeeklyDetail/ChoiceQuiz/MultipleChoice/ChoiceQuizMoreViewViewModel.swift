@@ -7,18 +7,18 @@
 
 import Foundation
 
-final class ChoiceQuizMoreViewViewModel {
-    let mission: ChoiceQuizMission
-    let numberOfWeek: Int
+final class ChoiceQuizMoreViewViewModel: WeeklyQuizBaseModel {
     
     @Published var imageUrls: [URL] = []
+    var selectedButton: Int?
+    @Published var buttonStatus: [Bool] = []
     
-    init(mission: ChoiceQuizMission, numberOfWeek: Int) {
-        self.mission = mission
-        self.numberOfWeek = numberOfWeek
+    override init(mission: Mission, numberOfWeek: Int) {
+        super.init(mission: mission, numberOfWeek: numberOfWeek)
         
         self.getImageUrls()
     }
+    
 }
 
 extension ChoiceQuizMoreViewViewModel {

@@ -30,7 +30,7 @@ final class SignUpCompleteViewController: UIViewController {
        let label = UILabel()
         label.textColor = .black
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .heavy)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -40,7 +40,7 @@ final class SignUpCompleteViewController: UIViewController {
        let label = UILabel()
         label.textColor = .systemGray
         label.text = SignUpConstants.desctiptions
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -57,7 +57,7 @@ final class SignUpCompleteViewController: UIViewController {
        let label = UILabel()
         label.textColor = .darkGray
         label.text = SignUpConstants.nftInfo
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .regular)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

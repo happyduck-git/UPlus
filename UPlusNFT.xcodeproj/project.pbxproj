@@ -50,6 +50,11 @@
 		24542D602A7113BD00F82CEA /* TotalRankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */; };
 		245E2DD22A87881600AAEFE6 /* Mission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245E2DD12A87881600AAEFE6 /* Mission.swift */; };
 		246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D72A891A8100CA7356 /* FirestoreActor.swift */; };
+		246BD1DA2A8A673B00CA7356 /* TestCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */; };
+		246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */; };
+		246BD1FF2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1FE2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift */; };
+		246BD2022A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD2012A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift */; };
+		246BD2042A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD2032A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift */; };
 		247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */; };
 		247FC60E2A678036001F3974 /* WelcomeBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */; };
 		247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */; };
@@ -178,7 +183,7 @@
 		93DA58362A8A102600525BEC /* NFTDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58352A8A102600525BEC /* NFTDetailViewController.swift */; };
 		93DA58382A8A18CE00525BEC /* GenerateLottieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58372A8A18CE00525BEC /* GenerateLottieViewController.swift */; };
 		93DA583B2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA583A2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift */; };
-		93DA583E2A8A30C600525BEC /* RankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA583D2A8A30C600525BEC /* RankCollectionViewCell.swift */; };
+		93DA583E2A8A30C600525BEC /* RewardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA583D2A8A30C600525BEC /* RewardCollectionViewCell.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013882A6518370005E342 /* SideMenuViewController.swift */; };
@@ -244,6 +249,11 @@
 		24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalRankCollectionViewCell.swift; sourceTree = "<group>"; };
 		245E2DD12A87881600AAEFE6 /* Mission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mission.swift; sourceTree = "<group>"; };
 		246BD1D72A891A8100CA7356 /* FirestoreActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreActor.swift; sourceTree = "<group>"; };
+		246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCollectionViewCell.swift; sourceTree = "<group>"; };
+		246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardInfoView.swift; sourceTree = "<group>"; };
+		246BD1FE2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceMultipleQuizButton.swift; sourceTree = "<group>"; };
+		246BD2012A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAuthQuizViewController.swift; sourceTree = "<group>"; };
+		246BD2032A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAuthQuizViewViewModel.swift; sourceTree = "<group>"; };
 		247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewController.swift; sourceTree = "<group>"; };
 		247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
@@ -371,7 +381,7 @@
 		93DA58352A8A102600525BEC /* NFTDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTDetailViewController.swift; sourceTree = "<group>"; };
 		93DA58372A8A18CE00525BEC /* GenerateLottieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateLottieViewController.swift; sourceTree = "<group>"; };
 		93DA583A2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAddressBottomSheetViewController.swift; sourceTree = "<group>"; };
-		93DA583D2A8A30C600525BEC /* RankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankCollectionViewCell.swift; sourceTree = "<group>"; };
+		93DA583D2A8A30C600525BEC /* RewardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardCollectionViewCell.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013882A6518370005E342 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -450,6 +460,7 @@
 		240269452A83DE9B00850E65 /* ChoiceQuiz */ = {
 			isa = PBXGroup;
 			children = (
+				246BD2002A8BCCF000CA7356 /* PhotoAuth */,
 				240269542A846B8700850E65 /* MultipleAnswer */,
 				240269532A846B6F00850E65 /* SingleAnswer */,
 				240269522A846A2700850E65 /* OXChoice */,
@@ -528,6 +539,7 @@
 				24542D542A70DE7D00F82CEA /* MyPageViewViewModel.swift */,
 				93E013942A66260A0005E342 /* UserProfileViewViewModel.swift */,
 				939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */,
+				246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -575,6 +587,24 @@
 				93A2ED8F2A6E0BD000C2287D /* RewardsViewViewModel.swift */,
 			);
 			path = Reward;
+			sourceTree = "<group>";
+		};
+		246BD1FD2A8B6E1800CA7356 /* Mission */ = {
+			isa = PBXGroup;
+			children = (
+				93E0138D2A6527D60005E342 /* MissionCollectionViewCell */,
+				246BD1FE2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift */,
+			);
+			path = Mission;
+			sourceTree = "<group>";
+		};
+		246BD2002A8BCCF000CA7356 /* PhotoAuth */ = {
+			isa = PBXGroup;
+			children = (
+				246BD2012A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift */,
+				246BD2032A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift */,
+			);
+			path = PhotoAuth;
 			sourceTree = "<group>";
 		};
 		247FC60A2A677672001F3974 /* BottomSheet */ = {
@@ -888,12 +918,12 @@
 		937C76572A492B8F001024D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				246BD1FD2A8B6E1800CA7356 /* Mission */,
 				93DA583C2A8A301400525BEC /* RewardView */,
 				9391948D2A80A22A0035FEB1 /* WalletCollectionViewCell */,
 				93A2ED982A6E1C8B00C2287D /* RankingView */,
 				93A2ED822A6A580300C2287D /* MyPageCollectionView */,
 				2417A59F2A67C93800AEC530 /* SignUpView */,
-				93E0138D2A6527D60005E342 /* MissionCollectionViewCell */,
 				932C34D02A53ADBA0032192A /* CampaignCollectionViewCell */,
 				249F59F82A530A71008CF6BE /* CampaignView */,
 				249F59F52A52F3FB008CF6BE /* PostDetailTableViewHeader */,
@@ -1098,7 +1128,8 @@
 		93DA583C2A8A301400525BEC /* RewardView */ = {
 			isa = PBXGroup;
 			children = (
-				93DA583D2A8A30C600525BEC /* RankCollectionViewCell.swift */,
+				93DA583D2A8A30C600525BEC /* RewardCollectionViewCell.swift */,
+				246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */,
 			);
 			path = RewardView;
 			sourceTree = "<group>";
@@ -1353,6 +1384,7 @@
 				93D1748A2A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift in Sources */,
 				240269492A83E31800850E65 /* ChoiceQuizVideoViewViewModel.swift in Sources */,
 				240269582A846BDC00850E65 /* AnswerQuizPluralViewController.swift in Sources */,
+				246BD1DA2A8A673B00CA7356 /* TestCollectionViewCell.swift in Sources */,
 				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
 				93A2ED8E2A6E025000C2287D /* RewardsViewController.swift in Sources */,
 				240269562A846BA400850E65 /* AnswerQuizSingularViewController.swift in Sources */,
@@ -1420,7 +1452,9 @@
 				932C34E42A5BCE700032192A /* CampaignCommentDefaultView.swift in Sources */,
 				93D1748E2A777C8A00F5B1B1 /* DailyMissionCompleteViewController.swift in Sources */,
 				93D174942A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift in Sources */,
+				246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */,
 				240269322A83B23E00850E65 /* FirebaseStorageManager.swift in Sources */,
+				246BD2042A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
@@ -1436,15 +1470,17 @@
 				93A2ED932A6E0EA200C2287D /* RankingViewController.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				240269442A83C37B00850E65 /* CommentCountMissionViewViewModel.swift in Sources */,
-				93DA583E2A8A30C600525BEC /* RankCollectionViewCell.swift in Sources */,
+				93DA583E2A8A30C600525BEC /* RewardCollectionViewCell.swift in Sources */,
 				247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */,
 				93E013B22A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift in Sources */,
 				240269302A83B21500850E65 /* ContentReadOnlyMissionViewController.swift in Sources */,
 				24542D4D2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift in Sources */,
 				93A2ED8C2A6DFECF00C2287D /* Reward.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
+				246BD1FF2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift in Sources */,
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,
 				937C764F2A457B2E001024D0 /* FirestoreManager.swift in Sources */,
+				246BD2022A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift in Sources */,
 				2402694C2A84675300850E65 /* ChoiceQuizMoreViewController.swift in Sources */,
 				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,
 				249F59F72A52F4F8008CF6BE /* PostDetailTableViewHeader.swift in Sources */,

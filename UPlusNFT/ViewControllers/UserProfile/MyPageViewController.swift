@@ -317,6 +317,7 @@ extension MyPageViewController {
         
         guard let collectionView = self.collectionView else { return }
         collectionView.frame = view.bounds
+
         collectionView.contentInset = UIEdgeInsets(top: self.initialHeight - (navHeight*1.6),
                                                    left: 0,
                                                    bottom: 0,
@@ -429,6 +430,12 @@ extension MyPageViewController {
             frame: .zero,
             collectionViewLayout: layout
         )
+        
+        collectionView.register(
+            TestCollectionViewCell.self,
+            forCellWithReuseIdentifier: TestCollectionViewCell.identifier
+        )
+        
         // 1. Register header
         collectionView.register(MissionCollectionViewHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -502,9 +509,30 @@ extension MyPageViewController {
         case 5:
             return self.createHistorySectionLayout()
         default:
-            return self.createCalendarSectionLayout()
+            return self.createTest()
         }
         
+    }
+    
+    private func createTest() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(2.0)
+            ),
+            subitems: [item]
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        return section
     }
     
     // Missions
@@ -714,7 +742,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 
                 return self.vm.mission.isHistorySectionOpened ? numberOfItems : 0
-                
+            case 6:
+                 return self.vm.mission.isHistorySectionOpened ? 1 : 0
             default:
                 return 1
             }
@@ -824,7 +853,10 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 
             default:
-                return UICollectionViewCell()
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TestCollectionViewCell.identifier, for: indexPath) as? TestCollectionViewCell else {
+                    fatalError()
+                }
+                return cell
             }
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageEventCollectionViewCell.identifier, for: indexPath) as? MypageEventCollectionViewCell else {

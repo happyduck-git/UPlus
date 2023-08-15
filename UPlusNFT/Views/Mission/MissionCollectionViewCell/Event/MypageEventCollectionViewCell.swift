@@ -26,21 +26,21 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
     private let eventTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         return label
     }()
     
     private let eventDescription: UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         return label
     }()
     
     private let pointLabel: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.blue03
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

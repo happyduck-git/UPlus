@@ -30,7 +30,7 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = MissionConstants.todayMission
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -38,7 +38,7 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
     private let quizDescLabel: UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3)
+        label.font = .systemFont(ofSize: UPlusFont.caption1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -54,7 +54,7 @@ final class DailyQuizMissionCollectionViewCell: UICollectionViewCell {
     private let pointLabel: UILabel = {
        let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

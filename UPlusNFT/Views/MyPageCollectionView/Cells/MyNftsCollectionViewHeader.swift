@@ -21,7 +21,7 @@ final class MyNftsCollectionViewHeader: UICollectionViewCell {
     private let nfts: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

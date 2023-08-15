@@ -8,12 +8,23 @@
 import Foundation
 import Combine
 
-final class ChoiceQuizzOXViewViewModel {
+class WeeklyQuizBaseModel {
     
     let mission: any Mission
-    
     let numberOfWeek: Int
     
+    /* WeeklyMission Completion */
+    @Published var weeklyMissionCompletion: Bool = false
+    
+    init(mission: any Mission, numberOfWeek: Int) {
+        self.mission = mission
+        self.numberOfWeek = numberOfWeek
+    }
+    
+}
+
+final class ChoiceQuizzOXViewViewModel: WeeklyQuizBaseModel {
+
     /* Choice Quiz */
     @Published var circleButtonDidTap: Bool = false
     @Published var xButtonDidTap: Bool = false
@@ -22,14 +33,6 @@ final class ChoiceQuizzOXViewViewModel {
 
     /* Answer Quiz */
     @Published var textExists: Bool = false
-    
-    /* WeeklyMission Completion */
-    @Published var weeklyMissionCompletion: Bool = false
-    
-    init(mission: any Mission,
-         numberOfWeek: Int) {
-        self.mission = mission
-        self.numberOfWeek = numberOfWeek
-    }
+
     
 }

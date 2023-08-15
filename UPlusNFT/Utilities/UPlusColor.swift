@@ -67,6 +67,7 @@ struct UPlusColor {
     static let gray07 = UIColor(hex: 0x333D4B)
     static let gray08 = UIColor(hex: 0x222529)
     static let gray09 = UIColor(hex: 0x141415)
+    static let grayBackground = UIColor(hex: 0xF5F5F5)
     
     static let gradient09deep = UIColor(hex: 0xA8CBFF)
     static let gradient09light = UIColor(hex: 0xBFF4FF)

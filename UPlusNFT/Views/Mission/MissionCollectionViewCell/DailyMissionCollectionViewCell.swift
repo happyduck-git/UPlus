@@ -34,7 +34,7 @@ class DailyMissionCollectionViewCell: UICollectionViewCell {
     private let pointLabel: UILabel = {
        let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -42,7 +42,7 @@ class DailyMissionCollectionViewCell: UICollectionViewCell {
     private let missionTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .heavy)
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

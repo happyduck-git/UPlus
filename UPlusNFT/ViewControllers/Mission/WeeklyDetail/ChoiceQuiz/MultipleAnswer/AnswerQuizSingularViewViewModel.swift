@@ -8,12 +8,9 @@
 import Foundation
 import Combine
 
-final class AnswerQuizSingularViewViewModel {
-    let mission: ShortAnswerQuizMission
-    let numberOfWeek: Int
+final class AnswerQuizSingularViewViewModel: WeeklyQuizBaseModel {
+
     
-    init(mission: ShortAnswerQuizMission, numberOfWeek: Int) {
-        self.mission = mission
-        self.numberOfWeek = numberOfWeek
-    }
+    
+    
 }

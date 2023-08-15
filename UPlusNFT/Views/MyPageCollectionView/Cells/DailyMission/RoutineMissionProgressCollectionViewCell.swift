@@ -18,7 +18,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -27,7 +27,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = UPlusColor.blue02
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -36,7 +36,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = UPlusColor.green
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

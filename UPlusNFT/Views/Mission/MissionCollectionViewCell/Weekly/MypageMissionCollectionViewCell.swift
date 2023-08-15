@@ -26,14 +26,14 @@ final class MypageMissionCollectionViewCell: UICollectionViewCell {
     private let missionTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         return label
     }()
     
     private let missionDescription: UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         return label
     }()
   

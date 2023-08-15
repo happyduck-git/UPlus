@@ -13,7 +13,7 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
     private let themeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .regular)
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -21,7 +21,7 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.lightGreen2
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .regular)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -48,7 +48,7 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
         label.numberOfLines = 2
         label.textColor = .black
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .semibold)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .semibold)
         label.text = "미션을 완료하여\nNFT를 받아보세요"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

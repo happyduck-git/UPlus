@@ -38,7 +38,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         label.textColor = .black
         label.textAlignment = .center
         label.text = "루틴 미션 시작하기"
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -48,7 +48,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         label.textColor = .systemRed
         label.textAlignment = .center
         label.text = "선택 이후 변경이 불가합니다"
-        label.font = .systemFont(ofSize: UPlusFont.subTitle2, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -69,7 +69,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         button.setTitleColor(.black, for: .normal)
         button.layer.borderWidth = MissionConstants.buttonBorderWidth
         button.layer.borderColor = UIColor.systemGray.cgColor
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         return button
     }()
     
@@ -80,7 +80,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         button.setTitleColor(.black, for: .normal)
         button.layer.borderWidth = MissionConstants.buttonBorderWidth
         button.layer.borderColor = UIColor.systemGray.cgColor
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         return button
     }()
     
@@ -91,7 +91,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         button.setTitleColor(.black, for: .normal)
         button.layer.borderWidth = MissionConstants.buttonBorderWidth
         button.layer.borderColor = UIColor.systemGray.cgColor
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         return button
     }()
     
@@ -101,7 +101,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
         button.setTitleColor(.white, for: .normal)
         button.setTitle("선택 완료", for: .normal)
         button.backgroundColor = UPlusColor.greenMint
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

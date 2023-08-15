@@ -120,7 +120,7 @@ extension DailyMissionCompleteViewController {
 // MARK: - Configure with View Model
 extension DailyMissionCompleteViewController {
     private func configure() {
-        self.pointLabel.text = "10" + MissionConstants.redeemPointSuffix
+        self.pointLabel.text = "10" + MissionConstants.pointUnit
     }
 }
 

@@ -514,6 +514,8 @@ extension FirestoreManager {
             let formatType = MissionFormatType(rawValue: type)
 
             switch formatType {
+            case .photoAuth:
+                missions.append(try doc.data(as: PhotoAuthMission.self, decoder: self.decoder))
             case .choiceQuiz:
                 missions.append(try doc.data(as: ChoiceQuizMission.self, decoder: self.decoder))
             case .answerQuiz:

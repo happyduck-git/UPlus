@@ -41,7 +41,7 @@ extension AnswerQuizPluralViewController {
                 string += "\(quizzes[i])\n"
             }
         }
-        self.label.text = string
+//        self.label.text = string
     }
   
 }

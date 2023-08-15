@@ -11,6 +11,8 @@ final class WalletAddressBottomSheetViewController: BottomSheetViewController {
     
     private let viewTitle: UILabel = {
         let label = UILabel()
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
+        label.textColor = .black
         label.text = WalletConstants.walletAddress
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,8 +27,10 @@ final class WalletAddressBottomSheetViewController: BottomSheetViewController {
     
     private let addressLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
-        label.text = WalletConstants.walletAddress
+        label.lineBreakMode = .byTruncatingMiddle
+        label.numberOfLines = 1
+        label.textColor = UPlusColor.gray09
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -36,6 +40,8 @@ final class WalletAddressBottomSheetViewController: BottomSheetViewController {
         label.textColor = UPlusColor.orange01
         label.backgroundColor = UPlusColor.orange02
         label.text = WalletConstants.warning
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -90,11 +96,13 @@ extension WalletAddressBottomSheetViewController {
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.cancelButton.trailingAnchor, multiplier: 2),
             self.cancelButton.bottomAnchor.constraint(equalTo: self.viewTitle.bottomAnchor),
             
-            self.addressLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.viewTitle.bottomAnchor, multiplier: 3),
-            self.addressLabel.centerXAnchor.constraint(equalTo: self.viewTitle.centerXAnchor),
-            self.warningLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.addressLabel.bottomAnchor, multiplier: 3),
-            self.warningLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
-            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.warningLabel.trailingAnchor, multiplier: 3),
+            self.addressLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.viewTitle.bottomAnchor, multiplier: 5),
+            self.addressLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
+            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.addressLabel.trailingAnchor, multiplier: 3),
+            
+            self.warningLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.addressLabel.bottomAnchor, multiplier: 5),
+            self.warningLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 5),
+            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.warningLabel.trailingAnchor, multiplier: 5),
             
             self.copyButton.topAnchor.constraint(equalToSystemSpacingBelow: self.warningLabel.bottomAnchor, multiplier: 4),
             self.copyButton.leadingAnchor.constraint(equalTo: self.warningLabel.leadingAnchor),

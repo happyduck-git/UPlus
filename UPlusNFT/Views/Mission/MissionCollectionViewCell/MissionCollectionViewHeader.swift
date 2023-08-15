@@ -21,7 +21,7 @@ class MissionCollectionViewHeader: UICollectionReusableView {
         let label = UILabel()
         label.text = MissionConstants.dailyAttendanceMission
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.head5, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -31,7 +31,7 @@ class MissionCollectionViewHeader: UICollectionReusableView {
         button.clipsToBounds = true
         button.setTitle(MissionConstants.details, for: .normal)
         button.backgroundColor = .white
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.subTitle3, weight: .medium)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
         button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
         button.setTitleColor(.systemGray, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false

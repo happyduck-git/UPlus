@@ -38,7 +38,7 @@ final class MyPageProfileCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "Lv.1"
         label.textColor = UPlusColor.pointGagePink
-        label.font = .systemFont(ofSize: UPlusFont.head6, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
