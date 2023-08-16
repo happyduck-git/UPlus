@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class LuniverseServiceManager {
+final actor LuniverseServiceManager {
     //MARK: - Init
     static let shared = LuniverseServiceManager()
     private init() {}

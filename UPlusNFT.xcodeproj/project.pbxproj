@@ -49,6 +49,7 @@
 		24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */; };
 		24542D602A7113BD00F82CEA /* TotalRankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */; };
 		245E2DD22A87881600AAEFE6 /* Mission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245E2DD12A87881600AAEFE6 /* Mission.swift */; };
+		24624B892A8D1E1200C9A42E /* MissionBaseScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B882A8D1E1200C9A42E /* MissionBaseScrollViewController.swift */; };
 		246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D72A891A8100CA7356 /* FirestoreActor.swift */; };
 		246BD1DA2A8A673B00CA7356 /* TestCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */; };
 		246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */; };
@@ -257,6 +258,7 @@
 		24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNftsCollectionViewHeader.swift; sourceTree = "<group>"; };
 		24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalRankCollectionViewCell.swift; sourceTree = "<group>"; };
 		245E2DD12A87881600AAEFE6 /* Mission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mission.swift; sourceTree = "<group>"; };
+		24624B882A8D1E1200C9A42E /* MissionBaseScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionBaseScrollViewController.swift; sourceTree = "<group>"; };
 		246BD1D72A891A8100CA7356 /* FirestoreActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreActor.swift; sourceTree = "<group>"; };
 		246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCollectionViewCell.swift; sourceTree = "<group>"; };
 		246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardInfoView.swift; sourceTree = "<group>"; };
@@ -1169,6 +1171,7 @@
 				93D174782A733C8500F5B1B1 /* DailyDetail */,
 				93E013B32A691F450005E342 /* WeeklyMissionCompleteViewController.swift */,
 				2402694D2A84683E00850E65 /* BaseMissionViewController.swift */,
+				24624B882A8D1E1200C9A42E /* MissionBaseScrollViewController.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -1346,6 +1349,7 @@
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */,
+				24624B892A8D1E1200C9A42E /* MissionBaseScrollViewController.swift in Sources */,
 				93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */,
 				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,

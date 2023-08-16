@@ -7,12 +7,13 @@
 
 import UIKit
 import Combine
+import Nuke
 
 protocol ContentReadOnlyMissionViewControllerDelegate: AnyObject {
     func answerDidSave()
 }
 
-final class ContentReadOnlyMissionViewController: UIViewController {
+final class ContentReadOnlyMissionViewController: MissionBaseScrollViewController {
 
     //MARK: - Dependency
     private let vm: ContentReadOnlyMissionViewViewModel
@@ -24,23 +25,15 @@ final class ContentReadOnlyMissionViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
-    private let label: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = .black
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let stack: UIStackView = {
+        let stack = UIStackView()
+        stack.distribution = .equalSpacing
+        stack.axis = .vertical
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
     }()
     
-    private let submitButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("확인완료!", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    private var images: [UIImage] = []
     
     //MARK: - Init
     init(vm: ContentReadOnlyMissionViewViewModel) {
@@ -59,6 +52,8 @@ final class ContentReadOnlyMissionViewController: UIViewController {
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
+        
+        self.configure()
         self.bind()
     }
 
@@ -66,25 +61,19 @@ final class ContentReadOnlyMissionViewController: UIViewController {
 
 extension ContentReadOnlyMissionViewController {
     
+    private func configure() {
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        self.subTitleLabel.text = self.vm.mission.missionContentText
+        self.confirmButton.setTitle(MissionConstants.readCompleted, for: .normal)
+    }
+    
     private func bind() {
         
         self.vm.$imageUrls
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
+            .sink { [weak self] imagePaths in
                 guard let `self` = self else { return }
-                self.label.text = (self.vm.mission.missionContentTitle ?? "Title") + "\n" + "ImagePaths: \($0)"
-                
-            }
-            .store(in: &bindings)
-        
-        self.submitButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let `self` = self else { return }
-                
-                let vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                vc.delegate = self
-                self.show(vc, sender: self)
+                self.createImageViews(imagePaths)
             }
             .store(in: &bindings)
 
@@ -95,25 +84,33 @@ extension ContentReadOnlyMissionViewController {
 //MARK: - Set UI & Layout
 extension ContentReadOnlyMissionViewController {
     private func setUI() {
-        self.view.addSubviews(
-            self.label,
-            self.submitButton
-        )
+        self.containerView.addSubview(self.stack)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.label.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-            self.label.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.label.trailingAnchor, multiplier: 2),
-            
-            self.submitButton.topAnchor.constraint(equalToSystemSpacingBelow: self.label.bottomAnchor, multiplier: 2),
-            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.submitButton.bottomAnchor, multiplier: 2),
-            self.submitButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.submitButton.trailingAnchor, multiplier: 5)
+            self.stack.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
+            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 2),
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 5)
         ])
-        
-        self.submitButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+    
+    private func createImageViews(_ urls: [URL]) {
+        Task {
+            do {
+                for i in 0..<urls.count {
+                    let imageView = UIImageView()
+                    imageView.contentMode = .scaleAspectFit
+                    imageView.frame.size = CGSize(width: self.stack.frame.width, height: self.view.frame.size.height / 4)
+                    imageView.image = try await ImagePipeline.shared.image(for: urls[i])
+                    self.stack.addArrangedSubview(imageView)
+                }
+            }
+            catch {
+                print("Error fetching image -- \(error)")
+            }
+        }
     }
 }
 

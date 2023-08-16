@@ -105,7 +105,9 @@ extension WeeklyMissionCompleteBottomSheetViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     self.vm.requestJourneyNft()
-                    self.dismiss(animated: true)
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true)
+                    }
                 }
                 .store(in: &bindings)
         }

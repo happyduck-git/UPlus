@@ -38,6 +38,8 @@ extension NftLevel {
             return 3
         case avatar4:
             return 4
+        case avatar5:
+            return 5
         default:
             return 99
         }

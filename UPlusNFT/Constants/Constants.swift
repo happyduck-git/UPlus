@@ -81,7 +81,6 @@ struct WritePostConstants {
 struct PostConstants {
     static let tempMissionSentence: String = "미션 문구"
     static let submitButton: String = "제출하기"
-    static let inputAnswer: String = "답변을 입력해주세요."
     static let inputComment: String = "댓글을 입력해주세요."
     static let writeButton: String = "작성하기"
     static let addComment: String = "답글 달기"
@@ -154,9 +153,12 @@ struct MissionConstants {
     static let next: String = "다음"
     static let upload: String = "인증 사진 올리기"
     static let submit: String = "제출하기"
+    static let inputAnswer: String = "답변을 입력하세요"
     
     static let reselect: String = "앗! 다시 한번 선택해보세요"
     static let buttonBorderWidth: CGFloat = 2.0
+    
+    static let readCompleted: String = "읽기 완료"
     
     static let congrats: String = "축하해요"
     static let weeklyCompleted: String = "여정 완료"

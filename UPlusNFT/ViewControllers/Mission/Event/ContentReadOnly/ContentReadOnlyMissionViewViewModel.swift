@@ -10,6 +10,9 @@ import Combine
 
 final class ContentReadOnlyMissionViewViewModel: MissionBaseModel {
     
+    //MARK: - Dependency
+    private let storageManager = FirebaseStorageManager.shared
+    
     @Published var imageUrls: [URL] = []
     
     override init(mission: Mission, numberOfWeek: Int) {
@@ -26,7 +29,7 @@ extension ContentReadOnlyMissionViewViewModel {
                 let imagePaths = mission.missionContentImagePaths ?? []
                 var imageUrls: [URL] = []
                 for imagePath in imagePaths {
-                    imageUrls.append(try await FirebaseStorageManager.shared.getDataUrl(reference: imagePath))
+                    imageUrls.append(try await self.storageManager.getDataUrl(reference: imagePath))
                 }
                 self.imageUrls = imageUrls
             }

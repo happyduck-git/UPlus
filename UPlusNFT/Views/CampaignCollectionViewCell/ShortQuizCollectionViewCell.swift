@@ -56,7 +56,7 @@ final class ShortQuizCollectionViewCell: UICollectionViewCell, CampaignCell {
     
     private lazy var answerTextField: UITextField = {
         let txtField = UITextField()
-        txtField.placeholder = PostConstants.inputAnswer
+        txtField.placeholder = MissionConstants.inputAnswer
         txtField.rightView = submitButton
         txtField.rightViewMode = .always
         txtField.borderStyle = .roundedRect

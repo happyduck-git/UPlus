@@ -306,12 +306,21 @@ extension MyPageViewViewModel {
     
     private func getTopLevelNftToken() async -> String? {
         let tokens = await self.updateUserOwnedNft()
-        guard let topNft = tokens.last,
-              let tokenNum = Int64(topNft)
-        else { return nil }
+        let topAvatarToken = self.sortTopLevelNft(tokens: tokens)
+        let intToken = Int64(topAvatarToken ?? "0") ?? 0
         
-        self.saveUserLevel(highestToken: tokenNum)
-        return topNft
+        self.saveUserLevel(highestToken: intToken)
+        return topAvatarToken
+    }
+    
+    private func sortTopLevelNft(tokens: [String]) -> String? {
+        let avatarTokens = tokens.filter {
+            let tokenNum = Int64($0) ?? 0
+            let range = NftLevel.avatar1.lowerBound...NftLevel.avatar5.upperBound
+            return range.contains(tokenNum)
+        }
+        
+        return avatarTokens.last
     }
     
     private func updateUserOwnedNft() async -> [String] {
@@ -338,6 +347,8 @@ extension MyPageViewViewModel {
                 // 동일하지 않다면, user_nfts의 reference 업데이트
                 self.updateNftList(nfts: nftTokens, userIndex: user.userIndex)
                 self.updatedNfts = nftTokens
+            } else {
+                print("새로운 nft가 없습니다.")
             }
             return nftTokens
         }

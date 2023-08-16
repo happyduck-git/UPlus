@@ -17,7 +17,7 @@ enum NFTServiceError: Error {
 }
 
 /// Singleton Object Class for UPlus NFT Service
-final class NFTServiceManager {
+final actor NFTServiceManager {
     
     //MARK: - Init
     static let shared = NFTServiceManager()
