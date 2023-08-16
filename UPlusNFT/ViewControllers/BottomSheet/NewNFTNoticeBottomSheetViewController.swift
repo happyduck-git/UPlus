@@ -24,7 +24,7 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
     private let stack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.distribution = .fillProportionally
+        stack.spacing = 5.0
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()

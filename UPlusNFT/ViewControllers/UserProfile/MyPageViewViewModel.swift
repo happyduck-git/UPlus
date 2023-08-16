@@ -330,6 +330,9 @@ extension MyPageViewViewModel {
             
             let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
             
+            print("Saved tokens: \(savedTokens)")
+            print("New tokens: \(nftTokens)")
+            
             // API fetched NFTs & Firestore fetched NFTs 가 동일한지 확인
             if !self.haveSameElements(nftTokens, savedTokens) {
                 // 동일하지 않다면, user_nfts의 reference 업데이트
