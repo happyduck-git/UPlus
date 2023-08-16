@@ -43,6 +43,7 @@ final class MyPageViewViewModel {
     @Published var userProfileViewModel: UserProfileViewViewModel?
     @Published var newPoint: Int64 = 0
     @Published var rank: Int = UPlusServiceInfoConstant.totalMembers
+    @Published var updatedNfts: [String] = []
     
     class MyPageMission {
         
@@ -240,9 +241,9 @@ extension MyPageViewViewModel {
     }
     
     func createMissionMainViewViewModel() async {
-        
-        let token = await self.getTopLevelNftToken() ?? "no-url"
-        let nftUrl = await self.firestoreManager.getNftUrl(tokenId: token)
+
+        let token = await self.getTopLevelNftToken() ?? "no-token"
+        let nftUrl = await self.firestoreManager.getNft(tokenId: token)?.nftContentImageUrl ?? "no-url"
         let level = self.getUserLevel()
         
         self.userProfileViewModel = UserProfileViewViewModel(
@@ -333,6 +334,7 @@ extension MyPageViewViewModel {
             if !self.haveSameElements(nftTokens, savedTokens) {
                 // 동일하지 않다면, user_nfts의 reference 업데이트
                 self.updateNftList(nfts: nftTokens, userIndex: user.userIndex)
+                self.updatedNfts = nftTokens
             }
             return nftTokens
         }

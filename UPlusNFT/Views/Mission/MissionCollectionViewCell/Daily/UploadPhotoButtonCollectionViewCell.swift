@@ -15,7 +15,7 @@ protocol UploadPhotoButtonCollectionViewCellDelegate: AnyObject {
 final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Dependency
-    private var vm: DailyRoutineMissionDetailViewViewModel?
+    private var vm: RoutineMissionDetailViewViewModel?
     
     // MARK: - Delegate
     weak var delegate: UploadPhotoButtonCollectionViewCellDelegate?
@@ -75,7 +75,7 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
 
 extension UploadPhotoButtonCollectionViewCell {
 
-    func bind(with vm: DailyRoutineMissionDetailViewViewModel) {
+    func bind(with vm: RoutineMissionDetailViewViewModel) {
         
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()

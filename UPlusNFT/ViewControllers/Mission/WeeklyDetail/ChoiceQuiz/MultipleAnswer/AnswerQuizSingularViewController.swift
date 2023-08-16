@@ -8,11 +8,18 @@
 import UIKit
 import Combine
 
+protocol AnswerQuizSingularViewControllerDelegate: AnyObject {
+    func answerDidSave()
+}
+
 //ShortAnswerQuizMission
 final class AnswerQuizSingularViewController: BaseMissionViewController {
 
     //MARK: - Dependency
     private let vm: AnswerQuizSingularViewViewModel
+    
+    //MARK: - Delegate
+    weak var delegate: AnswerQuizSingularViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -97,19 +104,19 @@ extension AnswerQuizSingularViewController {
 extension AnswerQuizSingularViewController {
     private func configure() {
         guard let mission = self.vm.mission as? ShortAnswerQuizMission,
-        let hint = mission.missionAnswerQuizzes.first
+              let hint = mission.missionAnswerQuizzes.first,
+              let answer = mission.missionAnswerQuizzes.last
         else { return }
         
         self.titleLabel.text = mission.missionContentTitle
         self.quizLabel.text = mission.missionContentText
         self.answerTextField.placeholder = hint
-        self.numberOfTextLabel.text = String(format: MissionConstants.numberOfTexts, hint.count)
+        self.numberOfTextLabel.text = String(format: MissionConstants.numberOfTexts, answer.count)
         
     }
   
     private func bind() {
         guard let mission = self.vm.mission as? ShortAnswerQuizMission,
-              let hint = mission.missionAnswerQuizzes.first,
               let answer = mission.missionAnswerQuizzes.last
         else { return }
         
@@ -119,7 +126,7 @@ extension AnswerQuizSingularViewController {
             .sink {
                 self.answerInfoLabel.isHidden = true
                 
-                if $0.count == hint.count {
+                if $0.count == answer.count {
                     self.checkAnswerButton.isUserInteractionEnabled = true
                     self.checkAnswerButton.backgroundColor = .black
                 } else {
@@ -135,6 +142,7 @@ extension AnswerQuizSingularViewController {
                 if (self.answerTextField.text ?? "") == answer {
                     
                     let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                    vc.delegate = self
                     self.show(vc, sender: self)
                     
                 } else {
@@ -144,5 +152,11 @@ extension AnswerQuizSingularViewController {
                 }
             }
             .store(in: &bindings)
+    }
+}
+
+extension AnswerQuizSingularViewController: WeeklyMissionCompleteViewControllerDelegate {
+    func answerDidSave() {
+        self.delegate?.answerDidSave()
     }
 }

@@ -15,7 +15,7 @@ class BaseMissionViewController: UIViewController {
         label.text = MissionConstants.quizMission
         label.textColor = .systemGray
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

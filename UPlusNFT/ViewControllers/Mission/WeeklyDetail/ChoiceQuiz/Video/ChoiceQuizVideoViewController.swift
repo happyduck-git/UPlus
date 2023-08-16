@@ -9,10 +9,17 @@ import UIKit
 import WebKit
 import Combine
 
+protocol ChoiceQuizVideoViewControllerDelegate: AnyObject {
+    func answerDidSave()
+}
+
 final class ChoiceQuizVideoViewController: BaseMissionViewController {
 
     //MARK: - Dependency
     private let vm: ChoiceQuizVideoViewViewModel
+    
+    // MARK: - Delegate
+    weak var delegate: ChoiceQuizVideoViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -223,6 +230,7 @@ extension ChoiceQuizVideoViewController {
                     if mission.missionChoiceQuizRightOrder == selectedAnswer {
                         
                         let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                        vc.delegate = self
                         self.show(vc, sender: self)
                         
                     } else {
@@ -312,4 +320,11 @@ extension ChoiceQuizVideoViewController {
         self.videoPlayer.evaluateJavaScript("document.querySelector('video').stopVideo();", completionHandler: nil)
 
     }
+}
+
+extension ChoiceQuizVideoViewController: WeeklyMissionCompleteViewControllerDelegate {
+    func answerDidSave() {
+        self.delegate?.answerDidSave()
+    }
+
 }

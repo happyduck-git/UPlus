@@ -31,7 +31,7 @@ final class UploadPhotoButtonCollectionViewCellFooter: UICollectionViewCell {
     private let reuploadButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemGray2
-        button.setTitle("재업로드", for: .normal)
+        button.setTitle(MissionConstants.reupload, for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -40,7 +40,7 @@ final class UploadPhotoButtonCollectionViewCellFooter: UICollectionViewCell {
     private let confirmButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .black
-        button.setTitle("확인", for: .normal)
+        button.setTitle(MissionConstants.confirm, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -64,7 +64,7 @@ final class UploadPhotoButtonCollectionViewCellFooter: UICollectionViewCell {
 // MARK: - Bind
 extension UploadPhotoButtonCollectionViewCellFooter {
     
-    func bind(with vm: DailyRoutineMissionDetailViewViewModel) {
+    func bind(with vm: RoutineMissionDetailViewViewModel) {
         
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
@@ -83,8 +83,11 @@ extension UploadPhotoButtonCollectionViewCellFooter {
             vm.$isFinishedRoutines
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
-                    guard let `self` = self else { return }
-                    if $0 {
+                    guard let `self` = self,
+                    let isFinished = $0
+                    else { return }
+                    
+                    if isFinished {
                         self.confirmButton.setTitle("루틴 완성!", for: .normal)
                         self.confirmButton.backgroundColor = .systemGray
                         self.isUserInteractionEnabled = false
@@ -96,7 +99,7 @@ extension UploadPhotoButtonCollectionViewCellFooter {
         bindViewToViewModel()
         bindViewModelToView()
     }
-
+    
 }
 
 // MARK: - Set UI & Layout

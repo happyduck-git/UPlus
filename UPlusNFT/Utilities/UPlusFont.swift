@@ -13,8 +13,9 @@ struct UPlusFont {
     
     static let nickname: CGFloat = 30
     static let head2: CGFloat = 26
-    static let head3: CGFloat = 24
     static let head4: CGFloat = 22
+    
+    static let h1: CGFloat = 24
     static let h2: CGFloat = 20
     static let h5: CGFloat = 18
 

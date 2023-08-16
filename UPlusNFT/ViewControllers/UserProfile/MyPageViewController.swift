@@ -8,12 +8,16 @@
 import UIKit
 import Combine
 import FirebaseAuth
+import OSLog
 
 final class MyPageViewController: UIViewController {
     
     // MARK: - Dependency
     private let vm: MyPageViewViewModel
     private var sideMenuVC: SideMenuViewController?
+    
+    // MARK: - Logger
+    private let logger = Logger()
     
     // MARK: - Side Menu Controller Manager
     private lazy var slideInTransitioningDelegate = SideMenuPresentationManager()
@@ -178,7 +182,6 @@ extension MyPageViewController {
         }
         func bindViewModelToView() {
             
-            
             self.vm.$userProfileViewModel
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] mission in
@@ -257,7 +260,6 @@ extension MyPageViewController {
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-//                    print("Missions fetched: \(missions.count)")
                     collection.reloadSections(IndexSet(integer: 5))
                 }
                 .store(in: &bindings)
@@ -280,8 +282,19 @@ extension MyPageViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] info in
                     guard let `self` = self else { return }
-//                    print("Missions by date: \(info)")
                     self.collectionView?.reloadSections(IndexSet(integer: 5))
+                }
+                .store(in: &bindings)
+            
+            self.vm.$updatedNfts
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] nfts in
+                    guard let `self` = self else { return }
+                   // TODO: Show bottom sheet
+                    print("New nfts: \(nfts)")
+                    for nft in nfts {
+                        self.showNewNftBottomSheet(tokenId: nft)
+                    }
                 }
                 .store(in: &bindings)
         }
@@ -396,8 +409,6 @@ extension MyPageViewController {
 
 extension MyPageViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //        print("Y OffSet: \(scrollView.contentOffset.y)")
-        //        print("Min: \(self.initialHeight)")
         
         if !isSet {
             self.initialTopOffset = scrollView.contentOffset.y
@@ -409,7 +420,6 @@ extension MyPageViewController {
         }
         
         self.topConstraint?.constant = self.initialTopOffset - scrollView.contentOffset.y
-        //        print("New top: \(self.initialTopOffset - scrollView.contentOffset.y)")
         let offset = -scrollView.contentOffset.y
         let newAlpha = (offset)/self.initialHeight
         
@@ -912,8 +922,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             switch indexPath.section {
             case 1:
                 if let missionType = self.vm.mission.savedMissionType {
-                    let vm = DailyRoutineMissionDetailViewViewModel(missionType: missionType)
-                    let vc = DailyRoutineMissionDetailViewController(vm: vm)
+                    let vm = RoutineMissionDetailViewViewModel(missionType: missionType)
+                    let vc = RoutineMissionDetailViewController(vm: vm)
 
                     self.show(vc, sender: self)
                 } else {
@@ -1000,12 +1010,38 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             
             self.addChildViewController(vc)
             self.navigationItem.title = RankingConstants.rank
+        
+            // pop game
+        case 3:
+            Task {
+                if await self.shareOnSlack() {
+                    
+                }
+            }
             
+            break
+            
+            // notice
+        case 4:
+            break
+            // FAQ
+        case 5:
+            break
         default:
-            // TODO: Wallet VC
+            
             break
         }
         self.sideMenuVC?.dismiss(animated: true)
+    }
+    
+    private func shareOnSlack() async -> Bool {
+        let urlString = MissionConstants.slackScheme
+        guard let url = URL(string: urlString) else {
+            self.logger.error("Wrong URL")
+            return false
+        }
+        
+        return await UIApplication.shared.open(url)
     }
     
     func resetPasswordDidTap() {
@@ -1061,4 +1097,15 @@ extension MyPageViewController: WelcomeBottomSheetViewControllerDelegate {
         }
     }
     
+}
+
+// MARK: - Private
+extension MyPageViewController {
+    private func showNewNftBottomSheet(tokenId: String) {
+        let vm = NewNFTNoticeBottomSheetViewViewModel(tokenId: tokenId)
+        let vc = NewNFTNoticeBottomSheetViewController(vm: vm)
+        vc.modalPresentationStyle = .overCurrentContext
+
+        self.present(vc, animated: false)
+    }
 }

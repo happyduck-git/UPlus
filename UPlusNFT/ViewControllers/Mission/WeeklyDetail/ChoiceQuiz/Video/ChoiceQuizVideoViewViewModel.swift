@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class ChoiceQuizVideoViewViewModel: WeeklyQuizBaseModel {
+final class ChoiceQuizVideoViewViewModel: MissionBaseModel {
     
     @Published var imageUrls: [URL] = []
     var buttonStatus: [Bool] = []

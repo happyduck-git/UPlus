@@ -8,10 +8,17 @@
 import UIKit
 import Combine
 
+protocol ContentReadOnlyMissionViewControllerDelegate: AnyObject {
+    func answerDidSave()
+}
+
 final class ContentReadOnlyMissionViewController: UIViewController {
 
     //MARK: - Dependency
     private let vm: ContentReadOnlyMissionViewViewModel
+    
+    //MARK: - Delegate
+    weak var delegate: ContentReadOnlyMissionViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -69,6 +76,17 @@ extension ContentReadOnlyMissionViewController {
                 
             }
             .store(in: &bindings)
+        
+        self.submitButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                
+                let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                vc.delegate = self
+                self.show(vc, sender: self)
+            }
+            .store(in: &bindings)
 
     }
     
@@ -96,5 +114,11 @@ extension ContentReadOnlyMissionViewController {
         ])
         
         self.submitButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+}
+
+extension ContentReadOnlyMissionViewController: WeeklyMissionCompleteViewControllerDelegate {
+    func answerDidSave() {
+        self.delegate?.answerDidSave()
     }
 }

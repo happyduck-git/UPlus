@@ -8,13 +8,17 @@
 import UIKit
 import PhotosUI
 import Combine
+import OSLog
 
-final class DailyRoutineMissionDetailViewController: UIViewController {
+final class RoutineMissionDetailViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: DailyRoutineMissionDetailViewViewModel
+    private let vm: RoutineMissionDetailViewViewModel
     
     private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Logger
+    private let logger = Logger()
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -42,7 +46,7 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: DailyRoutineMissionDetailViewViewModel) {
+    init(vm: RoutineMissionDetailViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         
@@ -62,14 +66,40 @@ final class DailyRoutineMissionDetailViewController: UIViewController {
         self.setUI()
         self.setLayout()
         self.setDelegate()
+        self.bind()
         
         self.addChildViewController(self.loadingVC)
     }
   
 }
 
+extension RoutineMissionDetailViewController {
+    
+    private func bind() {
+        func bindViewToViewModel() {
+            
+        }
+        func bindViewModelToView() {
+            self.vm.$isFinishedRoutines
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self,
+                        let collectionView = self.collectionView
+                    else { return }
+                    
+                    collectionView.reloadData()
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+    
+}
+
 // MARK: - Set UI & Layout & Delegate
-extension DailyRoutineMissionDetailViewController {
+extension RoutineMissionDetailViewController {
     private func setUI() {
         let collectionView = self.createCollectionView()
         self.collectionView = collectionView
@@ -91,7 +121,7 @@ extension DailyRoutineMissionDetailViewController {
 }
 
 // MARK: - Create Section
-extension DailyRoutineMissionDetailViewController {
+extension RoutineMissionDetailViewController {
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
         let layout = UICollectionViewCompositionalLayout {  sectionIndex, _ in
@@ -108,15 +138,21 @@ extension DailyRoutineMissionDetailViewController {
         )
         
         // 1. Add a header to section#0
-        collectionView.register(DailyRoutainStampCollectionViewCellHeader.self,
+        collectionView.register(RoutineStampCollectionViewCellHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: DailyRoutainStampCollectionViewCellHeader.identifier)
+                                withReuseIdentifier: RoutineStampCollectionViewCellHeader.identifier)
         
         // 2. Add stamp section cell
         collectionView.register(UICollectionViewCell.self,
                                 forCellWithReuseIdentifier: UICollectionViewCell.identifier)
-        collectionView.register(DailyRoutineMissionStampCollectionViewCell.self,
-            forCellWithReuseIdentifier: DailyRoutineMissionStampCollectionViewCell.identifier)
+        collectionView.register(RoutineMissionStampCollectionViewCell.self,
+            forCellWithReuseIdentifier: RoutineMissionStampCollectionViewCell.identifier)
+        collectionView.register(RoutineCompleteCollectionViewCell.self,
+                                forCellWithReuseIdentifier: RoutineCompleteCollectionViewCell.identifier)
+        collectionView.register(RoutineMissionBonusStageCollectionViewCell.self,
+                                forCellWithReuseIdentifier: RoutineMissionBonusStageCollectionViewCell.identifier)
+        collectionView.register(RoutineBonusClosedCollectionViewCell.self,
+                                forCellWithReuseIdentifier: RoutineBonusClosedCollectionViewCell.identifier)
         
         collectionView.register(UploadPhotoButtonCollectionViewCell.self,
             forCellWithReuseIdentifier: UploadPhotoButtonCollectionViewCell.identifier)
@@ -209,7 +245,7 @@ extension DailyRoutineMissionDetailViewController {
     
 }
 
-extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension RoutineMissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
@@ -228,18 +264,45 @@ extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UIC
         
         switch indexPath.section {
         case 0:
-            if indexPath.item == 0 {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyRoutineMissionStampCollectionViewCell.identifier, for: indexPath) as? DailyRoutineMissionStampCollectionViewCell else {
-                    fatalError()
-                }
-                
-                cell.bind(with: self.vm)
-                cell.contentView.layer.cornerRadius = 10
-                return cell
-            } else {
+            guard let isFinished = self.vm.isFinishedRoutines else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
-                cell.contentView.backgroundColor = .systemYellow
                 return cell
+            }
+            
+            if indexPath.item == 0 {
+                if isFinished {
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineCompleteCollectionViewCell.identifier, for: indexPath) as? RoutineCompleteCollectionViewCell else {
+                        fatalError()
+                    }
+                    cell.delegate = self
+                    
+                    return cell
+                } else {
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionStampCollectionViewCell.identifier, for: indexPath) as? RoutineMissionStampCollectionViewCell else {
+                        fatalError()
+                    }
+                    
+                    cell.bind(with: self.vm)
+                    cell.contentView.layer.cornerRadius = 10
+                    return cell
+                }
+ 
+            } else {
+               
+                if isFinished {
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionBonusStageCollectionViewCell.identifier, for: indexPath) as? RoutineMissionBonusStageCollectionViewCell else {
+                        return UICollectionViewCell()
+                    }
+                    
+                    
+                    return cell
+                } else {
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineBonusClosedCollectionViewCell.identifier, for: indexPath) as? RoutineBonusClosedCollectionViewCell else {
+                        return UICollectionViewCell()
+                    }
+           
+                    return cell
+                }
             }
             
         case 1:
@@ -260,9 +323,9 @@ extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UIC
         case UICollectionView.elementKindSectionHeader:
             guard let header = collectionView.dequeueReusableSupplementaryView(
                 ofKind: kind,
-                withReuseIdentifier: DailyRoutainStampCollectionViewCellHeader.identifier,
+                withReuseIdentifier: RoutineStampCollectionViewCellHeader.identifier,
                 for: indexPath
-            ) as? DailyRoutainStampCollectionViewCellHeader else {
+            ) as? RoutineStampCollectionViewCellHeader else {
                 return UICollectionReusableView()
             }
             
@@ -290,7 +353,7 @@ extension DailyRoutineMissionDetailViewController: UICollectionViewDelegate, UIC
     
 }
 
-extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellDelegate {
+extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellDelegate {
 
     func uploadButtonDidTap() {
         self.showPhotoBottomAlert()
@@ -343,7 +406,7 @@ extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionVi
 }
 
 // MARK: - PHPickerViewControllerDelegate
-extension DailyRoutineMissionDetailViewController: PHPickerViewControllerDelegate {
+extension RoutineMissionDetailViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
@@ -389,7 +452,7 @@ extension DailyRoutineMissionDetailViewController: PHPickerViewControllerDelegat
     
 }
 
-extension DailyRoutineMissionDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension RoutineMissionDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let pickedImage = info[.originalImage] as? UIImage else { return }
@@ -403,12 +466,12 @@ extension DailyRoutineMissionDetailViewController: UIImagePickerControllerDelega
     }
 }
 
-extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellFooterDelegate {
+extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellFooterDelegate {
     
     func confirmDidTap() {
         Task {
             do {
-                // 1. Save image to Storage
+                // 1. Save participation info to Storage
                 guard let imageData = self.vm.selectedImage?.jpegData(compressionQuality: 0.75) else {
                     return
                 }
@@ -416,10 +479,14 @@ extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionVi
                     missionType: self.vm.missionType,
                     image: imageData
                 )
+
+                // 2. Point 수여 complete vc
+                // 오늘 미션 정보 확인(point) // TODO: 부여하는 점수가 만일 모두 동일하다면 점수를 고정으로 두어도 될듯.
+                guard let mission = await self.vm.getTodayMissionInfo() else { return }
                 
-                // 2. Show CompleteVC on complete.
-                let vc = DailyMissionCompleteViewController(vm: self.vm)
-                self.show(vc, sender: self)
+                let vm = RoutineParticipationViewViewModel(mission: mission)
+                let vc = RoutineParticipationViewController(vm: vm)
+                
             }
             catch {
                 // TODO: 오류 발생 alert
@@ -430,32 +497,20 @@ extension DailyRoutineMissionDetailViewController: UploadPhotoButtonCollectionVi
     
 }
 
-extension DailyRoutineMissionDetailViewController: DailyRoutineMissionDetailViewViewModelDelegate {
+extension RoutineMissionDetailViewController: RoutineMissionDetailViewViewModelDelegate {
     func didRecieveMission() {
         DispatchQueue.main.async {
             self.loadingVC.removeViewController()
         }
     }
 }
-/*
- 
- Task {
- do {
- 
- // 1. Check missions
- let missions = try await FirestoreManager.shared.getDailyAthleteMission()
- // 2. Check participation status (in user_state_map)
- let statusMap = missions.compactMap {
- ($0.missionId, $0.missionUserStateMap)
- }
- 
- // 3. if status is succeeded get point / if pending or failed show the status
- 
- print("Current User: \(statusMap)")
- }
- catch {
- print("Error fetching athlete missions: \(error)")
- }
- }
- 
- */
+
+extension RoutineMissionDetailViewController: RoutineCompleteCollectionViewCellDelegate {
+    func redeemButtonDidTap(sender: RoutineCompleteCollectionViewCell) {
+        let vc = RoutineCompleteViewController(vm: self.vm)
+        vc.delegate = sender
+        self.show(vc, sender: self)
+    }
+
+}
+

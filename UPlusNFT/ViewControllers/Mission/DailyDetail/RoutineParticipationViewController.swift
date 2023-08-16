@@ -1,31 +1,16 @@
 //
-//  MissionCompleteViewController.swift
+//  RoutineParticipationViewController.swift
 //  UPlusNFT
 //
-//  Created by Platfarm on 2023/07/20.
+//  Created by Platfarm on 2023/08/16.
 //
 
 import UIKit
 import Combine
 
-enum MissionAnswerState: String {
-    case pending
-    case successed
-    case failed
-}
-
-protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
-    func answerDidSave()
-}
-
-final class WeeklyMissionCompleteViewController: UIViewController {
+final class RoutineParticipationViewController: UIViewController {
     
-    // MARK: - Dependency
-    private let vm: MissionBaseModel
-    private let firestoreManager = FirestoreManager.shared
-    
-    //MARK: - Delegate
-    weak var delegate: WeeklyMissionCompleteViewControllerDelegate?
+    private let vm: RoutineParticipationViewViewModel
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -70,10 +55,9 @@ final class WeeklyMissionCompleteViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(vm: MissionBaseModel) {
+    init(vm: RoutineParticipationViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
-        self.configure()
     }
     
     required init?(coder: NSCoder) {
@@ -84,76 +68,37 @@ final class WeeklyMissionCompleteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
         self.setNavigationBar()
-        self.bind()
+        self.configure()
     }
     
 }
 
-extension WeeklyMissionCompleteViewController {
+// MARK: - Configure
+extension RoutineParticipationViewController {
+    
+    private func configure() {
+        self.confirmButton.setTitle(String(format: MissionConstants.redeemPoint, self.vm.mission.missionRewardPoint),
+                                    for: .normal)
+    }
+    
     private func bind() {
         self.confirmButton.tapPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                
-                self.addChildViewController(self.loadingVC)
-                
-                let dataSource = self.vm.mission
-               
-               guard let missionType = MissionType(rawValue: dataSource.missionSubTopicType) else {
-                    return
-                }
-                
-                Task {
-                    do {
-                        try await self.firestoreManager
-                            .saveParticipatedWeeklyMission(
-                                questionId: dataSource.missionId,
-                                week: self.vm.numberOfWeek,
-                                today: Date().yearMonthDateFormat,
-                                missionType: missionType,
-                                point: dataSource.missionRewardPoint,
-                                state: .successed
-                            )
-                        self.delegate?.answerDidSave()
-                        self.loadingVC.removeViewController()
-                        
-                        guard let vcs = self.navigationController?.viewControllers else { return }
-                        
-                        for vc in vcs where vc is WeeklyMissionOverViewViewController {
-                            self.navigationController?.popToViewController(vc, animated: true)
-                        }
-                        
-                        // Weekly mission 완료 상태 확인
-                        self.vm.weeklyMissionCompletion = try await self.firestoreManager
-                            .checkWeeklyMissionSetCompletion(
-                                week: self.vm.numberOfWeek
-                            )
- 
-                    }
-                    catch {
-                        print("Error saving mission and user data -- \(error)")
-                    }
-                }
+                //TODO: 어느 VC로 돌아갈 지 결정 필요.
+                self.dismiss(animated: true)
             }
             .store(in: &bindings)
-
     }
-}
-
-// MARK: - Configure with View Model
-extension WeeklyMissionCompleteViewController {
-    private func configure() {
-        self.confirmButton.setTitle(String(format: MissionConstants.redeemPoint, self.vm.mission.missionRewardPoint), for: .normal)
-    }
+    
 }
 
 // MARK: - Set UI & Layout
-extension WeeklyMissionCompleteViewController {
+extension RoutineParticipationViewController {
     private func setUI() {
         self.view.addSubviews(self.backgroundConfetti,
                               self.resultLabel,

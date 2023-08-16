@@ -1,5 +1,5 @@
 //
-//  DailyRoutineMissionDetailViewViewModel.swift
+//  RoutineMissionDetailViewViewModel.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/28.
@@ -8,17 +8,18 @@
 import UIKit.UIImage
 import Combine
 
-protocol DailyRoutineMissionDetailViewViewModelDelegate: AnyObject {
+protocol RoutineMissionDetailViewViewModelDelegate: AnyObject {
     func didRecieveMission()
 }
 
-final class DailyRoutineMissionDetailViewViewModel {
+final class RoutineMissionDetailViewViewModel {
     
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
+    private let nftServiceManager = NFTServiceManager.shared
     
     //MARK: - Delegate
-    weak var delegate: DailyRoutineMissionDetailViewViewModelDelegate?
+    weak var delegate: RoutineMissionDetailViewViewModelDelegate?
     
     // MARK: - DataSource
     var missionType: MissionType
@@ -31,7 +32,7 @@ final class DailyRoutineMissionDetailViewViewModel {
             self.successedMissionsCount = athleteMissions.count
         }
     }
-    @Published var isFinishedRoutines: Bool = false
+    @Published var isFinishedRoutines: Bool?
     @Published var successedMissionsCount: Int = 0
     
     // MARK: - Init
@@ -41,7 +42,8 @@ final class DailyRoutineMissionDetailViewViewModel {
     
 }
 
-extension DailyRoutineMissionDetailViewViewModel {
+// MARK: - Firestore
+extension RoutineMissionDetailViewViewModel {
     
     func getAtheleteMissions() {
         Task {
@@ -56,6 +58,8 @@ extension DailyRoutineMissionDetailViewViewModel {
                     
                     self.isFinishedRoutines = true
                     //TODO: isFinishedRoutines bind하여 true인 경우 참여 버튼 비활성화.
+                } else {
+                    self.isFinishedRoutines = false
                 }
                 
                 self.delegate?.didRecieveMission()
@@ -63,6 +67,16 @@ extension DailyRoutineMissionDetailViewViewModel {
             catch {
                 print("Error fetching athelete missions -- \(error)")
             }
+        }
+    }
+    
+    func getTodayMissionInfo() async -> (any Mission)? {
+        do {
+            return try await self.firestoreManager.getTodayMission(missionType: self.missionType)
+        }
+        catch {
+            print("Error get today's mission -- \(error)")
+            return nil
         }
     }
     

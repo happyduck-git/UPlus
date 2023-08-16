@@ -128,9 +128,24 @@ struct MissionConstants {
     static let quizMission: String = "퀴즈 미션"
     static let checkAnswer: String = "정답 확인하기"
     static let confirm: String = "확인"
-    static let missionComplete: String = "미션 참여 완료"
+    static let missionParticipated: String = "미션 참여 완료"
+    static let missionCompleted: String = "미션 완주"
     static let redeemPoint: String = "%dP 포인트 받기"
-    static let routineMissionLimit: Int = 15
+    static let missionProgress: String = "%d회 성공 /15회차"
+    static let dailyMissionComplete: String = "15일 챌린지 완주를 축하해요!"
+    static let routineMissionLimit: Int = 3
+    static let redeemReward: String = "완주 보상 보기"
+    static let bonusStage: String = "보너스 스테이지"
+    static let pointInfo: String = "최대 600P 획득 기회"
+    static let bonusMissionLimit: Int = 6
+    static let certificate: String = "경험인증서 NFT"
+    static let certiPath: String = "TODO 루틴미션"
+    static let slackInfo: String = "Slack에 인증해서 경품 응모권을 받으세요!"
+    static let shareOnSlack: String = "Slack에 자랑하기"
+    static let slackScheme: String = "slack://"
+    static let rewardRedeemed: String = "보상 획득 완료"
+    static let reupload: String = "재업로드"
+    
     static let numberOfTexts: String = "%d글자"
     static let hintDescription: String = "밑줄에 들어갈 단어를 맞춰보세요"
     
@@ -142,6 +157,10 @@ struct MissionConstants {
     
     static let reselect: String = "앗! 다시 한번 선택해보세요"
     static let buttonBorderWidth: CGFloat = 2.0
+    
+    static let congrats: String = "축하해요"
+    static let weeklyCompleted: String = "여정 완료"
+    static let redeemNft: String = "NFT 보상 받기"
 }
 
 struct RankingConstants {
@@ -233,9 +252,11 @@ struct ImageAsset {
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
+    static let coloredNft: String = "uplus-nft-color"
     static let pointShadow: String = "point-shadow"
     static let confetti: String = "confetti"
     static let checkBlack: String = "check-black"
+    static let padlock: String = "padlock"
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"
@@ -385,4 +406,10 @@ struct FirestoreConstants {
     
     /* Reward */
     static let rewardUser = "reward_user"
+}
+
+struct AlertConstants {
+    static let slackShareFail: String = "Slack 공유 실패"
+    static let retryMessage: String = "다시 시도해 주시기 바랍니다."
+    static let confirm: String = "확인"
 }

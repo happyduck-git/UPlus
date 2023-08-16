@@ -66,6 +66,22 @@ extension WeeklyMissionOverViewViewController {
                     self.tableView.reloadData()
                 }
                 .store(in: &bindings)
+            
+            self.vm.weeklyMissionCompletion
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    if $0 {
+                        print("여정 완료")
+              
+                        let bottomVC = WeeklyMissionCompleteBottomSheetViewController(vm: self.vm)
+                        bottomVC.modalPresentationStyle = .overCurrentContext
+                        self.present(bottomVC, animated: false)
+                    } else {
+                        print("여정 미완료")
+                    }
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -137,12 +153,14 @@ extension WeeklyMissionOverViewViewController {
             case .answerQuizSingular:
                 let vm = AnswerQuizSingularViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = AnswerQuizSingularViewController(vm: vm)
+                vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
             case .answerQuizPlural:
                 let vm = AnswerQuizPluralViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = AnswerQuizPluralViewController(vm: vm)
+                vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
@@ -168,12 +186,14 @@ extension WeeklyMissionOverViewViewController {
             case .choiceQuizMore:
                 let vm = ChoiceQuizMoreViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizMoreViewController(vm: vm)
+                vc.delegate = self
                 
                 self.show(vc, sender: self)
 
             case .choiceQuizVideo:
                 let vm = ChoiceQuizVideoViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizVideoViewController(vm: vm)
+                vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
@@ -192,6 +212,7 @@ extension WeeklyMissionOverViewViewController {
             case .contentReadOnly:
                 let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: self.vm.week)
                 let vc = ContentReadOnlyMissionViewController(vm: vm)
+                vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
@@ -211,8 +232,16 @@ extension WeeklyMissionOverViewViewController {
     }
 }
 
-extension WeeklyMissionOverViewViewController: ChoiceQuizOXViewControllerDelegate {
-    func answerDidSaved() {
+extension WeeklyMissionOverViewViewController: ChoiceQuizOXViewControllerDelegate,
+                                               ChoiceQuizMoreViewControllerDelegate,
+                                               ChoiceQuizVideoViewControllerDelegate,
+                                               AnswerQuizPluralViewControllerDelegate,
+                                               AnswerQuizSingularViewControllerDelegate,
+                                               ContentReadOnlyMissionViewControllerDelegate {
+    func answerDidSave() {
         self.vm.getWeeklyMissionInfo(week: self.vm.week)
     }
 }
+
+
+

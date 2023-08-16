@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class DailyRoutainStampCollectionViewCellHeader: UICollectionViewCell {
+final class RoutineStampCollectionViewCellHeader: UICollectionViewCell {
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -71,8 +71,8 @@ final class DailyRoutainStampCollectionViewCellHeader: UICollectionViewCell {
 }
 // 
 // MARK: - Configure
-extension DailyRoutainStampCollectionViewCellHeader {
-    func bind(with vm: DailyRoutineMissionDetailViewViewModel) {
+extension RoutineStampCollectionViewCellHeader {
+    func bind(with vm: RoutineMissionDetailViewViewModel) {
         
         bindings.forEach { $0.cancel() }
         bindings.removeAll()
@@ -88,7 +88,7 @@ extension DailyRoutainStampCollectionViewCellHeader {
 }
 
 // MARK: - Set UI & Layout
-extension DailyRoutainStampCollectionViewCellHeader {
+extension RoutineStampCollectionViewCellHeader {
     private func setUI() {
         self.contentView.addSubviews(self.quizDescription,
                                      self.quizTitle,

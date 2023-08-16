@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class WeeklyQuizBaseModel {
+class MissionBaseModel {
     
     let mission: any Mission
     let numberOfWeek: Int
@@ -23,7 +23,7 @@ class WeeklyQuizBaseModel {
     
 }
 
-final class ChoiceQuizzOXViewViewModel: WeeklyQuizBaseModel {
+final class ChoiceQuizzOXViewViewModel: MissionBaseModel {
 
     /* Choice Quiz */
     @Published var circleButtonDidTap: Bool = false

@@ -7,6 +7,15 @@
 
 import Foundation
 
+enum NFTServiceStatus: String {
+    case pending
+    case fail
+}
+
+enum NFTServiceError: Error {
+    case issueFailed
+}
+
 /// Singleton Object Class for UPlus NFT Service
 final class NFTServiceManager {
     

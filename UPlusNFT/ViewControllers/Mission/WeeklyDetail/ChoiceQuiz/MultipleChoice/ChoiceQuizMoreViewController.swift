@@ -8,10 +8,17 @@
 import UIKit
 import Combine
 
+protocol ChoiceQuizMoreViewControllerDelegate: AnyObject {
+    func answerDidSave()
+}
+
 final class ChoiceQuizMoreViewController: BaseMissionViewController {
     
     //MARK: - Dependency
     private let vm: ChoiceQuizMoreViewViewModel
+    
+    // MARK: - Delegate
+    weak var delegate: ChoiceQuizMoreViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -95,6 +102,8 @@ extension ChoiceQuizMoreViewController {
                     if mission.missionChoiceQuizRightOrder == selected {
                         
                         let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                        vc.delegate = self
+                        
                         self.show(vc, sender: self)
                     } else {
                         self.answerInfoLabel.isHidden = false
@@ -154,15 +163,8 @@ extension ChoiceQuizMoreViewController {
     }
 }
 
-
-//import SwiftUI
-//import FirebaseFirestore
-//struct VCPreView:PreviewProvider {
-//    static var previews: some View {
-//        let misson = ChoiceQuizMission(missionId: "A",
-//                                       missionTopicType: "A", missionSubTopicType: "A", missionFormatType: "A", missionSubFormatType: "A", missionCreationTime: Timestamp(), missionStartTime: Timestamp(), missionRewardPoint: 10, missionPermitAvatarLevel: 1, missionChoiceQuizCaptions: ["A", "B"], missionChoiceQuizRightOrder: 1)
-//        let vm = ChoiceQuizMoreViewViewModel(mission: misson,
-//                                             numberOfWeek: 1)
-//        ChoiceQuizMoreViewController(vm: vm).toPreview()
-//    }
-//}
+extension ChoiceQuizMoreViewController: WeeklyMissionCompleteViewControllerDelegate {
+    func answerDidSave() {
+        self.delegate?.answerDidSave()
+    }
+}

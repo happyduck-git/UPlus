@@ -224,7 +224,7 @@ extension FirestoreManager {
         return nft.nftContentImageUrl
     }
     
-    func getNftUrl(tokenId: String) async -> String {
+    func getNft(tokenId: String) async -> UPlusNft? {
         do {
             let doc = try await threadsSetCollectionPath2
                 .document(FirestoreConstants.nfts)
@@ -232,13 +232,11 @@ extension FirestoreManager {
                 .document(String(describing: tokenId))
                 .getDocument()
             
-            let nft = try doc.data(as: UPlusNft.self, decoder: self.decoder)
-           
-            return nft.nftContentImageUrl
+            return try doc.data(as: UPlusNft.self, decoder: self.decoder)
         }
         catch {
-            print("Error fetching hold nft -- \(error)")
-            return "no-nft"
+            print("Error fetching Nft info -- \(error)")
+            return nil
         }
     }
     
@@ -599,8 +597,7 @@ extension FirestoreManager {
         var history: [PointHistory] = []
 
         for doc in docs {
-            var data = try doc.data(as: PointHistory.self, decoder: self.decoder)
-            history.append(data)
+            history.append(try doc.data(as: PointHistory.self, decoder: self.decoder))
         }
         
         return history
@@ -1304,6 +1301,29 @@ extension FirestoreManager {
             missions.append(try doc.data(as: GoodWorkerMission.self, decoder: decoder))
         }
         return missions
+    }
+    
+    func getTodayMission(missionType: MissionType) async throws -> any Mission {
+        
+        let doc = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(missionType.rawValue)
+            .document(Date().yearMonthDateFormat)
+            .getDocument()
+            
+        switch missionType {
+        case .dailyExpAthlete:
+            return try doc.data(as: AthleteMission.self, decoder: decoder)
+            
+        case .dailyExpGoodWorker:
+            return try doc.data(as: GoodWorkerMission.self, decoder: decoder)
+            
+        case .dailyExpEnvironmentalist:
+            return try doc.data(as: EnvironmentalistMission.self, decoder: decoder)
+            
+        default:
+            return try doc.data(as: EnvironmentalistMission.self, decoder: decoder)
+        }
     }
     
     // MARK: - Get Rewards

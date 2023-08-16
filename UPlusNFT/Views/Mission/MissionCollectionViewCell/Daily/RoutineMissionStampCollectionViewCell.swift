@@ -1,5 +1,5 @@
 //
-//  DailyRoutineMissionStampCollectionViewCell.swift
+//  RoutineMissionStampCollectionViewCell.swift
 //  UPlusNFT
 //
 //  Created by Platfarm on 2023/07/28.
@@ -8,12 +8,10 @@
 import UIKit
 import Combine
 
-final class DailyRoutineMissionStampCollectionViewCell: UICollectionViewCell {
-    
-    private let tempNumberOfStamps: Int = 15
+final class RoutineMissionStampCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Dependency
-    private var vm: DailyRoutineMissionDetailViewViewModel?
+    private var vm: RoutineMissionDetailViewViewModel?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -31,7 +29,6 @@ final class DailyRoutineMissionStampCollectionViewCell: UICollectionViewCell {
     private let progressLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "6 / 15"
         label.font = .systemFont(ofSize: UPlusFont.body1, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -69,9 +66,9 @@ final class DailyRoutineMissionStampCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: - Configure & Bind with View Model
-extension DailyRoutineMissionStampCollectionViewCell {
+extension RoutineMissionStampCollectionViewCell {
     
-    func bind(with vm: DailyRoutineMissionDetailViewViewModel) {
+    func bind(with vm: RoutineMissionDetailViewViewModel) {
         
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
@@ -90,16 +87,19 @@ extension DailyRoutineMissionStampCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
-                self.progressLabel.text = String(describing: $0) + " / " + String(describing: MissionConstants.routineMissionLimit)
+                self.progressLabel.text = String(format: MissionConstants.missionProgress, $0)
             }
             .store(in: &self.bindings)
         
         vm.$isFinishedRoutines
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                guard let `self` = self else { return }
-                if $0 {
-                    self.stampCollectionView.backgroundColor = UPlusColor.grayMint
+                guard let `self` = self,
+                let isFinished = $0
+                else { return }
+                if isFinished {
+                    // TODO: 미션 15개 완료한 경우
+                    
                 }
             }
             .store(in: &bindings)
@@ -109,7 +109,7 @@ extension DailyRoutineMissionStampCollectionViewCell {
 }
 
 // MARK: - Set UI & Layout
-extension DailyRoutineMissionStampCollectionViewCell {
+extension RoutineMissionStampCollectionViewCell {
     
     private func setDelegate() {
         self.stampCollectionView.delegate = self
@@ -140,7 +140,7 @@ extension DailyRoutineMissionStampCollectionViewCell {
     
 }
 
-extension DailyRoutineMissionStampCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension RoutineMissionStampCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 15
@@ -151,9 +151,11 @@ extension DailyRoutineMissionStampCollectionViewCell: UICollectionViewDelegate, 
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StampCollectionViewCell.identifier, for: indexPath) as? StampCollectionViewCell,
               let cellVM = self.vm
         else {
-            fatalError()
+            return UICollectionViewCell()
         }
-
+        
+        cell.resetCell()
+        
         if indexPath.item >= cellVM.athleteMissions.count {
             cell.contentView.backgroundColor = .systemGray
             return cell

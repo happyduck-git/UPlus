@@ -22,7 +22,9 @@ final class StampCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         
         self.contentView.clipsToBounds = true
-        self.contentView.backgroundColor = .white
+        self.contentView.backgroundColor = UPlusColor.gray01
+        self.contentView.layer.borderColor = UPlusColor.mint02.cgColor
+        self.contentView.layer.borderWidth = 1.5
         
         self.setUI()
         self.setLayout()
@@ -43,6 +45,10 @@ final class StampCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.contentView.backgroundColor = .white
+    }
+    
+    func resetCell() {
+        self.pointLabel.text = nil
     }
 }
 

@@ -6,10 +6,21 @@
 //
 
 import UIKit
+import Combine
+
+protocol AnswerQuizPluralViewControllerDelegate: AnyObject {
+    func answerDidSave()
+}
 
 final class AnswerQuizPluralViewController: BaseMissionViewController {
 
     private let vm: AnswerQuizPluralViewViewModel
+    
+    //MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    //MARK: - Delegate
+    weak var delegate: AnswerQuizPluralViewControllerDelegate?
     
     //MARK: - Init
     init(vm: AnswerQuizPluralViewViewModel) {
@@ -26,22 +37,32 @@ final class AnswerQuizPluralViewController: BaseMissionViewController {
         super.viewDidLoad()
   
         self.bind()
+        
+        // TEMP
+        self.checkAnswerButton.isUserInteractionEnabled = true
     }
 
 }
 
 extension AnswerQuizPluralViewController {
     private func bind() {
-        let quizzes = self.vm.mission.missionAnswerQuizzes
         
-        var string: String = "문제:\n"
-        
-        if !quizzes.isEmpty {
-            for i in stride(from: quizzes.startIndex, to: quizzes.endIndex, by: 2) {
-                string += "\(quizzes[i])\n"
+        self.checkAnswerButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                
+                let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                vc.delegate = self
+                self.show(vc, sender: self)
             }
-        }
-//        self.label.text = string
+            .store(in: &bindings)
     }
   
+}
+
+extension AnswerQuizPluralViewController: WeeklyMissionCompleteViewControllerDelegate {
+    func answerDidSave() {
+        self.delegate?.answerDidSave()
+    }
 }

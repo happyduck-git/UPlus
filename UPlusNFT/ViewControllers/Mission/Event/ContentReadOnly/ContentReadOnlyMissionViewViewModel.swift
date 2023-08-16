@@ -8,19 +8,15 @@
 import Foundation
 import Combine
 
-final class ContentReadOnlyMissionViewViewModel {
-    
-    let mission: ContentReadOnlyMission
-    let numberOfWeek: Int
+final class ContentReadOnlyMissionViewViewModel: MissionBaseModel {
     
     @Published var imageUrls: [URL] = []
     
-    init(mission: ContentReadOnlyMission, numberOfWeek: Int) {
-        self.mission = mission
-        self.numberOfWeek = numberOfWeek
-        
+    override init(mission: Mission, numberOfWeek: Int) {
+        super.init(mission: mission, numberOfWeek: numberOfWeek)
         self.getImageUrls()
     }
+
 }
 
 extension ContentReadOnlyMissionViewViewModel {

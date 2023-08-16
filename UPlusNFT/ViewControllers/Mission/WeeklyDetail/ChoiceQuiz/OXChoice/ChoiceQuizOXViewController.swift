@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 protocol ChoiceQuizOXViewControllerDelegate: AnyObject {
-    func answerDidSaved()
+    func answerDidSave()
 }
 
 final class ChoiceQuizOXViewController: UIViewController {
@@ -28,7 +28,7 @@ final class ChoiceQuizOXViewController: UIViewController {
         let label = UILabel()
         label.text = MissionConstants.quizMission
         label.textColor = .systemGray
-        label.font = .systemFont(ofSize: UPlusFont.head3, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.h1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -281,7 +281,7 @@ extension ChoiceQuizOXViewController {
 }
 
 extension ChoiceQuizOXViewController: WeeklyMissionCompleteViewControllerDelegate {
-    func answerDidSaved() {
-        self.delegate?.answerDidSaved()
+    func answerDidSave() {
+        self.delegate?.answerDidSave()
     }
 }
