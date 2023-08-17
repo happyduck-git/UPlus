@@ -10,7 +10,7 @@ import Combine
 import Nuke
 
 protocol ContentReadOnlyMissionViewControllerDelegate: AnyObject {
-    func answerDidSave()
+    func redeemDidTap()
 }
 
 final class ContentReadOnlyMissionViewController: MissionBaseScrollViewController {
@@ -64,7 +64,7 @@ extension ContentReadOnlyMissionViewController {
     private func configure() {
         self.titleLabel.text = self.vm.mission.missionContentTitle
         self.subTitleLabel.text = self.vm.mission.missionContentText
-        self.confirmButton.setTitle(MissionConstants.readCompleted, for: .normal)
+        self.checkAnswerButton.setTitle(MissionConstants.readCompleted, for: .normal)
     }
     
     private func bind() {
@@ -77,6 +77,17 @@ extension ContentReadOnlyMissionViewController {
             }
             .store(in: &bindings)
 
+        self.checkAnswerButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+    
+                let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                vc.delegate = self
+                self.show(vc, sender: self)
+            }
+            .store(in: &bindings)
+        
     }
     
 }
@@ -115,7 +126,7 @@ extension ContentReadOnlyMissionViewController {
 }
 
 extension ContentReadOnlyMissionViewController: WeeklyMissionCompleteViewControllerDelegate {
-    func answerDidSave() {
-        self.delegate?.answerDidSave()
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap()
     }
 }

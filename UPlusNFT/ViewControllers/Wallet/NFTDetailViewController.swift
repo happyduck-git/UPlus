@@ -127,7 +127,7 @@ extension NFTDetailViewController {
             
             self.nftTitle.text = vm.nftDetailType
             self.nftType.text = vm.nftType
-            let level = NftLevel.level(forPoints: vm.nftTokenId)
+            let level = NftLevel.level(tokenId: vm.nftTokenId)
             if Range(0...5).contains(level) {
                 self.levelLabel.text = MissionConstants.levelPrefix + String(describing: level)
             }

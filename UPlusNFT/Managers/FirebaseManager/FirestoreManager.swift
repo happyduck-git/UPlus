@@ -438,7 +438,7 @@ extension FirestoreManager {
     
     /* Daily Mission */
     func getDailyAthleteMission() async throws -> [AthleteMission] {
-        let documents = try await dummyCollection.document(FirestoreConstants.missions)
+        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(FirestoreConstants.dailyExpAthleteMissionSet)
             .getDocuments()
             .documents

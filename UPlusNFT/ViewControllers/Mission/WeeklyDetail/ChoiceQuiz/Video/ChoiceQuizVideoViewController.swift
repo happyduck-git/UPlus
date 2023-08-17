@@ -10,7 +10,7 @@ import WebKit
 import Combine
 
 protocol ChoiceQuizVideoViewControllerDelegate: AnyObject {
-    func answerDidSave()
+    func redeemDidTap()
 }
 
 final class ChoiceQuizVideoViewController: BaseMissionViewController {
@@ -323,8 +323,8 @@ extension ChoiceQuizVideoViewController {
 }
 
 extension ChoiceQuizVideoViewController: WeeklyMissionCompleteViewControllerDelegate {
-    func answerDidSave() {
-        self.delegate?.answerDidSave()
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap()
     }
 
 }

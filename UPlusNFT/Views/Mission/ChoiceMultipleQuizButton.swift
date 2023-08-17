@@ -26,6 +26,24 @@ final class ChoiceMultipleQuizButton: UIButton {
         return imageView
     }()
     
+    private let progressView: UIProgressView = {
+        let progress = UIProgressView()
+        progress.isHidden = true
+        progress.trackTintColor = .white
+        progress.progressTintColor = UPlusColor.gray02
+        progress.translatesAutoresizingMaskIntoConstraints = false
+        return progress
+    }()
+    
+    private let progressLabel: UILabel = {
+        let label = UILabel()
+        label.isHidden = true
+        label.textColor = UPlusColor.gray05
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -46,11 +64,23 @@ extension ChoiceMultipleQuizButton {
     func toggleImage(hidden: Bool) {
         self.checkmark.isHidden = hidden
     }
+    
+    func setProgress(progress: Float) {
+        self.progressView.setProgress(progress, animated: true)
+        self.progressLabel.text = String(format: MissionConstants.progressSuffix, (progress * 100))
+       
+        self.progressView.isHidden = false
+        self.progressLabel.isHidden = false
+        self.checkmark.isHidden = true
+        self.isUserInteractionEnabled = false
+    }
 }
 
 extension ChoiceMultipleQuizButton {
     private func setUI() {
-        self.addSubviews(self.quizCaption,
+        self.addSubviews(self.progressView,
+                         self.quizCaption,
+                         self.progressLabel,
                          self.checkmark)
     }
     
@@ -63,6 +93,17 @@ extension ChoiceMultipleQuizButton {
             self.checkmark.topAnchor.constraint(equalTo: quizCaption.topAnchor),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.checkmark.trailingAnchor, multiplier: 2),
             self.checkmark.bottomAnchor.constraint(equalTo: quizCaption.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.progressView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.progressView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.progressView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.progressView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            self.progressLabel.topAnchor.constraint(equalTo: self.checkmark.topAnchor),
+            self.progressLabel.trailingAnchor.constraint(equalTo: self.checkmark.trailingAnchor),
+            self.progressLabel.bottomAnchor.constraint(equalTo: self.checkmark.bottomAnchor)
         ])
     }
 }

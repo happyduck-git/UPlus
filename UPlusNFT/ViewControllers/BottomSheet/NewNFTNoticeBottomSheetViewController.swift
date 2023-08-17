@@ -24,7 +24,8 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
     private let stack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 5.0
+        stack.spacing = 10.0
+        stack.distribution = .fillProportionally
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -33,6 +34,7 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.textColor = .black
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -41,12 +43,14 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.textColor = .black
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let nftImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -55,6 +59,7 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
         label.textColor = UPlusColor.gray09
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -104,7 +109,7 @@ extension NewNFTNoticeBottomSheetViewController {
                     
                     self.missionTitle.text = nft.nftType
                     self.nftTitle.text = String(describing: nft.nftTokenId)
-                    self.pathLabel.text = nft.nftDetailType
+                    self.pathLabel.text = "보상경로: " + nft.nftDetailType
                     guard let url = URL(string: nft.nftContentImageUrl) else {
                         self.logger.warning("Error converting to url.")
                         return
@@ -131,11 +136,12 @@ extension NewNFTNoticeBottomSheetViewController {
 extension NewNFTNoticeBottomSheetViewController {
     private func setUI() {
         self.stack.addArrangedSubviews(self.missionTitle,
-                              self.nftTitle,
-                              self.nftImage,
-                              self.redeemButton)
+                                       self.nftTitle,
+                                       self.nftImage,
+                                       self.pathLabel,
+                                       self.redeemButton)
         
-        self.view.addSubviews(self.stack)
+        self.containerView.addSubviews(self.stack)
     }
     
     private func setLayout() {

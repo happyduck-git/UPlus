@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 protocol AnswerQuizPluralViewControllerDelegate: AnyObject {
-    func answerDidSave()
+    func redeemDidTap()
 }
 
 final class AnswerQuizPluralViewController: BaseMissionViewController {
@@ -62,7 +62,7 @@ extension AnswerQuizPluralViewController {
 }
 
 extension AnswerQuizPluralViewController: WeeklyMissionCompleteViewControllerDelegate {
-    func answerDidSave() {
-        self.delegate?.answerDidSave()
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap()
     }
 }

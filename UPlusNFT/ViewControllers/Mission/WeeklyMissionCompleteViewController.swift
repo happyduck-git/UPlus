@@ -15,59 +15,19 @@ enum MissionAnswerState: String {
 }
 
 protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
-    func answerDidSave()
+    func redeemDidTap()
 }
 
-final class WeeklyMissionCompleteViewController: UIViewController {
+final class WeeklyMissionCompleteViewController: BaseMissionCompletedViewController {
     
     // MARK: - Dependency
     private let vm: MissionBaseModel
-    private let firestoreManager = FirestoreManager.shared
     
     //MARK: - Delegate
     weak var delegate: WeeklyMissionCompleteViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
-    
-    // MARK: - UI Elements
-    private let loadingVC = LoadingViewController()
-    
-    private let backgroundConfetti: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.confetti)
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
-    
-    private let resultLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
-        label.text = MissionConstants.missionParticipated
-        label.textAlignment = .center
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let missionCompleteIcon: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.pointShadow)
-        imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private lazy var confirmButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
-        button.clipsToBounds = true
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
     // MARK: - Init
     init(vm: MissionBaseModel) {
@@ -85,9 +45,6 @@ final class WeeklyMissionCompleteViewController: UIViewController {
         super.viewDidLoad()
         
         self.view.backgroundColor = .white
-        self.setUI()
-        self.setLayout()
-        self.setNavigationBar()
         self.bind()
     }
     
@@ -102,37 +59,24 @@ extension WeeklyMissionCompleteViewController {
                 
                 self.addChildViewController(self.loadingVC)
                 
-                let dataSource = self.vm.mission
-               
-               guard let missionType = MissionType(rawValue: dataSource.missionSubTopicType) else {
-                    return
-                }
-                
                 Task {
                     do {
-                        try await self.firestoreManager
-                            .saveParticipatedWeeklyMission(
-                                questionId: dataSource.missionId,
-                                week: self.vm.numberOfWeek,
-                                today: Date().yearMonthDateFormat,
-                                missionType: missionType,
-                                point: dataSource.missionRewardPoint,
-                                state: .successed
-                            )
-                        self.delegate?.answerDidSave()
+                        // Save weekly mission participation.
+                        try await self.vm.saveWeeklyMissionParticipationStatus()
+                        
+                        // Check level update.
+                        async let _ = self.vm.checkLevelUpdate()
+                      
+                        self.delegate?.redeemDidTap()
                         self.loadingVC.removeViewController()
                         
                         guard let vcs = self.navigationController?.viewControllers else { return }
-                        
                         for vc in vcs where vc is WeeklyMissionOverViewViewController {
                             self.navigationController?.popToViewController(vc, animated: true)
                         }
                         
                         // Weekly mission 완료 상태 확인
-                        self.vm.weeklyMissionCompletion = try await self.firestoreManager
-                            .checkWeeklyMissionSetCompletion(
-                                week: self.vm.numberOfWeek
-                            )
+                        try await self.vm.checkMissionCompletion()
  
                     }
                     catch {
@@ -152,36 +96,4 @@ extension WeeklyMissionCompleteViewController {
     }
 }
 
-// MARK: - Set UI & Layout
-extension WeeklyMissionCompleteViewController {
-    private func setUI() {
-        self.view.addSubviews(self.backgroundConfetti,
-                              self.resultLabel,
-                              self.missionCompleteIcon,
-                              self.confirmButton)
-    }
-    
-    private func setLayout() {
-        self.backgroundConfetti.frame = view.bounds
-        
-        NSLayoutConstraint.activate([
-            self.resultLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 10),
-            self.resultLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            
-            self.missionCompleteIcon.topAnchor.constraint(equalToSystemSpacingBelow: self.resultLabel.bottomAnchor, multiplier: 5),
-            self.missionCompleteIcon.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 10),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.missionCompleteIcon.trailingAnchor, multiplier: 10),
-            
-            self.confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: self.missionCompleteIcon.bottomAnchor, multiplier: 5),
-            self.confirmButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
-            self.confirmButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 15),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.confirmButton.trailingAnchor, multiplier: 3),
-            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.confirmButton.bottomAnchor, multiplier: 3)
-        ])
-        self.resultLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-    }
-    
-    private func setNavigationBar() {
-        self.navigationItem.hidesBackButton = true
-    }
-}
+

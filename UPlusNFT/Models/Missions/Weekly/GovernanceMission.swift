@@ -24,5 +24,5 @@ struct GovernanceMission: Mission, Codable {
     var missionPermitAvatarLevel: Int64
     
     var governanceElectionCaptions: [String]
-    var governanceElectionUsers: [String: DocumentReference]?
+    var governanceElectionUserMap: [String: [DocumentReference]]?
 }

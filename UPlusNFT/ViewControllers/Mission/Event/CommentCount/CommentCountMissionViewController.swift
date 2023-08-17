@@ -97,7 +97,6 @@ extension CommentCountMissionViewController {
                     let val = self.vm.commentCountMap[text] ?? 0
                     self.vm.commentCountMap[text] = val + 1
                     
-                    self.vm.saveComment()
                     self.checkAnswerButton.isEnabled = false
                     self.checkAnswerButton.backgroundColor = .systemGray
                 }

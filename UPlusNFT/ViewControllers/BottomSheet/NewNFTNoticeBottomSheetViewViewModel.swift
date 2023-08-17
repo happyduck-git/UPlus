@@ -20,6 +20,7 @@ final class NewNFTNoticeBottomSheetViewViewModel {
     // MARK: - Init
     init(tokenId: String) {
         self.tokenId = tokenId
+        self.getNft()
     }
     
 }

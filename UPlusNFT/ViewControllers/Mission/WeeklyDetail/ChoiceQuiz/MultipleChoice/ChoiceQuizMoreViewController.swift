@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 protocol ChoiceQuizMoreViewControllerDelegate: AnyObject {
-    func answerDidSave()
+    func redeemDidTap()
 }
 
 final class ChoiceQuizMoreViewController: BaseMissionViewController {
@@ -164,7 +164,7 @@ extension ChoiceQuizMoreViewController {
 }
 
 extension ChoiceQuizMoreViewController: WeeklyMissionCompleteViewControllerDelegate {
-    func answerDidSave() {
-        self.delegate?.answerDidSave()
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap()
     }
 }

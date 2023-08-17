@@ -472,25 +472,21 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
         Task {
             do {
                 // 1. Save participation info to Storage
-                guard let imageData = self.vm.selectedImage?.jpegData(compressionQuality: 0.75) else {
-                    return
-                }
-                try await self.firestoreManager.saveParticipatedDailyMission(
-                    missionType: self.vm.missionType,
-                    image: imageData
-                )
-
-                // 2. Point 수여 complete vc
-                // 오늘 미션 정보 확인(point) // TODO: 부여하는 점수가 만일 모두 동일하다면 점수를 고정으로 두어도 될듯.
-                guard let mission = await self.vm.getTodayMissionInfo() else { return }
+                try await self.vm.saveRoutineParticipationStatus()
+        
+                // 2. Check level update
+                let mission = try await self.vm.getTodayMissionInfo()
                 
+                try await self.vm.checkLevelUpdate(mission: mission)
+                
+                // 3. Point 수여 complete vc
                 let vm = RoutineParticipationViewViewModel(mission: mission)
                 let vc = RoutineParticipationViewController(vm: vm)
                 
             }
             catch {
                 // TODO: 오류 발생 alert
-                print("Error process confirm button -- \(error)")
+                self.logger.error("Error process confirm button -- \(String(describing: error))")
             }
         }
     }

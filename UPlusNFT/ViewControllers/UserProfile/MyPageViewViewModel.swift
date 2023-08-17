@@ -8,11 +8,15 @@
 import Foundation
 import FirebaseFirestore
 import Combine
+import OSLog
 
 final class MyPageViewViewModel {
 
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Logger
+    private let logger = Logger()
     
     //MARK: - Sections
     enum MyPageViewMissionSectionType: String, CaseIterable {
@@ -245,7 +249,7 @@ extension MyPageViewViewModel {
         let token = await self.getTopLevelNftToken() ?? "no-token"
         let nftUrl = await self.firestoreManager.getNft(tokenId: token)?.nftContentImageUrl ?? "no-url"
         let level = self.getUserLevel()
-        
+        print("Userlevel: \(level)")
         self.userProfileViewModel = UserProfileViewViewModel(
             profileImage: nftUrl,
             username: self.user.userNickname,
@@ -304,12 +308,13 @@ extension MyPageViewViewModel {
 
 extension MyPageViewViewModel {
     
-    private func getTopLevelNftToken() async -> String? {
+    func getTopLevelNftToken() async -> String? {
         let tokens = await self.updateUserOwnedNft()
         let topAvatarToken = self.sortTopLevelNft(tokens: tokens)
         let intToken = Int64(topAvatarToken ?? "0") ?? 0
         
         self.saveUserLevel(highestToken: intToken)
+        
         return topAvatarToken
     }
     
@@ -323,7 +328,7 @@ extension MyPageViewViewModel {
         return avatarTokens.last
     }
     
-    private func updateUserOwnedNft() async -> [String] {
+    func updateUserOwnedNft() async -> [String] {
         
         do {
             // 1. Fetch NFTs from Luniverse
@@ -332,28 +337,28 @@ extension MyPageViewViewModel {
             let nfts = try await LuniverseServiceManager.shared.requestNftList(authKey: token,
                                                                                walletAddress: self.user.userWalletAddress ?? "n/a")
             
-            let nftTokens: [String] = nfts.data.items.map { $0.tokenId }.reversed()
+            let newestTokens: [String] = nfts.data.items.map { $0.tokenId }.reversed()
             
             // 2. Fetch NFTs from Firestore
             let savedNfts = user.userNfts ?? []
             
             let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
             
-            print("Saved tokens: \(savedTokens)")
-            print("New tokens: \(nftTokens)")
+            logger.info("Old tokens: \(savedTokens)")
+            logger.info("New tokens: \(newestTokens)")
             
             // API fetched NFTs & Firestore fetched NFTs 가 동일한지 확인
-            if !self.haveSameElements(nftTokens, savedTokens) {
+            if !self.haveSameElements(newestTokens, savedTokens) {
                 // 동일하지 않다면, user_nfts의 reference 업데이트
-                self.updateNftList(nfts: nftTokens, userIndex: user.userIndex)
-                self.updatedNfts = nftTokens
+                self.updateNftList(nfts: newestTokens, userIndex: user.userIndex)
+                self.updatedNfts = newestTokens
             } else {
-                print("새로운 nft가 없습니다.")
+                logger.info("새로운 nft가 없습니다.")
             }
-            return nftTokens
+            return newestTokens
         }
         catch {
-            print("Error requesting Luniverse access token -- \(error)")
+            logger.error("Error requesting Luniverse access token -- \(String(describing: error))")
             return []
         }
         
@@ -420,7 +425,7 @@ extension MyPageViewViewModel {
     }
     
     private func saveUserLevel(highestToken: Int64) {
-        let level = NftLevel.level(forPoints: highestToken)
+        let level = NftLevel.level(tokenId: highestToken)
         UserDefaults.standard.set(level, forKey: UserDefaultsConstants.level)
     }
     
@@ -439,6 +444,7 @@ extension MyPageViewViewModel {
     }
     
     private func haveSameElements(_ arr1: [String], _ arr2: [String]) -> Bool {
+        // TODO: 비교 로직 수정 필요
         return Set(arr1) == Set(arr2)
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit.UIImage
 import Combine
+import OSLog
 
 protocol RoutineMissionDetailViewViewModelDelegate: AnyObject {
     func didRecieveMission()
@@ -17,6 +18,9 @@ final class RoutineMissionDetailViewViewModel {
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
     private let nftServiceManager = NFTServiceManager.shared
+    
+    // MARK: - Logger
+    private let logger = Logger()
     
     //MARK: - Delegate
     weak var delegate: RoutineMissionDetailViewViewModelDelegate?
@@ -42,6 +46,32 @@ final class RoutineMissionDetailViewViewModel {
     
 }
 
+// MARK: - NFT Service
+extension RoutineMissionDetailViewViewModel {
+    
+    func checkLevelUpdate(mission: any Mission) async throws {
+        let level = UserDefaults.value(forKey: UserDefaultsConstants.level) as? Int
+        let user = try UPlusUser.getCurrentUser()
+        
+        let totalPoints = user.userTotalPoint ?? mission.missionRewardPoint
+        
+        let result = UserLevelPoint.checkLevelUpdate(
+            currentLevel: level ?? UserLevelPoint.level(forPoints: totalPoints),
+            newPoints: totalPoints
+        )
+        
+        if result.update {
+            let requestResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
+                                                                             nftType: .avatar,
+                                                                             level: result.newLevel)
+            self.logger.info("There is level update from \(String(describing: level)) to \(String(describing: result.newLevel)).")
+        } else {
+            self.logger.info("There is no level update.")
+        }
+    }
+
+}
+
 // MARK: - Firestore
 extension RoutineMissionDetailViewViewModel {
     
@@ -65,19 +95,22 @@ extension RoutineMissionDetailViewViewModel {
                 self.delegate?.didRecieveMission()
             }
             catch {
-                print("Error fetching athelete missions -- \(error)")
+                self.logger.error("Error fetching athelete missions -- \(String(describing: error))")
             }
         }
     }
     
-    func getTodayMissionInfo() async -> (any Mission)? {
-        do {
+    func getTodayMissionInfo() async throws -> any Mission {
             return try await self.firestoreManager.getTodayMission(missionType: self.missionType)
-        }
-        catch {
-            print("Error get today's mission -- \(error)")
-            return nil
-        }
     }
     
+    func saveRoutineParticipationStatus() async throws {
+        guard let imageData = self.selectedImage?.jpegData(compressionQuality: 0.75) else {
+            return
+        }
+        try await self.firestoreManager.saveParticipatedDailyMission(
+            missionType: self.missionType,
+            image: imageData
+        )
+    }
 }

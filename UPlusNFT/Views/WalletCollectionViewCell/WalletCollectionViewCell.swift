@@ -72,7 +72,7 @@ extension WalletCollectionViewCell {
             }
             self.nftTitle.text = data.nftDetailType
         
-            let level = NftLevel.level(forPoints: data.nftTokenId)
+            let level = NftLevel.level(tokenId: data.nftTokenId)
             if Range(0...5).contains(level) {
                 self.levelLabel.text = MissionConstants.levelPrefix + String(describing: level)
             }

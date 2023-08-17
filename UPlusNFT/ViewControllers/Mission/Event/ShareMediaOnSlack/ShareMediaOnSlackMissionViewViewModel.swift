@@ -8,16 +8,10 @@
 import Foundation
 import Combine
 
-final class ShareMediaOnSlackMissionViewViewModel {
-    
-    let mission: MediaShareMission
+final class ShareMediaOnSlackMissionViewViewModel: EventBaseModel {
     
     @Published var imageUrls: [URL] = []
-    
-    init(mission: MediaShareMission) {
-        self.mission = mission
-        
-    }
+
 }
 
 extension ShareMediaOnSlackMissionViewViewModel {

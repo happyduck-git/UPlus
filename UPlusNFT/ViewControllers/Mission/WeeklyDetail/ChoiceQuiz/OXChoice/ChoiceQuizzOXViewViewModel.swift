@@ -8,21 +8,6 @@
 import Foundation
 import Combine
 
-class MissionBaseModel {
-    
-    let mission: any Mission
-    let numberOfWeek: Int
-    
-    /* WeeklyMission Completion */
-    @Published var weeklyMissionCompletion: Bool = false
-    
-    init(mission: any Mission, numberOfWeek: Int) {
-        self.mission = mission
-        self.numberOfWeek = numberOfWeek
-    }
-    
-}
-
 final class ChoiceQuizzOXViewViewModel: MissionBaseModel {
 
     /* Choice Quiz */

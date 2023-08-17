@@ -28,8 +28,8 @@ struct NftLevel {
 }
 
 extension NftLevel {
-    static func level(forPoints points: Int64) -> Int {
-        switch points {
+    static func level(tokenId: Int64) -> Int {
+        switch tokenId {
         case avatar1:
             return 1
         case avatar2:

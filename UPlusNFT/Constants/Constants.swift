@@ -101,6 +101,10 @@ struct SideMenuConstants {
 struct MyPageConstants {
     static let goToMission: String = "미션 하러가기"
     static let ownedRewards: String = "보유한 경품"
+    static let levelUp: String = "Lv.%d 달성"
+    static let benefit: String = "특별 BONUS 혜택"
+    static let eventOpened: String = "이벤트 오픈"
+    static let redeemLevelUpBenefits: String = "레벨업 보상 받기"
 }
 
 struct RewardsConstants {
@@ -154,6 +158,8 @@ struct MissionConstants {
     static let upload: String = "인증 사진 올리기"
     static let submit: String = "제출하기"
     static let inputAnswer: String = "답변을 입력하세요"
+    static let progressSuffix: String = "%.0f%%"
+    static let resultDidCheck: String = "결과보기 완료"
     
     static let reselect: String = "앗! 다시 한번 선택해보세요"
     static let buttonBorderWidth: CGFloat = 2.0

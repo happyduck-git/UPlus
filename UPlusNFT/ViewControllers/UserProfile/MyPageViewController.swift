@@ -39,6 +39,11 @@ final class MyPageViewController: UIViewController {
     
     private let loadingVC = LoadingViewController()
     
+    private let refreshControl: UIRefreshControl = {
+       let control = UIRefreshControl()
+       return control
+    }()
+    
     private let containerView: PassThroughView = {
         let view = PassThroughView()
         view.backgroundColor = UPlusColor.gradient09light
@@ -291,9 +296,13 @@ extension MyPageViewController {
                 .sink { [weak self] nfts in
                     guard let `self` = self else { return }
                    // TODO: Show bottom sheet
-                    print("New nfts: \(nfts)")
                     for nft in nfts {
-                        self.showNewNftBottomSheet(tokenId: nft)
+                        let level = NftLevel.level(tokenId: Int64(nft) ?? 0)
+                        if level < 6 {
+                            self.showLevelUpBottomSheet(level: level)
+                        } else {
+                            self.showNewNftBottomSheet(tokenId: nft)
+                        }
                     }
                 }
                 .store(in: &bindings)
@@ -417,6 +426,7 @@ extension MyPageViewController {
         
         if scrollView.contentOffset.y < self.initialTopOffset - 150 {
             // TODO: Refresh indicator 나타내기. Luniverse API Call.
+            self.refreshControl.beginRefreshing()
         }
         
         self.topConstraint?.constant = self.initialTopOffset - scrollView.contentOffset.y
@@ -440,6 +450,8 @@ extension MyPageViewController {
             frame: .zero,
             collectionViewLayout: layout
         )
+        
+        collectionView.refreshControl = self.refreshControl
         
         collectionView.register(
             TestCollectionViewCell.self,
@@ -990,7 +1002,6 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         print("Selected row: \(selectedRow)")
         switch selectedRow {
         case 0:
-            
             let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
                                               style: .plain,
                                               target: self,
@@ -998,6 +1009,12 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             
             self.navigationItem.setRightBarButton(speakerItem, animated: true)
             self.navigationItem.title = SideMenuConstants.home
+            
+            // Check nft update
+            Task {
+                let _ = await self.vm.updateUserOwnedNft()
+            }
+            
         case 1:
             let vm = WalletViewViewModel()
             let vc = WalletViewController(vm: vm)
@@ -1013,11 +1030,7 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
             // pop game
         case 3:
-            Task {
-                if await self.shareOnSlack() {
-                    
-                }
-            }
+         
             
             break
             
@@ -1104,6 +1117,13 @@ extension MyPageViewController {
     private func showNewNftBottomSheet(tokenId: String) {
         let vm = NewNFTNoticeBottomSheetViewViewModel(tokenId: tokenId)
         let vc = NewNFTNoticeBottomSheetViewController(vm: vm)
+        vc.modalPresentationStyle = .overCurrentContext
+
+        self.present(vc, animated: false)
+    }
+    
+    private func showLevelUpBottomSheet(level: Int) {
+        let vc = LevelUpBottomSheetViewController(newLevel: level)
         vc.modalPresentationStyle = .overCurrentContext
 
         self.present(vc, animated: false)

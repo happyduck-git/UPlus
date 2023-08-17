@@ -238,7 +238,8 @@ extension WeeklyMissionOverViewViewController: ChoiceQuizOXViewControllerDelegat
                                                AnswerQuizPluralViewControllerDelegate,
                                                AnswerQuizSingularViewControllerDelegate,
                                                ContentReadOnlyMissionViewControllerDelegate {
-    func answerDidSave() {
+  
+    func redeemDidTap() {
         self.vm.getWeeklyMissionInfo(week: self.vm.week)
     }
 }

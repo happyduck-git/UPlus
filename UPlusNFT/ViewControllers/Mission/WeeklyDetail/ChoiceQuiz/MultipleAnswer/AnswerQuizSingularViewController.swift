@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 protocol AnswerQuizSingularViewControllerDelegate: AnyObject {
-    func answerDidSave()
+    func redeemDidTap()
 }
 
 //ShortAnswerQuizMission
@@ -63,6 +63,7 @@ final class AnswerQuizSingularViewController: BaseMissionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.hideKeyboardWhenTappedAround()
         self.setUI()
         self.setLayout()
         self.configure()
@@ -156,7 +157,7 @@ extension AnswerQuizSingularViewController {
 }
 
 extension AnswerQuizSingularViewController: WeeklyMissionCompleteViewControllerDelegate {
-    func answerDidSave() {
-        self.delegate?.answerDidSave()
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap()
     }
 }

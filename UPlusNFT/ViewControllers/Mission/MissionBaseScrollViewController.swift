@@ -50,7 +50,7 @@ class MissionBaseScrollViewController: UIViewController {
         return view
     }()
     
-    let confirmButton: UIButton = {
+    let checkAnswerButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
         button.setTitle(RewardsConstants.empty, for: .normal)
@@ -77,7 +77,7 @@ extension MissionBaseScrollViewController {
         self.canvasView.addSubviews(self.titleLabel,
                                     self.subTitleLabel,
                                     self.containerView,
-                                    self.confirmButton)
+                                    self.checkAnswerButton)
     }
     
     private func setLayout() {
@@ -108,13 +108,13 @@ extension MissionBaseScrollViewController {
             self.containerView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
             
-            self.confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.bottomAnchor, multiplier: 3),
-            self.confirmButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
-            self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.confirmButton.trailingAnchor, multiplier: 2),
-            self.canvasView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.confirmButton.bottomAnchor, multiplier: 3)
+            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.bottomAnchor, multiplier: 3),
+            self.checkAnswerButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
+            self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.checkAnswerButton.trailingAnchor, multiplier: 2),
+            self.canvasView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 3)
         ])
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.subTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.confirmButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.checkAnswerButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }

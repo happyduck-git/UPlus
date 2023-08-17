@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 protocol ChoiceQuizOXViewControllerDelegate: AnyObject {
-    func answerDidSave()
+    func redeemDidTap()
 }
 
 final class ChoiceQuizOXViewController: UIViewController {
@@ -281,7 +281,7 @@ extension ChoiceQuizOXViewController {
 }
 
 extension ChoiceQuizOXViewController: WeeklyMissionCompleteViewControllerDelegate {
-    func answerDidSave() {
-        self.delegate?.answerDidSave()
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap()
     }
 }

@@ -8,12 +8,8 @@
 import Foundation
 import Combine
 
-final class CommentCountMissionViewViewModel {
-    
-    private let firestoreManager = FirestoreManager.shared
-    
-    var mission: CommentCountMission
-    
+final class CommentCountMissionViewViewModel: EventBaseModel {
+
     var comment: String?
     
     @Published var imageUrls: [URL] = [] {
@@ -38,8 +34,10 @@ final class CommentCountMissionViewViewModel {
     
     @Published var participated: Bool = false
     
-    init(mission: CommentCountMission) {
-        self.mission = mission
+    override init(mission: any Mission) {
+        super.init(mission: mission)
+        
+        guard let mission = self.mission as? CommentCountMission else { return }
         self.comments = mission.commentUserRecents ?? []
         self.commentCountMap = mission.commentCountMap ?? [:]
         
@@ -76,23 +74,3 @@ extension CommentCountMissionViewViewModel {
     }
 }
 
-extension CommentCountMissionViewViewModel {
-    func saveComment() {
-        Task {
-            do {
-                print("Prev commts: \(mission.commentUserRecents ?? [])")
-                try await self.firestoreManager.saveParticipatedEventMission(
-                    type: .commentCount,
-                    eventId: mission.missionId,
-                    selectedIndex: nil,
-                    recentComments: mission.commentUserRecents ?? [],
-                    comment: self.comment,
-                    point: mission.missionRewardPoint
-                )
-            }
-            catch {
-                
-            }
-        }
-    }
-}
