@@ -9,7 +9,11 @@ import UIKit
 import Combine
 import OSLog
 
-final class GovernanceElectionMissionViewController: BaseMissionViewController {
+final class GovernanceElectionMissionViewController: BaseMissionViewController, EventCompletedViewControllerDelegate {
+    func redeemDidTap() {
+        <#code#>
+    }
+    
 
     //MARK: - Dependency
     private let vm: GovernanceElectionMissionViewViewModel
@@ -139,7 +143,7 @@ extension GovernanceElectionMissionViewController {
                     } else {
                         let vc = EventCompletedViewController(vm: self.vm)
                         vc.delegate?.redeemDidTap()
-                        
+                        vc.delegate = self
                         self.show(vc, sender: self)
                     }
                 }
@@ -183,3 +187,8 @@ extension GovernanceElectionMissionViewController {
     }
 }
 
+extension GovernanceElectionMissionViewController: EventCompletedViewControllerDelegate {
+    func redeemDidTap() {
+        
+    }
+}

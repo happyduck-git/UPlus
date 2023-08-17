@@ -165,6 +165,7 @@ struct MissionConstants {
     static let buttonBorderWidth: CGFloat = 2.0
     
     static let readCompleted: String = "읽기 완료"
+    static let eventCompleted: String = "이벤트 참여 완료"
     
     static let congrats: String = "축하해요"
     static let weeklyCompleted: String = "여정 완료"
