@@ -24,38 +24,22 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private let uploadPhotoButton: UIButton = {
+
+    private let uploadPhotoView: RoutineUploadPhotoView = {
+        let view = RoutineUploadPhotoView()
+        view.layer.borderColor = UPlusColor.gray04.cgColor
+        view.layer.borderWidth = 1.0
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let submitButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.share), for: .normal)
-        button.setTitle("날짜, 시간, 걸음수가 포함된 사진", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .white
-        button.alignVerticalCenter(padding: 30.0)
-        button.clipsToBounds = true
+        button.setTitle(MissionConstants.submit, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    private let photoView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.isHidden = true
-        imageView.backgroundColor = .darkGray
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let infoLabel: UILabel = {
-        let label = UILabel()
-        label.text = "꼭 확인하세요!\n날짜, 시간, 걸음수가 포함된 사진"
-        label.numberOfLines = 2
-        label.textAlignment = .center
-        label.textColor = .black
-        label.backgroundColor = .white
-        label.isHidden = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -71,76 +55,54 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    
 }
 
 extension UploadPhotoButtonCollectionViewCell {
 
-    func bind(with vm: RoutineMissionDetailViewViewModel) {
-        
-        self.bindings.forEach { $0.cancel() }
-        self.bindings.removeAll()
-        
-        self.uploadPhotoButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let `self` = self else { return }
-                self.delegate?.uploadButtonDidTap()
-            }
-            .store(in: &bindings)
 
-        vm.$selectedImage
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] image in
-                guard let `self` = self else { return }
-                if image != nil {
-                    UIView.animate(withDuration: 0.1) {
-                        self.photoView.image = image
-                        self.photoSelected()
-                    }
-                }
-                
-            }
-            .store(in: &bindings)
-    }
     
 }
 
 extension UploadPhotoButtonCollectionViewCell {
     private func setUI() {
-        self.contentView.addSubviews(uploadPhotoButton,
-                                     photoView,
-                                     infoLabel)
-        self.uploadPhotoButton.layer.cornerRadius = 10
+        self.contentView.addSubviews(self.uploadPhotoView,
+                                     self.submitButton)
+        
+       
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.uploadPhotoButton.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
-            self.uploadPhotoButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadPhotoButton.trailingAnchor, multiplier: 2),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.uploadPhotoButton.bottomAnchor, multiplier: 2)
+            self.uploadPhotoView.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 1),
+            self.uploadPhotoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadPhotoView.trailingAnchor, multiplier: 1),
+            
+            self.submitButton.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadPhotoView.bottomAnchor, multiplier: 3),
+            self.submitButton.leadingAnchor.constraint(equalTo: self.uploadPhotoView.leadingAnchor),
+            self.submitButton.trailingAnchor.constraint(equalTo: self.uploadPhotoView.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.submitButton.bottomAnchor, multiplier: 2)
         ])
+        
+        self.submitButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
 
 extension UploadPhotoButtonCollectionViewCell {
 
-    private func photoSelected() {
-        self.uploadPhotoButton.isHidden = true
-        self.photoView.isHidden = false
-        self.infoLabel.isHidden = false
-        
-        NSLayoutConstraint.activate([
-            self.photoView.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
-            self.photoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.photoView.trailingAnchor, multiplier: 2),
-            self.photoView.heightAnchor.constraint(equalToConstant: self.contentView.frame.height / 1.5),
-//                    self.photoView.heightAnchor.constraint(equalToConstant: 200),
-            
-            self.infoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.photoView.bottomAnchor, multiplier: 2),
-            self.infoLabel.leadingAnchor.constraint(equalTo: self.photoView.leadingAnchor),
-            self.infoLabel.trailingAnchor.constraint(equalTo: self.photoView.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 2)
-        ])
+
+}
+
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct UploadPhotoButtonCellPreView: PreviewProvider{
+    static var previews: some View {
+        UIViewPreview {
+            let view = UploadPhotoButtonCollectionViewCell(frame: .zero)
+            return view
+        }.previewLayout(.sizeThatFits)
     }
 }
+#endif

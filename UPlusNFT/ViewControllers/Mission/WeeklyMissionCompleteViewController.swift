@@ -21,7 +21,7 @@ protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
 final class WeeklyMissionCompleteViewController: BaseMissionCompletedViewController {
     
     // MARK: - Dependency
-    private let vm: MissionBaseModel
+    private let vm: WeeklyBaseModel
     
     //MARK: - Delegate
     weak var delegate: WeeklyMissionCompleteViewControllerDelegate?
@@ -30,7 +30,7 @@ final class WeeklyMissionCompleteViewController: BaseMissionCompletedViewControl
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - Init
-    init(vm: MissionBaseModel) {
+    init(vm: WeeklyBaseModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.configure()

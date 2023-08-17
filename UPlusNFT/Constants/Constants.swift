@@ -170,6 +170,8 @@ struct MissionConstants {
     static let congrats: String = "축하해요"
     static let weeklyCompleted: String = "여정 완료"
     static let redeemNft: String = "NFT 보상 받기"
+    
+    static let rewardPoint: String = "100P 보상"
 }
 
 struct RankingConstants {
@@ -265,7 +267,10 @@ struct ImageAsset {
     static let pointShadow: String = "point-shadow"
     static let confetti: String = "confetti"
     static let checkBlack: String = "check-black"
+    static let checkWhite: String = "check-white"
     static let padlock: String = "padlock"
+    static let stampGift: String = "stamp-gift"
+    static let stampPoint: String = "stamp-point"
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"

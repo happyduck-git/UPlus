@@ -8,39 +8,15 @@
 import UIKit
 import Combine
 
-protocol ChoiceQuizOXViewControllerDelegate: AnyObject {
-    func redeemDidTap()
-}
-
-final class ChoiceQuizOXViewController: UIViewController {
+final class ChoiceQuizOXViewController: BaseMissionViewController {
     
     // MARK: - Dependency
     private let vm: ChoiceQuizzOXViewViewModel
-    
-    //MARK: - Delegate
-    weak var delegate: ChoiceQuizOXViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = MissionConstants.quizMission
-        label.textColor = .systemGray
-        label.font = .systemFont(ofSize: UPlusFont.h1, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let quizLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.spacing = 10
@@ -54,7 +30,7 @@ final class ChoiceQuizOXViewController: UIViewController {
         let button = UIButton()
         button.tag = 0
         button.clipsToBounds = true
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UPlusColor.mint03, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 90, weight: .bold)
         button.backgroundColor = .white
         return button
@@ -64,35 +40,12 @@ final class ChoiceQuizOXViewController: UIViewController {
         let button = UIButton()
         button.tag = 1
         button.clipsToBounds = true
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UPlusColor.orange01, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 90, weight: .bold)
         button.backgroundColor = .white
         return button
     }()
-    
-    private let answerInfoLabel: UILabel = {
-        let label = UILabel()
-        label.isHidden = true
-        label.clipsToBounds = true
-        label.layer.cornerRadius = 10.0
-        label.text = MissionConstants.reselect
-        label.textAlignment = .center
-        label.textColor = UPlusColor.orange01
-        label.backgroundColor = UPlusColor.orange02
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var checkAnswerButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(MissionConstants.checkAnswer, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemGray
-        button.isUserInteractionEnabled = false
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
+
     // MARK: - Init
     init(vm: ChoiceQuizzOXViewViewModel) {
         self.vm = vm
@@ -234,11 +187,7 @@ extension ChoiceQuizOXViewController {
 extension ChoiceQuizOXViewController {
     
     private func setUI() {
-        self.view.addSubviews(self.titleLabel,
-                              self.quizLabel,
-                              self.stackView,
-                              self.answerInfoLabel,
-                              self.checkAnswerButton)
+        self.quizContainer.addSubviews(self.stackView)
         
         self.stackView.addArrangedSubviews(self.circleMarkButton,
                                            self.xMarkButton)
@@ -246,26 +195,10 @@ extension ChoiceQuizOXViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            
-            self.quizLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 8),
-            self.quizLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            
-            self.stackView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizLabel.bottomAnchor, multiplier: 10),
-            self.stackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stackView.trailingAnchor, multiplier: 2),
-            self.stackView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 5),
-            
-            self.answerInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.stackView.bottomAnchor, multiplier: 8),
-            self.answerInfoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.answerInfoLabel.trailingAnchor, multiplier: 5),
-            
-            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.answerInfoLabel.bottomAnchor, multiplier: 2),
-            self.checkAnswerButton.leadingAnchor.constraint(equalTo: self.stackView.leadingAnchor),
-            self.checkAnswerButton.trailingAnchor.constraint(equalTo: self.stackView.trailingAnchor),
-            self.checkAnswerButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 12),
-            
+            self.stackView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 5),
+            self.stackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stackView.trailingAnchor, multiplier: 2),
+            self.stackView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 5)
         ])
     }
 
@@ -282,6 +215,6 @@ extension ChoiceQuizOXViewController {
 
 extension ChoiceQuizOXViewController: WeeklyMissionCompleteViewControllerDelegate {
     func redeemDidTap() {
-        self.delegate?.redeemDidTap()
+        self.delegate?.redeemDidTap(vc: self)
     }
 }

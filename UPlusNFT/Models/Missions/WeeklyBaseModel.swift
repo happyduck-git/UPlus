@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import OSLog
 
-class MissionBaseModel {
+class WeeklyBaseModel {
     
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
@@ -33,7 +33,7 @@ class MissionBaseModel {
 }
 
 // MARK: - NFT Service
-extension MissionBaseModel {
+extension WeeklyBaseModel {
     
     func checkLevelUpdate() async throws {
         let level = UserDefaults.standard.value(forKey: UserDefaultsConstants.level) as? Int
@@ -58,7 +58,7 @@ extension MissionBaseModel {
 }
 
 // MARK: - Firestore
-extension MissionBaseModel {
+extension WeeklyBaseModel {
     func saveWeeklyMissionParticipationStatus() async throws {
         guard let missionType = MissionType(rawValue: self.mission.missionSubTopicType) else {
              return

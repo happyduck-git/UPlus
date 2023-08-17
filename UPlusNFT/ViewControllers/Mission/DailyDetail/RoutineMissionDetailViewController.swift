@@ -61,7 +61,7 @@ final class RoutineMissionDetailViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .systemGray4
+        self.view.backgroundColor = UPlusColor.grayBackground
         
         self.setUI()
         self.setLayout()
@@ -309,8 +309,8 @@ extension RoutineMissionDetailViewController: UICollectionViewDelegate, UICollec
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UploadPhotoButtonCollectionViewCell.identifier, for: indexPath) as? UploadPhotoButtonCollectionViewCell else {
                 fatalError()
             }
-            cell.bind(with: self.vm)
-            cell.delegate = self
+//            cell.bind(with: self.vm)
+//            cell.delegate = self
             return cell
         default:
             return UICollectionViewCell()
@@ -481,7 +481,7 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
                 
                 // 3. Point 수여 complete vc
                 let vm = RoutineParticipationViewViewModel(mission: mission)
-                let vc = RoutineParticipationViewController(vm: vm)
+                let vc = RoutineParticipatedViewController(vm: vm)
                 
             }
             catch {

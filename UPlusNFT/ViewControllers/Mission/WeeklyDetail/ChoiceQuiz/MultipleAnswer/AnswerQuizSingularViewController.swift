@@ -8,18 +8,11 @@
 import UIKit
 import Combine
 
-protocol AnswerQuizSingularViewControllerDelegate: AnyObject {
-    func redeemDidTap()
-}
-
 //ShortAnswerQuizMission
 final class AnswerQuizSingularViewController: BaseMissionViewController {
 
     //MARK: - Dependency
     private let vm: AnswerQuizSingularViewViewModel
-    
-    //MARK: - Delegate
-    weak var delegate: AnswerQuizSingularViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -158,6 +151,6 @@ extension AnswerQuizSingularViewController {
 
 extension AnswerQuizSingularViewController: WeeklyMissionCompleteViewControllerDelegate {
     func redeemDidTap() {
-        self.delegate?.redeemDidTap()
+        self.delegate?.redeemDidTap(vc: self)
     }
 }

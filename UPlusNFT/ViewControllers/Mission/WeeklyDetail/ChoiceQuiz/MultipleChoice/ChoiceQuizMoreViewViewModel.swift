@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ChoiceQuizMoreViewViewModel: MissionBaseModel {
+final class ChoiceQuizMoreViewViewModel: WeeklyBaseModel {
     
     @Published var imageUrls: [URL] = []
     var selectedButton: Int?

@@ -156,9 +156,7 @@ final class MyPageViewViewModel {
             await self.createMissionMainViewViewModel()
             
             await self.getMissionsTimeline()
-            
-            await self.getEventMission()
-            
+
             await self.getTodayRank()
         }
         
@@ -444,8 +442,23 @@ extension MyPageViewViewModel {
     }
     
     private func haveSameElements(_ arr1: [String], _ arr2: [String]) -> Bool {
-        // TODO: 비교 로직 수정 필요
-        return Set(arr1) == Set(arr2)
+        
+        let set1 = Set(arr1)
+        let set2 = Set(arr2)
+        
+        let set1ElementsAbsentInSet2 = set1.isDisjoint(with: set2)
+        let anyElementOfSet2AbsentInSet1 = !set2.isSubset(of: set1)
+        
+        if set1ElementsAbsentInSet2 {
+            return true
+        }
+        
+        if anyElementOfSet2AbsentInSet1 {
+            return false
+        }
+        
+        return true
     }
+
 }
 

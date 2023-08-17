@@ -9,17 +9,10 @@ import UIKit
 import WebKit
 import Combine
 
-protocol ChoiceQuizVideoViewControllerDelegate: AnyObject {
-    func redeemDidTap()
-}
-
 final class ChoiceQuizVideoViewController: BaseMissionViewController {
 
     //MARK: - Dependency
     private let vm: ChoiceQuizVideoViewViewModel
-    
-    // MARK: - Delegate
-    weak var delegate: ChoiceQuizVideoViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -324,7 +317,6 @@ extension ChoiceQuizVideoViewController {
 
 extension ChoiceQuizVideoViewController: WeeklyMissionCompleteViewControllerDelegate {
     func redeemDidTap() {
-        self.delegate?.redeemDidTap()
+        self.delegate?.redeemDidTap(vc: self)
     }
-
 }

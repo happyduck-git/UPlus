@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class ChoiceQuizzOXViewViewModel: MissionBaseModel {
+final class ChoiceQuizzOXViewViewModel: WeeklyBaseModel {
 
     /* Choice Quiz */
     @Published var circleButtonDidTap: Bool = false

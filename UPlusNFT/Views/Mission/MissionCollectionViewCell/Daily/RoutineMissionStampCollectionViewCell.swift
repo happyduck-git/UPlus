@@ -17,18 +17,9 @@ final class RoutineMissionStampCollectionViewCell: UICollectionViewCell {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "참여 스탬프"
-        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     private let progressLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = UPlusColor.blue04
         label.font = .systemFont(ofSize: UPlusFont.body1, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -41,7 +32,7 @@ final class RoutineMissionStampCollectionViewCell: UICollectionViewCell {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(StampCollectionViewCell.self,
                             forCellWithReuseIdentifier: StampCollectionViewCell.identifier)
-        collection.backgroundColor = .darkGray
+        collection.backgroundColor = .white
         collection.alwaysBounceVertical = true
         collection.isScrollEnabled = false
         collection.translatesAutoresizingMaskIntoConstraints = false
@@ -52,8 +43,11 @@ final class RoutineMissionStampCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.contentView.backgroundColor = .darkGray
+        self.contentView.backgroundColor = .white
         self.contentView.clipsToBounds = true
+        self.layer.cornerRadius = 10.0
+        self.contentView.layer.borderColor = UPlusColor.mint03.cgColor
+        self.contentView.layer.borderWidth = 1.0
         
         self.setUI()
         self.setLayout()
@@ -117,25 +111,22 @@ extension RoutineMissionStampCollectionViewCell {
     }
     
     private func setUI() {
-        self.contentView.addSubviews(self.titleLabel,
-                                     self.progressLabel,
+        self.contentView.addSubviews(self.progressLabel,
                                      self.stampCollectionView)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
-            self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 3),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.progressLabel.trailingAnchor, multiplier: 2),
-            self.progressLabel.bottomAnchor.constraint(equalTo: self.titleLabel.bottomAnchor),
-            
-            self.stampCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 2),
-            self.stampCollectionView.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
-            self.stampCollectionView.trailingAnchor.constraint(equalTo: self.progressLabel.trailingAnchor),
+            self.progressLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.progressLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 3),
+        
+            self.stampCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.progressLabel.bottomAnchor, multiplier: 2),
+            self.stampCollectionView.leadingAnchor.constraint(equalTo: self.progressLabel.leadingAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stampCollectionView.trailingAnchor, multiplier: 2),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stampCollectionView.bottomAnchor, multiplier: 2)
         ])
         
-        self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.progressLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
     
 }
@@ -157,12 +148,10 @@ extension RoutineMissionStampCollectionViewCell: UICollectionViewDelegate, UICol
         cell.resetCell()
         
         if indexPath.item >= cellVM.athleteMissions.count {
-            cell.contentView.backgroundColor = .systemGray
+            cell.showGiftMark(at: indexPath.item)
             return cell
         } else {
-            let point = cellVM.athleteMissions[indexPath.item].missionRewardPoint
-            
-            cell.configure(with: point)
+            cell.showCheckMark(at: indexPath.item)
             return cell
         }
         

@@ -105,6 +105,8 @@ extension PhotoAuthQuizViewController {
                 guard let `self` = self else { return }
                 
                 let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                vc.delegate = self
+                
                 self.show(vc, sender: self)
             }
             .store(in: &bindings)
@@ -191,4 +193,10 @@ extension PhotoAuthQuizViewController: PHPickerViewControllerDelegate {
         }
     }
     
+}
+
+extension PhotoAuthQuizViewController: WeeklyMissionCompleteViewControllerDelegate {
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap(vc: self)
+    }
 }

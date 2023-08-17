@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class RoutineParticipationViewController: UIViewController {
+final class RoutineParticipatedViewController: UIViewController {
     
     private let vm: RoutineParticipationViewViewModel
     
@@ -77,7 +77,7 @@ final class RoutineParticipationViewController: UIViewController {
 }
 
 // MARK: - Configure
-extension RoutineParticipationViewController {
+extension RoutineParticipatedViewController {
     
     private func configure() {
         self.confirmButton.setTitle(String(format: MissionConstants.redeemPoint, self.vm.mission.missionRewardPoint),
@@ -98,7 +98,7 @@ extension RoutineParticipationViewController {
 }
 
 // MARK: - Set UI & Layout
-extension RoutineParticipationViewController {
+extension RoutineParticipatedViewController {
     private func setUI() {
         self.view.addSubviews(self.backgroundConfetti,
                               self.resultLabel,

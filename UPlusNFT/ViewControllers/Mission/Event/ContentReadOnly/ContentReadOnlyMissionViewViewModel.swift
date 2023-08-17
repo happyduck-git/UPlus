@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class ContentReadOnlyMissionViewViewModel: MissionBaseModel {
+final class ContentReadOnlyMissionViewViewModel: WeeklyBaseModel {
     
     //MARK: - Dependency
     private let storageManager = FirebaseStorageManager.shared

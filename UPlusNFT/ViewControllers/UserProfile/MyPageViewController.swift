@@ -13,11 +13,11 @@ import OSLog
 final class MyPageViewController: UIViewController {
     
     // MARK: - Dependency
-    private let vm: MyPageViewViewModel
+    let vm: MyPageViewViewModel
     private var sideMenuVC: SideMenuViewController?
     
     // MARK: - Logger
-    private let logger = Logger()
+    let logger = Logger()
     
     // MARK: - Side Menu Controller Manager
     private lazy var slideInTransitioningDelegate = SideMenuPresentationManager()
@@ -171,7 +171,10 @@ final class MyPageViewController: UIViewController {
             collectionView?.reloadData()
             return
         case 1:
-            collectionView?.reloadData()
+            Task {
+                await self.vm.getEventMission()
+                print("Reloaded")
+            }
         default:
             return
         }
@@ -227,7 +230,6 @@ extension MyPageViewController {
                           let collection = self.collectionView
                     else { return }
                     if self.screenToShow == 1 {
-                        print("Reloaded")
                         collection.reloadData()
                     }
                 }
@@ -961,25 +963,33 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             case .contentReadOnly:
                 guard let mission = mission as? ContentReadOnlyMission else { return }
                 let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: 0)
-                let vc = ContentReadOnlyMissionViewController(vm: vm)
+                let vc = ContentReadOnlyMissionViewController(vm: vm, type: .event)
+//                vc.delegate = self
+                
                 self.show(vc, sender: self)
                 
             case .shareMediaOnSlack:
                 guard let mission = mission as? MediaShareMission else { return }
                 let vm = ShareMediaOnSlackMissionViewViewModel(mission: mission)
                 let vc = ShareMediaOnSlackMissionViewController(vm: vm)
+                vc.delegate = self
+                
                 self.show(vc, sender: self)
                 
             case .governanceElection:
                 guard let mission = mission as? GovernanceMission else { return }
                 let vm = GovernanceElectionMissionViewViewModel(mission: mission)
                 let vc = GovernanceElectionMissionViewController(vm: vm)
+                vc.delegate = self
+                
                 self.show(vc, sender: self)
                 
             case .commentCount:
                 guard let mission = mission as? CommentCountMission else { return }
                 let vm = CommentCountMissionViewViewModel(mission: mission)
                 let vc = CommentCountMissionViewController(vm: vm)
+                vc.delegate = self
+                
                 self.show(vc, sender: self)
                 
             default:
@@ -1129,3 +1139,5 @@ extension MyPageViewController {
         self.present(vc, animated: false)
     }
 }
+
+

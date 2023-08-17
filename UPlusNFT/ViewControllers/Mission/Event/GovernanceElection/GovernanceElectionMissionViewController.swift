@@ -9,15 +9,11 @@ import UIKit
 import Combine
 import OSLog
 
-final class GovernanceElectionMissionViewController: BaseMissionViewController, EventCompletedViewControllerDelegate {
-    func redeemDidTap() {
-        <#code#>
-    }
+final class GovernanceElectionMissionViewController: BaseMissionViewController {
     
-
     //MARK: - Dependency
     private let vm: GovernanceElectionMissionViewViewModel
-
+    
     // MARK: - Logger
     private let logger = Logger()
     
@@ -142,8 +138,8 @@ extension GovernanceElectionMissionViewController {
                         self.vm.screenType = .result
                     } else {
                         let vc = EventCompletedViewController(vm: self.vm)
-                        vc.delegate?.redeemDidTap()
                         vc.delegate = self
+                        
                         self.show(vc, sender: self)
                     }
                 }
@@ -189,6 +185,6 @@ extension GovernanceElectionMissionViewController {
 
 extension GovernanceElectionMissionViewController: EventCompletedViewControllerDelegate {
     func redeemDidTap() {
-        
+        self.delegate?.redeemDidTap(vc: self)
     }
 }

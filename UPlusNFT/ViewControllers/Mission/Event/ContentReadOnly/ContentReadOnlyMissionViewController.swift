@@ -9,17 +9,24 @@ import UIKit
 import Combine
 import Nuke
 
-protocol ContentReadOnlyMissionViewControllerDelegate: AnyObject {
-    func redeemDidTap()
-}
+//protocol ContentReadOnlyMissionViewControllerDelegate: AnyObject {
+//    func redeemDidTap()
+//}
 
-final class ContentReadOnlyMissionViewController: MissionBaseScrollViewController {
+final class ContentReadOnlyMissionViewController: BaseMissionScrollViewController {
 
+    enum ReadOnlyMissionType {
+        case weekly
+        case event
+    }
+    
+    private let type: ReadOnlyMissionType
+    
     //MARK: - Dependency
     private let vm: ContentReadOnlyMissionViewViewModel
     
     //MARK: - Delegate
-    weak var delegate: ContentReadOnlyMissionViewControllerDelegate?
+//    weak var delegate: ContentReadOnlyMissionViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -36,8 +43,10 @@ final class ContentReadOnlyMissionViewController: MissionBaseScrollViewControlle
     private var images: [UIImage] = []
     
     //MARK: - Init
-    init(vm: ContentReadOnlyMissionViewViewModel) {
+    init(vm: ContentReadOnlyMissionViewViewModel, type: ReadOnlyMissionType) {
         self.vm = vm
+        self.type = type
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -82,9 +91,21 @@ extension ContentReadOnlyMissionViewController {
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
     
-                let vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                vc.delegate = self
-                self.show(vc, sender: self)
+                switch self.type {
+                case .weekly:
+                    let vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                case .event:
+                    let vm = EventBaseModel(mission: self.vm.mission)
+                    let vc = EventCompletedViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                }
+
             }
             .store(in: &bindings)
         
@@ -125,8 +146,11 @@ extension ContentReadOnlyMissionViewController {
     }
 }
 
-extension ContentReadOnlyMissionViewController: WeeklyMissionCompleteViewControllerDelegate {
+extension ContentReadOnlyMissionViewController: WeeklyMissionCompleteViewControllerDelegate, EventCompletedViewControllerDelegate {
+    
     func redeemDidTap() {
-        self.delegate?.redeemDidTap()
+        self.delegate?.redeemDidTap(vc: self)
     }
+    
 }
+

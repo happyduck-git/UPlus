@@ -7,7 +7,7 @@
 import UIKit
 import Combine
 
-final class ShareMediaOnSlackMissionViewController: UIViewController {
+final class ShareMediaOnSlackMissionViewController: BaseMissionViewController {
 
     //MARK: - Dependency
     private let vm: ShareMediaOnSlackMissionViewViewModel
@@ -16,24 +16,7 @@ final class ShareMediaOnSlackMissionViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
-    private let label: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = .black
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let submitButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("확인완료!", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
+
     //MARK: - Init
     init(vm: ShareMediaOnSlackMissionViewViewModel) {
         self.vm = vm
@@ -60,6 +43,18 @@ extension ShareMediaOnSlackMissionViewController {
     
     private func bind() {
        
+        self.checkAnswerButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                
+                let vc = EventCompletedViewController(vm: self.vm)
+                vc.delegate = self
+                
+                self.show(vc, sender: self)
+                
+            }
+            .store(in: &bindings)
 
     }
     
@@ -68,24 +63,19 @@ extension ShareMediaOnSlackMissionViewController {
 //MARK: - Set UI & Layout
 extension ShareMediaOnSlackMissionViewController {
     private func setUI() {
-        self.view.addSubviews(
-            self.label,
-            self.submitButton
-        )
+       
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.label.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-            self.label.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.label.trailingAnchor, multiplier: 2),
-            
-            self.submitButton.topAnchor.constraint(equalToSystemSpacingBelow: self.label.bottomAnchor, multiplier: 2),
-            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.submitButton.bottomAnchor, multiplier: 2),
-            self.submitButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.submitButton.trailingAnchor, multiplier: 5)
+           
         ])
         
-        self.submitButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+}
+
+extension ShareMediaOnSlackMissionViewController: EventCompletedViewControllerDelegate {
+    func redeemDidTap() {
+        self.delegate?.redeemDidTap(vc: self)
     }
 }

@@ -8,19 +8,12 @@
 import UIKit
 import Combine
 
-protocol AnswerQuizPluralViewControllerDelegate: AnyObject {
-    func redeemDidTap()
-}
-
 final class AnswerQuizPluralViewController: BaseMissionViewController {
 
     private let vm: AnswerQuizPluralViewViewModel
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
-    
-    //MARK: - Delegate
-    weak var delegate: AnswerQuizPluralViewControllerDelegate?
     
     //MARK: - Init
     init(vm: AnswerQuizPluralViewViewModel) {
@@ -63,6 +56,6 @@ extension AnswerQuizPluralViewController {
 
 extension AnswerQuizPluralViewController: WeeklyMissionCompleteViewControllerDelegate {
     func redeemDidTap() {
-        self.delegate?.redeemDidTap()
+        self.delegate?.redeemDidTap(vc: self)
     }
 }

@@ -84,7 +84,7 @@ extension CommentCountMissionViewController {
                 }
                 .store(in: &bindings)
 
-            self.checkAnswerButton
+            self.checkAnswerButton // Point 바로 수여X
                 .tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in

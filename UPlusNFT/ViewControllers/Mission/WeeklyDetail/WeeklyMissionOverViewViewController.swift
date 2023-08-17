@@ -211,7 +211,7 @@ extension WeeklyMissionOverViewViewController {
             switch subFormatType {
             case .contentReadOnly:
                 let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: self.vm.week)
-                let vc = ContentReadOnlyMissionViewController(vm: vm)
+                let vc = ContentReadOnlyMissionViewController(vm: vm, type: .weekly)
                 vc.delegate = self
                 
                 self.show(vc, sender: self)
@@ -232,17 +232,15 @@ extension WeeklyMissionOverViewViewController {
     }
 }
 
-extension WeeklyMissionOverViewViewController: ChoiceQuizOXViewControllerDelegate,
-                                               ChoiceQuizMoreViewControllerDelegate,
-                                               ChoiceQuizVideoViewControllerDelegate,
-                                               AnswerQuizPluralViewControllerDelegate,
-                                               AnswerQuizSingularViewControllerDelegate,
-                                               ContentReadOnlyMissionViewControllerDelegate {
-  
-    func redeemDidTap() {
+extension WeeklyMissionOverViewViewController: BaseMissionViewControllerDelegate {
+    func redeemDidTap(vc: BaseMissionViewController) {
         self.vm.getWeeklyMissionInfo(week: self.vm.week)
     }
 }
 
-
+extension WeeklyMissionOverViewViewController: BaseMissionScrollViewControllerDelegate {
+    func redeemDidTap(vc: BaseMissionScrollViewController) {
+        self.vm.getWeeklyMissionInfo(week: self.vm.week)
+    }
+}
 

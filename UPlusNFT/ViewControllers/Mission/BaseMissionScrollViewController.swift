@@ -7,7 +7,13 @@
 
 import UIKit
 
-class MissionBaseScrollViewController: UIViewController {
+protocol BaseMissionScrollViewControllerDelegate: AnyObject {
+    func redeemDidTap(vc: BaseMissionScrollViewController)
+}
+
+class BaseMissionScrollViewController: UIViewController {
+    
+    weak var delegate: BaseMissionScrollViewControllerDelegate?
     
     //MARK: - UI Elements
     private let scrollView: UIScrollView = {
@@ -69,7 +75,7 @@ class MissionBaseScrollViewController: UIViewController {
     
 }
 
-extension MissionBaseScrollViewController {
+extension BaseMissionScrollViewController {
     
     private func setUI() {
         self.view.addSubview(self.scrollView)

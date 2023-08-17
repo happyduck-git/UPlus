@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol BaseMissionViewControllerDelegate: AnyObject {
+    func redeemDidTap(vc: BaseMissionViewController)
+}
+
 class BaseMissionViewController: UIViewController {
 
+    weak var delegate: BaseMissionViewControllerDelegate?
+    
     // MARK: - UI Elements
     let titleLabel: UILabel = {
         let label = UILabel()

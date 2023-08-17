@@ -8,7 +8,7 @@
 import UIKit.UIImage
 import Combine
 
-final class PhotoAuthQuizViewViewModel: MissionBaseModel {
+final class PhotoAuthQuizViewViewModel: WeeklyBaseModel {
     
     @Published var selectedImage: UIImage?
     
