@@ -10,6 +10,13 @@ import Combine
 
 final class RoutineMissionBonusStageCollectionViewCell: UICollectionViewCell {
     
+    // MARK: - Dependency
+    private var vm: RoutineMissionDetailViewViewModel?
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - UI Elements
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = MissionConstants.bonusStage
@@ -53,6 +60,11 @@ final class RoutineMissionBonusStageCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         
         self.contentView.backgroundColor = .white
+        self.contentView.layer.borderColor = UPlusColor.mint03.cgColor
+        self.contentView.layer.borderWidth = 1.0
+        self.contentView.clipsToBounds = true
+        self.contentView.layer.cornerRadius = 16
+        
         self.setUI()
         self.setLayout()
         self.setDelegate()
@@ -60,6 +72,46 @@ final class RoutineMissionBonusStageCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension RoutineMissionBonusStageCollectionViewCell {
+    func bind(with vm: RoutineMissionDetailViewViewModel) {
+        
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        self.vm = vm
+        
+        vm.$athleteMissions
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                self.stampCollectionView.reloadData()
+            }
+            .store(in: &self.bindings)
+        
+        vm.$successedMissionsCount
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                self.progressLabel.text = String(format: MissionConstants.missionProgress, $0 - MissionConstants.routineMissionLimit)
+            }
+            .store(in: &self.bindings)
+        
+        vm.$isFinishedRoutines
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self,
+                let isFinished = $0
+                else { return }
+                if isFinished {
+                    // TODO: bonus 미션 all 완료한 경우
+                    
+                }
+            }
+            .store(in: &bindings)
+        
     }
 }
 
@@ -104,12 +156,20 @@ extension RoutineMissionBonusStageCollectionViewCell: UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StampCollectionViewCell.identifier, for: indexPath) as? StampCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StampCollectionViewCell.identifier, for: indexPath) as? StampCollectionViewCell,
+              let cellVM = self.vm
         else {
             return UICollectionViewCell()
         }
         
+        cell.resetCell()
         
-        return cell
+        if indexPath.item + MissionConstants.routineMissionLimit >= cellVM.athleteMissions.count {
+            cell.showGiftMark(at: indexPath.item)
+            return cell
+        } else {
+            cell.showCheckMark(at: indexPath.item)
+            return cell
+        }
     }
 }

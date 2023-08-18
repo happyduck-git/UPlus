@@ -16,14 +16,7 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private let stack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 20.0
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-    
+
     private let levelTitle: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
@@ -36,8 +29,25 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
     private let nftImage: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .systemGray
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
+    }()
+    
+    private let levelBackgroudView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.titleBackground)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let levelLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .center
+        label.text = MissionConstants.levelUpTitle
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let benefitContainerView: UIView = {
@@ -52,21 +62,40 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
         label.textAlignment = .center
         label.text = MyPageConstants.benefit
         label.textColor = UPlusColor.blue03
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let couponView: UILabel = {
+    private let couponView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.couponFrame)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let couponLabel: UILabel = {
         let label = UILabel()
+        label.text = MyPageConstants.coffee
+        label.textColor = .black
+        return label
+    }()
+    
+    private let raffleView: UILabel = {
+        let label = UILabel()
+        label.text = MyPageConstants.raffle
+        label.textColor = UPlusColor.gray05
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let eventView: UILabel = {
-        let event = UILabel()
-        event.text = MyPageConstants.eventOpened
-        event.translatesAutoresizingMaskIntoConstraints = false
-        return event
+        let label = UILabel()
+        label.text = MyPageConstants.eventOpened
+        label.textColor = UPlusColor.gray05
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let redeemButton: UIButton = {
@@ -81,7 +110,7 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
     // MARK: - Init
     init(newLevel: Int) {
         self.newLevel = newLevel
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
     
     required init?(coder: NSCoder) {
@@ -106,7 +135,7 @@ extension LevelUpBottomSheetViewController {
         let raffle = level.raffle
         
         self.levelTitle.text = String(format: MyPageConstants.levelUp, level.rawValue)
-        self.couponView.text = coupon
+        self.couponLabel.text = coupon
     }
     
     private func bind() {
@@ -131,37 +160,76 @@ extension LevelUpBottomSheetViewController {
 // MARK: - Set UI & Layout
 extension LevelUpBottomSheetViewController {
     private func setUI() {
-        self.stack.addArrangedSubviews(self.levelTitle,
+        self.containerView.addSubviews(self.levelTitle,
                                        self.nftImage,
+                                       self.levelBackgroudView,
+                                       self.levelLabel,
                                        self.benefitContainerView,
                                        self.redeemButton)
         
-        self.benefitContainerView.addSubviews(self.benefitLabel,
-                                              self.couponView,
+        self.benefitContainerView.addSubviews(self.couponView,
+                                              self.couponLabel,
+                                              self.benefitLabel,
                                               self.eventView)
-        
-        self.containerView.addSubviews(self.stack)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.stack.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 2),
-            self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
-            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 3),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 5)
+            self.levelTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 3),
+            self.levelTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
+            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.levelTitle.trailingAnchor, multiplier: 2),
+            
+            self.nftImage.topAnchor.constraint(equalToSystemSpacingBelow: self.levelTitle.bottomAnchor, multiplier: 3),
+            self.nftImage.widthAnchor.constraint(equalToConstant: self.view.frame.width / 2),
+            self.nftImage.heightAnchor.constraint(equalTo: self.nftImage.widthAnchor),
+            self.nftImage.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
+            
+            self.levelBackgroudView.centerYAnchor.constraint(equalTo: self.nftImage.bottomAnchor),
+            self.levelBackgroudView.centerXAnchor.constraint(equalTo: self.nftImage.centerXAnchor),
+            
+            self.levelLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.levelBackgroudView.leadingAnchor, multiplier: 1),
+            self.levelLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.levelBackgroudView.topAnchor, multiplier: 1),
+            self.levelBackgroudView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.levelLabel.trailingAnchor, multiplier: 1),
+            self.levelBackgroudView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelLabel.bottomAnchor, multiplier: 1),
+            
+            self.benefitContainerView.topAnchor.constraint(equalToSystemSpacingBelow: self.levelLabel.bottomAnchor, multiplier: 3),
+            self.benefitContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
+            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.trailingAnchor, multiplier: 2),
+            
+            self.redeemButton.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.bottomAnchor, multiplier: 3),
+            self.redeemButton.leadingAnchor.constraint(equalTo: self.benefitContainerView.leadingAnchor),
+            self.redeemButton.trailingAnchor.constraint(equalTo: self.benefitContainerView.trailingAnchor),
+            
         ])
         
         NSLayoutConstraint.activate([
-            self.benefitLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.topAnchor, multiplier: 1),
+            self.benefitLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.topAnchor, multiplier: 2),
             self.benefitLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 3),
             self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitLabel.trailingAnchor, multiplier: 3),
+            
             self.couponView.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitLabel.bottomAnchor, multiplier: 1),
-            self.couponView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 1),
-            self.benefitContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.couponView.bottomAnchor, multiplier: 1),
+            self.couponView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 2),
+            self.benefitContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.couponView.bottomAnchor, multiplier: 2),
+            self.couponView.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3.5),
+            
+            self.raffleView.topAnchor.constraint(equalTo: self.couponView.topAnchor),
+            self.raffleView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.couponView.trailingAnchor, multiplier: 1),
+            self.raffleView.bottomAnchor.constraint(equalTo: self.couponView.bottomAnchor),
             
             self.eventView.topAnchor.constraint(equalTo: self.couponView.topAnchor),
             self.eventView.bottomAnchor.constraint(equalTo: self.couponView.bottomAnchor),
-            self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.eventView.trailingAnchor, multiplier: 1)
+            self.eventView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.raffleView.trailingAnchor, multiplier: 1),
+            self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.eventView.trailingAnchor, multiplier: 2)
         ])
     }
 }
+
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct LevelUpBottomSheetViewController_Preview: PreviewProvider {
+    static var previews: some View {
+        LevelUpBottomSheetViewController(newLevel: 1).toPreview()
+    }
+}
+#endif

@@ -99,6 +99,9 @@ extension ChoiceQuizMoreViewController {
                         
                         self.show(vc, sender: self)
                     } else {
+                        
+                        let button = self.vm.selectedButton ?? 0
+                        self.choiceButtons[button].layer.borderColor = UPlusColor.orange01.cgColor
                         self.answerInfoLabel.isHidden = false
                     }
                 }

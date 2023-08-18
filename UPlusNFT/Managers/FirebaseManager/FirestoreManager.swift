@@ -1158,8 +1158,11 @@ extension FirestoreManager {
     
     /// Update the user owned nft list after comparing to the nft list received from API.
     /// - Parameter tokens: NFT token id list.
-    func updateOwnedNfts(tokens: [String], userIndex: Int64) async throws {
+    func updateOwnedNfts(tokens: [String]) async throws {
         
+        var user = try UPlusUser.getCurrentUser()
+        
+        // 1. Update Firestore
         let paths = tokens.map { token in
             self.generateDocPath(pathIds: [
                 FirestoreConstants.devThreads2,
@@ -1172,12 +1175,17 @@ extension FirestoreManager {
         try await threadsSetCollectionPath2
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
-            .document(String(describing: userIndex))
+            .document(String(describing: user.userIndex))
             .setData(
                 [
-                    FirestoreConstants.userNfts: FieldValue.arrayUnion(paths)
+                    FirestoreConstants.userNfts: paths
                 ],
                 merge: true)
+
+        user.userNfts = paths
+        
+        // 2. Update UserDefaults
+        try UPlusUser.updateUser(user)
         
     }
     

@@ -19,8 +19,8 @@ struct UPlusUser: Codable {
     let userAccountCreationTime: Timestamp?
     var userTotalPoint: Int64?
     let userHasVipNft: Bool
-    let userRewards: [DocumentReference]? // 사용자가 획득한 보상 아이템 다큐먼트를 배열로 갖는다.
-    let userNfts: [DocumentReference]? //사용자가 획득한 NFT 다큐먼트를 배열로 갖는다.
+    var userRewards: [DocumentReference]? // 사용자가 획득한 보상 아이템 다큐먼트를 배열로 갖는다.
+    var userNfts: [DocumentReference]? //사용자가 획득한 NFT 다큐먼트를 배열로 갖는다.
     let userTypeMissionArrayMap: [String: [DocumentReference]]? //사용자가 참여한 미션 다큐먼트를 map으로 갖는다.
     var userPointHistory: [PointHistory]?
     let userIsAdmin: Bool
@@ -62,10 +62,11 @@ extension UPlusUser {
             )
         let encodedUserData = try JSONEncoder().encode(codableUser)
         UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
+        /*
         #if DEBUG
         print("User Info Saved: \(codableUser)")
         #endif
-        
+        */
         return currentUser
     }
     
@@ -84,9 +85,11 @@ extension UPlusUser {
         let codableUser = user.convertToSwiftUser()
         let encodedUserData = try JSONEncoder().encode(codableUser)
         UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
+        /*
         #if DEBUG
         print("User Info Updated: \(codableUser)")
         #endif
+         */
     }
     
     private func convertToSwiftUser() -> SwiftUPlusUser {

@@ -390,10 +390,14 @@ extension MyPageViewController {
         let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
                                           style: .plain,
                                           target: self,
-                                          action: nil)
+                                          action: #selector(speakerDidTap))
         
         self.navigationItem.setLeftBarButton(menuItem, animated: true)
         self.navigationItem.setRightBarButton(speakerItem, animated: true)
+    }
+    
+    @objc func speakerDidTap() {
+        //TODO: 공지사항 열람
     }
     
     private func setDelegate() {
@@ -1040,8 +1044,18 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
             // pop game
         case 3:
-         
-            
+            // NOTE: DEMO FOR NFT TRANSFER
+         /*
+            Task {
+                do {
+                    let result = try await NFTServiceManager.shared.requestSingleNft(userIndex: self.vm.user.userIndex, nftType: .gift)
+                    print("Result: \(result.data)")
+                }
+                catch {
+                    
+                }
+            }
+            */
             break
             
             // notice

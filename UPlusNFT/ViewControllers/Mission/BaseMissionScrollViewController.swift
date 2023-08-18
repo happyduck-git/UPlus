@@ -58,9 +58,11 @@ class BaseMissionScrollViewController: UIViewController {
     
     let checkAnswerButton: UIButton = {
         let button = UIButton()
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
+        button.backgroundColor = .black
         button.setTitleColor(.white, for: .normal)
         button.setTitle(RewardsConstants.empty, for: .normal)
-        button.backgroundColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -117,10 +119,11 @@ extension BaseMissionScrollViewController {
             self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.bottomAnchor, multiplier: 3),
             self.checkAnswerButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
             self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.checkAnswerButton.trailingAnchor, multiplier: 2),
-            self.canvasView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 3)
+            self.canvasView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 3),
+//            self.checkAnswerButton.heightAnchor.constraint(equalToConstant: 60)
         ])
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.subTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.checkAnswerButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+//        self.checkAnswerButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }

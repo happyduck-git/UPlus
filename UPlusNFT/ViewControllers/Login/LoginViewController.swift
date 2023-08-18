@@ -44,7 +44,7 @@ class LoginViewController: UIViewController {
     
     private let placeHolderLabel: UILabel = {
         let label = UILabel()
-        label.text = "@uplus.net"
+        label.text = LoginConstants.uplusEmailSuffix
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

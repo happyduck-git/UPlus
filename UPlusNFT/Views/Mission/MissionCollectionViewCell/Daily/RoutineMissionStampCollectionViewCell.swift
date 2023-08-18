@@ -45,7 +45,7 @@ final class RoutineMissionStampCollectionViewCell: UICollectionViewCell {
         
         self.contentView.backgroundColor = .white
         self.contentView.clipsToBounds = true
-        self.layer.cornerRadius = 10.0
+        self.contentView.layer.cornerRadius = 16.0
         self.contentView.layer.borderColor = UPlusColor.mint03.cgColor
         self.contentView.layer.borderWidth = 1.0
         
@@ -134,7 +134,7 @@ extension RoutineMissionStampCollectionViewCell {
 extension RoutineMissionStampCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 15
+        return MissionConstants.routineMissionLimit
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

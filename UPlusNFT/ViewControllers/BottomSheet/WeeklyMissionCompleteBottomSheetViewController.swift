@@ -73,7 +73,7 @@ final class WeeklyMissionCompleteBottomSheetViewController: BottomSheetViewContr
     // MARK: - Init
     init(vm: WeeklyMissionOverViewViewModel) {
         self.vm = vm
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
     
     required init?(coder: NSCoder) {

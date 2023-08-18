@@ -109,7 +109,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
     // MARK: - Init
     init(vm: MyPageViewViewModel) {
         self.vm = vm
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
     
     required init?(coder: NSCoder) {

@@ -24,7 +24,12 @@ struct NftLevel {
     static let weekly2: PointRange =  002_010_000...002_019_999
     static let weekly3: PointRange =  002_020_000...002_029_999
     
-    static let raffle: PointRange =  003_000_000...003_009_999
+    static let gift: PointRange =  003_000_000...003_009_999
+    
+    static let raffleBronze: PointRange =  003_010_000...003_019_999
+    static let raffleSilver: PointRange =  003_020_000...003_029_999
+    static let raffleGold: PointRange =  003_030_000...003_039_999
+
 }
 
 extension NftLevel {

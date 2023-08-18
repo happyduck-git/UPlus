@@ -42,6 +42,7 @@ final class RoutineCompleteCollectionViewCell: UICollectionViewCell {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         button.backgroundColor = UPlusColor.mint05
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -76,6 +77,7 @@ extension RoutineCompleteCollectionViewCell {
     private func setUI() {
         self.contentView.backgroundColor = UPlusColor.mint01
         self.contentView.clipsToBounds = true
+        self.contentView.layer.cornerRadius = 16.0
         self.contentView.layer.borderColor = UPlusColor.mint03.cgColor
         self.contentView.layer.borderWidth = 2.0
         

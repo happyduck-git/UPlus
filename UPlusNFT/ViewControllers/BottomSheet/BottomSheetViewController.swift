@@ -27,7 +27,7 @@ class BottomSheetViewController: UIViewController {
         return view
     }()
     
-    var defaultHeight: CGFloat = 600
+    var defaultHeight: CGFloat
     
     // 3. Dynamic container constraint
     var containerViewHeightConstraint: NSLayoutConstraint?
@@ -48,6 +48,15 @@ class BottomSheetViewController: UIViewController {
             self?.setTapGesture()
         }
         
+    }
+    
+    init(defaultHeight: CGFloat = 600) {
+        self.defaultHeight = defaultHeight
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

@@ -91,7 +91,7 @@ extension RoutineUploadPhotoView {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.rewardLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 3),
+            self.rewardLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 10),
             self.rewardLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 4),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rewardLabel.trailingAnchor, multiplier: 4),
             

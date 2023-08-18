@@ -329,15 +329,14 @@ extension MyPageViewViewModel {
     func updateUserOwnedNft() async -> [String] {
         
         do {
-            // 1. Fetch NFTs from Luniverse
-            // token Id 확인
+            // 1. Fetch NFTs from Luniverse.
             let token = try await LuniverseServiceManager.shared.requestAccessToken()
             let nfts = try await LuniverseServiceManager.shared.requestNftList(authKey: token,
                                                                                walletAddress: self.user.userWalletAddress ?? "n/a")
             
             let newestTokens: [String] = nfts.data.items.map { $0.tokenId }.reversed()
             
-            // 2. Fetch NFTs from Firestore
+            // 2. Fetch NFTs from Firestore.
             let savedNfts = user.userNfts ?? []
             
             let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
@@ -345,14 +344,9 @@ extension MyPageViewViewModel {
             logger.info("Old tokens: \(savedTokens)")
             logger.info("New tokens: \(newestTokens)")
             
-            // API fetched NFTs & Firestore fetched NFTs 가 동일한지 확인
-            if !self.haveSameElements(newestTokens, savedTokens) {
-                // 동일하지 않다면, user_nfts의 reference 업데이트
-                self.updateNftList(nfts: newestTokens, userIndex: user.userIndex)
-                self.updatedNfts = newestTokens
-            } else {
-                logger.info("새로운 nft가 없습니다.")
-            }
+            // 3. Compare differences.
+            self.differences(savedTokens, newestTokens)
+
             return newestTokens
         }
         catch {
@@ -366,7 +360,8 @@ extension MyPageViewViewModel {
     private func updateNftList(nfts: [String], userIndex: Int64) {
         Task {
             do {
-                try await firestoreManager.updateOwnedNfts(tokens: nfts, userIndex: userIndex)
+                try await firestoreManager.updateOwnedNfts(tokens: nfts)
+    
             }
             catch {
                 print("Error updating nft list -- \(error.localizedDescription)")
@@ -441,23 +436,23 @@ extension MyPageViewViewModel {
         return components.last.map { String($0) }
     }
     
-    private func haveSameElements(_ arr1: [String], _ arr2: [String]) -> Bool {
+    private func differences(_ oldArr: [String], _ newArr: [String]) {
+        let diffs = newArr.difference(from: oldArr)
+        var newlyAddedNfts: [String] = []
         
-        let set1 = Set(arr1)
-        let set2 = Set(arr2)
-        
-        let set1ElementsAbsentInSet2 = set1.isDisjoint(with: set2)
-        let anyElementOfSet2AbsentInSet1 = !set2.isSubset(of: set1)
-        
-        if set1ElementsAbsentInSet2 {
-            return true
+        for diff in diffs {
+            switch diff {
+            case .remove(_, let element, _):
+                self.logger.info("삭제된 NFT: \(element)")
+                
+            case .insert(_, let element, _):
+                newlyAddedNfts.append(element)
+                self.logger.info("새로 추가된 NFT: \(element)")
+            }
         }
         
-        if anyElementOfSet2AbsentInSet1 {
-            return false
-        }
-        
-        return true
+        self.updatedNfts = newlyAddedNfts
+        self.updateNftList(nfts: newArr, userIndex: user.userIndex)
     }
 
 }

@@ -105,9 +105,20 @@ extension WalletDetailViewController: UICollectionViewDelegate, UICollectionView
 
 extension WalletDetailViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vm = self.vm.nfts[indexPath.item]
-        let vc = NFTDetailViewController(vm: vm)
+        let nft = self.vm.nfts[indexPath.item]
         
-        show(vc, sender: self)
+        guard let type = UPlusNftType(rawValue: nft.nftType) else { return }
+        
+        switch type {
+        case .raffle:
+            let vm = GiftViewControllerViewViewModel(nft: nft)
+            let vc = GiftViewController(vm: vm)
+            
+            show(vc, sender: self)
+            
+        default:
+            let vc = NFTDetailViewController(vm: nft)
+            show(vc, sender: self)
+        }
     }
 }

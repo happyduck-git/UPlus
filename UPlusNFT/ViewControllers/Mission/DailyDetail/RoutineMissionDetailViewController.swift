@@ -27,7 +27,7 @@ final class RoutineMissionDetailViewController: UIViewController {
     private let loadingVC = LoadingViewController()
     
     private var collectionView: UICollectionView?
-    private var buttonSectionHeight: CGFloat = 0.2
+    private var buttonSectionHeight: CGFloat = 0.4
     
     private let photoPicker: PHPickerViewController = {
         var configuration = PHPickerConfiguration()
@@ -283,7 +283,7 @@ extension RoutineMissionDetailViewController: UICollectionViewDelegate, UICollec
                     }
                     
                     cell.bind(with: self.vm)
-                    cell.contentView.layer.cornerRadius = 10
+
                     return cell
                 }
  
@@ -293,7 +293,7 @@ extension RoutineMissionDetailViewController: UICollectionViewDelegate, UICollec
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionBonusStageCollectionViewCell.identifier, for: indexPath) as? RoutineMissionBonusStageCollectionViewCell else {
                         return UICollectionViewCell()
                     }
-                    
+                    cell.bind(with: self.vm)
                     
                     return cell
                 } else {
@@ -363,7 +363,7 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
         
 //        self.collectionView?.reloadSections(IndexSet(integer: 1))
         
-        self.buttonSectionHeight = 0.5 // the new height
+        self.buttonSectionHeight = 0.4 // the new height
 
         // Create a new layout and set it to the collection view
         let newLayout = self.createLayout()

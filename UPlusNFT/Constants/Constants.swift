@@ -37,6 +37,7 @@ struct LoginConstants {
     static let changePassword: String = "비밀번호 찾기"
     static let emailSentLabel: String = "이메일을 확인하여 비밀번호를 변경해주세요."
     static let stackSpacing: CGFloat = 1.0
+    static let uplusEmailSuffix: String = "@lguplus.co.kr"
 }
 
 struct SignUpConstants {
@@ -103,6 +104,8 @@ struct MyPageConstants {
     static let ownedRewards: String = "보유한 경품"
     static let levelUp: String = "Lv.%d 달성"
     static let benefit: String = "특별 BONUS 혜택"
+    static let coffee: String = "아메리카노"
+    static let raffle: String = "래플권"
     static let eventOpened: String = "이벤트 오픈"
     static let redeemLevelUpBenefits: String = "레벨업 보상 받기"
 }
@@ -136,10 +139,12 @@ struct MissionConstants {
     static let redeemPoint: String = "%dP 포인트 받기"
     static let missionProgress: String = "%d회 성공 /15회차"
     static let dailyMissionComplete: String = "15일 챌린지 완주를 축하해요!"
-    static let routineMissionLimit: Int = 3
+    static let routineMissionLimit: Int = 2
     static let redeemReward: String = "완주 보상 보기"
     static let bonusStage: String = "보너스 스테이지"
+    static let bonusStageInfo: String = "챌린지 완주 후 확인 가능"
     static let pointInfo: String = "최대 600P 획득 기회"
+    
     static let bonusMissionLimit: Int = 6
     static let certificate: String = "경험인증서 NFT"
     static let certiPath: String = "TODO 루틴미션"
@@ -167,11 +172,15 @@ struct MissionConstants {
     static let readCompleted: String = "읽기 완료"
     static let eventCompleted: String = "이벤트 참여 완료"
     
-    static let congrats: String = "축하해요"
+    static let congrats: String = "축하해요!"
     static let weeklyCompleted: String = "여정 완료"
     static let redeemNft: String = "NFT 보상 받기"
+    static let redeemLevelUp: String = "레벨업 보상 받기"
+    static let levelUpTitle: String = "LV.%d NFT"
     
     static let rewardPoint: String = "100P 보상"
+    
+    static let missionLevel: String = "난이도"
 }
 
 struct RankingConstants {
@@ -204,6 +213,21 @@ struct LottieConstants {
     static let share: String = "공유하기"
 }
 
+struct GiftConstants {
+    static let receiver: String = "받는 사람"
+    static let inputNickname: String = "닉네임을 입력해주세요"
+    static let checkNickname: String = "닉네임을 다시 확인해주세요."
+    static let info: String = "주의사항"
+    static let infoDetail: String = "주의사항 내용 1번 주의사항입니다.\n2번 주의사항입니다.\n3번 주의사항입니다."
+    static let sendGift: String = "선물하기"
+    static let giftSent: String = "선물 완료"
+    static let giftSentDescription: String = "%@ 님에게\n포인트 선물 완료!"
+    static let sendInfo: String = "실제 선물 전송까지 약간의 시간이 소요될 수 있습니다."
+    static let confirm: String = "확인"
+    static let sendTo: String = "받는 사람"
+    static let sentNft: String = "선물한 NFT"
+}
+
 struct EditUserInfo {
     static let editVCTitle: String = "비밀번호 수정"
     static let confirm: String = "수정완료"
@@ -234,6 +258,8 @@ struct SFSymbol {
     
     static let circledCheckmark: String = "checkmark.circle"
     static let circleFilledCheckmark: String = "checkmark.circle.fill"
+    
+    static let eyeFilled: String = "eye.fill"
 
 }
 
@@ -260,6 +286,7 @@ struct ImageAsset {
     /* HomeVC */
     static let questionBox: String = "question-box"
     static let point: String = "point-silver"
+    static let couponFrame: String = "coupon-frame"
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
@@ -271,12 +298,16 @@ struct ImageAsset {
     static let padlock: String = "padlock"
     static let stampGift: String = "stamp-gift"
     static let stampPoint: String = "stamp-point"
+    static let titleBackground: String = "title-background"
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"
     
     /* RewardVC */
     static let bellGray: String = "bell-gray"
+    
+    /* GiftVC */
+    static let giftColored: String = "gift-colored"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }

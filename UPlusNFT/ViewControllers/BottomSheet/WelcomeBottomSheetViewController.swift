@@ -93,7 +93,7 @@ final class WelcomeBottomSheetViewController: BottomSheetViewController {
     //MARK: - Init
     init(vm: WelcomeBottomSheetViewViewModel) {
         self.vm = vm
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
     
     required init?(coder: NSCoder) {

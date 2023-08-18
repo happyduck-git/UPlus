@@ -51,6 +51,7 @@ class BaseMissionViewController: UIViewController {
         label.textAlignment = .center
         label.textColor = UPlusColor.orange01
         label.backgroundColor = UPlusColor.orange02
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -60,6 +61,8 @@ class BaseMissionViewController: UIViewController {
         button.setTitle(MissionConstants.checkAnswer, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemGray
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
         button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -89,7 +92,7 @@ extension BaseMissionViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
+            self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 1),
             self.titleLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
             self.quizLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 3),
@@ -100,8 +103,8 @@ extension BaseMissionViewController {
             self.quizContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             
             self.answerInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.bottomAnchor, multiplier: 3),
-            self.answerInfoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.answerInfoLabel.trailingAnchor, multiplier: 5),
+            self.answerInfoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 7),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.answerInfoLabel.trailingAnchor, multiplier: 7),
             
             self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.answerInfoLabel.bottomAnchor, multiplier: 2),
             self.checkAnswerButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
@@ -111,10 +114,9 @@ extension BaseMissionViewController {
             
         ])
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.quizLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.answerInfoLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.checkAnswerButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
-//        self.quizContainer.setContentHuggingPriority(.defaultLow, for: .vertical)
+
     }
 
 }
