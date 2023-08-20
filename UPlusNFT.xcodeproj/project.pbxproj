@@ -53,6 +53,7 @@
 		24624B8B2A8E55E600C9A42E /* MyPageViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */; };
 		24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8C2A8E812700C9A42E /* UIViewPreview.swift */; };
 		24624B8F2A8E843900C9A42E /* RoutineUploadPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8E2A8E843900C9A42E /* RoutineUploadPhotoView.swift */; };
+		24624B912A90DE1000C9A42E /* RightArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B902A90DE1000C9A42E /* RightArrowButton.swift */; };
 		246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D72A891A8100CA7356 /* FirestoreActor.swift */; };
 		246BD1DA2A8A673B00CA7356 /* TestCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */; };
 		246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */; };
@@ -277,6 +278,7 @@
 		24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyPageViewController+Extensions.swift"; sourceTree = "<group>"; };
 		24624B8C2A8E812700C9A42E /* UIViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewPreview.swift; sourceTree = "<group>"; };
 		24624B8E2A8E843900C9A42E /* RoutineUploadPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineUploadPhotoView.swift; sourceTree = "<group>"; };
+		24624B902A90DE1000C9A42E /* RightArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightArrowButton.swift; sourceTree = "<group>"; };
 		246BD1D72A891A8100CA7356 /* FirestoreActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreActor.swift; sourceTree = "<group>"; };
 		246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCollectionViewCell.swift; sourceTree = "<group>"; };
 		246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardInfoView.swift; sourceTree = "<group>"; };
@@ -994,6 +996,7 @@
 				24DB21802A77F54C00AE0174 /* PassThroughView.swift */,
 				93DA58612A8EF0CF00525BEC /* InsetLabelView.swift */,
 				93DA58652A8EFCCC00525BEC /* TextReCheckLabelView.swift */,
+				24624B902A90DE1000C9A42E /* RightArrowButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1590,6 +1593,7 @@
 				93D174902A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift in Sources */,
 				93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */,
 				93A2ED932A6E0EA200C2287D /* RankingViewController.swift in Sources */,
+				24624B912A90DE1000C9A42E /* RightArrowButton.swift in Sources */,
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				240269442A83C37B00850E65 /* CommentCountMissionViewViewModel.swift in Sources */,
 				93DA583E2A8A30C600525BEC /* RewardCollectionViewCell.swift in Sources */,

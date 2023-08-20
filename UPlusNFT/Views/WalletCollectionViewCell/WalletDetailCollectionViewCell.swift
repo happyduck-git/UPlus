@@ -12,22 +12,26 @@ final class WalletDetailCollectionViewCell: UICollectionViewCell {
     
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8.0
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private let nftType: UILabel = {
         let label = UILabel()
-        label.textColor = UPlusColor.gray05
-         label.textAlignment = .center
-         label.translatesAutoresizingMaskIntoConstraints = false
-         return label
-     }()
+        label.textColor = UPlusColor.gray06
+        label.textAlignment = .left
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     private let nftTitle: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.textColor = .black
-        label.textAlignment = .center
+        label.textAlignment = .left
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -38,9 +42,7 @@ final class WalletDetailCollectionViewCell: UICollectionViewCell {
         
         self.setUI()
         self.setLayout()
-        
-        self.contentView.layer.borderColor = UPlusColor.mint.cgColor
-        self.contentView.layer.borderWidth = 1.0
+
     }
     
     required init?(coder: NSCoder) {
@@ -87,7 +89,7 @@ extension WalletDetailCollectionViewCell {
             self.nftImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.nftImageView.heightAnchor.constraint(equalTo: self.nftImageView.widthAnchor),
             
-            self.nftType.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 1),
+            self.nftType.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 2),
             self.nftType.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftType.trailingAnchor, multiplier: 1),
             
@@ -96,5 +98,6 @@ extension WalletDetailCollectionViewCell {
             self.nftTitle.trailingAnchor.constraint(equalTo: self.nftType.trailingAnchor),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.nftTitle.bottomAnchor, multiplier: 1)
         ])
+        self.nftType.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }

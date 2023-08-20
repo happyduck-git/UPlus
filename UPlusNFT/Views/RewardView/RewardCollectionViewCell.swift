@@ -13,6 +13,13 @@ final class RewardCollectionViewCell: UICollectionViewCell {
     
     private let logger = Logger()
     
+    private let frameImage: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.couponFrame)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private let titleStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
@@ -32,6 +39,7 @@ final class RewardCollectionViewCell: UICollectionViewCell {
     private let bottomTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         return label
     }()
@@ -46,6 +54,7 @@ final class RewardCollectionViewCell: UICollectionViewCell {
     private let rewardTypeLabel: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.gray05
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -94,27 +103,35 @@ extension RewardCollectionViewCell {
 //MARK: - Set UI & Layout
 extension RewardCollectionViewCell {
     private func setUI() {
+        self.contentView.addSubviews(self.frameImage)
+        
         self.titleStack.addArrangedSubviews(self.topTitle,
                                             self.bottomTitle)
         
-        self.contentView.addSubviews(self.titleStack,
-                                     self.rewardImage,
-                                     self.rewardTypeLabel)
+        self.frameImage.addSubviews(self.titleStack,
+                                    self.rewardImage,
+                                    self.rewardTypeLabel)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
-            self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.frameImage.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.frameImage.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.frameImage.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.frameImage.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            
+            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.frameImage.topAnchor, multiplier: 2),
+            self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.frameImage.leadingAnchor, multiplier: 2),
             
             self.rewardImage.topAnchor.constraint(equalTo: self.titleStack.topAnchor),
             self.rewardImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.titleStack.trailingAnchor, multiplier: 2),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rewardImage.trailingAnchor, multiplier: 2),
+            self.frameImage.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rewardImage.trailingAnchor, multiplier: 2),
             self.rewardImage.heightAnchor.constraint(equalTo: self.rewardImage.widthAnchor),
             
-            self.rewardTypeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 5),
+            self.rewardTypeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 1),
             self.rewardTypeLabel.leadingAnchor.constraint(equalTo: self.titleStack.leadingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.rewardTypeLabel.bottomAnchor, multiplier: 2)
+            self.frameImage.trailingAnchor.constraint(equalToSystemSpacingAfter: self.rewardTypeLabel.trailingAnchor, multiplier: 2),
+            self.frameImage.bottomAnchor.constraint(equalToSystemSpacingBelow: self.rewardTypeLabel.bottomAnchor, multiplier: 2)
         ])
         
         self.titleStack.setContentHuggingPriority(.defaultHigh, for: .vertical)

@@ -20,7 +20,7 @@ final class InsetLabelView: UIView {
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        self.clipsToBounds = true
         self.setUI()
         self.setLayout()
         self.configure()
@@ -28,6 +28,11 @@ final class InsetLabelView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.cornerRadius = self.frame.height / 2
     }
     
 }

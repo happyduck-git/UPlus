@@ -100,7 +100,7 @@ extension CampaignCommentEditView {
     }
     
     private func setLayout() {
-        print("Height: \(self.frame.height)")
+        
         NSLayoutConstraint.activate([
             editTextField.topAnchor.constraint(equalTo: self.topAnchor),
             editTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),

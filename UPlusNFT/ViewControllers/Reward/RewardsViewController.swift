@@ -19,9 +19,8 @@ final class RewardsViewController: UIViewController {
     // MARK: - UI Elements
     private let rewardsOwnedLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .systemGray3
-        label.numberOfLines = 0
-        label.textColor = .black
+        label.textColor = UPlusColor.gray05
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,8 +28,13 @@ final class RewardsViewController: UIViewController {
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 11.0
+        layout.minimumLineSpacing = 24.0
+        
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(RewardCollectionViewCell.self, forCellWithReuseIdentifier: RewardCollectionViewCell.identifier)
+        collection.contentInset = UIEdgeInsets(top: 24, left: 20, bottom: 40, right: 20)
+        
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
     }()
@@ -128,8 +132,7 @@ extension RewardsViewController: UICollectionViewDelegate, UICollectionViewDataS
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RewardCollectionViewCell.identifier, for: indexPath) as? RewardCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.layer.borderColor = UIColor.black.cgColor
-        cell.layer.borderWidth = 1.0
+
         cell.configure(with: self.vm.rewards[indexPath.item])
         
         return cell
@@ -140,6 +143,6 @@ extension RewardsViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width / 2.5, height: self.view.frame.height / 5)
+        return CGSize(width: self.view.frame.width / 2 - 30, height: self.view.frame.height / 6 - 24)
     }
 }

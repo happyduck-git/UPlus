@@ -195,7 +195,7 @@ struct WalletConstants {
     static let wallet: String = "웰렛"
     static let myNfts: String = "My NFTs"
     static let showAll: String = "전체보기"
-    static let rewardsUnit: String = "개"
+    static let rewardsUnit: String = "%@개"
     static let walletAddress: String = "내 지갑 주소"
     static let copy: String = "복사하기"
     static let warning: String = "주소 공유 시 주의사항 한 줄"
@@ -203,6 +203,9 @@ struct WalletConstants {
     static let videoGenerateTitle: String = "NFT 이미지 자랑하기"
     static let owner: String = "소유자"
     static let idCard: String = "ID Card"
+    static let level: String = "레벨"
+    static let ownedReward: String = "보유 경품"
+    static let traits: String = "특징"
 }
 
 struct LottieConstants {
@@ -302,6 +305,8 @@ struct ImageAsset {
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"
+    static let arrowRight: String = "arrow-right-mint"
+    static let sparkle: String = "sparkle"
     
     /* RewardVC */
     static let bellGray: String = "bell-gray"

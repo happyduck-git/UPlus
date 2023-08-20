@@ -14,7 +14,8 @@ final class WalletDetailViewController: UIViewController {
     private let numberOfNftsLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .black
+        label.textColor = UPlusColor.gray05
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -26,6 +27,7 @@ final class WalletDetailViewController: UIViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(WalletDetailCollectionViewCell.self,
                             forCellWithReuseIdentifier: WalletDetailCollectionViewCell.identifier)
+        collection.contentInset = UIEdgeInsets(top: 24, left: 10, bottom: 0, right: 0)
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
     }()
@@ -44,7 +46,9 @@ final class WalletDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.title = WalletConstants.myNfts
         self.view.backgroundColor = .white
+        
         self.setUI()
         self.setLayout()
         self.setDelegate()
@@ -70,9 +74,9 @@ extension WalletDetailViewController {
             self.numberOfNftsLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
             self.numberOfNftsLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
             
-            self.nftsCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.numberOfNftsLabel.bottomAnchor, multiplier: 2),
-            self.nftsCollectionView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftsCollectionView.trailingAnchor, multiplier: 2),
+            self.nftsCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.numberOfNftsLabel.bottomAnchor, multiplier: 3),
+            self.nftsCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.nftsCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.nftsCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
@@ -99,7 +103,7 @@ extension WalletDetailViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width / 2.2, height: self.view.frame.height / 3)
+        return CGSize(width: self.view.frame.width / 2 - 40, height: self.view.frame.height / 3.5)
     }
 }
 
@@ -111,13 +115,13 @@ extension WalletDetailViewController {
         
         switch type {
         case .raffle:
-            let vm = GiftViewControllerViewViewModel(nft: nft)
-            let vc = GiftViewController(vm: vm)
-            
+            let vc = NFTDetailViewController(vm: nft,
+                                             type: .gift)
             show(vc, sender: self)
             
         default:
-            let vc = NFTDetailViewController(vm: nft)
+            let vc = NFTDetailViewController(vm: nft,
+                                             type: .nft)
             show(vc, sender: self)
         }
     }

@@ -22,6 +22,7 @@ final class WalletViewController: UIViewController {
         label.textAlignment = .center
         label.text = WalletConstants.myNfts
         label.textColor = .black
+        label.font = .systemFont(ofSize: UPlusFont.h1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,7 +30,8 @@ final class WalletViewController: UIViewController {
     private let numberOfNftsLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .black
+        label.textColor = UPlusColor.gray05
+        label.font = .systemFont(ofSize: UPlusFont.h2)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -64,23 +66,13 @@ final class WalletViewController: UIViewController {
         return button
     }()
     
-    private let numberOfRaffles: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.black, for: .normal)
+    private let numberOfRaffles: RightArrowButton = {
+        let button = RightArrowButton()
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    // MARK: - Life Cycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.title = WalletConstants.wallet
-        self.view.backgroundColor = .white
-        
-        self.setUI()
-        self.setLayout()
-        self.setDelegate()
-    }
     
     // MARK: - Init
     init(vm: WalletViewViewModel) {
@@ -92,6 +84,23 @@ final class WalletViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Life Cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.view.backgroundColor = .white
+        
+        self.setUI()
+        self.setLayout()
+        self.setDelegate()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.walletAdButton.layer.cornerRadius = self.walletAdButton.frame.height / 2
     }
     
 }
@@ -139,7 +148,7 @@ extension WalletViewController {
                     guard let `self` = self else { return }
                     self.nftsCollectionView.reloadData()
                     
-                    self.numberOfNftsLabel.text = String(describing: $0.count) + WalletConstants.rewardsUnit
+                    self.numberOfNftsLabel.text = String(format: WalletConstants.rewardsUnit, String(describing: $0.count))
                 }
                 .store(in: &bindings)
             
@@ -148,7 +157,7 @@ extension WalletViewController {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    self.numberOfRaffles.setTitle("보유 경품 " + String(describing: $0.count) + "개", for: .normal)
+                    self.numberOfRaffles.setSubTitle(String(describing: $0.count))
                 }
                 .store(in: &bindings)
         }
@@ -177,7 +186,7 @@ extension WalletViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.myNftsLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
+            self.myNftsLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 5),
             self.myNftsLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
             
             self.numberOfNftsLabel.bottomAnchor.constraint(equalTo: self.myNftsLabel.bottomAnchor),
@@ -186,19 +195,22 @@ extension WalletViewController {
             self.showAllButton.centerYAnchor.constraint(equalTo: self.myNftsLabel.centerYAnchor),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.showAllButton.trailingAnchor, multiplier: 2),
             
-            self.nftsCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.numberOfNftsLabel.bottomAnchor, multiplier: 1),
+            self.nftsCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.numberOfNftsLabel.bottomAnchor, multiplier: 3),
             self.nftsCollectionView.leadingAnchor.constraint(equalTo: self.myNftsLabel.leadingAnchor),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftsCollectionView.trailingAnchor, multiplier: 2),
+            self.nftsCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
-            self.walletAdButton.topAnchor.constraint(equalToSystemSpacingBelow: self.nftsCollectionView.bottomAnchor, multiplier: 2),
-            self.walletAdButton.centerXAnchor.constraint(equalTo: self.nftsCollectionView.centerXAnchor),
+            self.walletAdButton.topAnchor.constraint(equalToSystemSpacingBelow: self.nftsCollectionView.bottomAnchor, multiplier: 4),
+            self.walletAdButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.walletAdButton.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3),
+            self.walletAdButton.heightAnchor.constraint(equalToConstant: 32),
             
-            self.numberOfRaffles.topAnchor.constraint(equalToSystemSpacingBelow: self.walletAdButton.bottomAnchor, multiplier: 2),
-            self.numberOfRaffles.leadingAnchor.constraint(equalTo: self.nftsCollectionView.leadingAnchor),
-            self.numberOfRaffles.trailingAnchor.constraint(equalTo: self.nftsCollectionView.trailingAnchor),
-            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfRaffles.bottomAnchor, multiplier: 2)
+            self.numberOfRaffles.topAnchor.constraint(equalToSystemSpacingBelow: self.walletAdButton.bottomAnchor, multiplier: 4),
+            self.numberOfRaffles.leadingAnchor.constraint(equalTo: self.myNftsLabel.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.numberOfRaffles.trailingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfRaffles.bottomAnchor, multiplier: 3)
         ])
         
+        self.walletAdButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.numberOfRaffles.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
     
@@ -225,7 +237,7 @@ extension WalletViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width / 1.5,
+        return CGSize(width: self.view.frame.width / 1.3,
                       height: self.nftsCollectionView.frame.height)
     }
 
