@@ -9,11 +9,16 @@ import UIKit
 
 final class TodayMissionCollectionViewCell: UICollectionViewCell {
     
+    enum `Type` {
+        case mission
+        case event
+    }
+    
+    var type: Type?
+    
     // MARK: - UI Elements
     private let missionLabel: UILabel = {
         let label = UILabel()
-        label.accessibilityIdentifier = "missionLabel"
-        label.text = MissionConstants.todayMission
         label.textColor = .black
         label.font = .systemFont(ofSize: UPlusFont.head2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -22,7 +27,6 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
 
     private let timeLabelcontainerView: UIView = {
         let view = UIView()
-        view.accessibilityIdentifier = "TimeContainerView"
         view.clipsToBounds = true
         view.backgroundColor = UPlusColor.grayMint
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -65,9 +69,22 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Configuration
 extension TodayMissionCollectionViewCell {
+    
     func configure(with vm: UserProfileViewViewModel) {
-        self.timeLabel.text = String(describing: vm.timeLeft) + MissionConstants.timeLeftSuffix
+        switch self.type {
+        case .mission:
+            self.missionLabel.text = MissionConstants.todayMission
+            self.timeLabel.text = String(format: MissionConstants.timeLeftSuffix, vm.timeLeft)
+            
+        case .event:
+            self.missionLabel.text = MissionConstants.availableEvent
+            self.timeLabel.text = String(format: MissionConstants.eventLeftSuffix, vm.timeLeft)
+            
+        default:
+            return
+        }
     }
+    
 }
 
 // MARK: - Set UI & Layout

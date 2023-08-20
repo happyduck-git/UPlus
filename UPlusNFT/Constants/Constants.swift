@@ -108,6 +108,10 @@ struct MyPageConstants {
     static let raffle: String = "래플권"
     static let eventOpened: String = "이벤트 오픈"
     static let redeemLevelUpBenefits: String = "레벨업 보상 받기"
+    static let routineMissionProgress: String = "%d / 15회"
+    static let routinMissionLimit: Int = 15
+    
+    static let eventLevel: String = "레벨 %d"
 }
 
 struct RewardsConstants {
@@ -124,12 +128,18 @@ struct MissionConstants {
     static let levelPrefix: String = "LV."
     static let levelUp: String = "레벨업하기"
     static let todayMission: String = "오늘의 미션"
+    static let availableEvent: String = "참여 가능한 이벤트"
     static let dailyAttendanceMission: String = "데일리 퀴즈"
     static let expMission: String = "갓생 인증 미션"
     static let missionUnit: String = "개"
     static let pointUnit: String = "P"
-    static let timeLeftSuffix: String = "시간 남음"
+    static let eventLeftSuffix: String = "%d개 남음"
+    static let timeLeftSuffix: String = "%d시간 남음"
     static let details: String = "자세히 보기"
+    
+    static let level0Event: String = "참여 이벤트"
+    static let otherLevelEvent: String = "레벨 이벤트"
+    
     /* Daily Quiz Mission */
     static let quizMission: String = "퀴즈 미션"
     static let checkAnswer: String = "정답 확인하기"
@@ -302,6 +312,7 @@ struct ImageAsset {
     static let stampGift: String = "stamp-gift"
     static let stampPoint: String = "stamp-point"
     static let titleBackground: String = "title-background"
+    static let routineImage: String = "todo"
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"

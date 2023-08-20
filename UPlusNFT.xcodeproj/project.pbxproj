@@ -54,6 +54,7 @@
 		24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8C2A8E812700C9A42E /* UIViewPreview.swift */; };
 		24624B8F2A8E843900C9A42E /* RoutineUploadPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8E2A8E843900C9A42E /* RoutineUploadPhotoView.swift */; };
 		24624B912A90DE1000C9A42E /* RightArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B902A90DE1000C9A42E /* RightArrowButton.swift */; };
+		24624B942A9274B500C9A42E /* LevelDividerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */; };
 		246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D72A891A8100CA7356 /* FirestoreActor.swift */; };
 		246BD1DA2A8A673B00CA7356 /* TestCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */; };
 		246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */; };
@@ -279,6 +280,7 @@
 		24624B8C2A8E812700C9A42E /* UIViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewPreview.swift; sourceTree = "<group>"; };
 		24624B8E2A8E843900C9A42E /* RoutineUploadPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineUploadPhotoView.swift; sourceTree = "<group>"; };
 		24624B902A90DE1000C9A42E /* RightArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightArrowButton.swift; sourceTree = "<group>"; };
+		24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDividerCollectionViewCell.swift; sourceTree = "<group>"; };
 		246BD1D72A891A8100CA7356 /* FirestoreActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreActor.swift; sourceTree = "<group>"; };
 		246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCollectionViewCell.swift; sourceTree = "<group>"; };
 		246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardInfoView.swift; sourceTree = "<group>"; };
@@ -640,6 +642,14 @@
 				93A2ED8F2A6E0BD000C2287D /* RewardsViewViewModel.swift */,
 			);
 			path = Reward;
+			sourceTree = "<group>";
+		};
+		24624B922A92749B00C9A42E /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */,
+			);
+			path = Event;
 			sourceTree = "<group>";
 		};
 		246BD1FD2A8B6E1800CA7356 /* Mission */ = {
@@ -1118,6 +1128,7 @@
 		93A2ED852A6A5AB900C2287D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				24624B922A92749B00C9A42E /* Event */,
 				2402695F2A8480FC00850E65 /* History */,
 				9391946E2A7A1D3B0035FEB1 /* DailyMission */,
 				93A2ED832A6A583200C2287D /* MyPageProfileCollectionViewCell.swift */,
@@ -1504,6 +1515,7 @@
 				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
 				93A2ED8E2A6E025000C2287D /* RewardsViewController.swift in Sources */,
 				240269562A846BA400850E65 /* AnswerQuizSingularViewController.swift in Sources */,
+				24624B942A9274B500C9A42E /* LevelDividerCollectionViewCell.swift in Sources */,
 				2402695C2A846C1300850E65 /* AnswerQuizSingularViewViewModel.swift in Sources */,
 				932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */,
 				93DA58542A8DA8EB00525BEC /* WeeklyBaseModel.swift in Sources */,

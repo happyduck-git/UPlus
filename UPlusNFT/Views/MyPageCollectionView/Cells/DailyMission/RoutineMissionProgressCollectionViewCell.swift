@@ -14,29 +14,65 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
+    
+    private let missionImage: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.routineImage)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    private let titleStack: UIStackView = {
+       let stack = UIStackView()
+        stack.axis = .vertical
+        stack.distribution = .fillEqually
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
     private let title: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.textAlignment = .center
         label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private let subTitle: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.gray06
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .regular)
+        return label
+    }()
+    
+    private let pointContainerView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10.0
+        view.backgroundColor = UPlusColor.blue01
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let pointLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UPlusColor.blue02
+        label.textColor = UPlusColor.blue03
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private let progressBar: UIProgressView = {
+        let progressView = UIProgressView()
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        return progressView
     }()
     
     private let numberOfParticipation: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.green
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -66,47 +102,82 @@ extension RoutineMissionProgressCollectionViewCell {
         
         vm.mission.$savedMissionType
             .receive(on: DispatchQueue.main)
-            .sink {
+            .sink { [weak self] in
+                guard let `self` = self else { return }
                 self.title.text = $0?.displayName ?? "걷기 루틴 미션"
+                self.subTitle.text = $0?.description ?? "걷기 루틴 미션"
             }
             .store(in: &bindings)
         
         vm.mission.$routineParticipationCount
             .receive(on: DispatchQueue.main)
-            .sink {
-                self.numberOfParticipation.text = String(describing: $0) + "회"
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                
+                self.numberOfParticipation.text = String(format: MyPageConstants.routineMissionProgress, $0)
+                self.setProgress($0)
             }
             .store(in: &bindings)
         
         vm.mission.$routinePoint
             .receive(on: DispatchQueue.main)
-            .sink {
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                
                 self.pointLabel.text = String(describing: $0) + MissionConstants.pointUnit
             }
             .store(in: &bindings)
     }
 }
 
+//MARK: - Private
+extension RoutineMissionProgressCollectionViewCell {
+    private func setProgress(_ progress: Int) {
+        self.progressBar.setProgress(Float(progress / MyPageConstants.routinMissionLimit), animated: true)
+    }
+}
+
 // MARK: - Set UI & Layout
 extension RoutineMissionProgressCollectionViewCell {
     private func setUI() {
-        self.contentView.addSubviews(self.title,
-                                     self.pointLabel,
+        self.contentView.addSubviews(self.missionImage,
+                                     self.titleStack,
+                                     self.pointContainerView,
+                                     self.progressBar,
                                      self.numberOfParticipation)
+        
+        self.titleStack.addArrangedSubviews(self.title,
+                                            self.subTitle)
+        
+        self.pointContainerView.addSubview(self.pointLabel)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.title.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 1),
-            self.title.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
-            self.pointLabel.topAnchor.constraint(equalTo: self.title.topAnchor),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 1),
-            self.pointLabel.bottomAnchor.constraint(equalTo: self.title.bottomAnchor),
             
-            self.numberOfParticipation.topAnchor.constraint(equalToSystemSpacingBelow: self.title.bottomAnchor, multiplier: 1),
-            self.numberOfParticipation.leadingAnchor.constraint(equalTo: self.title.leadingAnchor),
-            self.numberOfParticipation.trailingAnchor.constraint(equalTo: self.title.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 5)
+            self.missionImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.missionImage.centerYAnchor.constraint(equalTo: self.titleStack.centerYAnchor),
+            
+            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 3),
+            self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionImage.trailingAnchor, multiplier: 2),
+            
+            self.pointContainerView.topAnchor.constraint(equalTo: self.titleStack.topAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 2),
+            self.pointContainerView.widthAnchor.constraint(equalToConstant: 55),
+            self.pointContainerView.heightAnchor.constraint(equalToConstant: 25),
+            
+            self.pointLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pointContainerView.topAnchor, multiplier: 1),
+            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.leadingAnchor, multiplier: 1),
+            self.pointContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 1),
+            self.pointContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 1),
+            
+            self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 2),
+            self.progressBar.leadingAnchor.constraint(equalTo: self.missionImage.leadingAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.progressBar.trailingAnchor, multiplier: 2),
+            
+            self.numberOfParticipation.topAnchor.constraint(equalToSystemSpacingBelow: self.progressBar.bottomAnchor, multiplier: 1),
+            self.numberOfParticipation.trailingAnchor.constraint(equalTo: self.progressBar.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 3)
         ])
         
         self.numberOfParticipation.setContentHuggingPriority(.defaultHigh, for: .vertical)

@@ -26,13 +26,12 @@ final class MyPageViewViewModel {
         case button
         case calendar
         case history
-        case test
     }
     
-    enum MyPageViewEventSectionType: CaseIterable {
+    enum MyPageViewEventSectionType: String, CaseIterable {
         case availableEvent
-        case level0event
-        case otherLevelEvent
+        case level0event = "참여 이벤트"
+        case level1event = "레벨 이벤트"
     }
     
     let missionSections: [MyPageViewMissionSectionType] = MyPageViewMissionSectionType.allCases
@@ -112,21 +111,24 @@ final class MyPageViewViewModel {
         @Published var missionPerLevel: [Int64: [any Mission]] = [:] {
             didSet {
                 self.level0Mission = missionPerLevel[0] ?? []
-                self.level1Mission = missionPerLevel[1] ?? []
-                self.level2Mission = missionPerLevel[2] ?? []
-                self.level3Mission = missionPerLevel[3] ?? []
-                self.level4Mission = missionPerLevel[4] ?? []
-                self.level5Mission = missionPerLevel[5] ?? []
+
+                var others: [(any Mission)?] = []
+               
+                others.append(nil)
+                others.append(contentsOf: missionPerLevel[2] ?? [])
+                others.append(nil)
+                others.append(contentsOf: missionPerLevel[3] ?? [])
+                others.append(nil)
+                others.append(contentsOf: missionPerLevel[4] ?? [])
+                others.append(nil)
+                others.append(contentsOf: missionPerLevel[5] ?? [])
+                
+                self.otherMissions.append(contentsOf: others)
             }
         }
         
-        var level0Mission: [any Mission] = []
-        var level1Mission: [any Mission] = []
-        var level2Mission: [any Mission] = []
-        var level3Mission: [any Mission] = []
-        var level4Mission: [any Mission] = []
-        var level5Mission: [any Mission] = []
-        
+        @Published var level0Mission: [any Mission] = []
+        @Published var otherMissions: [(any Mission)?] = []
     }
     
     class MissionSelectBottomView {

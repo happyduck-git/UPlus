@@ -19,7 +19,6 @@ class MissionCollectionViewHeader: UICollectionReusableView {
     // MARK: - UI Elements
     private let sectionTitle: UILabel = {
         let label = UILabel()
-        label.text = MissionConstants.dailyAttendanceMission
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -88,7 +88,7 @@ final class MyPageViewController: UIViewController {
         button.tag = 0
         button.addTarget(self, action: #selector(buttonDidTap(_:)), for: .touchUpInside)
         button.backgroundColor = .white
-        button.setTitleColor(UPlusColor.navy, for: .normal)
+        button.setTitleColor(UPlusColor.blue04, for: .normal)
         button.setTitle("미션", for: .normal)
         return button
     }()
@@ -98,14 +98,22 @@ final class MyPageViewController: UIViewController {
         button.tag = 1
         button.addTarget(self, action: #selector(buttonDidTap(_:)), for: .touchUpInside)
         button.backgroundColor = .white
-        button.setTitleColor(UPlusColor.navy, for: .normal)
+        button.setTitleColor(UPlusColor.gray03, for: .normal)
         button.setTitle("이벤트", for: .normal)
         return button
     }()
     
-    private let buttonBottomBar: PassThroughView = {
+    private let buttonBottomBar1: PassThroughView = {
         let view = PassThroughView()
-        view.backgroundColor = UPlusColor.navy
+        view.backgroundColor = UPlusColor.blue04
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let buttonBottomBar2: PassThroughView = {
+        let view = PassThroughView()
+        view.isHidden = true
+        view.backgroundColor = UPlusColor.blue04
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -168,16 +176,35 @@ final class MyPageViewController: UIViewController {
         self.screenToShow = sender.tag
         switch sender.tag {
         case 0:
+            switchButton(tag: 0)
             collectionView?.reloadData()
             return
         case 1:
+            switchButton(tag: 1)
             Task {
                 await self.vm.getEventMission()
-                print("Reloaded")
             }
         default:
             return
         }
+    }
+    
+    private func switchButton(tag: Int) {
+        if tag == 0 {
+            UIView.animate(withDuration: 0.3) {
+                self.buttonBottomBar1.isHidden = false
+                self.buttonBottomBar2.isHidden = true
+                self.missionButton.setTitleColor(UPlusColor.blue04, for: .normal)
+                self.eventButton.setTitleColor(UPlusColor.gray03, for: .normal)
+            }
+            
+        } else {
+            self.buttonBottomBar1.isHidden = true
+            self.buttonBottomBar2.isHidden = false
+            self.missionButton.setTitleColor(UPlusColor.gray03, for: .normal)
+            self.eventButton.setTitleColor(UPlusColor.blue04, for: .normal)
+        }
+        
     }
     
 }
@@ -222,8 +249,21 @@ extension MyPageViewController {
                     collection.reloadSections(IndexSet(integer: 2))
                 }
                 .store(in: &bindings)
+                
+            self.vm.event.$level0Mission
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] data in
+                    guard let `self` = self,
+                          let collection = self.collectionView
+                    else { return }
+                    if self.screenToShow == 1 {
+//                        collection.reloadSections(IndexSet(integer: 1))
+                        collection.reloadData()
+                    }
+                }
+                .store(in: &bindings)
             
-            self.vm.event.$eventMissions
+            self.vm.event.$otherMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] data in
                     guard let `self` = self,
@@ -232,13 +272,6 @@ extension MyPageViewController {
                     if self.screenToShow == 1 {
                         collection.reloadData()
                     }
-                }
-                .store(in: &bindings)
-                
-            self.vm.event.$missionPerLevel
-                .receive(on: DispatchQueue.main)
-                .sink {
-                    print("Per level: \($0[0]?.count ?? 999)")
                 }
                 .store(in: &bindings)
             
@@ -332,6 +365,9 @@ extension MyPageViewController {
                                        self.userProfileView,
                                        self.buttonStack)
         
+        self.missionButton.addSubview(self.buttonBottomBar1)
+        self.eventButton.addSubview(self.buttonBottomBar2)
+        
         self.buttonStack.addArrangedSubviews(self.missionButton,
                                              self.eventButton)
     }
@@ -378,6 +414,15 @@ extension MyPageViewController {
             self.buttonStack.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
         ])
         
+        NSLayoutConstraint.activate([
+            self.buttonBottomBar1.heightAnchor.constraint(equalToConstant: 4),
+            self.buttonBottomBar1.widthAnchor.constraint(equalTo: self.missionButton.widthAnchor),
+            self.buttonBottomBar1.bottomAnchor.constraint(equalTo: self.missionButton.bottomAnchor),
+            
+            self.buttonBottomBar2.heightAnchor.constraint(equalToConstant: 4),
+            self.buttonBottomBar2.widthAnchor.constraint(equalTo: self.eventButton.widthAnchor),
+            self.buttonBottomBar2.bottomAnchor.constraint(equalTo: self.eventButton.bottomAnchor),
+        ])
     }
     
     private func setNavigationItem() {
@@ -469,6 +514,11 @@ extension MyPageViewController {
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: MissionCollectionViewHeader.identifier)
         
+        collectionView.register(UICollectionReusableView.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: UICollectionReusableView.identifier)
+        
+        
         // 2. Register cell
         collectionView.register(
             UICollectionViewCell.self,
@@ -517,6 +567,11 @@ extension MyPageViewController {
             forCellWithReuseIdentifier: MypageEventCollectionViewCell.identifier
         )
         
+        collectionView.register(
+            LevelDividerCollectionViewCell.self,
+            forCellWithReuseIdentifier: LevelDividerCollectionViewCell.identifier
+        )
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
@@ -536,13 +591,14 @@ extension MyPageViewController {
             return self.createCalendarSectionLayout()
         case 5:
             return self.createHistorySectionLayout()
+
         default:
-            return self.createTest()
+            return self.createHistorySectionLayout()
         }
         
     }
     
-    private func createTest() -> NSCollectionLayoutSection {
+    private func createLevel0MissionSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -553,16 +609,30 @@ extension MyPageViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(2.0)
+                heightDimension: .fractionalHeight(0.15)
             ),
             subitems: [item]
         )
         
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+        
         let section = NSCollectionLayoutSection(group: group)
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.09)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
+        section.boundarySupplementaryItems = [header]
         
         return section
     }
-    
+ 
     // Missions
     private func createTodayMissionSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
@@ -579,7 +649,6 @@ extension MyPageViewController {
             ),
             subitems: [item]
         )
-        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
         
@@ -597,7 +666,7 @@ extension MyPageViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.15)
+                heightDimension: .fractionalHeight(0.2)
             ),
             subitems: [item]
         )
@@ -770,14 +839,30 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 
                 return self.vm.mission.isHistorySectionOpened ? numberOfItems : 0
+                
             case 6:
                  return self.vm.mission.isHistorySectionOpened ? 1 : 0
+                
             default:
                 return 1
             }
+            
         } else {
-            print("Itmes: \(self.vm.event.eventMissions.count)")
-            return self.vm.event.eventMissions.count
+            
+            switch section {
+            case 0:
+                return 1
+                
+            case 1:
+                return self.vm.event.level0Mission.count
+                
+            case 2:
+                return self.vm.event.otherMissions.count
+                
+            default:
+                return 0
+            }
+        
         }
     }
     
@@ -793,6 +878,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     return cell
                 }
                 
+                cell.type = .mission
                 cell.configure(with: vm)
                 return cell
                 
@@ -887,31 +973,90 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return cell
             }
         } else {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageEventCollectionViewCell.identifier, for: indexPath) as? MypageEventCollectionViewCell else {
-                fatalError()
-            }
-            cell.resetCell()
-            
-            let mission = self.vm.event.eventMissions[indexPath.item]
-
-            let participatedUsers = mission.missionUserStateMap ?? [:]
-            if participatedUsers.contains(where: { (key, _) in
-                key == String(describing: self.vm.user.userIndex)
-            }) { // 참여한 경우
-                cell.configure(type: .participated,
-                               mission: mission)
-                
-            } else { // 참여하지 않은 경우
-                if self.vm.getUserLevel() < mission.missionPermitAvatarLevel {
-                    cell.configure(type: .close,
-                                   mission: mission)
-                } else {
-                    cell.configure(type: .open,
-                                   mission: mission)
+            switch indexPath.section {
+            case 0:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
+                    fatalError()
                 }
+                guard let vm = self.vm.userProfileViewModel else {
+                    return cell
+                }
+                
+                cell.type = .event
+                cell.configure(with: vm)
+                return cell
+                
+                
+            case 1:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageEventCollectionViewCell.identifier, for: indexPath) as? MypageEventCollectionViewCell else {
+                    fatalError()
+                }
+                cell.resetCell()
+                
+                
+                let mission = self.vm.event.level0Mission[indexPath.item]
+                
+                let participatedUsers = mission.missionUserStateMap ?? [:]
+                if participatedUsers.contains(where: { (key, _) in
+                    key == String(describing: self.vm.user.userIndex)
+                }) { // 참여한 경우
+                    cell.configure(type: .participated,
+                                   mission: mission)
+                    
+                } else { // 참여하지 않은 경우
+                    if self.vm.getUserLevel() < mission.missionPermitAvatarLevel {
+                        cell.configure(type: .close,
+                                       mission: mission)
+                    } else {
+                        cell.configure(type: .open,
+                                       mission: mission)
+                    }
+                }
+                
+                return cell
+                
+            case 2:
+                
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageEventCollectionViewCell.identifier, for: indexPath) as? MypageEventCollectionViewCell else {
+                    fatalError()
+                }
+                
+                cell.resetCell()
+                
+                guard let dividerCell = collectionView.dequeueReusableCell(withReuseIdentifier: LevelDividerCollectionViewCell.identifier, for: indexPath) as? LevelDividerCollectionViewCell else {
+                    fatalError()
+                }
+
+                guard let mission = self.vm.event.otherMissions[indexPath.item] else {
+
+                    dividerCell.configure(level: 1)
+                    return dividerCell
+                }
+
+                let participatedUsers = mission.missionUserStateMap ?? [:]
+                
+                if participatedUsers.contains(where: { (key, _) in
+                    key == String(describing: self.vm.user.userIndex)
+                }) { // 참여한 경우
+                    cell.configure(type: .participated,
+                                   mission: mission)
+                    
+                } else { // 참여하지 않은 경우
+                    if self.vm.getUserLevel() < mission.missionPermitAvatarLevel {
+                        cell.configure(type: .close,
+                                       mission: mission)
+                    } else {
+                        cell.configure(type: .open,
+                                       mission: mission)
+                    }
+                }
+                
+                return cell
+                
+            default:
+                return UICollectionViewCell()
             }
-            
-            return cell
+        
         }
         
     }
@@ -926,10 +1071,18 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             ) as? MissionCollectionViewHeader else {
                 return UICollectionReusableView()
             }
-            header.configure(headerText: vm.missionSections[indexPath.section].rawValue,
-                             buttonTitle: "자세히 보기")
-            return header
-            
+        
+            if self.screenToShow == 0 {
+                header.configure(headerText: vm.missionSections[indexPath.section].rawValue,
+                                 buttonTitle: MissionConstants.details)
+                return header
+            } else {
+                header.configure(headerText: vm.eventSections[indexPath.section].rawValue,
+                                 buttonTitle: MissionConstants.details)
+                
+                return header
+            }
+
         default:
             return UICollectionReusableView()
         }
@@ -959,6 +1112,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 break
             }
         } else {
+            print("IndexPath: \(indexPath)")
             // Temp: 해당 화면 보여주기
             let mission = self.vm.event.eventMissions[indexPath.item]
             let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
@@ -1013,7 +1167,7 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         for child in self.children {
             child.removeViewController()
         }
-        print("Selected row: \(selectedRow)")
+        
         switch selectedRow {
         case 0:
             let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
