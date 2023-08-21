@@ -20,9 +20,9 @@ final class UserProfileView: PassThroughView {
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
-        imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 3.0
-        imageView.backgroundColor = UPlusColor.pointCirclePink.withAlphaComponent(0.5)
+        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.image = UIImage(named: ImageAsset.level1InitialAvatar)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

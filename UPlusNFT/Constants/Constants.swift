@@ -49,7 +49,7 @@ struct SignUpConstants {
     static let register: String = "가입 완료하기"
     static let authenticate: String = "이메일 인증하기"
     static let authCompleted: String = "이메일 인증이 완료되었습니다."
-    static let emailSuffix: String = "@gmail.com" //"@platfarm.net" //"@gmail.com" //"@uplus.net"
+    static let emailSuffix: String = "@platfarm.net" //"@platfarm.net" //"@gmail.com" //"@uplus.net"
     static let deeplinkDomain: String = "https://DEV-LGUplus-NFT-Platfarm.firebaseapp.com"
     static let passwordRegex: String = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
     static let textFieldDebounce: RunLoop.SchedulerTimeType.Stride = 0.2
@@ -59,8 +59,7 @@ struct SignUpConstants {
     static let passwordCheckValidation: String = "비밀번호가 일치하지 않습니다."
     
     static let greetings: String = "님의\nNFT 멤버십이 시작됐어요"
-    static let desctiptions: String = "서태호와 함께 멤버십을 즐겨보세요"
-    static let nftInfo: String = "서태호 NFT는 한 사람 당 하나만 발급받을 수 있어요."
+    static let nftInfo: String = "미션을 수행하며 월드클래스 기업으로 성장시켜보세요"
     static let redeemGift: String = "웰컴 선물 받기"
     
     static let vipHolderInitialPoint: Int64 = 400
@@ -104,14 +103,18 @@ struct MyPageConstants {
     static let ownedRewards: String = "보유한 경품"
     static let levelUp: String = "Lv.%d 달성"
     static let benefit: String = "특별 BONUS 혜택"
+    static let vipBenefitTitle: String = "특별 혜택"
     static let coffee: String = "아메리카노"
     static let raffle: String = "래플권"
     static let eventOpened: String = "이벤트 오픈"
     static let redeemLevelUpBenefits: String = "레벨업 보상 받기"
     static let routineMissionProgress: String = "%d / 15회"
     static let routinMissionLimit: Int = 15
-    
+    static let pointLeftTillNextLevel: String = "다음 레벨 업까지 %dP"
     static let eventLevel: String = "레벨 %d"
+    static let missionPoint: String = "+%dP"
+    static let vipPoints: String = "400P"
+    static let vipHolderGreeting: String = "서태호 NFT 홀더 %@님,\n특별 포인트를 드려요"
 }
 
 struct RewardsConstants {
@@ -126,7 +129,7 @@ struct MissionConstants {
     static let pointSuffix: String = "pt"
     static let level: String = "Level"
     static let levelPrefix: String = "LV."
-    static let levelUp: String = "레벨업하기"
+    static let retrieve: String = "받기"
     static let todayMission: String = "오늘의 미션"
     static let availableEvent: String = "참여 가능한 이벤트"
     static let dailyAttendanceMission: String = "데일리 퀴즈"
@@ -136,24 +139,32 @@ struct MissionConstants {
     static let eventLeftSuffix: String = "%d개 남음"
     static let timeLeftSuffix: String = "%d시간 남음"
     static let details: String = "자세히 보기"
+    static let difficulty: String = "난이도"
     
     static let level0Event: String = "참여 이벤트"
     static let otherLevelEvent: String = "레벨 이벤트"
     
-    /* Daily Quiz Mission */
     static let quizMission: String = "퀴즈 미션"
     static let checkAnswer: String = "정답 확인하기"
     static let confirm: String = "확인"
     static let missionParticipated: String = "미션 참여 완료"
     static let missionCompleted: String = "미션 완주"
+    static let participated: String = "미션 완주"
     static let redeemPoint: String = "%dP 포인트 받기"
     static let missionProgress: String = "%d회 성공 /15회차"
+    
+    /* Routine Mission */
+    static let routineTitle: String = "TO-DO 미션"
+    static let routineSubTitle: String = "미션 완주하고 루틴 미션 완주 인증서를 받으세요!"
     static let dailyMissionComplete: String = "15일 챌린지 완주를 축하해요!"
-    static let routineMissionLimit: Int = 2
+    static let routineMissionLimit: Int = 15
     static let redeemReward: String = "완주 보상 보기"
     static let bonusStage: String = "보너스 스테이지"
     static let bonusStageInfo: String = "챌린지 완주 후 확인 가능"
     static let pointInfo: String = "최대 600P 획득 기회"
+    static let info: String = "주의사항"
+    static let infoDetail: String = "주의사항 내용 1번 주의사항입니다.\n2번 주의사항입니다.\n3번 주의사항입니다."
+    static let photoEditWarning: String = "제출 이후엔 수정이 불가합니다"
     
     static let bonusMissionLimit: Int = 6
     static let certificate: String = "경험인증서 NFT"
@@ -171,6 +182,7 @@ struct MissionConstants {
     static let watchVideoDescription: String = "영상 시청 후 다음 페이지에서 답을 맞춰보세요."
     static let next: String = "다음"
     static let upload: String = "인증 사진 올리기"
+    static let edit: String = "수정하기"
     static let submit: String = "제출하기"
     static let inputAnswer: String = "답변을 입력하세요"
     static let progressSuffix: String = "%.0f%%"
@@ -277,6 +289,9 @@ struct SFSymbol {
 }
 
 struct ImageAsset {
+    static let level1InitialAvatar: String = "level1-avatar-initial"
+    static let vipInitialBenefit: String = "vip-initial-benefit"
+    
     static let speaker: String = "speaker"
     static let pointSticker: String = "point-sticker"
     static let trophy: String = "trophy"
@@ -300,6 +315,7 @@ struct ImageAsset {
     static let questionBox: String = "question-box"
     static let point: String = "point-silver"
     static let couponFrame: String = "coupon-frame"
+    static let routineImage: String = "todo"
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
@@ -312,7 +328,6 @@ struct ImageAsset {
     static let stampGift: String = "stamp-gift"
     static let stampPoint: String = "stamp-point"
     static let titleBackground: String = "title-background"
-    static let routineImage: String = "todo"
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"

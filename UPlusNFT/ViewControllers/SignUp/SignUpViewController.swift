@@ -341,7 +341,7 @@ final class SignUpViewController: UIViewController {
                 .sink { [weak self] valid in
                     guard let `self` = self else { return }
                     if valid {
-                       
+                       print("User created called.")
                         // Request a single NFT to NFT Service.
                         self.signupVM.requestToCreateNewUserNft()
                         

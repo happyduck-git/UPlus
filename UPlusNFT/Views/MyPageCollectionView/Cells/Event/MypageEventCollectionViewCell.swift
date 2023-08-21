@@ -26,6 +26,7 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
     private let eventTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
         return label
     }()
@@ -37,8 +38,18 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let pointContainerView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10.0
+        view.backgroundColor = UPlusColor.blue01
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let pointLabel: UILabel = {
         let label = UILabel()
+        label.textAlignment = .center
         label.textColor = UPlusColor.blue03
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +73,7 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
  
     override func prepareForReuse() {
         self.pointLabel.textColor = UPlusColor.blue03
+        self.pointContainerView.isHidden = false
     }
 }
 
@@ -76,6 +88,7 @@ extension MypageEventCollectionViewCell {
             self.pointLabel.text = String(describing: mission.missionRewardPoint) + "P"
         case .close:
             self.eventTitle.text = "레벨 \(mission.missionPermitAvatarLevel)에 오픈"
+            self.pointContainerView.isHidden = true
         case .participated:
             self.eventTitle.text = mission.missionContentTitle
             self.eventDescription.text = "참여 완료"
@@ -95,20 +108,31 @@ extension MypageEventCollectionViewCell {
     private func setUI() {
         self.titleStack.addArrangedSubviews(self.eventTitle,
                                             self.eventDescription)
+        
         self.contentView.addSubviews(self.titleStack,
-                                     self.pointLabel)
+                                     self.pointContainerView)
+        
+        self.pointContainerView.addSubview(self.pointLabel)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 1),
-            self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
-            self.titleStack.bottomAnchor.constraint(equalToSystemSpacingBelow: self.contentView.bottomAnchor, multiplier: 1),
+            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 2),
+            self.titleStack.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.leadingAnchor, multiplier: 2),
             
-            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.titleStack.trailingAnchor, multiplier: 2),
-            self.pointLabel.topAnchor.constraint(equalTo: self.titleStack.topAnchor),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 2)
+            self.pointContainerView.topAnchor.constraint(equalTo: self.eventTitle.topAnchor),
+            self.pointContainerView.widthAnchor.constraint(equalToConstant: 52),
+            self.pointContainerView.heightAnchor.constraint(equalToConstant: 30),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 1)
         ])
-        self.pointLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        
+        NSLayoutConstraint.activate([
+            self.pointLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pointContainerView.topAnchor, multiplier: 1),
+            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.leadingAnchor, multiplier: 1),
+            self.pointContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 1),
+            self.pointContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 1)
+        ])
     }
 }

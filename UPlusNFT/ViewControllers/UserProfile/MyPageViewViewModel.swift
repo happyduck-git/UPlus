@@ -48,6 +48,8 @@ final class MyPageViewViewModel {
     @Published var rank: Int = UPlusServiceInfoConstant.totalMembers
     @Published var updatedNfts: [String] = []
     
+    var isRefreshing: Bool = false
+    
     class MyPageMission {
         
         weak var parent: MyPageViewViewModel?
@@ -94,16 +96,17 @@ final class MyPageViewViewModel {
         @Published var eventMissions: [any Mission] = [] {
             didSet {
                 var dic: [Int64: [any Mission]] = [:]
+                
                 for mission in eventMissions {
                     if var array = dic[mission.missionPermitAvatarLevel] {
-                          // Key exists, append string to its array
-                          array.append(mission)
+                        array.append(mission)
                         dic[mission.missionPermitAvatarLevel] = array
-                      } else {
-                          // Key doesn't exist, create new key-value pair
-                          dic[mission.missionPermitAvatarLevel] = [mission]
-                      }
+                        
+                    } else {
+                        dic[mission.missionPermitAvatarLevel] = [mission]
+                    }
                 }
+                
                 self.missionPerLevel = dic
             }
         }
@@ -114,6 +117,8 @@ final class MyPageViewViewModel {
 
                 var others: [(any Mission)?] = []
                
+                others.append(nil)
+                others.append(contentsOf: missionPerLevel[1] ?? [])
                 others.append(nil)
                 others.append(contentsOf: missionPerLevel[2] ?? [])
                 others.append(nil)
@@ -339,7 +344,7 @@ extension MyPageViewViewModel {
             let newestTokens: [String] = nfts.data.items.map { $0.tokenId }.reversed()
             
             // 2. Fetch NFTs from Firestore.
-            let savedNfts = user.userNfts ?? []
+            let savedNfts = try UPlusUser.getCurrentUser().userNfts ?? []
             
             let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
             

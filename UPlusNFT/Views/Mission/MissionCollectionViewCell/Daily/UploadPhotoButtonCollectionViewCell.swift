@@ -10,6 +10,8 @@ import Combine
 
 protocol UploadPhotoButtonCollectionViewCellDelegate: AnyObject {
     func uploadButtonDidTap()
+    func editButtonDidTap()
+    func submitButtonDidTap()
 }
 
 final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
@@ -33,11 +35,40 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
+    private let buttonStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 20.0
+        stack.distribution = .fillEqually
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    private let editButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(MissionConstants.edit, for: .normal)
+        button.backgroundColor = UPlusColor.gray09
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10.0
+        return button
+    }()
+    
     private let submitButton: UIButton = {
         let button = UIButton()
         button.setTitle(MissionConstants.submit, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UPlusColor.gray09
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10.0
         return button
+    }()
+    
+    private let infoLabel: UILabel = {
+        let label = UILabel()
+        label.text = MissionConstants.photoEditWarning
+        label.textColor = UPlusColor.mint04
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
 
     // MARK: - Init
@@ -47,7 +78,8 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
         self.contentView.backgroundColor = .systemGray5
         self.setUI()
         self.setLayout()
-        
+
+        self.uploadPhotoView.delegate = self
         
     }
     
@@ -55,22 +87,61 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+}
+
+// MARK: - Bind with View Model
+extension UploadPhotoButtonCollectionViewCell {
     
+    func bind(with vm: RoutineMissionDetailViewViewModel) {
+        
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        self.vm = vm
+        self.uploadPhotoView.bind(with: vm)
+        
+        func bindViewToViewModel() {
+            
+            self.editButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.delegate?.editButtonDidTap()
+                }
+                .store(in: &bindings)
+            
+            self.submitButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.delegate?.submitButtonDidTap()
+                }
+                .store(in: &bindings)
+            
+        }
+        
+        func bindViewModelToView() {
+            
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
     
 }
 
+// MARK: - Set UI & Layout
 extension UploadPhotoButtonCollectionViewCell {
-
-
     
-}
-
-extension UploadPhotoButtonCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.uploadPhotoView,
-                                     self.submitButton)
+                                     self.buttonStack,
+                                     self.infoLabel)
         
-       
+        self.buttonStack.addArrangedSubviews(self.editButton,
+                                             self.submitButton)
     }
     
     private func setLayout() {
@@ -79,18 +150,24 @@ extension UploadPhotoButtonCollectionViewCell {
             self.uploadPhotoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadPhotoView.trailingAnchor, multiplier: 1),
             
-            self.submitButton.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadPhotoView.bottomAnchor, multiplier: 3),
-            self.submitButton.leadingAnchor.constraint(equalTo: self.uploadPhotoView.leadingAnchor),
-            self.submitButton.trailingAnchor.constraint(equalTo: self.uploadPhotoView.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.submitButton.bottomAnchor, multiplier: 2)
+            self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadPhotoView.bottomAnchor, multiplier: 3),
+            self.buttonStack.leadingAnchor.constraint(equalTo: self.uploadPhotoView.leadingAnchor),
+            self.buttonStack.trailingAnchor.constraint(equalTo: self.uploadPhotoView.trailingAnchor),
+            
+            self.infoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 2),
+            self.infoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.infoLabel.trailingAnchor, multiplier: 2),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 2)
         ])
-        
-        self.submitButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
+    
 }
 
-extension UploadPhotoButtonCollectionViewCell {
+extension UploadPhotoButtonCollectionViewCell: RoutineUploadPhotoViewDelegate {
 
+    func uploadButtonDidTap() {
+        self.delegate?.uploadButtonDidTap()
+    }
 
 }
 

@@ -50,7 +50,6 @@ final class UserMissionDataView: PassThroughView {
     
     private let levelDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "다음 레벨 업까지 120P"
         label.font = .systemFont(ofSize: UPlusFont.caption1)
         label.textColor = UPlusColor.lightGreen
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -83,20 +82,30 @@ final class UserMissionDataView: PassThroughView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.levelProgressBar.setProgress(0.7, animated: true)
-        
-    }
-    
+
 }
 
+// MARK: - Private
+extension UserMissionDataView {
+    private func setProgress(point: Int64, level: Int, maxPoint: Int) {
+        let progress: Float = Float(point) / Float(maxPoint)
+        self.levelProgressBar.setProgress(progress, animated: true)
+    }
+}
+
+// MARK: - Configure & Bind
 extension UserMissionDataView {
     func configure(vm: MyPageViewViewModel) {
         
-        self.pointLabel.text = String(describing: vm.user.userTotalPoint ?? 0)
-        self.levelLabel.text = MissionConstants.levelPrefix + String(describing: vm.userProfileViewModel?.level ?? 0)
+        let point = vm.user.userTotalPoint ?? 0
+        let level = Int(vm.userProfileViewModel?.level ?? 0)
+        let max = UserLevel(rawValue: level)?.scoreRange.upperBound ?? 0
+        
+        self.pointLabel.text = String(describing: point)
+        self.levelLabel.text = MissionConstants.levelPrefix + String(describing: level)
+        self.levelDescriptionLabel.text = String(format: MyPageConstants.pointLeftTillNextLevel, max - point)
+        
+        self.setProgress(point: point, level: level, maxPoint: Int(max))
         self.bind(with: vm)
     }
     

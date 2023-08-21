@@ -85,4 +85,19 @@ enum UserLevel: Int {
             return "5"
         }
     }
+    
+    var scoreRange: ClosedRange<Int64> {
+        switch self {
+        case .level1:
+            return 0...399
+        case .level2:
+            return 400...899
+        case .level3:
+            return 900...1599
+        case .level4:
+            return 1600...2599
+        case .level5:
+            return 2600...9999
+        }
+    }
 }

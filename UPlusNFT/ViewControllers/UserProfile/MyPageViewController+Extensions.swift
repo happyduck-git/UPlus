@@ -25,3 +25,9 @@ extension MyPageViewController: BaseMissionViewControllerDelegate {
         }
     }
 }
+
+extension MyPageViewController: CommentCountMissionViewControllerDelegate {
+    func checkAnswerDidTap() {
+        
+    }
+}

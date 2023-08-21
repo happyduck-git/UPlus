@@ -24,7 +24,10 @@ final class WeeklyMissionOverViewViewController: UIViewController {
     
     private let tableView: UITableView = {
         let table = UITableView()
-        table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        table.register(WeeklyOverViewTableViewCell.self,
+                       forCellReuseIdentifier: WeeklyOverViewTableViewCell.identifier)
+        table.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
     
@@ -39,8 +42,11 @@ final class WeeklyMissionOverViewViewController: UIViewController {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         
+        self.view.backgroundColor = UPlusColor.gray02
+        
         self.setUI()
         self.setDelegate()
+        
         self.bind()
         
         self.header.configure(with: vm)
@@ -113,20 +119,21 @@ extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-        // 1. Check if user has participated a cetain mission
-        let mission = self.vm.weeklyMissions[indexPath.row]
-        let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
-        var config = cell.defaultContentConfiguration()
-        
-        if hasParticipated {
-            config.text = "참여 완료"
-        } else {
-            config.text = String(describing: mission.missionSubFormatType) + " : " + String(describing: mission.missionRewardPoint) + MissionConstants.pointUnit
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: WeeklyOverViewTableViewCell.identifier, for: indexPath) as? WeeklyOverViewTableViewCell else {
+            return UITableViewCell()
         }
-        cell.contentConfiguration = config
+
+        let mission = self.vm.weeklyMissions[indexPath.row]
         
+        let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
+        let type: MissionStatus = hasParticipated ? .participated : .open
+        cell.configure(type: type, mission: mission)
+      
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
 
 }

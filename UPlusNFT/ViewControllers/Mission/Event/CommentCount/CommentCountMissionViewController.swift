@@ -8,15 +8,40 @@
 import UIKit
 import Combine
 
-final class CommentCountMissionViewController: BaseMissionViewController {
+protocol CommentCountMissionViewControllerDelegate: AnyObject {
+    func checkAnswerDidTap()
+}
+
+final class CommentCountMissionViewController: UIViewController {
 
     //MARK: - Dependency
     private let vm: CommentCountMissionViewViewModel
+    
+    // MARK: - Delegate
+    weak var delegate: CommentCountMissionViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = MissionConstants.quizMission
+        label.textColor = .systemGray
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: UPlusFont.h1, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let quizLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     private let textField: UITextField = {
         let txtField = UITextField()
@@ -24,6 +49,25 @@ final class CommentCountMissionViewController: BaseMissionViewController {
         txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
+    }()
+    
+    private let checkAnswerButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("추천하기", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .black
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10.0
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let commentTable: UITableView = {
+        let table = UITableView()
+        table.register(CommentCountMissionTableViewCell.self,
+                       forCellReuseIdentifier: CommentCountMissionTableViewCell.identifier)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
     }()
     
     //MARK: - Init
@@ -44,7 +88,12 @@ final class CommentCountMissionViewController: BaseMissionViewController {
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
+        self.setDelegate()
+        
         self.bind()
+        
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        self.quizLabel.text = self.vm.mission.missionContentText
     }
 
 }
@@ -114,17 +163,68 @@ extension CommentCountMissionViewController {
 extension CommentCountMissionViewController {
     private func setUI() {
         self.view.addSubviews(
-            self.textField
+            self.titleLabel,
+            self.quizLabel,
+            self.textField,
+            self.checkAnswerButton,
+            self.commentTable
         )
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.textField.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 2),
+            self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
+            self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 2),
+            
+            self.quizLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 2),
+            self.quizLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
+            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizLabel.trailingAnchor, multiplier: 2),
+            
+            
+            self.textField.topAnchor.constraint(equalToSystemSpacingBelow: self.quizLabel.bottomAnchor, multiplier: 3),
             self.textField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
             self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.textField.trailingAnchor, multiplier: 2),
-            self.textField.heightAnchor.constraint(equalToConstant: 80)
+            
+            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.textField.bottomAnchor, multiplier: 3),
+            self.checkAnswerButton.leadingAnchor.constraint(equalTo: self.textField.leadingAnchor),
+            self.checkAnswerButton.trailingAnchor.constraint(equalTo: self.textField.trailingAnchor),
+            self.checkAnswerButton.heightAnchor.constraint(equalToConstant: 60),
+            
+            self.commentTable.topAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 2),
+            self.commentTable.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.commentTable.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.commentTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
+    }
+    
+    private func setDelegate() {
+        self.commentTable.delegate = self
+        self.commentTable.dataSource = self
+    }
+}
+
+extension CommentCountMissionViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentCountMissionTableViewCell.identifier,
+                                                 for: indexPath) as? CommentCountMissionTableViewCell else {
+            return UITableViewCell()
+        }
         
+        let nickname = self.vm.comments[indexPath.row]
+        let comment = self.vm.comments[indexPath.row + 1]
+        
+        cell.configure(image: "image", nickname: nickname, comment: comment)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.vm.comments.count / 2
+    }
+ 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }

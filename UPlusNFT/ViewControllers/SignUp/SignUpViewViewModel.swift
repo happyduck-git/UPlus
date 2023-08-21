@@ -130,7 +130,7 @@ extension SignUpViewViewModel {
                 let result = try await self.nftServiceManager.requestSingleNft(
                     userIndex: user.userIndex,
                     nftType: .avatar,
-                    level: user.userHasVipNft ? 1 : 2
+                    level: 1
                 )
                 print("Result of requesting nft: \(result)")
             }

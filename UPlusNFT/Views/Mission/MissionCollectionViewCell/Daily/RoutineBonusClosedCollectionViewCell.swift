@@ -11,9 +11,10 @@ final class RoutineBonusClosedCollectionViewCell: UICollectionViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = MissionConstants.bonusStage
-        label.textColor = UPlusColor.mint04
         label.numberOfLines = 0
+        label.textAlignment = .center
+        label.textColor = UPlusColor.mint04
+        label.text = MissionConstants.bonusStage
         label.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -21,10 +22,11 @@ final class RoutineBonusClosedCollectionViewCell: UICollectionViewCell {
     
     let subTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = MissionConstants.bonusStageInfo
-        label.textColor = UPlusColor.mint05
-        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .semibold)
         label.numberOfLines = 0
+        label.textAlignment = .center
+        label.textColor = UPlusColor.mint05
+        label.text = MissionConstants.bonusStageInfo
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

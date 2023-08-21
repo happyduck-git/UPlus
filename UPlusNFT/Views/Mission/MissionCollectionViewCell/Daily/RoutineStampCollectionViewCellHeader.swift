@@ -16,22 +16,22 @@ final class RoutineStampCollectionViewCellHeader: UICollectionViewCell {
     // MARK: - UI Elements
     private let quizDescription: UILabel = {
         let label = UILabel()
-        label.text = "갓생미션 인증서와 300만원 경품권을 받으세요!"
-        label.textColor = .darkGray
+        label.text = MissionConstants.routineTitle
+        label.textColor = UPlusColor.gray09
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let quizTitle: UILabel = {
         let label = UILabel()
-        label.text = "매일 6000보 걷기"
-        label.textColor = .black
+        label.text = MissionConstants.routineSubTitle
+        label.textColor = UPlusColor.mint05
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -46,7 +46,6 @@ final class RoutineStampCollectionViewCellHeader: UICollectionViewCell {
     
     private let eventLabel: UILabel = {
         let label = UILabel()
-        label.text = "이벤트 기간 D-23"
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
         label.textAlignment = .center

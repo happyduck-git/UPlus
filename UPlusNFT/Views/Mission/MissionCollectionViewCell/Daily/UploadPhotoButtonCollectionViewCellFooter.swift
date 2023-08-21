@@ -8,18 +8,11 @@
 import UIKit
 import Combine
 
-protocol UploadPhotoButtonCollectionViewCellFooterDelegate: AnyObject {
-    func confirmDidTap()
-}
-
 final class UploadPhotoButtonCollectionViewCellFooter: UICollectionViewCell {
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
-    
-    // MARK: - Delegate
-    weak var delegate: UploadPhotoButtonCollectionViewCellFooterDelegate?
-    
+
     // MARK: - UI Elements
     private let exampleImage: UIImageView = {
         let image = UIImageView()
@@ -28,22 +21,22 @@ final class UploadPhotoButtonCollectionViewCellFooter: UICollectionViewCell {
         return image
     }()
     
-    private let reuploadButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .systemGray2
-        button.setTitle(MissionConstants.reupload, for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let infoTitle: UILabel = {
+       let label = UILabel()
+        label.text = MissionConstants.info
+        label.textColor = .systemGray
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
-    
-    private let confirmButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .black
-        button.setTitle(MissionConstants.confirm, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+
+    private let infoDetailTitle: UILabel = {
+       let label = UILabel()
+        label.text = MissionConstants.infoDetail
+        label.numberOfLines = 0
+        label.textColor = .systemGray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     // MARK: - Init
@@ -70,13 +63,7 @@ extension UploadPhotoButtonCollectionViewCellFooter {
         self.bindings.removeAll()
         
         func bindViewToViewModel() {
-            self.confirmButton.tapPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
-                    guard let `self` = self else { return }
-                    self.delegate?.confirmDidTap()
-                }
-                .store(in: &bindings)
+ 
         }
         
         func bindViewModelToView() {
@@ -88,9 +75,7 @@ extension UploadPhotoButtonCollectionViewCellFooter {
                     else { return }
                     
                     if isFinished {
-                        self.confirmButton.setTitle("루틴 완성!", for: .normal)
-                        self.confirmButton.backgroundColor = .systemGray
-                        self.isUserInteractionEnabled = false
+                      // 15일 미션을 모두 완료한 경우
                     }
                 }
                 .store(in: &bindings)
@@ -106,8 +91,8 @@ extension UploadPhotoButtonCollectionViewCellFooter {
 extension UploadPhotoButtonCollectionViewCellFooter {
     private func setUI() {
         self.contentView.addSubviews(self.exampleImage,
-                                     self.reuploadButton,
-                                     self.confirmButton)
+                                     self.infoTitle,
+                                     self.infoDetailTitle)
     }
     
     private func setLayout() {
@@ -117,16 +102,14 @@ extension UploadPhotoButtonCollectionViewCellFooter {
             self.exampleImage.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.exampleImage.heightAnchor.constraint(equalToConstant: self.contentView.frame.height / 1.4),
             
-            self.reuploadButton.topAnchor.constraint(equalToSystemSpacingBelow: self.exampleImage.bottomAnchor, multiplier: 2),
-            self.reuploadButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.reuploadButton.bottomAnchor, multiplier: 2),
-            self.reuploadButton.widthAnchor.constraint(equalToConstant: self.contentView.frame.width / 3),
-            self.confirmButton.topAnchor.constraint(equalTo: self.reuploadButton.topAnchor),
-            self.confirmButton.bottomAnchor.constraint(equalTo: self.reuploadButton.bottomAnchor),
-            self.confirmButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.reuploadButton.trailingAnchor, multiplier: 2),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.confirmButton.trailingAnchor, multiplier: 2)
+            self.infoTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.exampleImage.bottomAnchor, multiplier: 2),
+            self.infoTitle.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.infoTitle.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            
+            self.infoDetailTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.infoTitle.bottomAnchor, multiplier: 1),
+            self.infoDetailTitle.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.infoDetailTitle.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoDetailTitle.bottomAnchor, multiplier: 2)
         ])
-        
-        self.reuploadButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
 }

@@ -106,26 +106,22 @@ extension RoutineUploadPhotoView {
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 5)
             
         ])
+        
+        NSLayoutConstraint.activate([
+            self.photoView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.photoView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.photoView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.photoView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            
+        ])
+        
         self.infoLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
     }
     
     private func photoSelected() {
         self.uploadPhotoButton.isHidden = true
+        self.infoLabel.isHidden = true
         self.photoView.isHidden = false
-        self.infoLabel.isHidden = false
-        
-        NSLayoutConstraint.activate([
-            self.photoView.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 2),
-            self.photoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.photoView.trailingAnchor, multiplier: 2),
-            self.photoView.heightAnchor.constraint(equalToConstant: self.frame.height / 1.5),
-//                    self.photoView.heightAnchor.constraint(equalToConstant: 200),
-            
-            self.infoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.photoView.bottomAnchor, multiplier: 2),
-            self.infoLabel.leadingAnchor.constraint(equalTo: self.photoView.leadingAnchor),
-            self.infoLabel.trailingAnchor.constraint(equalTo: self.photoView.trailingAnchor),
-            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 2)
-        ])
     }
 
 }
@@ -150,8 +146,9 @@ extension RoutineUploadPhotoView {
                 guard let `self` = self else { return }
                 if image != nil {
                     UIView.animate(withDuration: 0.1) {
-                        self.photoView.image = image
                         self.photoSelected()
+                        self.photoView.image = image
+                        
                     }
                 }
                 

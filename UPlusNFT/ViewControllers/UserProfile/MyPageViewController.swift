@@ -152,8 +152,8 @@ final class MyPageViewController: UIViewController {
         super.viewDidAppear(animated)
 
         if self.vm.memberShip.isVIP && self.vm.memberShip.isJustRegisterd {
-            let vm = WelcomeBottomSheetViewViewModel()
-            let vc = WelcomeBottomSheetViewController(vm: vm)
+            let vm = VipHolderBottomSheetViewViewModel(user: self.vm.user)
+            let vc = VipHolderBottomSheetViewController(vm: vm)
             vc.delegate = self
             vc.modalPresentationStyle = .overCurrentContext
 
@@ -330,15 +330,16 @@ extension MyPageViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] nfts in
                     guard let `self` = self else { return }
-                   // TODO: Show bottom sheet
+                    
                     for nft in nfts {
                         let level = NftLevel.level(tokenId: Int64(nft) ?? 0)
-                        if level < 6 {
+                        if level < 6 && level > 1 {
                             self.showLevelUpBottomSheet(level: level)
                         } else {
                             self.showNewNftBottomSheet(tokenId: nft)
                         }
                     }
+                    
                 }
                 .store(in: &bindings)
         }
@@ -355,7 +356,7 @@ extension MyPageViewController {
         
         let collectionView = self.createCollectionView()
         self.collectionView = collectionView
-        collectionView.backgroundColor = .systemGray6
+        collectionView.backgroundColor = UPlusColor.grayBackground
         
         self.view.addSubviews(collectionView,
                               self.containerView)
@@ -475,9 +476,18 @@ extension MyPageViewController {
             self.isSet = true
         }
         
-        if scrollView.contentOffset.y < self.initialTopOffset - 150 {
-            // TODO: Refresh indicator 나타내기. Luniverse API Call.
+        if !self.vm.isRefreshing && scrollView.contentOffset.y < self.initialTopOffset - 200 {
+            
+            self.vm.isRefreshing.toggle()
+            
             self.refreshControl.beginRefreshing()
+            self.refreshControl.isHidden = true
+            
+            Task {
+                await self.vm.createMissionMainViewViewModel()
+                self.vm.isRefreshing.toggle()
+                self.refreshControl.endRefreshing()
+            }
         }
         
         self.topConstraint?.constant = self.initialTopOffset - scrollView.contentOffset.y
@@ -667,11 +677,12 @@ extension MyPageViewController {
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
                 heightDimension: .fractionalHeight(0.2)
+//                heightDimension: .estimated(120)
             ),
             subitems: [item]
         )
         
-        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+        group.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
         
@@ -884,19 +895,12 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 // Routine mission
             case 1:
-                if self.vm.mission.savedMissionType == nil {
-                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier, for: indexPath) as? RoutineMissionSelectCollectionViewCell else {
-                        fatalError()
-                    }
-                    
-                    return cell
-                } else {
-                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
-                        fatalError()
-                    }
-                    cell.bind(with: self.vm)
-                    return cell
+                
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
+                    fatalError()
                 }
+                cell.bind(with: self.vm)
+                return cell
                 
                 // Weekly mission
             case 2:
@@ -956,12 +960,14 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 if self.vm.mission.isDateSelected {
                     let data = self.vm.mission.selectedDateMissions[indexPath.item]
-                    cell.configure(title: data.missionContentTitle ?? "no-title")
+                    cell.configure(title: data.missionContentTitle ?? "no-title",
+                                   point: data.missionRewardPoint)
                     
                     return cell
                 } else {
                     let data = self.vm.mission.participatedMissions[indexPath.item]
-                    cell.configure(title: data.missionContentTitle ?? "no-title")
+                    cell.configure(title: data.missionContentTitle ?? "no-title",
+                                   point: data.missionRewardPoint)
                     
                     return cell
                 }
@@ -1278,7 +1284,7 @@ extension MyPageViewController: RoutineSelectBottomSheetViewControllerDelegate {
     }
 }
 
-extension MyPageViewController: WelcomeBottomSheetViewControllerDelegate {
+extension MyPageViewController: VipHolderBottomSheetViewControllerDelegate {
 
     func userVipPointSaveStatus(status: Bool) {
         if status {

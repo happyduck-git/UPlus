@@ -69,6 +69,8 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
         button.setTitle(MissionConstants.redeemNft, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10.0
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

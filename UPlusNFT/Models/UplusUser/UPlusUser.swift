@@ -85,11 +85,11 @@ extension UPlusUser {
         let codableUser = user.convertToSwiftUser()
         let encodedUserData = try JSONEncoder().encode(codableUser)
         UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
-        /*
+
         #if DEBUG
         print("User Info Updated: \(codableUser)")
         #endif
-         */
+
     }
     
     private func convertToSwiftUser() -> SwiftUPlusUser {

@@ -28,16 +28,16 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
     private let timeLabelcontainerView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
-        view.backgroundColor = UPlusColor.grayMint
+        view.backgroundColor = UPlusColor.gray03
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.accessibilityIdentifier = "timeLabel"
-        label.textColor = UPlusColor.darkgrayMint
-        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
+        label.text = RewardsConstants.empty
+        label.textColor = UPlusColor.gray06
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

@@ -35,16 +35,7 @@ final class SignUpCompleteViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    private let descriptionLabel: UILabel = {
-       let label = UILabel()
-        label.textColor = .systemGray
-        label.text = SignUpConstants.desctiptions
-        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .heavy)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -62,9 +53,9 @@ final class SignUpCompleteViewController: UIViewController {
         return label
     }()
     
-    private lazy var welcomeGiftButton: UIButton = {
+    private lazy var startButton: UIButton = {
        let button = UIButton()
-        button.backgroundColor = .black
+        button.backgroundColor = UPlusColor.mint03
         button.clipsToBounds = true
         button.setTitleColor(.white, for: .normal)
         button.setTitle(SignUpConstants.redeemGift, for: .normal)
@@ -135,34 +126,31 @@ extension SignUpCompleteViewController {
     
     private func setUI() {
         self.view.addSubviews(self.greetingsLabel,
-                              self.descriptionLabel,
                               self.nftImageView,
                               self.nftInfoLabel,
-                              self.welcomeGiftButton)
+                              self.startButton)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.greetingsLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 4),
             self.greetingsLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            
-            self.descriptionLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.greetingsLabel.bottomAnchor, multiplier: 1),
-            self.descriptionLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-          
-            self.nftImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.descriptionLabel.bottomAnchor, multiplier: 4),
+ 
+            self.nftImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.greetingsLabel.bottomAnchor, multiplier: 3),
             self.nftImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.nftImageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             self.nftImageView.heightAnchor.constraint(equalToConstant: 200),
             self.nftImageView.widthAnchor.constraint(equalToConstant: 200),
             
             self.nftInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 4),
             self.nftInfoLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
-            self.welcomeGiftButton.topAnchor.constraint(equalToSystemSpacingBelow: self.nftInfoLabel.bottomAnchor, multiplier: 2),
-            self.welcomeGiftButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.welcomeGiftButton.trailingAnchor, multiplier: 2),
-            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.welcomeGiftButton.bottomAnchor, multiplier: 2)
+            self.startButton.topAnchor.constraint(equalToSystemSpacingBelow: self.nftInfoLabel.bottomAnchor, multiplier: 2),
+            self.startButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.startButton.trailingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.startButton.bottomAnchor, multiplier: 2)
         ])
-        self.welcomeGiftButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.startButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
     
     private func setNavigationItem() {
@@ -173,7 +161,7 @@ extension SignUpCompleteViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.welcomeGiftButton.layer.cornerRadius = self.welcomeGiftButton.frame.height / 7
+        self.startButton.layer.cornerRadius = self.startButton.frame.height / 7
     }
 }
 

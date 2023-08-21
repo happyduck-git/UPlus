@@ -52,6 +52,8 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
     
     private let benefitContainerView: UIView = {
         let view = UIView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10.0
         view.backgroundColor = UPlusColor.grayBackground
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -79,12 +81,14 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.text = MyPageConstants.coffee
         label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let raffleView: UILabel = {
         let label = UILabel()
         label.text = MyPageConstants.raffle
+        label.textAlignment = .center
         label.textColor = UPlusColor.gray05
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -94,6 +98,7 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
         let label = UILabel()
         label.text = MyPageConstants.eventOpened
         label.textColor = UPlusColor.gray05
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -103,6 +108,8 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
         button.setTitle(MissionConstants.redeemNft, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10.0
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -136,6 +143,7 @@ extension LevelUpBottomSheetViewController {
         
         self.levelTitle.text = String(format: MyPageConstants.levelUp, level.rawValue)
         self.couponLabel.text = coupon
+        self.raffleView.text = raffle
     }
     
     private func bind() {
@@ -160,6 +168,7 @@ extension LevelUpBottomSheetViewController {
 // MARK: - Set UI & Layout
 extension LevelUpBottomSheetViewController {
     private func setUI() {
+        
         self.containerView.addSubviews(self.levelTitle,
                                        self.nftImage,
                                        self.levelBackgroudView,
@@ -170,7 +179,9 @@ extension LevelUpBottomSheetViewController {
         self.benefitContainerView.addSubviews(self.couponView,
                                               self.couponLabel,
                                               self.benefitLabel,
+                                              self.raffleView,
                                               self.eventView)
+        
     }
     
     private func setLayout() {
@@ -192,13 +203,15 @@ extension LevelUpBottomSheetViewController {
             self.levelBackgroudView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.levelLabel.trailingAnchor, multiplier: 1),
             self.levelBackgroudView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelLabel.bottomAnchor, multiplier: 1),
             
-            self.benefitContainerView.topAnchor.constraint(equalToSystemSpacingBelow: self.levelLabel.bottomAnchor, multiplier: 3),
+            self.benefitContainerView.topAnchor.constraint(equalToSystemSpacingBelow: self.levelBackgroudView.bottomAnchor, multiplier: 1),
             self.benefitContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.trailingAnchor, multiplier: 2),
             
-            self.redeemButton.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.bottomAnchor, multiplier: 3),
+            self.redeemButton.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.bottomAnchor, multiplier: 1),
             self.redeemButton.leadingAnchor.constraint(equalTo: self.benefitContainerView.leadingAnchor),
             self.redeemButton.trailingAnchor.constraint(equalTo: self.benefitContainerView.trailingAnchor),
+            self.redeemButton.heightAnchor.constraint(equalToConstant: 60),
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.redeemButton.bottomAnchor, multiplier: 1)
             
         ])
         
@@ -206,21 +219,29 @@ extension LevelUpBottomSheetViewController {
             self.benefitLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.topAnchor, multiplier: 2),
             self.benefitLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 3),
             self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitLabel.trailingAnchor, multiplier: 3),
-            
+
             self.couponView.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitLabel.bottomAnchor, multiplier: 1),
             self.couponView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 2),
             self.benefitContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.couponView.bottomAnchor, multiplier: 2),
             self.couponView.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3.5),
+
+            self.couponLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.couponView.topAnchor, multiplier: 1),
+            self.couponLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.couponView.leadingAnchor, multiplier: 1),
+            self.couponView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.couponLabel.trailingAnchor, multiplier: 1),
+            self.couponView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.couponLabel.bottomAnchor, multiplier: 1),
             
             self.raffleView.topAnchor.constraint(equalTo: self.couponView.topAnchor),
             self.raffleView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.couponView.trailingAnchor, multiplier: 1),
             self.raffleView.bottomAnchor.constraint(equalTo: self.couponView.bottomAnchor),
-            
+
             self.eventView.topAnchor.constraint(equalTo: self.couponView.topAnchor),
             self.eventView.bottomAnchor.constraint(equalTo: self.couponView.bottomAnchor),
             self.eventView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.raffleView.trailingAnchor, multiplier: 1),
             self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.eventView.trailingAnchor, multiplier: 2)
         ])
+        
+        self.levelTitle.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.redeemButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
 

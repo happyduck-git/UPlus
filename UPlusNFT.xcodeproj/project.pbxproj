@@ -62,8 +62,8 @@
 		246BD2022A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD2012A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift */; };
 		246BD2042A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD2032A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift */; };
 		247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */; };
-		247FC60E2A678036001F3974 /* WelcomeBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */; };
-		247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */; };
+		247FC60E2A678036001F3974 /* VipHolderBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60D2A678036001F3974 /* VipHolderBottomSheetViewController.swift */; };
+		247FC6102A678E27001F3974 /* VipHolderBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FC60F2A678E27001F3974 /* VipHolderBottomSheetViewViewModel.swift */; };
 		24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */; };
 		249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */; };
 		249F59F12A500875008CF6BE /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249F59F02A500874008CF6BE /* UILabel+Extension.swift */; };
@@ -211,6 +211,7 @@
 		93DA58682A8F020E00525BEC /* GiftSentBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58672A8F020E00525BEC /* GiftSentBottomSheetViewController.swift */; };
 		93DA586A2A8F0F6E00525BEC /* GiftViewControllerViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58692A8F0F6E00525BEC /* GiftViewControllerViewViewModel.swift */; };
 		93DA586D2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA586C2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift */; };
+		93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013882A6518370005E342 /* SideMenuViewController.swift */; };
@@ -288,8 +289,8 @@
 		246BD2012A8BCF3400CA7356 /* PhotoAuthQuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAuthQuizViewController.swift; sourceTree = "<group>"; };
 		246BD2032A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAuthQuizViewViewModel.swift; sourceTree = "<group>"; };
 		247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
-		247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewController.swift; sourceTree = "<group>"; };
-		247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
+		247FC60D2A678036001F3974 /* VipHolderBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VipHolderBottomSheetViewController.swift; sourceTree = "<group>"; };
+		247FC60F2A678E27001F3974 /* VipHolderBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VipHolderBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
 		24984ABC2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageCacheManager.swift; sourceTree = "<group>"; };
 		249F59EE2A4EF403008CF6BE /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		249F59F02A500874008CF6BE /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
@@ -436,6 +437,7 @@
 		93DA58672A8F020E00525BEC /* GiftSentBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftSentBottomSheetViewController.swift; sourceTree = "<group>"; };
 		93DA58692A8F0F6E00525BEC /* GiftViewControllerViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftViewControllerViewViewModel.swift; sourceTree = "<group>"; };
 		93DA586C2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyOverViewTableViewCell.swift; sourceTree = "<group>"; };
+		93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountMissionTableViewCell.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013882A6518370005E342 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -647,6 +649,7 @@
 		24624B922A92749B00C9A42E /* Event */ = {
 			isa = PBXGroup;
 			children = (
+				9391949F2A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift */,
 				24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */,
 			);
 			path = Event;
@@ -676,8 +679,8 @@
 			isa = PBXGroup;
 			children = (
 				247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */,
-				247FC60D2A678036001F3974 /* WelcomeBottomSheetViewController.swift */,
-				247FC60F2A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift */,
+				247FC60D2A678036001F3974 /* VipHolderBottomSheetViewController.swift */,
+				247FC60F2A678E27001F3974 /* VipHolderBottomSheetViewViewModel.swift */,
 				93DA583A2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift */,
 				93DA584B2A8CA82100525BEC /* WeeklyMissionCompleteBottomSheetViewController.swift */,
 				93DA584D2A8CC46500525BEC /* LevelUpBottomSheetViewController.swift */,
@@ -1097,7 +1100,6 @@
 		9391949E2A820C1B0035FEB1 /* Event */ = {
 			isa = PBXGroup;
 			children = (
-				9391949F2A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -1189,6 +1191,7 @@
 			children = (
 				93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */,
 				93D174932A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift */,
+				93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */,
 			);
 			path = Weekly;
 			sourceTree = "<group>";
@@ -1526,6 +1529,7 @@
 				2417A59E2A67C4E500AEC530 /* EditUserInfoViewController.swift in Sources */,
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
+				93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */,
 				93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
 				93DA58462A8C5BBA00525BEC /* RoutineBonusClosedCollectionViewCell.swift in Sources */,
@@ -1601,7 +1605,7 @@
 				24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */,
 				93D174962A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift in Sources */,
 				240269422A83C37100850E65 /* CommentCountMissionViewController.swift in Sources */,
-				247FC60E2A678036001F3974 /* WelcomeBottomSheetViewController.swift in Sources */,
+				247FC60E2A678036001F3974 /* VipHolderBottomSheetViewController.swift in Sources */,
 				93D174902A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift in Sources */,
 				93E013932A6622E20005E342 /* MissionProfileCollectionViewCell.swift in Sources */,
 				93A2ED932A6E0EA200C2287D /* RankingViewController.swift in Sources */,
@@ -1609,7 +1613,7 @@
 				936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */,
 				240269442A83C37B00850E65 /* CommentCountMissionViewViewModel.swift in Sources */,
 				93DA583E2A8A30C600525BEC /* RewardCollectionViewCell.swift in Sources */,
-				247FC6102A678E27001F3974 /* WelcomeBottomSheetViewViewModel.swift in Sources */,
+				247FC6102A678E27001F3974 /* VipHolderBottomSheetViewViewModel.swift in Sources */,
 				93E013B22A690E9A0005E342 /* ChoiceQuizzOXViewViewModel.swift in Sources */,
 				240269302A83B21500850E65 /* ContentReadOnlyMissionViewController.swift in Sources */,
 				24542D4D2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift in Sources */,

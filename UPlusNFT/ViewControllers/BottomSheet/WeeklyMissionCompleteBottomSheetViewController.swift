@@ -133,12 +133,13 @@ extension WeeklyMissionCompleteBottomSheetViewController {
 // MARK: - Set UI & Layout
 extension WeeklyMissionCompleteBottomSheetViewController {
     private func setUI() {
-        self.containerView.addSubview(self.stack)
+        self.containerView.addSubviews(self.stack,
+                                      self.redeemButton)
+        
         self.stack.addArrangedSubviews(self.greetingsLabel,
                                        self.titleLabel,
                                        self.nftImage,
-                                       self.missionTypeLabel,
-                                       self.redeemButton)
+                                       self.missionTypeLabel)
     }
     
     private func setLayout() {
@@ -146,7 +147,12 @@ extension WeeklyMissionCompleteBottomSheetViewController {
             self.stack.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 2),
             self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 3),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 5)
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 5),
+            
+            self.redeemButton.topAnchor.constraint(equalToSystemSpacingBelow: self.stack.topAnchor, multiplier: 2),
+            self.redeemButton.leadingAnchor.constraint(equalTo: self.stack.leadingAnchor),
+            self.redeemButton.trailingAnchor.constraint(equalTo: self.stack.trailingAnchor),
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.redeemButton.bottomAnchor, multiplier: 3)
         ])
         
         self.redeemButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)

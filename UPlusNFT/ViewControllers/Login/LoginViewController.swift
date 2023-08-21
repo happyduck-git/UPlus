@@ -394,6 +394,9 @@ extension LoginViewController: SignUpViewControllerDelegate {
     func signupDidComplete() {
         
         do {
+            
+            //TODO: level 
+            
             let user = try UPlusUser.getCurrentUser()
             
             let vm = MyPageViewViewModel(user: user,

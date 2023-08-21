@@ -153,8 +153,8 @@ extension ChoiceQuizVideoViewController {
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.videoPlayer.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 5),
-            self.videoPlayer.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
-            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.videoPlayer.trailingAnchor, multiplier: 3),
+            self.videoPlayer.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 1),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.videoPlayer.trailingAnchor, multiplier: 1),
             self.videoPlayer.heightAnchor.constraint(equalToConstant: self.view.frame.height / 3.5),
             
             self.videoDescriptionLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.videoPlayer.bottomAnchor, multiplier: 2),
@@ -268,12 +268,14 @@ extension ChoiceQuizVideoViewController {
         
         guard let iframeString = self.vm.mission.missionContentText,
               let videoURL = self.buildYTUrl(iframeString:  iframeString) else { return }
-        
+
         let request = URLRequest(url: videoURL)
         self.videoPlayer.load(request)
+       
     }
     
     private func buildYTUrl(iframeString: String) -> URL? {
+    
         guard let iframeString = self.vm.mission.missionContentText else { return nil }
         let pattern = "src=\"([^\"]+)\""
         let regex = try? NSRegularExpression(pattern: pattern, options: [])

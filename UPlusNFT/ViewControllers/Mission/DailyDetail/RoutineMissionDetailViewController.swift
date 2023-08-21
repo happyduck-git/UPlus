@@ -230,7 +230,7 @@ extension RoutineMissionDetailViewController {
         
         let footerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.4)
+            heightDimension: .fractionalHeight(0.5)
             
         )
         let footer = NSCollectionLayoutBoundarySupplementaryItem(
@@ -309,9 +309,11 @@ extension RoutineMissionDetailViewController: UICollectionViewDelegate, UICollec
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UploadPhotoButtonCollectionViewCell.identifier, for: indexPath) as? UploadPhotoButtonCollectionViewCell else {
                 fatalError()
             }
-//            cell.bind(with: self.vm)
-//            cell.delegate = self
+            
+            cell.bind(with: self.vm)
+            cell.delegate = self
             return cell
+            
         default:
             return UICollectionViewCell()
         }
@@ -343,7 +345,6 @@ extension RoutineMissionDetailViewController: UICollectionViewDelegate, UICollec
             }
             
             footer.bind(with: self.vm)
-            footer.delegate = self
             return footer
             
         default:
@@ -357,6 +358,14 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
 
     func uploadButtonDidTap() {
         self.showPhotoBottomAlert()
+    }
+    
+    func editButtonDidTap() {
+        self.showPhotoBottomAlert()
+    }
+    
+    func submitButtonDidTap() {
+        self.confirmDidTap()
     }
 
     private func updateLayout() {
@@ -403,6 +412,30 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
         
         self.present(alert, animated: true)
     }
+    
+    private func confirmDidTap() {
+        Task {
+            do {
+                // 1. Save participation info to Storage
+                try await self.vm.saveRoutineParticipationStatus()
+        
+                // 2. Check level update
+                let mission = try await self.vm.getTodayMissionInfo()
+                
+                try await self.vm.checkLevelUpdate(mission: mission)
+                
+                // 3. Point 수여 complete vc
+                let vm = RoutineParticipationViewViewModel(mission: mission)
+                let vc = RoutineParticipatedViewController(vm: vm)
+                
+            }
+            catch {
+                // TODO: 오류 발생 alert
+                self.logger.error("Error process confirm button -- \(String(describing: error))")
+            }
+        }
+    }
+    
 }
 
 // MARK: - PHPickerViewControllerDelegate
@@ -464,33 +497,6 @@ extension RoutineMissionDetailViewController: UIImagePickerControllerDelegate, U
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true)
     }
-}
-
-extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCellFooterDelegate {
-    
-    func confirmDidTap() {
-        Task {
-            do {
-                // 1. Save participation info to Storage
-                try await self.vm.saveRoutineParticipationStatus()
-        
-                // 2. Check level update
-                let mission = try await self.vm.getTodayMissionInfo()
-                
-                try await self.vm.checkLevelUpdate(mission: mission)
-                
-                // 3. Point 수여 complete vc
-                let vm = RoutineParticipationViewViewModel(mission: mission)
-                let vc = RoutineParticipatedViewController(vm: vm)
-                
-            }
-            catch {
-                // TODO: 오류 발생 alert
-                self.logger.error("Error process confirm button -- \(String(describing: error))")
-            }
-        }
-    }
-    
 }
 
 extension RoutineMissionDetailViewController: RoutineMissionDetailViewViewModelDelegate {

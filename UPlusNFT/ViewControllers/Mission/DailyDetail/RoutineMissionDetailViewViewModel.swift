@@ -80,7 +80,7 @@ extension RoutineMissionDetailViewViewModel {
             do {
                 let user = try UPlusUser.getCurrentUser()
 
-                let (daysLeft, missions) = try await self.firestoreManager.getRoutineMissionInfo(missionType: .dailyExpAthlete, userIndex: user.userIndex)
+                let (daysLeft, missions) = try await self.firestoreManager.getRoutineMissionInfo(missionType: .dailyExpGoodWorker, userIndex: user.userIndex)
                 self.daysLeft = daysLeft
                 self.athleteMissions = missions
                 
