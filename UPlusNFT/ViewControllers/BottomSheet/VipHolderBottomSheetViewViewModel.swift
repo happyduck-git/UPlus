@@ -32,7 +32,7 @@ extension VipHolderBottomSheetViewViewModel {
                 let result = try await self.nftServiceManger.requestSingleNft(userIndex: user.userIndex,
                                                                  nftType: .avatar,
                                                                  level: 2)
-                print("Result of requesting nft: \(result)")
+                print("🫡 Result of requesting nft: \(result)")
             }
             catch {
                 print("Error requesting level 2 nft.")

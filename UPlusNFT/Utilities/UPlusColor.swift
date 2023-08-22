@@ -72,3 +72,9 @@ struct UPlusColor {
     static let gradient09deep = UIColor(hex: 0xA8CBFF)
     static let gradient09light = UIColor(hex: 0xBFF4FF)
 }
+
+// MARK: - Per UI Elements
+extension UPlusColor {
+    static let buttonDeactivated = UIColor(hex: 0xD6DCE2)
+    static let buttonActivated = UIColor(hex: 0x59E3E3)
+}

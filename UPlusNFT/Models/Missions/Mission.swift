@@ -33,15 +33,11 @@ enum MissionType: String {
     case weeklyQuiz2 = "weekly_quiz__2"
     case weeklyQuiz3 = "weekly_quiz__3"
 
-    case eventMission = "event_mission"
+    case eventRegularMission = "event_mission__regular"
+    case eventLevelMission = "event_mission__level"
     
     var storagePathFolderName: String {
-        switch self {
-        case .eventMission:
-            return "event__mission_set"
-        default:
-            return self.rawValue + "__mission_set"
-        }
+        return self.rawValue + "__mission_set"
     }
     
     var displayName: String {
@@ -49,11 +45,13 @@ enum MissionType: String {
         case .dailyExpAthlete:
             return "걷기 루틴 미션"
         case .dailyExpGoodWorker:
-            return "환경 루틴 미션"
+            return "오늘 할 일 정하기"
         case .dailyExpEnvironmentalist:
             return "업무 루틴 미션"
-        case .eventMission:
-            return "이벤트 미션"
+        case .eventRegularMission:
+            return "참여 이벤트"
+        case .eventLevelMission:
+            return "레벨 이벤트"
         default:
             return "주간 퀴즈"
         }
@@ -64,10 +62,10 @@ enum MissionType: String {
         case .dailyExpAthlete:
             return "매일 6000보 걷기 인증"
         case .dailyExpGoodWorker:
-            return "매일 텀블러 사용하기 인증"
+            return "체계적으로 일해 최고의 CEO가 되자"
         case .dailyExpEnvironmentalist:
             return "매일 TODO 리스트 작성하기 인증"
-        case .eventMission:
+        case .eventRegularMission, .eventLevelMission:
             return "이벤트 미션"
         default:
             return "주간 퀴즈"
@@ -92,7 +90,8 @@ enum MissionFormatType: String {
 }
 
 enum MissionSubFormatType: String {
-    case photoAuth = "photo_auth"
+    case photoAuthNoManagement = "photo_auth__no_management"
+    case photoAuthManagement = "photo_auth__management"
     case choiceQuizOX = "choice_quiz__ox"
     case choiceQuizMore = "choice_quiz__more"
     case choiceQuizVideo = "choice_quiz__video"
@@ -108,6 +107,7 @@ enum MissionUserState: String {
     case pending
     case succeeded
     case failed
+    case notParticipated
 }
 
 struct MissionModel: Mission, Codable {

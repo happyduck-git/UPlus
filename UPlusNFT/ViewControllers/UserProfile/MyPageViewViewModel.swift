@@ -30,8 +30,8 @@ final class MyPageViewViewModel {
     
     enum MyPageViewEventSectionType: String, CaseIterable {
         case availableEvent
-        case level0event = "참여 이벤트"
-        case level1event = "레벨 이벤트"
+        case regularEvent = "참여 이벤트"
+        case levelEvent = "레벨 이벤트"
     }
     
     let missionSections: [MyPageViewMissionSectionType] = MyPageViewMissionSectionType.allCases
@@ -58,7 +58,7 @@ final class MyPageViewViewModel {
         var dailyMissions: [String: [Timestamp]] = [:]
         @Published var isHistorySectionOpened: Bool = false
         
-        @Published var savedMissionType: MissionType?
+        @Published var routineParticipationStatus: MissionUserState?
         
         @Published var routineParticipationCount: Int = 0
         @Published var routinePoint: Int64 = 0
@@ -93,11 +93,11 @@ final class MyPageViewViewModel {
     }
     
     class MyPageEvent {
-        @Published var eventMissions: [any Mission] = [] {
+        @Published var levelAllEvents: [any Mission] = [] {
             didSet {
                 var dic: [Int64: [any Mission]] = [:]
                 
-                for mission in eventMissions {
+                for mission in levelAllEvents {
                     if var array = dic[mission.missionPermitAvatarLevel] {
                         array.append(mission)
                         dic[mission.missionPermitAvatarLevel] = array
@@ -113,10 +113,10 @@ final class MyPageViewViewModel {
         
         @Published var missionPerLevel: [Int64: [any Mission]] = [:] {
             didSet {
-                self.level0Mission = missionPerLevel[0] ?? []
-
                 var others: [(any Mission)?] = []
                
+                others.append(nil)
+                others.append(contentsOf: missionPerLevel[0] ?? [])
                 others.append(nil)
                 others.append(contentsOf: missionPerLevel[1] ?? [])
                 others.append(nil)
@@ -128,12 +128,12 @@ final class MyPageViewViewModel {
                 others.append(nil)
                 others.append(contentsOf: missionPerLevel[5] ?? [])
                 
-                self.otherMissions.append(contentsOf: others)
+                self.levelEvents.append(contentsOf: others)
             }
         }
         
-        @Published var level0Mission: [any Mission] = []
-        @Published var otherMissions: [(any Mission)?] = []
+        @Published var regularEvents: [any Mission] = []
+        @Published var levelEvents: [(any Mission)?] = []
     }
     
     class MissionSelectBottomView {
@@ -195,38 +195,42 @@ extension MyPageViewViewModel {
     
     /// Get User Selected Routine Mission If Any.
     func getSelectedRoutine() async {
-        
-        do {
-            self.mission.savedMissionType = try await firestoreManager.getUserSelectedRoutineMission(userIndex: self.user.userIndex)
-            
-            if let savedType = self.mission.savedMissionType {
-                self.getRoutineParticipationCount(type: savedType)
-            }
-        }
-        catch {
-            print("Error retrieving selected routine mission -- \(error)")
-        }
-        
+        self.getRoutineParticipationCount(type: .dailyExpGoodWorker)
     }
     
     /// Get Number of Pariticipated Days of Routine Missions.
     func getRoutineParticipationCount(type: MissionType) {
         Task {
             do {
+                var todayInfo: [String: String] = [:]
+                
                 // 1. 선택한 루틴 미션DB 조회
                 let missions = try await self.firestoreManager.getRoutineMission(type: type)
                 let userMap = missions.compactMap { mission in
-                    mission.missionUserStateMap
+                    let statusMap = mission.missionUserStateMap
+                    
+                    // 금일 참여 현황 조회
+                    if mission.missionId == Date().yearMonthDateFormat {
+                        todayInfo = statusMap ?? [:]
+                    }
+                    
+                    return statusMap
+                    
                 }
+                
+                let todayStatus = todayInfo[String(describing: self.user.userIndex)] ?? MissionUserState.notParticipated.rawValue
+                self.mission.routineParticipationStatus = MissionUserState(rawValue: todayStatus) ?? .notParticipated
+
                 // 2. 참여 현황 조회
                 let currentUser = userMap.filter { map in
                     map.contains { ele in
                         ele.key == String(describing: self.user.userIndex)
                     }
                 }
-                self.mission.routineParticipationCount = currentUser.count
                 
-                // 3. 전체 포인트 계산
+                self.mission.routineParticipationCount = currentUser.count
+
+                // 4. 전체 포인트 계산 (5, 10, 15회는 500P)
                 let totalPoint = missions.reduce(0, {
                     $0 + $1.missionRewardPoint
                 })
@@ -239,10 +243,24 @@ extension MyPageViewViewModel {
         }
     }
     
-    func getEventMission() async {
+    
+    /// Get leveled events.
+    func getLevelEvents() async {
         do {
-            self.event.eventMissions = try await self.firestoreManager.getEvent()
-            print("Mssioon; \(self.event.eventMissions.count)")
+            self.event.levelAllEvents = try await self.firestoreManager.getLevelEvents()
+            print("Level Events: \(self.event.levelEvents.count)")
+        }
+        catch {
+            print("Error fetching event missions -- \(error)")
+        }
+    }
+    
+    
+    /// Get regular events.
+    func getRegularEvents() async {
+        do {
+            self.event.regularEvents = try await self.firestoreManager.getRegularEvents()
+            print("Regular Events: \(self.event.regularEvents.count)")
         }
         catch {
             print("Error fetching event missions -- \(error)")
@@ -311,6 +329,7 @@ extension MyPageViewViewModel {
     
 }
 
+// MARK: - NFT related logics
 extension MyPageViewViewModel {
     
     func getTopLevelNftToken() async -> String? {
@@ -462,5 +481,16 @@ extension MyPageViewViewModel {
         self.updateNftList(nfts: newArr, userIndex: user.userIndex)
     }
 
+    func timeDifference(from startDate: Date, to endDate: Date) -> String {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day, .hour], from: startDate, to: endDate)
+
+        guard let days = components.day, let hours = components.hour else {
+            return String(format: MissionConstants.timeLeft, 0, 0)
+        }
+
+        return String(format: MissionConstants.timeLeft, days, hours)
+    }
+    
 }
 

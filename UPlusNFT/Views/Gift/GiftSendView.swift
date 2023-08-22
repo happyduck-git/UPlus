@@ -51,6 +51,7 @@ final class GiftSendView: UIView {
     
     private let warningLabel: TextReCheckLabelView = {
        let label = TextReCheckLabelView()
+        label.isHidden = true
         label.setLabelText(GiftConstants.checkNickname)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -68,6 +69,7 @@ final class GiftSendView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life Cycle
     override func layoutSubviews() {
         super.layoutSubviews()
         self.textField.heightAnchor.constraint(equalToConstant: self.frame.height / 2).isActive = true
@@ -102,10 +104,10 @@ extension GiftSendView {
             self.receiverLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.receiverLabel.trailingAnchor, multiplier: 2),
             
-            
             self.textField.topAnchor.constraint(equalToSystemSpacingBelow: self.receiverLabel.bottomAnchor, multiplier: 2),
             self.textField.leadingAnchor.constraint(equalTo: self.receiverLabel.leadingAnchor),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.textField.trailingAnchor, multiplier: 2),
+            self.textField.heightAnchor.constraint(equalToConstant: 50),
             
             self.warningLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.textField.bottomAnchor, multiplier: 1),
             self.warningLabel.leadingAnchor.constraint(equalTo: self.textField.leadingAnchor),

@@ -414,6 +414,9 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
     }
     
     private func confirmDidTap() {
+        
+        self.addChildViewController(self.loadingVC)
+        
         Task {
             do {
                 // 1. Save participation info to Storage
@@ -427,6 +430,12 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
                 // 3. Point 수여 complete vc
                 let vm = RoutineParticipationViewViewModel(mission: mission)
                 let vc = RoutineParticipatedViewController(vm: vm)
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.loadingVC.removeViewController()
+                    guard let `self` = self else { return }
+                    self.show(vc, sender: self)
+                }
                 
             }
             catch {

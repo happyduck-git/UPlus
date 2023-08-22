@@ -229,6 +229,8 @@ extension NFTDetailViewController {
                 
                 let vm = GiftViewControllerViewViewModel(nft: self.vm)
                 let vc = GiftViewController(vm: vm)
+                
+                self.show(vc, sender: self)
             }
             .store(in: &bindings)
     }
@@ -247,12 +249,13 @@ extension NFTDetailViewController {
                 print("Error fetching nft image -- \(error)")
             }
             
-            self.nftTitle.text = vm.nftDetailType
+            self.nftTitle.text = vm.nftName ?? vm.nftType
             self.nftType.setNameTitle(text: vm.nftType)
             let level = NftLevel.level(tokenId: vm.nftTokenId)
             if Range(0...5).contains(level) {
                 self.levelLabel.text = MissionConstants.levelPrefix + String(describing: level)
             }
+            self.storyLabel.text = vm.nftDescription ?? nil
         }
     }
 }

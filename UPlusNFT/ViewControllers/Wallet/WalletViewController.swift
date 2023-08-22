@@ -38,7 +38,7 @@ final class WalletViewController: UIViewController {
     
     private let showAllButton: UIButton = {
        let button = UIButton()
-        button.setTitleColor(UPlusColor.mint04, for: .normal)
+        button.setTitleColor(UPlusColor.buttonActivated, for: .normal)
         button.setTitle(WalletConstants.showAll, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -49,8 +49,13 @@ final class WalletViewController: UIViewController {
         layout.scrollDirection = .horizontal
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.register(WalletMissionButtonCollectionViewCell.self,
+                            forCellWithReuseIdentifier: WalletMissionButtonCollectionViewCell.identifier)
         collection.register(WalletCollectionViewCell.self,
                             forCellWithReuseIdentifier: WalletCollectionViewCell.identifier)
+        collection.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        
+        collection.showsHorizontalScrollIndicator = false
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
     }()
@@ -122,6 +127,7 @@ extension WalletViewController {
                     guard let `self` = self else { return }
                     
                     let vc = WalletAddressBottomSheetViewController()
+                    vc.defaultHeight = 300
                     vc.modalPresentationStyle = .overCurrentContext
 
                     self.present(vc, animated: false)
@@ -223,17 +229,41 @@ extension WalletViewController {
 extension WalletViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.vm.nfts.count
+        if self.vm.isOnlyAvatar {
+            return self.vm.nfts.count + 1
+        } else {
+            return self.vm.nfts.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WalletCollectionViewCell.identifier, for: indexPath) as? WalletCollectionViewCell else {
             fatalError()
             
         }
         
+        if self.vm.isOnlyAvatar {
+            if indexPath.item == 0 {
+                
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WalletMissionButtonCollectionViewCell.identifier, for: indexPath) as? WalletMissionButtonCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                cell.deleate = self
+                return cell
+                
+            } else {
+                
+                cell.configure(with: self.vm.nfts[indexPath.item - 1])
+                return cell
+                
+            }
+        }
+        
         cell.configure(with: self.vm.nfts[indexPath.item])
         return cell
+        
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -241,4 +271,36 @@ extension WalletViewController: UICollectionViewDelegate, UICollectionViewDataSo
                       height: self.nftsCollectionView.frame.height)
     }
 
+}
+
+extension WalletViewController: WalletDetailMissionButtonCollectionViewCellDelegate {
+    func goToWeeklyMissionDidTap() {
+        
+        let startDay = UPlusServiceInfoConstant.startDay
+        
+        #if DEBUG
+        let numberOfWeek = 2
+        #else
+        let numberOfWeek = self.numberOfWeek(startDay: startDay) ?? 1
+        #endif
+        
+        let vm = WeeklyMissionOverViewViewModel(week: numberOfWeek)
+        let vc = WeeklyMissionOverViewViewController(vm: vm)
+        
+        self.show(vc, sender: self)
+    }
+    
+    func numberOfWeek(startDay: String) -> Int? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        guard let startDate = dateFormatter.date(from: startDay) else {
+            return nil
+        }
+        
+        let today = Date()
+        let daysDifference = Date.daysBetween(start: startDate, end: today)
+        
+        return (daysDifference / 7) + 1
+    }
 }

@@ -81,7 +81,7 @@ extension RoutineMissionStampCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
-                self.progressLabel.text = String(format: MissionConstants.missionProgress, $0)
+                self.progressLabel.text = String(format: MissionConstants.routineProgress, $0)
             }
             .store(in: &self.bindings)
         

@@ -43,8 +43,18 @@ final class RoutineParticipatedViewController: UIViewController {
         return imageView
     }()
     
+    private let missionConfirmInfo: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var confirmButton: UIButton = {
         let button = UIButton()
+        button.setTitle(MissionConstants.complete, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
@@ -68,10 +78,14 @@ final class RoutineParticipatedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = .white
+        
         self.setUI()
         self.setLayout()
         self.setNavigationBar()
+        
         self.configure()
+        self.bind()
     }
     
 }
@@ -80,8 +94,9 @@ final class RoutineParticipatedViewController: UIViewController {
 extension RoutineParticipatedViewController {
     
     private func configure() {
-        self.confirmButton.setTitle(String(format: MissionConstants.redeemPoint, self.vm.mission.missionRewardPoint),
-                                    for: .normal)
+        
+        self.missionConfirmInfo.text = String(format: MissionConstants.missionSubmissionNotice, self.vm.mission.missionRewardPoint)
+        
     }
     
     private func bind() {
@@ -89,8 +104,14 @@ extension RoutineParticipatedViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                //TODO: 어느 VC로 돌아갈 지 결정 필요.
-                self.dismiss(animated: true)
+                
+                guard let vcs = self.navigationController?.viewControllers else { return }
+                for vc in vcs where vc is MyPageViewController {
+                    DispatchQueue.main.async {
+                        self.navigationController?.popToViewController(vc, animated: true)
+                    }
+                }
+              
             }
             .store(in: &bindings)
     }
@@ -103,6 +124,7 @@ extension RoutineParticipatedViewController {
         self.view.addSubviews(self.backgroundConfetti,
                               self.resultLabel,
                               self.missionCompleteIcon,
+                              self.missionConfirmInfo,
                               self.confirmButton)
     }
     
@@ -117,7 +139,11 @@ extension RoutineParticipatedViewController {
             self.missionCompleteIcon.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 10),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.missionCompleteIcon.trailingAnchor, multiplier: 10),
             
-            self.confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: self.missionCompleteIcon.bottomAnchor, multiplier: 5),
+            self.missionConfirmInfo.topAnchor.constraint(equalToSystemSpacingBelow: self.missionCompleteIcon.bottomAnchor, multiplier: 3),
+            self.missionConfirmInfo.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.missionConfirmInfo.trailingAnchor, multiplier: 2),
+            
+            self.confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: self.missionConfirmInfo.bottomAnchor, multiplier: 3),
             self.confirmButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
             self.confirmButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 15),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.confirmButton.trailingAnchor, multiplier: 3),

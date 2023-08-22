@@ -211,9 +211,9 @@ extension CommentCountMissionViewController: UITableViewDelegate, UITableViewDat
                                                  for: indexPath) as? CommentCountMissionTableViewCell else {
             return UITableViewCell()
         }
-        
-        let nickname = self.vm.comments[indexPath.row]
-        let comment = self.vm.comments[indexPath.row + 1]
+      
+        let nickname = self.vm.comments[indexPath.row * 2]
+        let comment = self.vm.comments[(indexPath.row * 2) + 1]
         
         cell.configure(image: "image", nickname: nickname, comment: comment)
         

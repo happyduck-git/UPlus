@@ -15,7 +15,7 @@ enum UserLevelPoint {
     static let level3:PointRange = 900...1599
     static let level4:PointRange = 1600...2599
     static let level5:PartialRangeFrom<Int64> = 2600...
-    
+
 }
 
 extension UserLevelPoint {
@@ -37,18 +37,79 @@ extension UserLevelPoint {
     }
 
     typealias Updates = (update: Bool, newLevel: Int)
-    static func checkLevelUpdate(currentLevel: Int,
+    static private func checkLevelUpdate(currentLevel: Int,
                                  newPoints: Int64) -> Updates {
         let newLevel = UserLevelPoint.level(forPoints: newPoints)
-        if currentLevel == newLevel {
-            return (true, currentLevel)
+        print("Current level: \(currentLevel)")
+        print("To be changed level: \(newLevel)")
+        if currentLevel != newLevel {
+            return (true, newLevel)
         } else {
-         return (false, newLevel)
+         return (false, currentLevel)
         }
     }
     
 }
 
+extension UserLevelPoint {
+
+    static func userLevelUpdate(mission: any Mission,
+                                nftType: UPlusNftType,
+                                firestoreManager: FirestoreManager,
+                                nftServiceManager: NFTServiceManager) async throws {
+        
+        let level = UserDefaults.standard.value(forKey: UserDefaultsConstants.level) as? Int
+        let user = try UPlusUser.getCurrentUser()
+        let totalPoints = user.userTotalPoint ?? mission.missionRewardPoint
+        
+        let result = UserLevelPoint.checkLevelUpdate(
+            currentLevel: level ?? UserLevelPoint.level(forPoints: totalPoints),
+            newPoints: totalPoints
+        )
+        print("Total Points: \(totalPoints)")
+        if result.update {
+            
+            let newLevelResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
+                                                                              nftType: .avatar,
+                                                                              level: result.newLevel)
+            print("newLevelResult result: \(newLevelResult.data)")
+            // 레벨 별 차등지급 상품
+            var raffleType: UPlusNftDetailType?
+            var coffeeType: RewardType?
+            
+            switch result.newLevel {
+            case 2:
+                raffleType = .gift
+                coffeeType = .coffeeCoupon1
+            case 3:
+                raffleType = .raffleBronze
+                coffeeType = .coffeeCoupon2
+            case 4:
+                raffleType = .raffleSilver
+                coffeeType = .coffeePoint10K
+            case 5:
+                raffleType = .raffleGold
+                coffeeType = .coffeePoint20K
+            default:
+                return
+            }
+            /*
+            
+            let giftResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
+                                                                          nftType: raffleType ?? .gift)
+            print("gift result: \(giftResult.data)")
+          
+            try await firestoreManager.saveReward(userIndex: user.userIndex, reward: coffeeType ?? .coffeeCoupon1)
+            */
+            UPlusLogger.logger.info("There is level update from \(String(describing: level)) to \(String(describing: result.newLevel)).")
+        } else {
+            UPlusLogger.logger.info("There is no level update.")
+        }
+    }
+     
+}
+
+// MARK: - User Level
 enum UserLevel: Int {
     case level1 = 1
     case level2 = 2

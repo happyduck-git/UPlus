@@ -15,6 +15,7 @@ final class WalletViewViewModel {
     var walletAddress: String = ""
     @Published var nfts: [UPlusNft] = []
     @Published var rewards: [Reward] = []
+    var isOnlyAvatar: Bool = true
     
     init() {
         self.getNfts()
@@ -32,13 +33,40 @@ extension WalletViewViewModel {
                     guard let `self` = self else { return }
                     switch result {
                     case .success(let nfts):
-                        self.nfts = nfts
+                        
+                        var highestAvatar: UPlusNft?
+                        var highestRaffle: UPlusNft?
+                        var nftsToShow: [UPlusNft?] = []
                         
                         for nft in nfts {
+                            let nftType = UPlusNftDetailType(rawValue: nft.nftDetailType) ?? .avatar
+                            
+                            if nftType != .avatar {
+                                self.isOnlyAvatar.toggle()
+                            }
+ 
+                            switch nftType {
+                            case .avatar:
+                                let currentHighest = highestAvatar?.nftTokenId ?? 0
+                                if currentHighest < nft.nftTokenId {
+                                    highestAvatar = nft
+                                }
+                                continue
+                            case .raffleBronze, .raffleSilver, .raffleGold:
+                                let currentHighest = highestRaffle?.nftTokenId ?? 0
+                                if currentHighest < nft.nftTokenId {
+                                    highestRaffle = nft
+                                }
+                                continue
+                            default:
+                                nftsToShow.append(nft)
+                                continue
+                            }
+                            
                             let type = nft.nftDetailType
                             let lastChar = type.last
                             let isNumber = lastChar?.isNumber ?? false
-
+                            
                             if isNumber {
                                 print("type: \(self.replaceLastCharWithPercent(input: type))")
                                 print(UPlusNftDetailType(rawValue: self.replaceLastCharWithPercent(input: type)))
@@ -47,8 +75,16 @@ extension WalletViewViewModel {
                             }
                             
                         }
+                        
+                        nftsToShow.append(highestAvatar)
+                        nftsToShow.append(highestRaffle)
+                        
+                        let compactMappedNfts = nftsToShow.compactMap { $0 }
+                        self.nfts = compactMappedNfts
+                        
                     case .failure(let error):
                         print("Error fetching nfts -- \(error)")
+                        
                     }
                 }
             }

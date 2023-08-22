@@ -151,7 +151,12 @@ struct MissionConstants {
     static let missionCompleted: String = "미션 완주"
     static let participated: String = "미션 완주"
     static let redeemPoint: String = "%dP 포인트 받기"
-    static let missionProgress: String = "%d회 성공 /15회차"
+    static let routineProgress: String = "%d회 성공 /15회차"
+    
+    /* Weekly Mission */
+    static let timeLeft: String = "%d일 %d시간 후 종료"
+    static let weeklyPoints: String = "600P+NFT"
+    static let weeklyMissionProgress: String = "%d/15회"
     
     /* Routine Mission */
     static let routineTitle: String = "TO-DO 미션"
@@ -165,6 +170,8 @@ struct MissionConstants {
     static let info: String = "주의사항"
     static let infoDetail: String = "주의사항 내용 1번 주의사항입니다.\n2번 주의사항입니다.\n3번 주의사항입니다."
     static let photoEditWarning: String = "제출 이후엔 수정이 불가합니다"
+    static let missionSubmissionNotice: String = "평가 완료 후 %dP 보상, 내일 중 지급될 수 있습니다"
+    static let complete: String = "완료하기"
     
     static let bonusMissionLimit: Int = 6
     static let certificate: String = "경험인증서 NFT"
@@ -228,6 +235,8 @@ struct WalletConstants {
     static let level: String = "레벨"
     static let ownedReward: String = "보유 경품"
     static let traits: String = "특징"
+    static let goToMissionInfo: String = "월드클래스 기업 만들기에 참여하여\n여정 인증서 NFT를 받으세요!"
+    static let goToMission: String = "여정 미션 참여하기"
 }
 
 struct LottieConstants {
@@ -316,6 +325,7 @@ struct ImageAsset {
     static let point: String = "point-silver"
     static let couponFrame: String = "coupon-frame"
     static let routineImage: String = "todo"
+    static let clock: String = "clock"
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
@@ -333,6 +343,7 @@ struct ImageAsset {
     static let walletGray: String = "wallet-gray"
     static let arrowRight: String = "arrow-right-mint"
     static let sparkle: String = "sparkle"
+    static let walletBuilding: String = "wallet-building"
     
     /* RewardVC */
     static let bellGray: String = "bell-gray"
@@ -367,7 +378,9 @@ struct FirestoreConstants {
     static let userTypeMissionArrayMap = "user_type_mission_array_map"
     static let userTotalPoint = "user_total_point"
     static let userNfts = "user_nfts"
+    static let userRewards = "user_rewards"
     static let accountCreationTime = "user_account_creation_time"
+    
     static let devThreads2 = "dev_threads2"
     static let configuration = "configuration"
     static let missions = "missions"
@@ -381,7 +394,7 @@ struct FirestoreConstants {
     static let environmentalistMission = "exp_environmentalist_mission_set"
     static let goodWorkerMission = "exp_good_worker_mission_set"
     static let suddenMission = "sudden_mission_set"
-    static let missionTimelineMap = "missions_begin_end_time_map"
+    static let missionBeginEndTimeMap = "missions_begin_end_time_map"
     
     /* Configuration */
     static let accountableEmails = "accountable_emails"

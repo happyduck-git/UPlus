@@ -11,7 +11,7 @@ extension MyPageViewController: BaseMissionViewControllerDelegate {
     func redeemDidTap(vc: BaseMissionViewController) {
         if vc is GovernanceElectionMissionViewController {
             Task {
-                await self.vm.getEventMission()
+                await self.vm.getLevelEvents()
             }
         }
         if vc is ShareMediaOnSlackMissionViewController {

@@ -14,7 +14,6 @@ struct GoodWorkerMission: Codable, Hashable, Mission {
     var missionFormatType: String
     var missionContentTitle: String?
     var missionContentText: String?
-    var missionContentImagePath: [String]?
     var missionCreationTime: Timestamp
     var missionStartTime: Timestamp
     var missionEndTime: Timestamp?
@@ -24,4 +23,6 @@ struct GoodWorkerMission: Codable, Hashable, Mission {
     var missionContentImagePaths: [String]?
     var missionUserStateMap: [String : String]?
     var missionPermitAvatarLevel: Int64
+    var missionAdminConfirmTime: Timestamp?
+    var missionAdminUserEmail: String?
 }

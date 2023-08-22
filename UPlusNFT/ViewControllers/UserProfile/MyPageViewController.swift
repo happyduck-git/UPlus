@@ -182,7 +182,8 @@ final class MyPageViewController: UIViewController {
         case 1:
             switchButton(tag: 1)
             Task {
-                await self.vm.getEventMission()
+                await self.vm.getRegularEvents()
+                await self.vm.getLevelEvents()
             }
         default:
             return
@@ -227,19 +228,6 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
-            self.vm.mission.$savedMissionType
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] mission in
-                    guard let `self` = self,
-                          let collection = self.collectionView
-                    else { return }
-                    
-                    if let _ = mission {
-                        collection.reloadSections(IndexSet(integer: 1))
-                    }
-                }
-                .store(in: &bindings)
-            
             self.vm.mission.$weeklyMissions
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] data in
@@ -250,7 +238,7 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
                 
-            self.vm.event.$level0Mission
+            self.vm.event.$regularEvents
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] data in
                     guard let `self` = self,
@@ -263,7 +251,7 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
-            self.vm.event.$otherMissions
+            self.vm.event.$levelEvents
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] data in
                     guard let `self` = self,
@@ -326,6 +314,14 @@ extension MyPageViewController {
                 }
                 .store(in: &bindings)
             
+            self.vm.mission.$routineParticipationStatus
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] status in
+                    guard let `self` = self else { return }
+                    self.collectionView?.reloadSections(IndexSet(integer: 1))
+                }
+                .store(in: &bindings)
+            
             self.vm.$updatedNfts
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] nfts in
@@ -333,15 +329,18 @@ extension MyPageViewController {
                     
                     for nft in nfts {
                         let level = NftLevel.level(tokenId: Int64(nft) ?? 0)
-                        if level < 6 && level > 1 {
+                        if level < 10 && level > 1 {
                             self.showLevelUpBottomSheet(level: level)
-                        } else {
+                        } else if level == 10 {
                             self.showNewNftBottomSheet(tokenId: nft)
+                        } else {
+                            continue
                         }
                     }
                     
                 }
                 .store(in: &bindings)
+
         }
         
         bindViewToViewModel()
@@ -712,7 +711,7 @@ extension MyPageViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.15)
+                heightDimension: .fractionalHeight(0.2)
             ),
             subitems: [item]
         )
@@ -865,10 +864,10 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return 1
                 
             case 1:
-                return self.vm.event.level0Mission.count
+                return self.vm.event.regularEvents.count
                 
             case 2:
-                return self.vm.event.otherMissions.count
+                return self.vm.event.levelEvents.count
                 
             default:
                 return 0
@@ -912,21 +911,24 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 if !self.vm.mission.weeklyMissions.isEmpty {
                     let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
                     let missionInfo = self.vm.mission.weeklyMissions[weekCollection] ?? []
+                    
                     let begin = missionInfo[0].dateValue().monthDayFormat
-                    let end = missionInfo[1].dateValue().monthDayFormat
+                    let end = missionInfo[1].dateValue()
+                    
+                    let timeLeft = self.vm.timeDifference(from: Date(), to: end)
                     let weekTotalPoint: Int64 = 100 // TODO: Query from DB
                     
                     if missionInfo[0].dateValue() > Date() {
                         cell.configure(type: .close,
                                        title: weekCollection,
-                                       period: begin + " - " + end,
+                                       period: timeLeft,
                                        point: weekTotalPoint,
                                        openDate: begin)
                         return cell
                     } else {
                         cell.configure(type: .open, // open
                                        title: weekCollection,
-                                       period: begin + " - " + end,
+                                       period: timeLeft,
                                        point: weekTotalPoint)
                         return cell
                     }
@@ -1000,7 +1002,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 cell.resetCell()
                 
                 
-                let mission = self.vm.event.level0Mission[indexPath.item]
+                let mission = self.vm.event.regularEvents[indexPath.item]
                 
                 let participatedUsers = mission.missionUserStateMap ?? [:]
                 if participatedUsers.contains(where: { (key, _) in
@@ -1033,7 +1035,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     fatalError()
                 }
 
-                guard let mission = self.vm.event.otherMissions[indexPath.item] else {
+                guard let mission = self.vm.event.levelEvents[indexPath.item] else {
 
                     dividerCell.configure(level: 1)
                     return dividerCell
@@ -1098,17 +1100,28 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if self.screenToShow == 0 {
             switch indexPath.section {
             case 1:
-                if let missionType = self.vm.mission.savedMissionType {
-                    let vm = RoutineMissionDetailViewViewModel(missionType: missionType)
-                    let vc = RoutineMissionDetailViewController(vm: vm)
-
-                    self.show(vc, sender: self)
-                } else {
-                    let vc = RoutineSelectBottomSheetViewController(vm: self.vm)
-                    vc.modalPresentationStyle = .overCurrentContext
-                    vc.delegate = self
-                    self.present(vc, animated: false)
+                let participationStatus = self.vm.mission.routineParticipationStatus
+                
+                // NOTE: pending status에 대한 temporary action
+                if participationStatus == .pending {
+                    
+                    let action = UIAlertAction(title: "확인", style: .cancel)
+                    let alert = UIAlertController(title: "이미 참여하셨습니다!", message: "현재 미션 참여 검토 중입니다.", preferredStyle: .alert)
+                    alert.addAction(action)
+                    
+                    self.present(alert, animated: true)
+                    
+                    return
                 }
+                
+                self.addChildViewController(self.loadingVC)
+                let vm = RoutineMissionDetailViewViewModel(missionType: .dailyExpGoodWorker)
+                let vc = RoutineMissionDetailViewController(vm: vm)
+                
+                self.loadingVC.removeViewController()
+                
+                self.show(vc, sender: self)
+                
             case 2:
                 let vm = WeeklyMissionOverViewViewModel(week: indexPath.item + 1)
                 let vc = WeeklyMissionOverViewViewController(vm: vm)
@@ -1119,11 +1132,29 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             }
         } else {
             print("IndexPath: \(indexPath)")
-            // Temp: 해당 화면 보여주기
-            let mission = self.vm.event.eventMissions[indexPath.item]
+            //TODO: index path 별로 나누기
+            var anyMission: (any Mission)?
+            
+            switch indexPath.section {
+            case 1:
+                anyMission = self.vm.event.regularEvents[indexPath.item]
+            case 2:
+                anyMission = self.vm.event.levelEvents[indexPath.item]
+            default:
+                return
+            }
+            guard let mission = anyMission else { return }
             let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
             
             switch type {
+            case .photoAuth:
+                guard let mission = mission as? PhotoAuthMission else { return }
+                let vm = PhotoAuthQuizViewViewModel(mission: mission, numberOfWeek: 1)
+                let vc = PhotoAuthQuizViewController(vm: vm)
+                vc.delegate = self
+                
+                self.show(vc, sender: self)
+                
             case .contentReadOnly:
                 guard let mission = mission as? ContentReadOnlyMission else { return }
                 let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: 0)
@@ -1205,17 +1236,31 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             // pop game
         case 3:
             // NOTE: DEMO FOR NFT TRANSFER
-         /*
+       
             Task {
                 do {
+                    /*
                     let result = try await NFTServiceManager.shared.requestSingleNft(userIndex: self.vm.user.userIndex, nftType: .gift)
                     print("Result: \(result.data)")
+                    */
+                    
+                    /*
+                    let raffleResult = try await NFTServiceManager.shared.requestSingleNft(userIndex: 15,
+                                                                                             nftType: .gift)
+                    print("raffleResult result: \(raffleResult.data)")
+                    
+                    let newLevelResult = try await NFTServiceManager.shared.requestSingleNft(userIndex: 15,
+                                                                                             nftType: .avatar,
+                                                                                             level: 4)
+                    
+                    print("newLevelResult result: \(newLevelResult.data)")
+                     */
                 }
                 catch {
-                    
+                    print("Error requesting single nft -- \(error)")
                 }
             }
-            */
+           
             break
             
             // notice
@@ -1263,24 +1308,6 @@ extension MyPageViewController: MissionHistoryButtonCollectionViewCellDelegate {
 extension MyPageViewController: MissionHistoryCalendarCollectionViewCellDelegate {
     func dateSelected(_ date: Date) {
         self.vm.mission.dateSelected.send(date)
-    }
-}
-
-// NOTE: Routine selection logic will be deleted.
-extension MyPageViewController: RoutineSelectBottomSheetViewControllerDelegate {
-    func routineSelected() {
-        self.addChildViewController(self.loadingVC)
-        
-        Task {
-
-            await self.vm.getSelectedRoutine()
-            
-            DispatchQueue.main.async {
-                self.loadingVC.removeViewController()
-                guard let collection = self.collectionView else { return }
-                collection.reloadSections(IndexSet(integer: 1))
-            }
-        }
     }
 }
 

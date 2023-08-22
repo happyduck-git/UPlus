@@ -22,12 +22,13 @@ final class WalletDetailViewController: UIViewController {
     
     private let nftsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 7
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(WalletDetailCollectionViewCell.self,
                             forCellWithReuseIdentifier: WalletDetailCollectionViewCell.identifier)
-        collection.contentInset = UIEdgeInsets(top: 24, left: 10, bottom: 0, right: 0)
+        collection.contentInset = UIEdgeInsets(top: 24, left: 20, bottom: 0, right: 20)
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
     }()
@@ -75,8 +76,8 @@ extension WalletDetailViewController {
             self.numberOfNftsLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
             
             self.nftsCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.numberOfNftsLabel.bottomAnchor, multiplier: 3),
-            self.nftsCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.nftsCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.nftsCollectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.nftsCollectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             self.nftsCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
@@ -94,16 +95,18 @@ extension WalletDetailViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WalletDetailCollectionViewCell.identifier, for: indexPath) as? WalletDetailCollectionViewCell else {
             return UICollectionViewCell()
         }
         
         cell.configure(with: vm.nfts[indexPath.item])
         return cell
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width / 2 - 40, height: self.view.frame.height / 3.5)
+        return CGSize(width: (self.view.frame.width - 47) / 2, height: self.view.frame.height / 3.5)
     }
 }
 
@@ -114,7 +117,7 @@ extension WalletDetailViewController {
         guard let type = UPlusNftType(rawValue: nft.nftType) else { return }
         
         switch type {
-        case .raffle:
+        case .gift:
             let vc = NFTDetailViewController(vm: nft,
                                              type: .gift)
             show(vc, sender: self)

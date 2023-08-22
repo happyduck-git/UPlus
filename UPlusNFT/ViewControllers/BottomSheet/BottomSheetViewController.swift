@@ -45,7 +45,10 @@ class BottomSheetViewController: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.animatePresentView()
+            
+            /*
             self?.setTapGesture()
+             */
         }
         
     }
@@ -82,6 +85,8 @@ extension BottomSheetViewController {
         self.dismissView()
     }
     
+    
+    /// Dismiss the view controller with the custom animation.
     func dismissView() {
         // hide main container view by updating bottom constraint in animation block
         UIView.animate(withDuration: 0.3) {

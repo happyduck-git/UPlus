@@ -14,38 +14,72 @@ final class MypageMissionCollectionViewCell: UICollectionViewCell {
         case close
     }
     
-    private let titleStack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.alignment = .leading
-        stack.distribution = .fillProportionally
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
+    private let missionImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.routineImage)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
-    
+
     private let missionTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.lineBreakMode = .byTruncatingMiddle
         label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
-        return label
-    }()
-    
-    private let missionDescription: UILabel = {
-        let label = UILabel()
-        label.textColor = .darkGray
-        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
-        return label
-    }()
-  
-    private let openDateLabel: UILabel = {
-        let label = UILabel()
-        label.isHidden = true
-        label.numberOfLines = 2
-        label.textAlignment = .center
-        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private let clockImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.clock)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let timeLeftLabel: UILabel = { //MissionConstants.timeLeft
+        let label = UILabel()
+        label.textColor = UPlusColor.gray06
+        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let pointContainerView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10.0
+        view.backgroundColor = UPlusColor.blue01
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let pointLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.blue03
+        label.textAlignment = .center
+        label.text = MissionConstants.weeklyPoints
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let progressBar: UIProgressView = {
+        let progressView = UIProgressView()
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        return progressView
+    }()
+    
+    private let numberOfParticipation: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.green
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -64,12 +98,11 @@ final class MypageMissionCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.openDateLabel.isHidden = true
     }
     
     func resetCell() {
         self.missionTitle.text = nil
-        self.missionDescription.text = nil
+        self.timeLeftLabel.text = nil
     }
 }
 
@@ -83,15 +116,15 @@ extension MypageMissionCollectionViewCell {
         switch type {
         case .open:
             self.missionTitle.text = title
-            self.missionDescription.text = "참여기간: " + period
-            // TODO: Point 원형 뱃지 텍스트에 포인트 추가
-            self.openDateLabel.isHidden = true
+            self.timeLeftLabel.text = period
+            self.numberOfParticipation.text = MissionConstants.weeklyMissionProgress
+            
         case .close:
             self.addOpenDateLabel()
             
-//            self.missionTitle.text = title
-//            self.missionDescription.text = "참여기간: " + period
-            self.openDateLabel.text = "🔒\n" + (openDate ?? "08.28") + "에 오픈" 
+            //            self.missionTitle.text = title
+            //            self.missionDescription.text = "참여기간: " + period
+            self.timeLeftLabel.text = "🔒\n" + (openDate ?? "08.28") + "에 오픈"
         }
     }
 }
@@ -99,30 +132,62 @@ extension MypageMissionCollectionViewCell {
 // MARK: - Set UI & Layout
 extension MypageMissionCollectionViewCell {
     private func setUI() {
-        self.contentView.addSubviews(self.titleStack)
-        self.titleStack.addArrangedSubviews(self.missionTitle,
-                                            self.missionDescription)
+        self.contentView.addSubviews(self.missionImage,
+                                     self.missionTitle,
+                                     self.clockImage,
+                                     self.timeLeftLabel,
+                                     self.pointContainerView,
+                                     self.progressBar,
+                                     self.numberOfParticipation)
+        
+        self.pointContainerView.addSubviews(self.pointLabel)
     }
     
     private func setLayout() {
+        
         NSLayoutConstraint.activate([
-            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
-            self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 2),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleStack.trailingAnchor, multiplier: 2)
+            self.missionImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.missionImage.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+            self.missionTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.missionTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionImage.trailingAnchor, multiplier: 2),
+            self.clockImage.topAnchor.constraint(equalToSystemSpacingBelow: self.missionTitle.bottomAnchor, multiplier: 1),
+            self.clockImage.leadingAnchor.constraint(equalTo: self.missionTitle.leadingAnchor),
+            
+            self.timeLeftLabel.centerYAnchor.constraint(equalTo: self.clockImage.centerYAnchor),
+            self.timeLeftLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.clockImage.trailingAnchor, multiplier: 1),
+            
+            self.pointContainerView.topAnchor.constraint(equalTo: self.missionTitle.topAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 2),
+            self.pointContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionTitle.trailingAnchor, multiplier: 2),
+            self.pointContainerView.heightAnchor.constraint(equalToConstant: 30),
+            self.pointContainerView.widthAnchor.constraint(equalToConstant: 95),
+            
+            self.progressBar.leadingAnchor.constraint(equalTo: self.missionImage.leadingAnchor),
+            self.progressBar.trailingAnchor.constraint(equalTo: self.pointContainerView.trailingAnchor),
+            self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.timeLeftLabel.bottomAnchor, multiplier: 2),
+            
+            self.numberOfParticipation.topAnchor.constraint(equalToSystemSpacingBelow: self.progressBar.bottomAnchor, multiplier: 1),
+            self.numberOfParticipation.trailingAnchor.constraint(equalTo: self.pointContainerView.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 2) 
         ])
         
-        self.missionDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
-    }
-
-    private func addOpenDateLabel() {
-        self.openDateLabel.isHidden = false
-        self.contentView.addSubview(openDateLabel)
         NSLayoutConstraint.activate([
-            self.openDateLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.openDateLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.openDateLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.openDateLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+            self.pointLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pointContainerView.topAnchor, multiplier: 1),
+            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.leadingAnchor, multiplier: 1),
+            self.pointContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 1),
+            self.pointContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 1)
+        ])
+        
+    }
+    
+    private func addOpenDateLabel() {
+        self.timeLeftLabel.isHidden = false
+        self.contentView.addSubview(timeLeftLabel)
+        NSLayoutConstraint.activate([
+            self.timeLeftLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.timeLeftLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.timeLeftLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.timeLeftLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
         ])
     }
 }

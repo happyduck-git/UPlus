@@ -114,17 +114,19 @@ extension GiftViewController {
                             let result = await self.vm.sendNft()
                             if result {
                                 // TODO: 성공완료 시 Show Bottom Sheet
-                                print("선물 보내기 완료")
+                                UPlusLogger.logger.info("선물 보내기 완료")
                                 
+                                let vc = GiftSentBottomSheetViewController()
+                                vc.delegate = self
+                                vc.modalPresentationStyle = .overCurrentContext
+
+                                self.present(vc, animated: false)
                                 
                             } else {
                                 // TODO: 실패 alert
-                                print("선물 보내기 실패")
+                                UPlusLogger.logger.error("선물 보내기 실패")
+                                self.showAlert()
                             }
-                            let vc = GiftSentBottomSheetViewController()
-                            vc.modalPresentationStyle = .overCurrentContext
-
-                            self.present(vc, animated: false)
                             
                         } else {
                             // TODO: show warning label
@@ -135,12 +137,36 @@ extension GiftViewController {
                 }
                 .store(in: &bindings)
         }
+        
         func bindViewModelToView() {
-            
+            self.vm.$username
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    let bgColor: UIColor = $0.isEmpty ? UPlusColor.buttonDeactivated : UPlusColor.buttonActivated
+                    let txtColor: UIColor = $0.isEmpty ? .white : UPlusColor.gray08
+                    let isActivated: Bool = $0.isEmpty ? false : true
+                    
+                    self.sendGiftButton.backgroundColor = bgColor
+                    self.sendGiftButton.setTitleColor(txtColor, for: .normal)
+                    self.sendGiftButton.isUserInteractionEnabled = isActivated
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
         bindViewModelToView()
+    }
+}
+
+extension GiftViewController {
+    private func showAlert() {
+        let action = UIAlertAction(title: "확인", style: .cancel)
+        let alert = UIAlertController(title: "선물 전송에 실패하였습니다.", message: "선물 전송에 실패하였습니다. 다시 시도해 주세요.", preferredStyle: .alert)
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
+        }
     }
 }
 
@@ -166,7 +192,7 @@ extension GiftViewController {
             self.receiverInputView.topAnchor.constraint(equalToSystemSpacingBelow: self.giftDetailView.bottomAnchor, multiplier: 2),
             self.receiverInputView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.receiverInputView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.receiverInputView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 6),
+            self.receiverInputView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 5),
             
             self.infoTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.receiverInputView.bottomAnchor, multiplier: 3),
             self.infoTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
@@ -184,6 +210,17 @@ extension GiftViewController {
         self.receiverInputView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.infoTitle.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.sendGiftButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+}
+
+extension GiftViewController: GiftSentBottomSheetViewControllerDelegate {
+    func completeButtonDidTap() {
+        guard let vcs = self.navigationController?.viewControllers else { return }
+        for vc in vcs {
+            if vc is WalletViewController {
+                self.navigationController?.popToViewController(vc, animated: true)
+            }
+        }
     }
 }
 

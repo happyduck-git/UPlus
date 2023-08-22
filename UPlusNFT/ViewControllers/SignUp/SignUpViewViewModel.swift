@@ -132,7 +132,7 @@ extension SignUpViewViewModel {
                     nftType: .avatar,
                     level: 1
                 )
-                print("Result of requesting nft: \(result)")
+                print("🫡 Result of requesting nft: \(result)")
             }
             catch {
                 print("Error requesting new user nft -- \(error)")

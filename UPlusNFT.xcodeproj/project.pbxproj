@@ -212,6 +212,8 @@
 		93DA586A2A8F0F6E00525BEC /* GiftViewControllerViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58692A8F0F6E00525BEC /* GiftViewControllerViewViewModel.swift */; };
 		93DA586D2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA586C2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift */; };
 		93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */; };
+		93DA58732A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58722A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift */; };
+		93DA58752A948CB700525BEC /* UPlusLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58742A948CB700525BEC /* UPlusLogger.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013882A6518370005E342 /* SideMenuViewController.swift */; };
@@ -438,6 +440,8 @@
 		93DA58692A8F0F6E00525BEC /* GiftViewControllerViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftViewControllerViewViewModel.swift; sourceTree = "<group>"; };
 		93DA586C2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyOverViewTableViewCell.swift; sourceTree = "<group>"; };
 		93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountMissionTableViewCell.swift; sourceTree = "<group>"; };
+		93DA58722A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMissionButtonCollectionViewCell.swift; sourceTree = "<group>"; };
+		93DA58742A948CB700525BEC /* UPlusLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UPlusLogger.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013882A6518370005E342 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -974,6 +978,7 @@
 				24A2546F2A853F9B0034534A /* UPlusColor.swift */,
 				24A254742A854D5A0034534A /* EnvironmentConfig.swift */,
 				24624B8C2A8E812700C9A42E /* UIViewPreview.swift */,
+				93DA58742A948CB700525BEC /* UPlusLogger.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1059,6 +1064,7 @@
 			children = (
 				9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */,
 				93DA582F2A89FCF600525BEC /* WalletDetailCollectionViewCell.swift */,
+				93DA58722A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift */,
 			);
 			path = WalletCollectionViewCell;
 			sourceTree = "<group>";
@@ -1530,6 +1536,8 @@
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
 				93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */,
+				93DA58752A948CB700525BEC /* UPlusLogger.swift in Sources */,
+				93DA58732A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift in Sources */,
 				93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
 				93DA58462A8C5BBA00525BEC /* RoutineBonusClosedCollectionViewCell.swift in Sources */,

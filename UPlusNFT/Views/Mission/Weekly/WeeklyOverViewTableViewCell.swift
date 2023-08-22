@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum MissionStatus {
+enum WeeklyMissionStatus {
     case open
     case participated
 }
@@ -94,7 +94,7 @@ final class WeeklyOverViewTableViewCell: UITableViewCell {
 
 // MARK: - Configure
 extension WeeklyOverViewTableViewCell {
-    func configure(type: MissionStatus,
+    func configure(type: WeeklyMissionStatus,
                    mission: any Mission) {
         switch type {
         case .open:
@@ -146,6 +146,10 @@ extension WeeklyOverViewTableViewCell {
             self.levelStack.topAnchor.constraint(equalToSystemSpacingBelow: self.missionTitle.bottomAnchor, multiplier: 1),
             self.levelStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelStack.bottomAnchor, multiplier: 2),
+            
+            self.completedLabel.topAnchor.constraint(equalTo: self.levelStack.topAnchor),
+            self.completedLabel.leadingAnchor.constraint(equalTo: self.levelStack.leadingAnchor),
+            self.completedLabel.bottomAnchor.constraint(equalTo: self.levelStack.bottomAnchor),
             
             self.pointContainerView.topAnchor.constraint(equalTo: self.missionTitle.topAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 2),

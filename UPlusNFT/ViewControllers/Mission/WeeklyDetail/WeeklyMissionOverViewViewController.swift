@@ -126,7 +126,7 @@ extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewD
         let mission = self.vm.weeklyMissions[indexPath.row]
         
         let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
-        let type: MissionStatus = hasParticipated ? .participated : .open
+        let type: WeeklyMissionStatus = hasParticipated ? .participated : .open
         cell.configure(type: type, mission: mission)
       
         return cell

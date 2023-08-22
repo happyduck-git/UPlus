@@ -16,6 +16,7 @@ enum FirestoreError: Error {
     case documentFoundToBeNil
     case userNotFound
     case invalidEmail
+    case missionStateNotFound
 }
 
 final class FirestoreManager {
@@ -308,6 +309,46 @@ extension FirestoreManager {
     
 }
 
+// MARK: - Set Rewards
+extension FirestoreManager {
+
+    func saveReward(userIndex: Int64, reward: RewardType) async throws {
+        
+        let batch = self.db.batch()
+        
+        // 1. Save to user set
+        let rewardIndex = reward.couponIndex(userIndex: userIndex)
+        
+        let rewardPath: DocumentReference = threadsSetCollectionPath2
+            .document(FirestoreConstants.rewards)
+            .collection(FirestoreConstants.rewardSetCollection)
+            .document(String(describing: rewardIndex))
+            
+        
+        let userDoc = threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+        
+        batch.setData([FirestoreConstants.userRewards: FieldValue.arrayUnion([rewardPath])],
+                      forDocument: userDoc,
+                      merge: true)
+        
+        // 2. Save to rewards set
+        let userPath: DocumentReference = threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+            
+        batch.setData([FirestoreConstants.rewardUser: userPath],
+                      forDocument: userPath,
+                      merge: true)
+        
+        try await batch.commit()
+    }
+    
+}
+
 //MARK: - Get Users Point
 extension FirestoreManager {
     
@@ -422,34 +463,22 @@ extension FirestoreManager {
     /// Get User Selected Routine MissionType.
     /// - Parameter userIndex: Current User's index.
     /// - Returns: Optional MissionType.
-    func getUserSelectedRoutineMission(userIndex: Int64) async throws -> MissionType? {
-        let data = try await self.threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
-            .collection(FirestoreConstants.userSetCollection)
-            .document(String(describing: userIndex))
-            .getDocument()
-            .data()
-        guard let rawVal = data?[FirestoreConstants.selectedMissionTopic] as? String else {
-            return nil
-        }
-        
-        return MissionType(rawValue: rawVal)
-    }
+//    func getUserSelectedRoutineMission(userIndex: Int64) async throws -> MissionType? {
+//        let data = try await self.threadsSetCollectionPath2
+//            .document(FirestoreConstants.users)
+//            .collection(FirestoreConstants.userSetCollection)
+//            .document(String(describing: userIndex))
+//            .getDocument()
+//            .data()
+//        guard let rawVal = data?[FirestoreConstants.selectedMissionTopic] as? String else {
+//            return nil
+//        }
+//        
+//        return MissionType(rawValue: rawVal)
+//    }
     
     /* Daily Mission */
-    func getDailyAthleteMission() async throws -> [AthleteMission] {
-        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
-            .collection(FirestoreConstants.dailyExpAthleteMissionSet)
-            .getDocuments()
-            .documents
-        
-        var missions: [AthleteMission] = []
-        for doc in documents {
-            missions.append(try doc.data(as: AthleteMission.self, decoder: self.decoder))
-        }
-        return missions
-    }
-    
+
     func getRoutineMission(type: MissionType) async throws -> [any Mission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(type.storagePathFolderName)
@@ -493,6 +522,28 @@ extension FirestoreManager {
         }
     }
     
+    func getRoutineMissionStatus(userIndex: Int64) async throws -> MissionUserState {
+        let doc = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(MissionType.dailyExpGoodWorker.storagePathFolderName)
+            .document(Date().yearMonthDateFormat)
+            .getDocument()
+        
+        let data = doc.data()
+        let missionStateMap = data?[FirestoreConstants.missionUserStateMap] as? [String: String] ?? [:]
+        
+        guard let statusVal = missionStateMap[String(describing: userIndex)] else {
+            return .notParticipated
+        }
+        
+        guard let status = MissionUserState(rawValue: statusVal) else {
+            throw FirestoreError.missionStateNotFound
+        }
+        
+        return status
+
+    }
+    
     /* Weekly Mission */
     func getWeeklyMission(week: Int) async throws -> [any Mission] {
         
@@ -530,6 +581,67 @@ extension FirestoreManager {
         return missions
     }
     
+    // (New) 미션 일반 _ 레벨 나뉜 후
+    func getLevelEvents() async throws -> [any Mission] {
+        let documents = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(MissionType.eventLevelMission.storagePathFolderName)
+            .getDocuments()
+            .documents
+        
+        return self.sortMission(documents: documents)
+    }
+    
+    func getRegularEvents() async throws -> [any Mission] {
+        let documents = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(MissionType.eventRegularMission.storagePathFolderName)
+            .getDocuments()
+            .documents
+        
+        return self.sortMission(documents: documents)
+    }
+    
+    private func sortMission(documents: [QueryDocumentSnapshot]) -> [any Mission] {
+        var missions: [any Mission] = []
+        
+        for doc in documents {
+            do {
+                let data = doc.data()
+                let type = data[FirestoreConstants.missionFormatType] as? String ?? "n/a"
+               
+                let formatType = MissionFormatType(rawValue: type)
+                switch formatType {
+                case .photoAuth:
+                    missions.append(try doc.data(as: PhotoAuthMission.self, decoder: self.decoder))
+                
+                case .contentReadOnly:
+                    missions.append(try doc.data(as: ContentReadOnlyMission.self, decoder: self.decoder))
+                    
+                case .shareMediaOnSlack:
+                    missions.append(try doc.data(as: MediaShareMission.self, decoder: self.decoder))
+                    
+                case .governanceElection:
+                    missions.append(try doc.data(as: GovernanceMission.self, decoder: self.decoder))
+                    
+                case .commentCount:
+                    missions.append(try doc.data(as: CommentCountMission.self, decoder: self.decoder))
+                    
+                default:
+                    break
+                }
+            }
+            catch {
+                continue
+            }
+            
+        }
+
+        return missions
+    }
+    
+    /*
+    // (Old) 미션 일반 _ 레벨 나뉘기 전
     func getEvent() async throws -> [any Mission] {
     
         let documents = try await threadsSetCollectionPath2
@@ -571,6 +683,7 @@ extension FirestoreManager {
 
         return missions
     }
+    */
     
     func getAllMissionDate() async throws -> [String: [Timestamp]] {
         let data = try await threadsSetCollectionPath2
@@ -578,7 +691,7 @@ extension FirestoreManager {
             .getDocument()
             .data()
         
-        return data?[FirestoreConstants.missionTimelineMap] as? [String: [Timestamp]] ?? [:]
+        return data?[FirestoreConstants.missionBeginEndTimeMap] as? [String: [Timestamp]] ?? [:]
     }
     
     /// Fetch all the mission hitory that the user has participated.
@@ -666,7 +779,7 @@ extension FirestoreManager {
             .collection(FirestoreConstants.userSetCollection)
             .document(String(describing: user.userIndex))
         
-        if state == .successed {
+        if state == .succeeded {
             batch.setData(
                 [
                     FirestoreConstants.userTotalPoint: FieldValue.increment(point),
@@ -880,7 +993,8 @@ extension FirestoreManager {
     ///   - comment: comment for Comment Mission.
     ///   - point: point.
     func saveParticipatedEventMission(
-        type: MissionFormatType,
+        formatType: MissionFormatType,
+        missionType: MissionType,
         eventId: String,
         selectedIndex: Int?,
         recentComments: [String],
@@ -916,14 +1030,14 @@ extension FirestoreManager {
         // Event doc path
         let eventDocPath = threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
-            .collection(MissionType.eventMission.storagePathFolderName)
+            .collection(missionType.storagePathFolderName)
             .document(eventId)
         
-        switch type {
+        switch formatType {
         case .contentReadOnly:
             batch.setData(
                 [
-                    FirestoreConstants.userTypeMissionArrayMap: [MissionType.eventMission.rawValue: FieldValue.arrayUnion([userDocRef]) ]
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([userDocRef]) ]
                 ],
                 forDocument: userDocRef,
                 merge: true
@@ -938,7 +1052,7 @@ extension FirestoreManager {
             )
             batch.setData(
                 [
-                    FirestoreConstants.userTypeMissionArrayMap: [MissionType.eventMission.rawValue: FieldValue.arrayUnion([userDocRef]) ]
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([userDocRef]) ]
                 ],
                 forDocument: userDocRef,
                 merge: true
@@ -977,7 +1091,7 @@ extension FirestoreManager {
             )
             batch.setData(
                 [
-                    FirestoreConstants.userTypeMissionArrayMap: [MissionType.eventMission.rawValue: FieldValue.arrayUnion([userDocRef]) ]
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([userDocRef]) ]
                 ],
                 forDocument: userDocRef,
                 merge: true
@@ -1315,7 +1429,7 @@ extension FirestoreManager {
         
         let doc = try await threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
-            .collection(missionType.rawValue)
+            .collection(missionType.storagePathFolderName)
             .document(Date().yearMonthDateFormat)
             .getDocument()
             

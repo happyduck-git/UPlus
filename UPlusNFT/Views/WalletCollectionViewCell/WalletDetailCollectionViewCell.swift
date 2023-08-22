@@ -68,8 +68,8 @@ extension WalletDetailCollectionViewCell {
                 print("Error fetching nft image -- \(error)")
             }
             print("Type: \(data.nftDetailType)")
-            self.nftTitle.text = data.nftDetailType
             self.nftType.text = data.nftType
+            self.nftTitle.text = data.nftName ?? data.nftType
         }
     }
 }

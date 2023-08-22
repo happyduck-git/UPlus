@@ -36,4 +36,6 @@ struct UPlusNft: Codable {
     let nftDetailType: String
     let nftTradable: Bool
     let nftUser: DocumentReference?
+    let nftDescription: String?
+    let nftName: String?
 }

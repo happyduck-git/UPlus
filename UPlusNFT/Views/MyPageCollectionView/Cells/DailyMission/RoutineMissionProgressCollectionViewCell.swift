@@ -83,8 +83,10 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
         self.contentView.backgroundColor = .white
         self.contentView.clipsToBounds = true
         self.contentView.layer.cornerRadius = 30
+        
         self.setUI()
         self.setLayout()
+        self.configure()
     }
     
     required init?(coder: NSCoder) {
@@ -95,19 +97,15 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
 // MARK: - Bind with View Model
 extension RoutineMissionProgressCollectionViewCell {
     
+    private func configure() {
+        self.title.text = MissionType.dailyExpGoodWorker.displayName
+        self.subTitle.text = MissionType.dailyExpGoodWorker.description
+    }
+    
     func bind(with vm: MyPageViewViewModel) {
         
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
-        
-        vm.mission.$savedMissionType
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                guard let `self` = self else { return }
-                self.title.text = $0?.displayName ?? "걷기 루틴 미션"
-                self.subTitle.text = $0?.description ?? "걷기 루틴 미션"
-            }
-            .store(in: &bindings)
         
         vm.mission.$routineParticipationCount
             .receive(on: DispatchQueue.main)
@@ -163,7 +161,7 @@ extension RoutineMissionProgressCollectionViewCell {
             
             self.pointContainerView.topAnchor.constraint(equalTo: self.titleStack.topAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 2),
-            self.pointContainerView.widthAnchor.constraint(equalToConstant: 55),
+            self.pointContainerView.widthAnchor.constraint(equalToConstant: 60),
             self.pointContainerView.heightAnchor.constraint(equalToConstant: 25),
             
             self.pointLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pointContainerView.topAnchor, multiplier: 1),

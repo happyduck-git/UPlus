@@ -152,7 +152,7 @@ extension WeeklyMissionCompleteBottomSheetViewController {
             self.redeemButton.topAnchor.constraint(equalToSystemSpacingBelow: self.stack.topAnchor, multiplier: 2),
             self.redeemButton.leadingAnchor.constraint(equalTo: self.stack.leadingAnchor),
             self.redeemButton.trailingAnchor.constraint(equalTo: self.stack.trailingAnchor),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.redeemButton.bottomAnchor, multiplier: 3)
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.redeemButton.bottomAnchor, multiplier: 2)
         ])
         
         self.redeemButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)

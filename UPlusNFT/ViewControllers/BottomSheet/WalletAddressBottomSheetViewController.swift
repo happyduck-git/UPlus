@@ -6,9 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 final class WalletAddressBottomSheetViewController: BottomSheetViewController {
     
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - UI Elements
     private let viewTitle: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
@@ -19,7 +24,7 @@ final class WalletAddressBottomSheetViewController: BottomSheetViewController {
     }()
     
     private let cancelButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setImage(UIImage(named: ImageAsset.xMarkBlack), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -47,8 +52,8 @@ final class WalletAddressBottomSheetViewController: BottomSheetViewController {
     }()
     
     private let copyButton: UIButton = {
-       let button = UIButton()
-        button.backgroundColor = .black
+        let button = UIButton()
+        button.backgroundColor = UPlusColor.buttonActivated
         button.setTitleColor(.white, for: .normal)
         button.setTitle(WalletConstants.copy, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -61,11 +66,51 @@ final class WalletAddressBottomSheetViewController: BottomSheetViewController {
         
         self.setUI()
         self.setLayout()
+        
         self.configure()
+        self.bind()
     }
     
 }
 
+// MARK: - Bind
+extension WalletAddressBottomSheetViewController {
+    
+    private func bind() {
+        func bindViewToViewModel() {
+            
+            self.cancelButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    self.dismissView()
+                }
+                .store(in: &bindings)
+            
+            self.copyButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    UIPasteboard.general.string = self.addressLabel.text
+                    // TEMP
+                    self.copyButton.setTitle("복사 완료!", for: .normal)
+                }
+                .store(in: &bindings)
+        }
+        
+        func bindViewModelToView() {
+            
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+    
+}
+
+// MARK: - Configure
 extension WalletAddressBottomSheetViewController {
     private func configure() {
         do {
@@ -113,4 +158,4 @@ extension WalletAddressBottomSheetViewController {
         self.copyButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
- 
+

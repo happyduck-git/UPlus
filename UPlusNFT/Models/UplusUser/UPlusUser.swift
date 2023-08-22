@@ -87,7 +87,7 @@ extension UPlusUser {
         UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
 
         #if DEBUG
-        print("User Info Updated: \(codableUser)")
+//        print("User Info Updated: \(codableUser)")
         #endif
 
     }

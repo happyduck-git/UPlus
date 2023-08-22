@@ -45,8 +45,13 @@ extension NftLevel {
             return 4
         case avatar5:
             return 5
+            
+        case weekly1, weekly2, weekly3:
+            return 10
+      
+        // gift and raffles
         default:
-            return 99
+            return 100
         }
     }
 }

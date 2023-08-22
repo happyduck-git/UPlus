@@ -10,7 +10,7 @@ import Combine
 
 enum MissionAnswerState: String {
     case pending
-    case successed
+    case succeeded
     case failed
 }
 

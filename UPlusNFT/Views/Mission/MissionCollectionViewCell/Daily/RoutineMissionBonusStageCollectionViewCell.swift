@@ -95,7 +95,7 @@ extension RoutineMissionBonusStageCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
-                self.progressLabel.text = String(format: MissionConstants.missionProgress, $0 - MissionConstants.routineMissionLimit)
+                self.progressLabel.text = String(format: MissionConstants.routineProgress, $0 - MissionConstants.routineMissionLimit)
             }
             .store(in: &self.bindings)
         

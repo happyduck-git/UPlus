@@ -53,10 +53,13 @@ extension GiftViewControllerViewViewModel {
                                                                                to: self.receiverUserIndex ?? 0,
                                                                                tokenId: self.nft.nftTokenId)
             let status = NFTServiceStatus(rawValue: response.data.status) ?? .fail
+            
             switch status {
             case .pending:
+                logger.info("Send nft success -- \(String(describing: response.data))")
                 return true
             case .fail:
+                logger.info("Send nft fail -- \(String(describing: response.data))")
                 return false
             }
         }

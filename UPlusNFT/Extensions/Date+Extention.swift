@@ -39,4 +39,9 @@ extension Date {
 
         return localDate
     }
+    
+    static func daysBetween(start: Date, end: Date) -> Int {
+        let calendar = Calendar.current
+        return calendar.dateComponents([.day], from: start, to: end).day ?? 0
+    }
 }

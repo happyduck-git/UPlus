@@ -6,8 +6,19 @@
 //
 
 import UIKit
+import Combine
+
+protocol GiftSentBottomSheetViewControllerDelegate: AnyObject {
+    func completeButtonDidTap()
+}
 
 final class GiftSentBottomSheetViewController: BottomSheetViewController {
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - Delegate
+    weak var delegate: GiftSentBottomSheetViewControllerDelegate?
     
     // MARK: - UI Elements
     private let giftImageView: UIImageView = {
@@ -105,7 +116,7 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
         return label
     }()
     
-    private let confirmButton: UIButton = {
+    private let completeButton: UIButton = {
         let button = UIButton()
         button.setTitle(GiftConstants.confirm, for: .normal)
         button.backgroundColor = .black
@@ -120,6 +131,7 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
         
         self.setUI()
         self.setLayout()
+        self.bind()
     }
     
     override init(defaultHeight: CGFloat = 500) {
@@ -132,6 +144,29 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
     
 }
 
+// MARK: - Bind
+extension GiftSentBottomSheetViewController {
+    private func bind() {
+        func bindViewToViewModel() {
+            self.completeButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.dismiss(animated: true)
+                    // TODO: Delegate
+                    self.delegate?.completeButtonDidTap()
+                }
+                .store(in: &bindings)
+        }
+        func bindViewModelToView() {
+            
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+}
+
 // MARK: - Set UI & Layout
 extension GiftSentBottomSheetViewController {
     private func setUI() {
@@ -142,7 +177,7 @@ extension GiftSentBottomSheetViewController {
             self.titleLabel,
             self.giftContainerView,
             self.sendInfoLabel,
-            self.confirmButton
+            self.completeButton
         )
         self.giftContainerView.addSubviews(self.containerStack)
 
@@ -175,10 +210,10 @@ extension GiftSentBottomSheetViewController {
             self.sendInfoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.sendInfoLabel.trailingAnchor, multiplier: 2),
 
-            self.confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: self.sendInfoLabel.bottomAnchor, multiplier: 5),
-            self.confirmButton.leadingAnchor.constraint(equalTo: self.giftContainerView.leadingAnchor),
-            self.confirmButton.trailingAnchor.constraint(equalTo: self.giftContainerView.trailingAnchor),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.confirmButton.bottomAnchor, multiplier: 5)
+            self.completeButton.topAnchor.constraint(equalToSystemSpacingBelow: self.sendInfoLabel.bottomAnchor, multiplier: 5),
+            self.completeButton.leadingAnchor.constraint(equalTo: self.giftContainerView.leadingAnchor),
+            self.completeButton.trailingAnchor.constraint(equalTo: self.giftContainerView.trailingAnchor),
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.completeButton.bottomAnchor, multiplier: 5)
         ])
         
         NSLayoutConstraint.activate([
@@ -189,7 +224,7 @@ extension GiftSentBottomSheetViewController {
         ])
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.sendInfoLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.confirmButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.completeButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
 
