@@ -19,17 +19,17 @@ final class EventCompletedViewController: BaseMissionCompletedViewController {
     private let logger = Logger()
     
     // MARK: - Dependency
-    let vm: EventBaseModel
+    let vm: MissionBaseModel
     
     // MARK: - Delegate
-    weak var delegate: EventCompletedViewControllerDelegate?
+//    weak var delegate: EventCompletedViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     
     // MARK: - Init
-    init(vm: EventBaseModel) {
+    init(vm: MissionBaseModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
     }

@@ -7,8 +7,15 @@
 
 import UIKit
 
+protocol BaseMissionCompletedViewControllerDelegate: AnyObject {
+    func redeemDidTap()
+}
+
 class BaseMissionCompletedViewController: UIViewController {
 
+    //MARK: - Delegate
+    weak var delegate: BaseMissionCompletedViewControllerDelegate?
+    
     // MARK: - UI Elements
     let loadingVC = LoadingViewController()
     

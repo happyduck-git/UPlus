@@ -61,7 +61,7 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
         
         self.contentView.backgroundColor = .white
         self.contentView.clipsToBounds = true
-        self.contentView.layer.cornerRadius = 30
+        self.contentView.layer.cornerRadius = 20
         
         self.setUI()
         self.setLayout()

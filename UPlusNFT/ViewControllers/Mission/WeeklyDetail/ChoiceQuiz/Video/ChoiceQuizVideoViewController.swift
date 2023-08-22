@@ -183,7 +183,8 @@ extension ChoiceQuizVideoViewController {
 
 extension ChoiceQuizVideoViewController {
     private func configure() {
-        self.quizLabel.text = MissionConstants.watchVideo
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        self.quizLabel.text = self.vm.mission.missionContentText
         self.checkAnswerButton.isUserInteractionEnabled = true
         self.checkAnswerButton.setTitle(MissionConstants.next, for: .normal)
     }
@@ -222,23 +223,35 @@ extension ChoiceQuizVideoViewController {
                     
                     if mission.missionChoiceQuizRightOrder == selectedAnswer {
                         
-                        let vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                        vc.delegate = self
+                        var vc: BaseMissionCompletedViewController?
+                        
+                        switch self.vm.type {
+                        case .event:
+                            vc = EventCompletedViewController(vm: self.vm)
+                            vc?.delegate = self
+                        case .weekly:
+                            vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                            vc?.delegate = self
+                        }
+                        
+                        guard let vc = vc else { return }
+                        self.navigationController?.modalPresentationStyle = .fullScreen
                         self.show(vc, sender: self)
                         
                     } else {
                         self.answerInfoLabel.isHidden = false
                     }
                 }
-                
-                
+ 
             }
             .store(in: &bindings)
         
         for button in buttons {
             button.tapPublisher
                 .receive(on: DispatchQueue.main)
-                .sink { _ in
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
                     self.answerInfoLabel.isHidden = true
                     self.checkAnswerButton.isUserInteractionEnabled = true
                     self.checkAnswerButton.backgroundColor = UPlusColor.gray09
@@ -317,7 +330,7 @@ extension ChoiceQuizVideoViewController {
     }
 }
 
-extension ChoiceQuizVideoViewController: WeeklyMissionCompleteViewControllerDelegate {
+extension ChoiceQuizVideoViewController: BaseMissionCompletedViewControllerDelegate {
     func redeemDidTap() {
         self.delegate?.redeemDidTap(vc: self)
     }

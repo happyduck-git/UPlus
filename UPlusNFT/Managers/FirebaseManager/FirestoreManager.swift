@@ -627,6 +627,9 @@ extension FirestoreManager {
                 case .commentCount:
                     missions.append(try doc.data(as: CommentCountMission.self, decoder: self.decoder))
                     
+                case .choiceQuiz:
+                    missions.append(try doc.data(as: ChoiceQuizMission.self, decoder: self.decoder))
+                    
                 default:
                     break
                 }

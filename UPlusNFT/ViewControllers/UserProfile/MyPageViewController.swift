@@ -257,6 +257,7 @@ extension MyPageViewController {
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
+                    print("Level events: \(data.count)")
                     if self.screenToShow == 1 {
                         collection.reloadData()
                     }
@@ -647,14 +648,16 @@ extension MyPageViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
+//                heightDimension: .fractionalHeight(1.0)
+                heightDimension: .estimated(150)
             )
         )
         
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.1)
+//                heightDimension: .fractionalHeight(0.1)
+                heightDimension: .estimated(150)
             ),
             subitems: [item]
         )
@@ -668,15 +671,16 @@ extension MyPageViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
+//                heightDimension: .fractionalHeight(1.0)
+                heightDimension: .estimated(130)
             )
         )
         
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.2)
-//                heightDimension: .estimated(120)
+//                heightDimension: .fractionalHeight(0.2)
+                heightDimension: .estimated(130)
             ),
             subitems: [item]
         )
@@ -684,6 +688,7 @@ extension MyPageViewController {
         group.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10.0
         
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
@@ -704,20 +709,23 @@ extension MyPageViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
+//                heightDimension: .fractionalHeight(1.0)
+                heightDimension: .estimated(110)
             )
         )
         
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(0.2)
+//                heightDimension: .fractionalHeight(0.2)
+                heightDimension: .estimated(110)
             ),
             subitems: [item]
         )
-        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20)
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
         
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
@@ -867,6 +875,10 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return self.vm.event.regularEvents.count
                 
             case 2:
+//                print("LEVEL EVENT FROM NUMBER FO : \(self.vm.event.levelEvents)")
+                for ele in self.vm.event.levelEvents {
+                    print(ele)
+                }
                 return self.vm.event.levelEvents.count
                 
             default:
@@ -1036,7 +1048,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
 
                 guard let mission = self.vm.event.levelEvents[indexPath.item] else {
-
+                    
                     dividerCell.configure(level: 1)
                     return dividerCell
                 }
@@ -1144,12 +1156,12 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return
             }
             guard let mission = anyMission else { return }
-            let type = MissionFormatType(rawValue: mission.missionFormatType) ?? .commentCount
+            let type = MissionSubFormatType(rawValue: mission.missionSubFormatType) ?? .commentCount
             
             switch type {
-            case .photoAuth:
+            case .photoAuthManagement, .photoAuthNoManagement:
                 guard let mission = mission as? PhotoAuthMission else { return }
-                let vm = PhotoAuthQuizViewViewModel(mission: mission, numberOfWeek: 1)
+                let vm = PhotoAuthQuizViewViewModel(type: .event, mission: mission)
                 let vc = PhotoAuthQuizViewController(vm: vm)
                 vc.delegate = self
                 
@@ -1157,7 +1169,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
             case .contentReadOnly:
                 guard let mission = mission as? ContentReadOnlyMission else { return }
-                let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: 0)
+                let vm = ContentReadOnlyMissionViewViewModel(type: .event, mission: mission, numberOfWeek: 0)
                 let vc = ContentReadOnlyMissionViewController(vm: vm, type: .event)
 //                vc.delegate = self
                 
@@ -1165,7 +1177,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
             case .shareMediaOnSlack:
                 guard let mission = mission as? MediaShareMission else { return }
-                let vm = ShareMediaOnSlackMissionViewViewModel(mission: mission)
+                let vm = ShareMediaOnSlackMissionViewViewModel(type: .event, mission: mission)
                 let vc = ShareMediaOnSlackMissionViewController(vm: vm)
                 vc.delegate = self
                 
@@ -1173,7 +1185,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
             case .governanceElection:
                 guard let mission = mission as? GovernanceMission else { return }
-                let vm = GovernanceElectionMissionViewViewModel(mission: mission)
+                let vm = GovernanceElectionMissionViewViewModel(type: .event, mission: mission)
                 let vc = GovernanceElectionMissionViewController(vm: vm)
                 vc.delegate = self
                 
@@ -1181,9 +1193,30 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
             case .commentCount:
                 guard let mission = mission as? CommentCountMission else { return }
-                let vm = CommentCountMissionViewViewModel(mission: mission)
+                let vm = CommentCountMissionViewViewModel(type: .event, mission: mission)
                 let vc = CommentCountMissionViewController(vm: vm)
                 vc.delegate = self
+                
+                self.show(vc, sender: self)
+                
+            case .choiceQuizOX:
+                guard let mission = mission as? ChoiceQuizMission else { return }
+                let vm = ChoiceQuizzOXViewViewModel(type: .event, mission: mission)
+                let vc = ChoiceQuizOXViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+                
+            case .choiceQuizMore:
+                guard let mission = mission as? ChoiceQuizMission else { return }
+                let vm = ChoiceQuizMoreViewViewModel(type: .event, mission: mission)
+                let vc = ChoiceQuizMoreViewController(vm: vm)
+                
+                self.show(vc, sender: self)
+                
+            case .choiceQuizVideo:
+                guard let mission = mission as? ChoiceQuizMission else { return }
+                let vm = ChoiceQuizVideoViewViewModel(type: .event, mission: mission)
+                let vc = ChoiceQuizVideoViewController(vm: vm)
                 
                 self.show(vc, sender: self)
                 

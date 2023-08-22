@@ -8,6 +8,6 @@
 import Foundation
 import Combine
 
-final class AnswerQuizPluralViewViewModel: WeeklyBaseModel {
+final class AnswerQuizPluralViewViewModel: MissionBaseModel {
 
 }

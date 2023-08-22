@@ -8,15 +8,16 @@
 import Foundation
 import Combine
 
-final class ChoiceQuizVideoViewViewModel: WeeklyBaseModel {
+final class ChoiceQuizVideoViewViewModel: MissionBaseModel {
     
     @Published var imageUrls: [URL] = []
     var buttonStatus: [Bool] = []
     var selectedButton: Int?
     
     //MARK: - Init
-    override init(mission: Mission, numberOfWeek: Int) {
-        super.init(mission: mission, numberOfWeek: numberOfWeek)
+    override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
+        super.init(type: type, mission: mission, numberOfWeek: numberOfWeek)
+        
         self.getImageUrls()
     }
     

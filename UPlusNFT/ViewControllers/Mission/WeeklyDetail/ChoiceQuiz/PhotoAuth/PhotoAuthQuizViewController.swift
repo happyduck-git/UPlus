@@ -91,6 +91,7 @@ extension PhotoAuthQuizViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
+                
                 self.present(
                     photoPicker,
                     animated: true,
@@ -101,20 +102,31 @@ extension PhotoAuthQuizViewController {
         
         self.checkAnswerButton.tapPublisher
             .receive(on: DispatchQueue.main)
-            .sink {[weak self] in
+            .sink { [weak self] in
                 guard let `self` = self else { return }
                 
-                let vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                vc.delegate = self
+                var vc: BaseMissionCompletedViewController?
                 
+                switch self.vm.type {
+                case .event:
+                    vc = EventCompletedViewController(vm: self.vm)
+                    vc?.delegate = self
+                case .weekly:
+                    vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                    vc?.delegate = self
+                }
+                
+                guard let vc = vc else { return }
+                self.navigationController?.modalPresentationStyle = .fullScreen
                 self.show(vc, sender: self)
             }
             .store(in: &bindings)
         
         self.vm.$selectedImage
             .receive(on: DispatchQueue.main)
-            .sink {[weak self] in
+            .sink { [weak self] in
                 guard let `self` = self else { return }
+                
                 self.uploadButton.isHidden = true
                 self.container.image = $0
                 self.checkAnswerButton.isUserInteractionEnabled = true
@@ -195,7 +207,7 @@ extension PhotoAuthQuizViewController: PHPickerViewControllerDelegate {
     
 }
 
-extension PhotoAuthQuizViewController: WeeklyMissionCompleteViewControllerDelegate {
+extension PhotoAuthQuizViewController: BaseMissionCompletedViewControllerDelegate {
     func redeemDidTap() {
         self.delegate?.redeemDidTap(vc: self)
     }

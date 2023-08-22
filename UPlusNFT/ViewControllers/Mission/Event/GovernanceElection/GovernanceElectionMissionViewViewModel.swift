@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class GovernanceElectionMissionViewViewModel: EventBaseModel {
+final class GovernanceElectionMissionViewViewModel: MissionBaseModel {
     
     enum ScreenType {
         case vote

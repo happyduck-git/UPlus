@@ -99,8 +99,7 @@ extension ContentReadOnlyMissionViewController {
                     self.show(vc, sender: self)
                     
                 case .event:
-                    let vm = EventBaseModel(mission: self.vm.mission)
-                    let vc = EventCompletedViewController(vm: vm)
+                    let vc = EventCompletedViewController(vm: self.vm)
                     vc.delegate = self
                     
                     self.show(vc, sender: self)
@@ -146,7 +145,7 @@ extension ContentReadOnlyMissionViewController {
     }
 }
 
-extension ContentReadOnlyMissionViewController: WeeklyMissionCompleteViewControllerDelegate, EventCompletedViewControllerDelegate {
+extension ContentReadOnlyMissionViewController: BaseMissionCompletedViewControllerDelegate {
     
     func redeemDidTap() {
         self.delegate?.redeemDidTap(vc: self)

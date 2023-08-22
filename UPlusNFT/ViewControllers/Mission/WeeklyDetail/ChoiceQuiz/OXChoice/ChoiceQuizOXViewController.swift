@@ -117,8 +117,18 @@ extension ChoiceQuizOXViewController {
                     
                     if checkUserAnswer() {
                         print("Right answer submitted.")
-                        let vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                        vc.delegate = self
+                        var vc: BaseMissionCompletedViewController?
+                        
+                        switch self.vm.type {
+                        case .event:
+                            vc = EventCompletedViewController(vm: self.vm)
+                            vc?.delegate = self
+                        case .weekly:
+                            vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                            vc?.delegate = self
+                        }
+                        
+                        guard let vc = vc else { return }
                         navigationController?.modalPresentationStyle = .fullScreen
                         self.show(vc, sender: self)
                     } else {
@@ -175,7 +185,8 @@ extension ChoiceQuizOXViewController {
 
 extension ChoiceQuizOXViewController {
     private func configure() {
-        self.quizLabel.text = vm.mission.missionContentTitle
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        self.quizLabel.text = self.vm.mission.missionContentTitle
         
         let dataSource = self.vm.mission as! ChoiceQuizMission
         self.circleMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[0], for: .normal)
@@ -213,8 +224,9 @@ extension ChoiceQuizOXViewController {
     
 }
 
-extension ChoiceQuizOXViewController: WeeklyMissionCompleteViewControllerDelegate {
+extension ChoiceQuizOXViewController: BaseMissionCompletedViewControllerDelegate {
     func redeemDidTap() {
         self.delegate?.redeemDidTap(vc: self)
     }
 }
+

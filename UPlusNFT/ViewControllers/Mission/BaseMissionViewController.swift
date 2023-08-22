@@ -21,6 +21,7 @@ class BaseMissionViewController: UIViewController {
         label.text = MissionConstants.quizMission
         label.textColor = .systemGray
         label.numberOfLines = 0
+        label.textAlignment = .center
         label.font = .systemFont(ofSize: UPlusFont.h1, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -29,8 +30,9 @@ class BaseMissionViewController: UIViewController {
     let quizLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
         label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -93,10 +95,12 @@ extension BaseMissionViewController {
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 1),
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 1),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 1),
             
             self.quizLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 3),
-            self.quizLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.quizLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 1),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizLabel.trailingAnchor, multiplier: 1),
             
             self.quizContainer.topAnchor.constraint(equalToSystemSpacingBelow: self.quizLabel.bottomAnchor, multiplier: 1),
             self.quizContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
@@ -113,10 +117,10 @@ extension BaseMissionViewController {
             self.checkAnswerButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
             
         ])
+        
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.quizLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.answerInfoLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.checkAnswerButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
-
     }
 
 }

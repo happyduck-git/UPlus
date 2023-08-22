@@ -45,16 +45,28 @@ extension AnswerQuizPluralViewController {
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
                 
-                let vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                vc.delegate = self
+                var vc: BaseMissionCompletedViewController?
+                
+                switch self.vm.type {
+                case .event:
+                    vc = EventCompletedViewController(vm: self.vm)
+                    vc?.delegate = self
+                case .weekly:
+                    vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                    vc?.delegate = self
+                }
+                
+                guard let vc = vc else { return }
+                self.navigationController?.modalPresentationStyle = .fullScreen
                 self.show(vc, sender: self)
+                
             }
             .store(in: &bindings)
     }
   
 }
 
-extension AnswerQuizPluralViewController: WeeklyMissionCompleteViewControllerDelegate {
+extension AnswerQuizPluralViewController: BaseMissionCompletedViewControllerDelegate {
     func redeemDidTap() {
         self.delegate?.redeemDidTap(vc: self)
     }

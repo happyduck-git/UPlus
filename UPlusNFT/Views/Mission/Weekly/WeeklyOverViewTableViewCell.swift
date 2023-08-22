@@ -90,6 +90,12 @@ final class WeeklyOverViewTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - Life Cycle
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.contentView.frame = self.contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10))
+    }
 }
 
 // MARK: - Configure

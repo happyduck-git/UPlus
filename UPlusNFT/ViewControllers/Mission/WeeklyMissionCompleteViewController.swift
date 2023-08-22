@@ -21,16 +21,16 @@ protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
 final class WeeklyMissionCompleteViewController: BaseMissionCompletedViewController {
     
     // MARK: - Dependency
-    private let vm: WeeklyBaseModel
+    private let vm: MissionBaseModel
     
     //MARK: - Delegate
-    weak var delegate: WeeklyMissionCompleteViewControllerDelegate?
+//    weak var delegate: WeeklyMissionCompleteViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - Init
-    init(vm: WeeklyBaseModel) {
+    init(vm: MissionBaseModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.configure()

@@ -7,14 +7,14 @@
 
 import Foundation
 
-final class ChoiceQuizMoreViewViewModel: WeeklyBaseModel {
+final class ChoiceQuizMoreViewViewModel: MissionBaseModel {
     
     @Published var imageUrls: [URL] = []
     var selectedButton: Int?
     @Published var buttonStatus: [Bool] = []
     
-    override init(mission: Mission, numberOfWeek: Int) {
-        super.init(mission: mission, numberOfWeek: numberOfWeek)
+    override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
+        super.init(type: type, mission: mission, numberOfWeek: numberOfWeek)
         
         self.getImageUrls()
     }

@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class CommentCountMissionViewViewModel: EventBaseModel {
+final class CommentCountMissionViewViewModel: MissionBaseModel {
 
     var comment: String?
     
@@ -34,8 +34,9 @@ final class CommentCountMissionViewViewModel: EventBaseModel {
     
     @Published var participated: Bool = false
     
-    override init(mission: any Mission) {
-        super.init(mission: mission)
+    //MARK: - Init
+    override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
+        super.init(type: type, mission: mission)
         
         guard let mission = self.mission as? CommentCountMission else { return }
         self.comments = mission.commentUserRecents ?? []
@@ -54,6 +55,7 @@ final class CommentCountMissionViewViewModel: EventBaseModel {
         }
         
     }
+
 }
 
 extension CommentCountMissionViewViewModel {

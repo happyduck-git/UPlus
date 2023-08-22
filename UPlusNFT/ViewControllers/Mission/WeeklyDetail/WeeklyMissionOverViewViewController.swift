@@ -26,7 +26,7 @@ final class WeeklyMissionOverViewViewController: UIViewController {
         let table = UITableView()
         table.register(WeeklyOverViewTableViewCell.self,
                        forCellReuseIdentifier: WeeklyOverViewTableViewCell.identifier)
-        table.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        table.separatorStyle = .none
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
@@ -158,14 +158,14 @@ extension WeeklyMissionOverViewViewController {
             switch subFormatType {
             
             case .answerQuizSingular:
-                let vm = AnswerQuizSingularViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+                let vm = AnswerQuizSingularViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
                 let vc = AnswerQuizSingularViewController(vm: vm)
                 vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
             case .answerQuizPlural:
-                let vm = AnswerQuizPluralViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+                let vm = AnswerQuizPluralViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
                 let vc = AnswerQuizPluralViewController(vm: vm)
                 vc.delegate = self
                 
@@ -184,21 +184,21 @@ extension WeeklyMissionOverViewViewController {
             switch subFormatType {
     
             case .choiceQuizOX:
-                let vm = ChoiceQuizzOXViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+                let vm = ChoiceQuizzOXViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizOXViewController(vm: vm)
                 vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
             case .choiceQuizMore:
-                let vm = ChoiceQuizMoreViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+                let vm = ChoiceQuizMoreViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizMoreViewController(vm: vm)
                 vc.delegate = self
                 
                 self.show(vc, sender: self)
 
             case .choiceQuizVideo:
-                let vm = ChoiceQuizVideoViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+                let vm = ChoiceQuizVideoViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
                 let vc = ChoiceQuizVideoViewController(vm: vm)
                 vc.delegate = self
                 
@@ -217,7 +217,7 @@ extension WeeklyMissionOverViewViewController {
             
             switch subFormatType {
             case .contentReadOnly:
-                let vm = ContentReadOnlyMissionViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+                let vm = ContentReadOnlyMissionViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
                 let vc = ContentReadOnlyMissionViewController(vm: vm, type: .weekly)
                 vc.delegate = self
                 
@@ -230,7 +230,7 @@ extension WeeklyMissionOverViewViewController {
         } else if anyMission is PhotoAuthMission {
             let mission = anyMission as! PhotoAuthMission
             
-            let vm = PhotoAuthQuizViewViewModel(mission: mission, numberOfWeek: self.vm.week)
+            let vm = PhotoAuthQuizViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
             let vc = PhotoAuthQuizViewController(vm: vm)
             
             self.show(vc, sender: self)

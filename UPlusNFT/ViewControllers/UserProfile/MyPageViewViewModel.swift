@@ -248,7 +248,7 @@ extension MyPageViewViewModel {
     func getLevelEvents() async {
         do {
             self.event.levelAllEvents = try await self.firestoreManager.getLevelEvents()
-            print("Level Events: \(self.event.levelEvents.count)")
+            print("Level Events: \(self.event.levelEvents)")
         }
         catch {
             print("Error fetching event missions -- \(error)")

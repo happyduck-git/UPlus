@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class ShareMediaOnSlackMissionViewViewModel: EventBaseModel {
+final class ShareMediaOnSlackMissionViewViewModel: MissionBaseModel {
     
     @Published var imageUrls: [URL] = []
 

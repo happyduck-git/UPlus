@@ -8,15 +8,15 @@
 import Foundation
 import Combine
 
-final class ContentReadOnlyMissionViewViewModel: WeeklyBaseModel {
+final class ContentReadOnlyMissionViewViewModel: MissionBaseModel {
     
     //MARK: - Dependency
     private let storageManager = FirebaseStorageManager.shared
     
     @Published var imageUrls: [URL] = []
     
-    override init(mission: Mission, numberOfWeek: Int) {
-        super.init(mission: mission, numberOfWeek: numberOfWeek)
+    override init(type: Type, mission: Mission, numberOfWeek: Int) {
+        super.init(type: type, mission: mission, numberOfWeek: numberOfWeek)
         self.getImageUrls()
     }
 
