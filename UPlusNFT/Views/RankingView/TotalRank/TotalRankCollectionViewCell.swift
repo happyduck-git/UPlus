@@ -31,8 +31,14 @@ final class TotalRankCollectionViewCell: UICollectionViewCell {
         table.showsHorizontalScrollIndicator = false
         
         // TODO: Register Custom Cell
-        table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
-        table.register(TotalRankTableViewCell.self, forCellReuseIdentifier: TotalRankTableViewCell.identifier)
+        table.register(Top3RankerTableViewCell.self,
+                       forCellReuseIdentifier: Top3RankerTableViewCell.identifier)
+        
+        table.register(UITableViewCell.self,
+                       forCellReuseIdentifier: UITableViewCell.identifier)
+        
+        table.register(TotalRankTableViewCell.self,
+                       forCellReuseIdentifier: TotalRankTableViewCell.identifier)
         
         return table
     }()
@@ -80,9 +86,9 @@ extension TotalRankCollectionViewCell {
         
         vm.$top3RankUserList
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
+            .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                print("Top3: \($0)")
+                self.rankTableView.reloadData()
             }
             .store(in: &bindings)
     }
@@ -109,30 +115,71 @@ extension TotalRankCollectionViewCell {
 // MARK: - TableViw Delegate & DataSource
 extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         guard let vm = self.vm else { return 0 }
-        return vm.totalRankerList.count
+        
+        return vm.totalRankSections.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return 1
+        default:
+            guard let vm = self.vm else { return 0 }
+            return vm.totalRankerList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let vm = self.vm else { fatalError() }
-        let cellVM = vm.totalRankerList[indexPath.row]
+        guard let vm = self.vm else { return UITableViewCell() }
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalRankTableViewCell.identifier, for: indexPath) as? TotalRankTableViewCell else {
-            return UITableViewCell()
+        switch indexPath.section {
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: Top3RankerTableViewCell.identifier) as? Top3RankerTableViewCell,
+            let top3Users = self.vm?.top3RankUserList
+            else {
+                return UITableViewCell()
+            }
+            
+            cell.configure(top3Users: top3Users)
+            return cell
+            
+        default:
+            let cellVM = vm.totalRankerList[indexPath.row]
+            
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalRankTableViewCell.identifier, for: indexPath) as? TotalRankTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            cell.configure(with: cellVM, at: indexPath.row)
+            return cell
         }
         
-        cell.configure(with: cellVM, at: indexPath.row)
-        return cell
     }
     
+}
+
+//MARK: - Footer
+extension TotalRankCollectionViewCell {
+    
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 100.0))
-        footer.backgroundColor = .white
-        return footer
+        if section == 1 {
+            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 100.0))
+            footer.backgroundColor = .white
+            return footer
+        } else {
+            return nil
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 100
+        if section == 1 {
+            return 100
+        } else {
+            return 0
+        }
+        
     }
+    
 }

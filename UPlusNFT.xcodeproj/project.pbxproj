@@ -56,6 +56,10 @@
 		24624B912A90DE1000C9A42E /* RightArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B902A90DE1000C9A42E /* RightArrowButton.swift */; };
 		24624B942A9274B500C9A42E /* LevelDividerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */; };
 		24624B962A94FCA800C9A42E /* MissionBaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B952A94FCA800C9A42E /* MissionBaseModel.swift */; };
+		24624B9A2A963A7E00C9A42E /* TopRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B992A963A7E00C9A42E /* TopRankView.swift */; };
+		24624B9C2A9650CE00C9A42E /* UITableViewHeaderFooterView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B9B2A9650CE00C9A42E /* UITableViewHeaderFooterView+Extension.swift */; };
+		24624B9E2A965F5900C9A42E /* Top3RankerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B9D2A965F5900C9A42E /* Top3RankerTableViewCell.swift */; };
+		24624BA02A96652000C9A42E /* YesterdayRankerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B9F2A96652000C9A42E /* YesterdayRankerTableViewCell.swift */; };
 		246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D72A891A8100CA7356 /* FirestoreActor.swift */; };
 		246BD1DA2A8A673B00CA7356 /* TestCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */; };
 		246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */; };
@@ -292,6 +296,10 @@
 		24624B902A90DE1000C9A42E /* RightArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightArrowButton.swift; sourceTree = "<group>"; };
 		24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDividerCollectionViewCell.swift; sourceTree = "<group>"; };
 		24624B952A94FCA800C9A42E /* MissionBaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionBaseModel.swift; sourceTree = "<group>"; };
+		24624B992A963A7E00C9A42E /* TopRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRankView.swift; sourceTree = "<group>"; };
+		24624B9B2A9650CE00C9A42E /* UITableViewHeaderFooterView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewHeaderFooterView+Extension.swift"; sourceTree = "<group>"; };
+		24624B9D2A965F5900C9A42E /* Top3RankerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Top3RankerTableViewCell.swift; sourceTree = "<group>"; };
+		24624B9F2A96652000C9A42E /* YesterdayRankerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YesterdayRankerTableViewCell.swift; sourceTree = "<group>"; };
 		246BD1D72A891A8100CA7356 /* FirestoreActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreActor.swift; sourceTree = "<group>"; };
 		246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCollectionViewCell.swift; sourceTree = "<group>"; };
 		246BD1FB2A8B321900CA7356 /* RewardInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardInfoView.swift; sourceTree = "<group>"; };
@@ -895,6 +903,7 @@
 				932C34DF2A57A06A0032192A /* URL+Extension.swift */,
 				93E0139C2A666E070005E342 /* UIStackView+Extension.swift */,
 				2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */,
+				24624B9B2A9650CE00C9A42E /* UITableViewHeaderFooterView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1283,6 +1292,7 @@
 			children = (
 				93DA587F2A960B1A00525BEC /* TodayRankTableViewCell.swift */,
 				93A2ED9D2A6E411900C2287D /* TodayRankCollectionViewCell.swift */,
+				24624B9F2A96652000C9A42E /* YesterdayRankerTableViewCell.swift */,
 			);
 			path = TodayRank;
 			sourceTree = "<group>";
@@ -1292,6 +1302,8 @@
 			children = (
 				24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */,
 				93DA58832A96118700525BEC /* TotalRankTableViewCell.swift */,
+				24624B992A963A7E00C9A42E /* TopRankView.swift */,
+				24624B9D2A965F5900C9A42E /* Top3RankerTableViewCell.swift */,
 			);
 			path = TotalRank;
 			sourceTree = "<group>";
@@ -1512,6 +1524,8 @@
 				93E013A32A667F100005E342 /* SignUpCompleteViewController.swift in Sources */,
 				2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */,
 				2402695E2A8480EA00850E65 /* MissionHistoryDetailCollectionViewCell.swift in Sources */,
+				24624B9E2A965F5900C9A42E /* Top3RankerTableViewCell.swift in Sources */,
+				24624B9C2A9650CE00C9A42E /* UITableViewHeaderFooterView+Extension.swift in Sources */,
 				939194EC2A89CAAC0035FEB1 /* NftLevel.swift in Sources */,
 				244BBB142A556ED5006C33D2 /* TextFieldCollectionVeiwCellViewModel.swift in Sources */,
 				9391947F2A7CBD580035FEB1 /* SignUpCompleteViewViewModel.swift in Sources */,
@@ -1586,6 +1600,7 @@
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
 				93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */,
+				24624B9A2A963A7E00C9A42E /* TopRankView.swift in Sources */,
 				93DA58752A948CB700525BEC /* UPlusLogger.swift in Sources */,
 				93DA58732A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift in Sources */,
 				93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */,
@@ -1634,6 +1649,7 @@
 				93D174922A7796C100F5B1B1 /* UserProfileView.swift in Sources */,
 				93A2ED9A2A6E1C9D00C2287D /* RankingMenuBar.swift in Sources */,
 				939194862A80822F0035FEB1 /* ContentReadOnlyMission.swift in Sources */,
+				24624BA02A96652000C9A42E /* YesterdayRankerTableViewCell.swift in Sources */,
 				249F59EF2A4EF403008CF6BE /* PhotoCollectionViewCell.swift in Sources */,
 				93D1748C2A773B0500F5B1B1 /* UploadPhotoButtonCollectionViewCell.swift in Sources */,
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,

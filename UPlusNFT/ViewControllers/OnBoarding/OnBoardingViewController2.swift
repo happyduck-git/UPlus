@@ -117,18 +117,18 @@ extension OnBoardingViewController2 {
 extension OnBoardingViewController2 {
     
     private func setUI() {
-        self.view.addSubview(self.scrollView)
+        self.view.addSubviews(self.scrollView,
+                             self.startButton)
         self.scrollView.addSubview(self.canvasView)
-        self.canvasView.addSubviews(self.onBoardImageView,
-                                    self.startButton)
+        self.canvasView.addSubviews(self.onBoardImageView)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
            
             self.canvasView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
             self.canvasView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
@@ -142,13 +142,14 @@ extension OnBoardingViewController2 {
             self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
             self.onBoardImageView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
             self.onBoardImageView.bottomAnchor.constraint(equalTo: self.canvasView.bottomAnchor),
-            
-            self.onBoardImageView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.startButton.bottomAnchor, multiplier: 5),
-            self.startButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.onBoardImageView.leadingAnchor, multiplier: 3),
-            self.onBoardImageView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.startButton.trailingAnchor, multiplier: 3),
-            self.startButton.heightAnchor.constraint(equalToConstant: 80)
         ])
-
+        
+        NSLayoutConstraint.activate([
+            self.startButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            self.startButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 3),
+            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.startButton.trailingAnchor, multiplier: 3),
+            self.startButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
 }
 

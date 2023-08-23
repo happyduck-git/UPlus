@@ -12,6 +12,21 @@ final class RankingViewViewModel {
     
     private let firestoreManager = FirestoreManager.shared
     
+    //MARK: - Section
+    enum TotalRankSection: CaseIterable {
+        case top3
+        case others
+    }
+    
+    enum TodayRankSection: CaseIterable {
+        case yesterday
+        case today
+    }
+    
+    let totalRankSections: [TotalRankSection] = TotalRankSection.allCases
+    let todayRankSections: [TodayRankSection] = TodayRankSection.allCases
+    
+    //MARK: - Data
     private let currentUser: UPlusUser?
     
     @Published var totakRankerFetched: Bool = false

@@ -32,6 +32,9 @@ final class TodayRankCollectionViewCell: UICollectionViewCell {
 
         // TODO: Register Custom Cell
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        
+        table.register(YesterdayRankerTableViewCell.self, forCellReuseIdentifier: YesterdayRankerTableViewCell.identifier)
+        
         table.register(TodayRankTableViewCell.self, forCellReuseIdentifier: TodayRankTableViewCell.identifier)
         
         return table
@@ -71,8 +74,8 @@ extension TodayRankCollectionViewCell {
         
         vm.$totakRankerFetched
             .receive(on: RunLoop.current)
-            .sink { [weak self] in
-                guard let `self` = self else { return }
+            .sink {
+                
                 if $0 {
                     Task {
                         try await vm.getTodayRankers(totalRankerList: vm.totalRankerList)
@@ -100,7 +103,8 @@ extension TodayRankCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
-                // TODO: TableView Header에 표시 필요.
+                
+                self.rankTableView.reloadData()
                 print("어제 랭커 " + ($0.first?.userEmail ?? "없음"))
             }
             .store(in: &bindings)
@@ -128,31 +132,64 @@ extension TodayRankCollectionViewCell {
 // MARK: - TableViw Delegate & DataSource
 extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         guard let vm = self.vm else { return 0 }
-        return vm.todayRankerList.count
+        
+        return vm.todayRankSections.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return 1
+            
+        default:
+            guard let vm = self.vm else { return 0 }
+            return vm.todayRankerList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let vm = self.vm else { fatalError() }
-        let cellVM = vm.todayRankerList[indexPath.row]
+        guard let vm = self.vm else { return UITableViewCell() }
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TodayRankTableViewCell.identifier, for: indexPath) as? TodayRankTableViewCell else {
-            return UITableViewCell()
+        switch indexPath.section {
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: YesterdayRankerTableViewCell.identifier, for: indexPath) as? YesterdayRankerTableViewCell else {
+                return UITableViewCell()
+            }
+            let ranker = vm.yesterdayRankerList.first
+            cell.configure(ranker: ranker)
+            
+            return cell
+            
+        default:
+            let cellVM = vm.todayRankerList[indexPath.row]
+            
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TodayRankTableViewCell.identifier, for: indexPath) as? TodayRankTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            cell.configure(with: cellVM, at: indexPath.row)
+            return cell
         }
-        
-        cell.configure(with: cellVM, at: indexPath.row)
-        return cell
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 100.0))
-        footer.backgroundColor = .white
-        return footer
+        if section == 1 {
+            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 100.0))
+            footer.backgroundColor = .white
+            return footer
+        } else {
+            return nil
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 100
+        if section == 1 {
+            return 100
+        } else {
+            return 0
+        }
     }
     
 }

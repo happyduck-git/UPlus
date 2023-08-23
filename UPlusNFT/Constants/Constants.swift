@@ -219,8 +219,12 @@ struct RankingConstants {
     static let rank: String = "랭킹"
     static let todayRank: String = "일일 랭킹"
     static let totalRank: String = "누적 랭킹"
+    static let yesterdayRank: String = "어제의 랭킹"
+    static let yesterdayRanker: String = "어제의 랭커"
     static let topOneHundred: String = "TOP100"
     static let myRank: String = "내 순위"
+    static let top3: String = "TOP 3"
+    static let top3Info: String = "TOP 3에게는 PoC 이후 특별한 보상을 드립니다."
 }
 
 struct WalletConstants {
@@ -332,6 +336,11 @@ struct ImageAsset {
     static let computer: String = "computer"
     static let lock: String = "lock"
     static let hand: String = "hand"
+    
+    /* RankVC */
+    static let bronze: String = "bronze-medal"
+    static let silver: String = "silver-medal"
+    static let gold: String = "golden-medal"
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
