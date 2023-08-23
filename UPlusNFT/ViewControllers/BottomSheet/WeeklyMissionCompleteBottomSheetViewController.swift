@@ -67,6 +67,7 @@ final class WeeklyMissionCompleteBottomSheetViewController: BottomSheetViewContr
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
         button.setTitle(MissionConstants.redeemNft, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -147,12 +148,13 @@ extension WeeklyMissionCompleteBottomSheetViewController {
             self.stack.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 2),
             self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 3),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 5),
             
-            self.redeemButton.topAnchor.constraint(equalToSystemSpacingBelow: self.stack.topAnchor, multiplier: 2),
+            
+            self.redeemButton.topAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 2),
             self.redeemButton.leadingAnchor.constraint(equalTo: self.stack.leadingAnchor),
             self.redeemButton.trailingAnchor.constraint(equalTo: self.stack.trailingAnchor),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.redeemButton.bottomAnchor, multiplier: 2)
+            self.redeemButton.heightAnchor.constraint(equalToConstant: 80),
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.redeemButton.bottomAnchor, multiplier: 3)
         ])
         
         self.redeemButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)

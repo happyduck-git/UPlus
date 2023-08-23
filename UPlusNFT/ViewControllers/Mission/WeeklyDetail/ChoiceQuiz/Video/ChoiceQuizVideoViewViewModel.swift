@@ -10,7 +10,13 @@ import Combine
 
 final class ChoiceQuizVideoViewViewModel: MissionBaseModel {
     
+    
+    
     @Published var imageUrls: [URL] = []
+    
+    var videoId: String = ""
+    
+    
     var buttonStatus: [Bool] = []
     var selectedButton: Int?
     
@@ -23,6 +29,7 @@ final class ChoiceQuizVideoViewViewModel: MissionBaseModel {
     
 }
 
+// MARK: - Get Image Urls
 extension ChoiceQuizVideoViewViewModel {
     private func getImageUrls() {
         Task {
@@ -40,4 +47,3 @@ extension ChoiceQuizVideoViewViewModel {
         }
     }
 }
-

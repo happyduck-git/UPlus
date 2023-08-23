@@ -98,9 +98,20 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
 
 extension NewNFTNoticeBottomSheetViewController {
     private func bind() {
+        
         func bindViewToViewModel() {
+        
+            self.redeemButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.dismissView()
+                }
+                .store(in: &bindings)
             
         }
+        
         func bindViewModelToView() {
             self.vm.nft
                 .receive(on: DispatchQueue.main)

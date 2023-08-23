@@ -111,7 +111,6 @@ extension WeeklyOverViewTableViewCell {
             self.missionTitle.text = mission.missionContentTitle
             self.completedLabel.text = MissionConstants.participated
             self.pointContainerView.backgroundColor = UPlusColor.gray02
-            self.pointLabel.textColor = UPlusColor.gray05
             self.levelStack.isHidden = true
             self.completedLabel.isHidden = false
         }
@@ -147,7 +146,7 @@ extension WeeklyOverViewTableViewCell {
         NSLayoutConstraint.activate([
             self.missionTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
             self.missionTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
-            self.missionTitle.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.leadingAnchor, multiplier: 2),
+            self.pointContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionTitle.trailingAnchor, multiplier: 2),
             
             self.levelStack.topAnchor.constraint(equalToSystemSpacingBelow: self.missionTitle.bottomAnchor, multiplier: 1),
             self.levelStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),

@@ -10,12 +10,19 @@ import PhotosUI
 import Combine
 import OSLog
 
+protocol RoutineMissionDetailViewControllerDelegate: AnyObject {
+    func submitDidTap()
+}
+
 final class RoutineMissionDetailViewController: UIViewController {
     
     // MARK: - Dependency
     private let vm: RoutineMissionDetailViewViewModel
     
     private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - Delegate
+    weak var delegate: RoutineMissionDetailViewControllerDelegate?
     
     // MARK: - Logger
     private let logger = Logger()
@@ -366,6 +373,7 @@ extension RoutineMissionDetailViewController: UploadPhotoButtonCollectionViewCel
     
     func submitButtonDidTap() {
         self.confirmDidTap()
+        self.delegate?.submitDidTap()
     }
 
     private func updateLayout() {

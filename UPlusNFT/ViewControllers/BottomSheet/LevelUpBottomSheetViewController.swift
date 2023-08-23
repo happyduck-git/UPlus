@@ -150,9 +150,10 @@ extension LevelUpBottomSheetViewController {
         func bindViewToViewModel() {
             self.redeemButton.tapPublisher
                 .receive(on: DispatchQueue.main)
-                .sink { _ in
-                    // TODO: Save rewards and raffle to Firestore
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
                     
+                    self.dismissView()
                 }
                 .store(in: &bindings)
         }

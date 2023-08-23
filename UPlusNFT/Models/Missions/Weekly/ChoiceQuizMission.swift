@@ -23,6 +23,8 @@ struct ChoiceQuizMission: Mission, Codable {
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
     
+    var missionChoiceQuizExtraBundle: String?
+    
     let missionChoiceQuizCaptions: [String]
     let missionChoiceQuizRightOrder: Int64
 }

@@ -56,6 +56,7 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         

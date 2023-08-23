@@ -552,8 +552,18 @@ extension MyPageViewController {
         )
         
         collectionView.register(
-            MypageMissionCollectionViewCell.self,
-            forCellWithReuseIdentifier: MypageMissionCollectionViewCell.identifier
+            WeeklyMissionCollectionViewCell.self,
+            forCellWithReuseIdentifier: WeeklyMissionCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            WeeklyLockedCollectionViewCell.self,
+            forCellWithReuseIdentifier: WeeklyLockedCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            WeeklyCompletedCollectionViewCell.self,
+            forCellWithReuseIdentifier: WeeklyCompletedCollectionViewCell.identifier
         )
         
         collectionView.register(
@@ -569,6 +579,11 @@ extension MyPageViewController {
         collectionView.register(
             MissionHistoryDetailCollectionViewCell.self,
             forCellWithReuseIdentifier: MissionHistoryDetailCollectionViewCell.identifier
+        )
+        
+        collectionView.register(
+            MissionHistoryNoParticipationCollectionViewCell.self,
+            forCellWithReuseIdentifier: MissionHistoryNoParticipationCollectionViewCell.identifier
         )
         
         // Event Cell
@@ -648,7 +663,6 @@ extension MyPageViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-//                heightDimension: .fractionalHeight(1.0)
                 heightDimension: .estimated(150)
             )
         )
@@ -656,7 +670,6 @@ extension MyPageViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-//                heightDimension: .fractionalHeight(0.1)
                 heightDimension: .estimated(150)
             ),
             subitems: [item]
@@ -671,16 +684,14 @@ extension MyPageViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-//                heightDimension: .fractionalHeight(1.0)
-                heightDimension: .estimated(130)
+                heightDimension: .estimated(150)
             )
         )
         
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-//                heightDimension: .fractionalHeight(0.2)
-                heightDimension: .estimated(130)
+                heightDimension: .estimated(150)
             ),
             subitems: [item]
         )
@@ -709,7 +720,6 @@ extension MyPageViewController {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-//                heightDimension: .fractionalHeight(1.0)
                 heightDimension: .estimated(110)
             )
         )
@@ -717,7 +727,6 @@ extension MyPageViewController {
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-//                heightDimension: .fractionalHeight(0.2)
                 heightDimension: .estimated(110)
             ),
             subitems: [item]
@@ -915,39 +924,52 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 // Weekly mission
             case 2:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageMissionCollectionViewCell.identifier, for: indexPath) as? MypageMissionCollectionViewCell else {
-                    fatalError()
-                }
-                cell.resetCell()
                 
                 if !self.vm.mission.weeklyMissions.isEmpty {
-                    let weekCollection = String(format: "weekly_quiz__%d__mission_set", (indexPath.item + 1))
-                    let missionInfo = self.vm.mission.weeklyMissions[weekCollection] ?? []
                     
-                    let begin = missionInfo[0].dateValue().monthDayFormat
+                    let (status, title) = self.weeklyMissionInfo(week: indexPath.item + 1)
+                    
+                    let missionInfo = self.vm.mission.weeklyMissions[title] ?? []
+                    
+                    let begin = missionInfo[0].dateValue()
                     let end = missionInfo[1].dateValue()
+                    let today = Date()
                     
-                    let timeLeft = self.vm.timeDifference(from: Date(), to: end)
-                    let weekTotalPoint: Int64 = 100 // TODO: Query from DB
+                    let timeLeft = self.vm.timeDifference(from: today, to: end)
+                    let weekTotalPoint: Int64 = 600 // TODO: Query from DB
                     
-                    if missionInfo[0].dateValue() > Date() {
-                        cell.configure(type: .close,
-                                       title: weekCollection,
-                                       period: timeLeft,
-                                       point: weekTotalPoint,
-                                       openDate: begin)
+                    switch status {
+                    case .before:
+                        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyLockedCollectionViewCell.identifier, for: indexPath) as? WeeklyLockedCollectionViewCell else {
+                            fatalError()
+                        }
+                        
+                        cell.configure(title: title, openDate: begin.monthDayFormat)
+
                         return cell
-                    } else {
-                        cell.configure(type: .open, // open
-                                       title: weekCollection,
-                                       period: timeLeft,
-                                       point: weekTotalPoint)
+                        
+                    case .open:
+                        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyMissionCollectionViewCell.identifier, for: indexPath) as? WeeklyMissionCollectionViewCell else {
+                            fatalError()
+                        }
+                        cell.resetCell()
+                        cell.configure(title: title, period: timeLeft, point: weekTotalPoint)
+
+                        return cell
+                        
+                    case .close:
+                        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyCompletedCollectionViewCell.identifier, for: indexPath) as? WeeklyCompletedCollectionViewCell else {
+                            fatalError()
+                        }
+                        
+                        cell.configure(title: title)
+
                         return cell
                     }
+
                 } else {
-                    return cell
+                    return UICollectionViewCell()
                 }
-                
                 
                 // Mission History button
             case 3:
@@ -968,6 +990,10 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return cell
                 
             case 5:
+                guard let goToMissionCell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryNoParticipationCollectionViewCell.identifier, for: indexPath) as? MissionHistoryNoParticipationCollectionViewCell else {
+                    fatalError()
+                }
+                
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryDetailCollectionViewCell.identifier, for: indexPath) as? MissionHistoryDetailCollectionViewCell else {
                     fatalError()
                 }
@@ -1129,19 +1155,30 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 self.addChildViewController(self.loadingVC)
                 let vm = RoutineMissionDetailViewViewModel(missionType: .dailyExpGoodWorker)
                 let vc = RoutineMissionDetailViewController(vm: vm)
+                vc.delegate = self
                 
                 self.loadingVC.removeViewController()
                 
                 self.show(vc, sender: self)
                 
             case 2:
-                let vm = WeeklyMissionOverViewViewModel(week: indexPath.item + 1)
-                let vc = WeeklyMissionOverViewViewController(vm: vm)
+  
+                let (status, _) = self.weeklyMissionInfo(week: indexPath.item + 1)
+                
+                switch status {
+                case .open:
+                    let vm = WeeklyMissionOverViewViewModel(week: indexPath.item + 1)
+                    let vc = WeeklyMissionOverViewViewController(vm: vm)
 
-                self.show(vc, sender: self)
+                    self.show(vc, sender: self)
+                case .before, .close:
+                    return
+                }
+                
             default:
                 break
             }
+            
         } else {
             print("IndexPath: \(indexPath)")
             //TODO: index path 별로 나누기
@@ -1229,6 +1266,36 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
 }
 
+// MARK: - Private
+extension MyPageViewController {
+    
+    private func weeklyMissionInfo(week: Int) -> (status: WeeklyCellType, title: String) {
+        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let missionInfo = self.vm.mission.weeklyMissions[weekCollection] ?? []
+        
+        let begin = missionInfo[0].dateValue()
+        let end = missionInfo[1].dateValue()
+        let today = Date()
+        
+        if begin > today {
+            return (.before, weekCollection)
+        } else if end > today {
+            return (.open, weekCollection)
+        } else {
+            return (.before, weekCollection)
+        }
+    }
+    
+}
+
+// MARK: - Routine Detail VC Delegate
+extension MyPageViewController: RoutineMissionDetailViewControllerDelegate {
+    func submitDidTap() {
+        self.vm.mission.routineParticipationStatus = .pending
+    }
+}
+
+// MARK: - Side Menu Delegate
 extension MyPageViewController: SideMenuViewControllerDelegate {
     func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int) {
         

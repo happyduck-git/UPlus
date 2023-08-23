@@ -581,7 +581,6 @@ extension FirestoreManager {
         return missions
     }
     
-    // (New) 미션 일반 _ 레벨 나뉜 후
     func getLevelEvents() async throws -> [any Mission] {
         let documents = try await threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
@@ -642,51 +641,6 @@ extension FirestoreManager {
 
         return missions
     }
-    
-    /*
-    // (Old) 미션 일반 _ 레벨 나뉘기 전
-    func getEvent() async throws -> [any Mission] {
-    
-        let documents = try await threadsSetCollectionPath2
-            .document(FirestoreConstants.missions)
-            .collection(MissionType.eventMission.storagePathFolderName)
-            .getDocuments()
-            .documents
-        
-        var missions: [any Mission] = []
-        
-        for doc in documents {
-            do {
-                let data = doc.data()
-                let type = data[FirestoreConstants.missionFormatType] as? String ?? "n/a"
-               
-                let formatType = MissionFormatType(rawValue: type)
-                switch formatType {
-                case .contentReadOnly:
-                    missions.append(try doc.data(as: ContentReadOnlyMission.self, decoder: self.decoder))
-                    
-                case .shareMediaOnSlack:
-                    missions.append(try doc.data(as: MediaShareMission.self, decoder: self.decoder))
-                    
-                case .governanceElection:
-                    missions.append(try doc.data(as: GovernanceMission.self, decoder: self.decoder))
-                    
-                case .commentCount:
-                    missions.append(try doc.data(as: CommentCountMission.self, decoder: self.decoder))
-                    
-                default:
-                    break
-                }
-            }
-            catch {
-                continue
-            }
-            
-        }
-
-        return missions
-    }
-    */
     
     func getAllMissionDate() async throws -> [String: [Timestamp]] {
         let data = try await threadsSetCollectionPath2

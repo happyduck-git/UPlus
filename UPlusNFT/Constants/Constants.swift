@@ -115,6 +115,8 @@ struct MyPageConstants {
     static let missionPoint: String = "+%dP"
     static let vipPoints: String = "400P"
     static let vipHolderGreeting: String = "서태호 NFT 홀더 %@님,\n특별 포인트를 드려요"
+    static let noParticipate: String = "미션에 참여하지 않았습니다."
+    static let makeTodoList: String =  "오늘 할 일 정하기"
 }
 
 struct RewardsConstants {
@@ -149,7 +151,8 @@ struct MissionConstants {
     static let confirm: String = "확인"
     static let missionParticipated: String = "미션 참여 완료"
     static let missionCompleted: String = "미션 완주"
-    static let participated: String = "미션 완주"
+    static let missionTerminated: String = "미션 종료"
+    static let participated: String = "참여 완료"
     static let redeemPoint: String = "%dP 포인트 받기"
     static let routineProgress: String = "%d회 성공 /15회차"
     
@@ -326,6 +329,9 @@ struct ImageAsset {
     static let couponFrame: String = "coupon-frame"
     static let routineImage: String = "todo"
     static let clock: String = "clock"
+    static let computer: String = "computer"
+    static let lock: String = "lock"
+    static let hand: String = "hand"
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"

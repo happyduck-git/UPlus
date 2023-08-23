@@ -29,6 +29,7 @@ final class ChoiceQuizVideoViewController: BaseMissionViewController {
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.backgroundColor = .systemGray4
         webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.isUserInteractionEnabled = false
         return webView
     }()
     
@@ -46,7 +47,9 @@ final class ChoiceQuizVideoViewController: BaseMissionViewController {
     private let containerView: UIView = {
        let view = UIView()
         view.isHidden = true
-        view.backgroundColor = UPlusColor.gray05
+        view.layer.cornerRadius = 8.0
+        view.clipsToBounds = true
+        view.backgroundColor = UPlusColor.gray02
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -119,6 +122,8 @@ extension ChoiceQuizVideoViewController {
                 let order = i+j
                 let button = ChoiceMultipleQuizButton()
                 button.tag = order
+                button.clipsToBounds = true
+                button.layer.cornerRadius = 8.0
                 button.backgroundColor = .white
                 
                 if order < captions.count {
@@ -278,15 +283,36 @@ extension ChoiceQuizVideoViewController {
 //MARK: - Private
 extension ChoiceQuizVideoViewController {
     private func playYTVideo() {
-        
-        guard let iframeString = self.vm.mission.missionContentText,
-              let videoURL = self.buildYTUrl(iframeString:  iframeString) else { return }
+
+        guard let mission = self.vm.mission as? ChoiceQuizMission,
+        let urlString = mission.missionChoiceQuizExtraBundle,
+        let videoURL = self.convertToEmbedURL(from: urlString)
+        else { return }
 
         let request = URLRequest(url: videoURL)
         self.videoPlayer.load(request)
        
     }
     
+    private func extractVideoID(from urlString: String) -> String? {
+        if let videoIDRange = urlString.range(of: "(?<=v=)[^,]*", options: .regularExpression) {
+            let videoID = String(urlString[videoIDRange])
+            return videoID
+        } else {
+            return nil
+        }
+    }
+
+    private func convertToEmbedURL(from urlString: String) -> URL? {
+        if let videoID = extractVideoID(from: urlString) {
+            let embedURLString = "https://www.youtube.com/embed/\(videoID)?autoplay=1"
+            return URL(string: embedURLString)
+        } else {
+            return nil
+        }
+    }
+    
+    // NOT IN USE
     private func buildYTUrl(iframeString: String) -> URL? {
     
         guard let iframeString = self.vm.mission.missionContentText else { return nil }
@@ -306,6 +332,7 @@ extension ChoiceQuizVideoViewController {
         
     }
     
+    // NOT IN USE
     private func appendAutoplayParameter(to url: String) -> String {
         var result = url
 

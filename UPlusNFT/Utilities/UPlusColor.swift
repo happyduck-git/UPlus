@@ -52,7 +52,7 @@ struct UPlusColor {
     static let blue01 = UIColor(hex: 0xDCE8FF)
     static let blue02 = UIColor(hex: 0xA8CBFF)
     static let blue03 = UIColor(hex: 0x699BF7)
-    static let blue04 = UIColor(hex: 0x192D47)
+    static let blue04 = UIColor(hex: 0x2C76FF)
     
     static let yellow01 = UIColor(hex: 0xFFC700)
     static let orange01 = UIColor(hex: 0xFF612F)

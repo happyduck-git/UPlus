@@ -183,7 +183,7 @@
 		93D1748E2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1748D2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift */; };
 		93D174902A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1748F2A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift */; };
 		93D174922A7796C100F5B1B1 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174912A7796C100F5B1B1 /* UserProfileView.swift */; };
-		93D174942A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174932A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift */; };
+		93D174942A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174932A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift */; };
 		93D174962A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174952A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift */; };
 		93DA58302A89FCF600525BEC /* WalletDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA582F2A89FCF600525BEC /* WalletDetailCollectionViewCell.swift */; };
 		93DA58342A8A07DC00525BEC /* WalletDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58332A8A07DC00525BEC /* WalletDetailViewController.swift */; };
@@ -215,6 +215,12 @@
 		93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */; };
 		93DA58732A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58722A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift */; };
 		93DA58752A948CB700525BEC /* UPlusLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58742A948CB700525BEC /* UPlusLogger.swift */; };
+		93DA58782A95C8B200525BEC /* WeeklyCompletedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58772A95C8B200525BEC /* WeeklyCompletedCollectionViewCell.swift */; };
+		93DA587A2A95CC3E00525BEC /* WeeklyLockedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58792A95CC3E00525BEC /* WeeklyLockedCollectionViewCell.swift */; };
+		93DA587C2A95EF2800525BEC /* OnBoardingViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA587B2A95EF2700525BEC /* OnBoardingViewController2.swift */; };
+		93DA587E2A9601E900525BEC /* MissionHistoryNoParticipationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA587D2A9601E900525BEC /* MissionHistoryNoParticipationCollectionViewCell.swift */; };
+		93DA58802A960B1A00525BEC /* TodayRankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA587F2A960B1A00525BEC /* TodayRankTableViewCell.swift */; };
+		93DA58842A96118700525BEC /* TotalRankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58832A96118700525BEC /* TotalRankTableViewCell.swift */; };
 		93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */; };
 		93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */; };
 		93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E013882A6518370005E342 /* SideMenuViewController.swift */; };
@@ -412,7 +418,7 @@
 		93D1748D2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineCompleteViewController.swift; sourceTree = "<group>"; };
 		93D1748F2A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionAndEventCollectionViewHeader.swift; sourceTree = "<group>"; };
 		93D174912A7796C100F5B1B1 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
-		93D174932A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MypageMissionCollectionViewCell.swift; sourceTree = "<group>"; };
+		93D174932A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93D174952A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionSelectCollectionViewCell.swift; sourceTree = "<group>"; };
 		93DA582F2A89FCF600525BEC /* WalletDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		93DA58332A8A07DC00525BEC /* WalletDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDetailViewController.swift; sourceTree = "<group>"; };
@@ -444,6 +450,12 @@
 		93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountMissionTableViewCell.swift; sourceTree = "<group>"; };
 		93DA58722A94683A00525BEC /* WalletMissionButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMissionButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		93DA58742A948CB700525BEC /* UPlusLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UPlusLogger.swift; sourceTree = "<group>"; };
+		93DA58772A95C8B200525BEC /* WeeklyCompletedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyCompletedCollectionViewCell.swift; sourceTree = "<group>"; };
+		93DA58792A95CC3E00525BEC /* WeeklyLockedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyLockedCollectionViewCell.swift; sourceTree = "<group>"; };
+		93DA587B2A95EF2700525BEC /* OnBoardingViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingViewController2.swift; sourceTree = "<group>"; };
+		93DA587D2A9601E900525BEC /* MissionHistoryNoParticipationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryNoParticipationCollectionViewCell.swift; sourceTree = "<group>"; };
+		93DA587F2A960B1A00525BEC /* TodayRankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayRankTableViewCell.swift; sourceTree = "<group>"; };
+		93DA58832A96118700525BEC /* TotalRankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalRankTableViewCell.swift; sourceTree = "<group>"; };
 		93E013822A65091F0005E342 /* MissionSideMenuPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionSideMenuPresentationController.swift; sourceTree = "<group>"; };
 		93E013842A65175F0005E342 /* SideMenuPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuPresentationManager.swift; sourceTree = "<group>"; };
 		93E013882A6518370005E342 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -581,6 +593,7 @@
 			isa = PBXGroup;
 			children = (
 				2402695D2A8480EA00850E65 /* MissionHistoryDetailCollectionViewCell.swift */,
+				93DA587D2A9601E900525BEC /* MissionHistoryNoParticipationCollectionViewCell.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -589,6 +602,7 @@
 			isa = PBXGroup;
 			children = (
 				2417A59A2A67A9ED00AEC530 /* OnBoardingViewController.swift */,
+				93DA587B2A95EF2700525BEC /* OnBoardingViewController2.swift */,
 			);
 			path = OnBoarding;
 			sourceTree = "<group>";
@@ -1138,6 +1152,7 @@
 		93A2ED852A6A5AB900C2287D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				93DA58762A95C89900525BEC /* Weekly */,
 				24624B922A92749B00C9A42E /* Event */,
 				2402695F2A8480FC00850E65 /* History */,
 				9391946E2A7A1D3B0035FEB1 /* DailyMission */,
@@ -1161,10 +1176,10 @@
 		93A2ED982A6E1C8B00C2287D /* RankingView */ = {
 			isa = PBXGroup;
 			children = (
+				93DA58822A960B3100525BEC /* TotalRank */,
+				93DA58812A960B2200525BEC /* TodayRank */,
 				93A2ED992A6E1C9D00C2287D /* RankingMenuBar.swift */,
 				93A2ED9B2A6E3BDD00C2287D /* RankBottomFlatSheetView.swift */,
-				93A2ED9D2A6E411900C2287D /* TodayRankCollectionViewCell.swift */,
-				24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */,
 			);
 			path = RankingView;
 			sourceTree = "<group>";
@@ -1198,7 +1213,7 @@
 			isa = PBXGroup;
 			children = (
 				93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */,
-				93D174932A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift */,
+				93D174932A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift */,
 				93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */,
 			);
 			path = Weekly;
@@ -1252,6 +1267,33 @@
 				93DA586C2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift */,
 			);
 			path = Weekly;
+			sourceTree = "<group>";
+		};
+		93DA58762A95C89900525BEC /* Weekly */ = {
+			isa = PBXGroup;
+			children = (
+				93DA58772A95C8B200525BEC /* WeeklyCompletedCollectionViewCell.swift */,
+				93DA58792A95CC3E00525BEC /* WeeklyLockedCollectionViewCell.swift */,
+			);
+			path = Weekly;
+			sourceTree = "<group>";
+		};
+		93DA58812A960B2200525BEC /* TodayRank */ = {
+			isa = PBXGroup;
+			children = (
+				93DA587F2A960B1A00525BEC /* TodayRankTableViewCell.swift */,
+				93A2ED9D2A6E411900C2287D /* TodayRankCollectionViewCell.swift */,
+			);
+			path = TodayRank;
+			sourceTree = "<group>";
+		};
+		93DA58822A960B3100525BEC /* TotalRank */ = {
+			isa = PBXGroup;
+			children = (
+				24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */,
+				93DA58832A96118700525BEC /* TotalRankTableViewCell.swift */,
+			);
+			path = TotalRank;
 			sourceTree = "<group>";
 		};
 		93E013812A6507B50005E342 /* Mission */ = {
@@ -1447,6 +1489,7 @@
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				24624B8F2A8E843900C9A42E /* RoutineUploadPhotoView.swift in Sources */,
 				9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */,
+				93DA587A2A95CC3E00525BEC /* WeeklyLockedCollectionViewCell.swift in Sources */,
 				93DA58602A8EEFEF00525BEC /* GiftDetailView.swift in Sources */,
 				24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */,
 				93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */,
@@ -1485,14 +1528,17 @@
 				939194882A80827F0035FEB1 /* MediaShareMission.swift in Sources */,
 				93D174862A738C1000F5B1B1 /* StampCollectionViewCell.swift in Sources */,
 				2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */,
+				93DA58802A960B1A00525BEC /* TodayRankTableViewCell.swift in Sources */,
 				93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */,
 				93A2ED9E2A6E411900C2287D /* TodayRankCollectionViewCell.swift in Sources */,
 				93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */,
 				24542D532A70AC7A00F82CEA /* ShortAnswerQuizMission.swift in Sources */,
 				240269392A83BFE700850E65 /* ShareMediaOnSlackMissionViewController.swift in Sources */,
+				93DA587E2A9601E900525BEC /* MissionHistoryNoParticipationCollectionViewCell.swift in Sources */,
 				24542D582A70E8E100F82CEA /* LoadingViewController.swift in Sources */,
 				93E013A82A68C1D70005E342 /* AthleteMission.swift in Sources */,
 				24DB21AD2A82F8E000AE0174 /* NFTServiceManager.swift in Sources */,
+				93DA58842A96118700525BEC /* TotalRankTableViewCell.swift in Sources */,
 				93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */,
 				93DA584A2A8CA23500525BEC /* RoutineParticipatedViewController.swift in Sources */,
 				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
@@ -1545,6 +1591,7 @@
 				93E0139F2A6671DB0005E342 /* MissionCollectionViewHeader.swift in Sources */,
 				937C765D2A492EBB001024D0 /* PostTableViewCell.swift in Sources */,
 				93DA58462A8C5BBA00525BEC /* RoutineBonusClosedCollectionViewCell.swift in Sources */,
+				93DA58782A95C8B200525BEC /* WeeklyCompletedCollectionViewCell.swift in Sources */,
 				93E013B02A6909A10005E342 /* ChoiceQuizOXViewController.swift in Sources */,
 				93E0139B2A6662B20005E342 /* DailyQuizMissionCollectionViewCell.swift in Sources */,
 				93D174822A7382BA00F5B1B1 /* RoutineMissionStampCollectionViewCell.swift in Sources */,
@@ -1560,6 +1607,7 @@
 				93DA58362A8A102600525BEC /* NFTDetailViewController.swift in Sources */,
 				24A254752A854D5A0034534A /* EnvironmentConfig.swift in Sources */,
 				2402695A2A846BF700850E65 /* AnswerQuizPluralViewViewModel.swift in Sources */,
+				93DA587C2A95EF2800525BEC /* OnBoardingViewController2.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
 				246BD1D82A891A8100CA7356 /* FirestoreActor.swift in Sources */,
 				245E2DD22A87881600AAEFE6 /* Mission.swift in Sources */,
@@ -1602,7 +1650,7 @@
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				932C34E42A5BCE700032192A /* CampaignCommentDefaultView.swift in Sources */,
 				93D1748E2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift in Sources */,
-				93D174942A7797DB00F5B1B1 /* MypageMissionCollectionViewCell.swift in Sources */,
+				93D174942A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift in Sources */,
 				246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */,
 				240269322A83B23E00850E65 /* FirebaseStorageManager.swift in Sources */,
 				246BD2042A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift in Sources */,

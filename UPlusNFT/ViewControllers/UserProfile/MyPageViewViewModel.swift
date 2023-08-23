@@ -69,6 +69,7 @@ final class MyPageViewViewModel {
         @Published var participatedHistory: [PointHistory] = []
         @Published var participatedMissions: [any Mission] = []
         @Published var missionDates: [String] = []
+        @Published var todayParticipation: Bool = false
         
         // Selected date's missions
         var isDateSelected: Bool = false
@@ -304,6 +305,12 @@ extension MyPageViewViewModel {
                 if results.count > 0 {
                     dates.append(date)
                 }
+                
+                // 3. Check if there is any participation on today.
+                if date == Date().yearMonthDateFormat {
+                    self.mission.todayParticipation = true
+                }
+                
             }
             self.mission.missionDates = dates
             self.mission.participatedMissions = missions
@@ -494,3 +501,7 @@ extension MyPageViewViewModel {
     
 }
 
+extension MyPageViewViewModel {
+ 
+    
+}

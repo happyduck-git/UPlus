@@ -146,94 +146,104 @@ extension WeeklyMissionOverViewViewController {
 
 extension WeeklyMissionOverViewViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let anyMission = self.vm.weeklyMissions[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: false)
         
-        if anyMission is ShortAnswerQuizMission {
-            let mission = anyMission as! ShortAnswerQuizMission
+        let mission = self.vm.weeklyMissions[indexPath.row]
+        let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
+        let type: WeeklyMissionStatus = hasParticipated ? .participated : .open
+        
+        switch type {
+        case .open:
+            let anyMission = self.vm.weeklyMissions[indexPath.row]
             
-            guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
-                return
-            }
-            switch subFormatType {
-            
-            case .answerQuizSingular:
-                let vm = AnswerQuizSingularViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
-                let vc = AnswerQuizSingularViewController(vm: vm)
-                vc.delegate = self
+            if anyMission is ShortAnswerQuizMission {
+                let mission = anyMission as! ShortAnswerQuizMission
                 
-                self.show(vc, sender: self)
+                guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
+                    return
+                }
+                switch subFormatType {
                 
-            case .answerQuizPlural:
-                let vm = AnswerQuizPluralViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
-                let vc = AnswerQuizPluralViewController(vm: vm)
-                vc.delegate = self
+                case .answerQuizSingular:
+                    let vm = AnswerQuizSingularViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                    let vc = AnswerQuizSingularViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                case .answerQuizPlural:
+                    let vm = AnswerQuizPluralViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                    let vc = AnswerQuizPluralViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                default:
+                    break
+                }
                 
-                self.show(vc, sender: self)
+            } else if anyMission is ChoiceQuizMission {
+                let mission = anyMission as! ChoiceQuizMission
                 
-            default:
-                break
-            }
-            
-        } else if anyMission is ChoiceQuizMission {
-            let mission = anyMission as! ChoiceQuizMission
-            
-            guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
-                return
-            }
-            switch subFormatType {
-    
-            case .choiceQuizOX:
-                let vm = ChoiceQuizzOXViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
-                let vc = ChoiceQuizOXViewController(vm: vm)
-                vc.delegate = self
-                
-                self.show(vc, sender: self)
-                
-            case .choiceQuizMore:
-                let vm = ChoiceQuizMoreViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
-                let vc = ChoiceQuizMoreViewController(vm: vm)
-                vc.delegate = self
-                
-                self.show(vc, sender: self)
+                guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
+                    return
+                }
+                switch subFormatType {
+        
+                case .choiceQuizOX:
+                    let vm = ChoiceQuizzOXViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                    let vc = ChoiceQuizOXViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                case .choiceQuizMore:
+                    let vm = ChoiceQuizMoreViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                    let vc = ChoiceQuizMoreViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
 
-            case .choiceQuizVideo:
-                let vm = ChoiceQuizVideoViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
-                let vc = ChoiceQuizVideoViewController(vm: vm)
-                vc.delegate = self
+                case .choiceQuizVideo:
+                    let vm = ChoiceQuizVideoViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                    let vc = ChoiceQuizVideoViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                default:
+                    break
+                }
+                
+            } else if anyMission is ContentReadOnlyMission {
+                let mission = anyMission as! ContentReadOnlyMission
+                
+                guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
+                    return
+                }
+                
+                switch subFormatType {
+                case .contentReadOnly:
+                    let vm = ContentReadOnlyMissionViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                    let vc = ContentReadOnlyMissionViewController(vm: vm, type: .weekly)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                default:
+                    break
+                }
+                
+            } else if anyMission is PhotoAuthMission {
+                let mission = anyMission as! PhotoAuthMission
+                
+                let vm = PhotoAuthQuizViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                let vc = PhotoAuthQuizViewController(vm: vm)
                 
                 self.show(vc, sender: self)
-                
-            default:
-                break
             }
-            
-        } else if anyMission is ContentReadOnlyMission {
-            let mission = anyMission as! ContentReadOnlyMission
-            
-            guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else {
-                return
-            }
-            
-            switch subFormatType {
-            case .contentReadOnly:
-                let vm = ContentReadOnlyMissionViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
-                let vc = ContentReadOnlyMissionViewController(vm: vm, type: .weekly)
-                vc.delegate = self
-                
-                self.show(vc, sender: self)
-                
-            default:
-                break
-            }
-            
-        } else if anyMission is PhotoAuthMission {
-            let mission = anyMission as! PhotoAuthMission
-            
-            let vm = PhotoAuthQuizViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
-            let vc = PhotoAuthQuizViewController(vm: vm)
-            
-            self.show(vc, sender: self)
+        case .participated:
+            return
         }
         
     }

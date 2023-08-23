@@ -9,10 +9,6 @@ import UIKit
 import Combine
 import OSLog
 
-protocol EventCompletedViewControllerDelegate: AnyObject {
-    func redeemDidTap()
-}
-
 final class EventCompletedViewController: BaseMissionCompletedViewController {
 
     // MARK: - Logger
@@ -20,9 +16,6 @@ final class EventCompletedViewController: BaseMissionCompletedViewController {
     
     // MARK: - Dependency
     let vm: MissionBaseModel
-    
-    // MARK: - Delegate
-//    weak var delegate: EventCompletedViewControllerDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
