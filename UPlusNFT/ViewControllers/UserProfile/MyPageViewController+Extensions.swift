@@ -11,11 +11,21 @@ extension MyPageViewController: BaseMissionViewControllerDelegate {
     func redeemDidTap(vc: BaseMissionViewController) {
      
         print("Completed Redeem did tap")
+        // get event mission info
+        Task {
+            await self.vm.getRegularEvents()
+            await self.vm.getLevelEvents()
+        }
     }
 }
 
 extension MyPageViewController: CommentCountMissionViewControllerDelegate {
-    func checkAnswerDidTap() {
-        
+    func submitCommentDidTap() {
+        print("Comment event comment submit did tap")
+        // get event mission info
+        Task {
+            await self.vm.getRegularEvents()
+            await self.vm.getLevelEvents()
+        }
     }
 }

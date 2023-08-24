@@ -145,7 +145,8 @@ final class TotalRankTableViewCell: UITableViewCell {
         self.rankLabel.text = "\(row + 1)"
         self.username.text = vm.userNickname
         self.level.text = "Lv.n"
-        self.popScoreLabel.text = "\(vm.userPointHistory?.first?.userPointCount ?? 0)P"
+        self.popScoreLabel.text = "\(vm.userTotalPoint ?? 0)P"
+        print("Score: \(vm.userTotalPoint)")
     }
     
     public func setAsCollectionInfoCell() {

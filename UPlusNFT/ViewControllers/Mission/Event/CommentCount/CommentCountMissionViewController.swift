@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 protocol CommentCountMissionViewControllerDelegate: AnyObject {
-    func checkAnswerDidTap()
+    func submitCommentDidTap()
 }
 
 final class CommentCountMissionViewController: UIViewController {
@@ -118,12 +118,23 @@ extension CommentCountMissionViewController {
                 }
                 .store(in: &bindings)
             
+            self.vm.$comments
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.commentTable.reloadData()
+                }
+                .store(in: &bindings)
+            
             self.vm.$combinations
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
                     let imageCount = $0["ImageUrls"] as? [URL]
+                    
+               
                     
                     /*
                     self.label.text = "ImageUrls: \(imageCount?.count ?? 0)개\n\n"
@@ -148,6 +159,21 @@ extension CommentCountMissionViewController {
                     
                     self.checkAnswerButton.isEnabled = false
                     self.checkAnswerButton.backgroundColor = .systemGray
+                    
+                    Task {
+                        do {
+                            try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
+                                                                           recentComments: self.vm.comments,
+                                                                           comment: text)
+                            // Check level update.
+                            async let _ = self.vm.checkLevelUpdate()
+                        }
+                        catch {
+                            UPlusLogger.logger.error("Error saving event participation status  -- \(String(describing: error))")
+                        }
+                    }
+                    
+                    self.delegate?.submitCommentDidTap()
                 }
                 .store(in: &bindings)
         }

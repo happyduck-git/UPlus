@@ -139,8 +139,10 @@ extension OnBoardingViewController2 {
         ])
 
         NSLayoutConstraint.activate([
-            self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
+            self.canvasView.topAnchor.constraint(equalToSystemSpacingBelow: self.onBoardImageView.topAnchor, multiplier: 10),
+//            self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
             self.onBoardImageView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
+            self.onBoardImageView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
             self.onBoardImageView.bottomAnchor.constraint(equalTo: self.canvasView.bottomAnchor),
         ])
         

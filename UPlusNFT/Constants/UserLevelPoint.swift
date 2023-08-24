@@ -68,40 +68,46 @@ extension UserLevelPoint {
         )
         print("Total Points: \(totalPoints)")
         if result.update {
-            
-            let newLevelResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
-                                                                              nftType: .avatar,
-                                                                              level: result.newLevel)
-            print("newLevelResult result: \(newLevelResult.data)")
-            // 레벨 별 차등지급 상품
-            var raffleType: UPlusNftDetailType?
-            var coffeeType: RewardType?
-            
-            switch result.newLevel {
-            case 2:
-                raffleType = .gift
-                coffeeType = .coffeeCoupon1
-            case 3:
-                raffleType = .raffleBronze
-                coffeeType = .coffeeCoupon2
-            case 4:
-                raffleType = .raffleSilver
-                coffeeType = .coffeePoint10K
-            case 5:
-                raffleType = .raffleGold
-                coffeeType = .coffeePoint20K
-            default:
-                return
+            do {
+                
+                let newLevelResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
+                                                                                  nftType: .avatar,
+                                                                                  level: result.newLevel)
+                
+                print("newLevelResult result: \(newLevelResult.data)")
+                // 레벨 별 차등지급 상품
+                var raffleType: UPlusNftDetailType?
+                var coffeeType: RewardType?
+                
+                switch result.newLevel {
+                case 2:
+                    raffleType = .gift
+                    coffeeType = .coffeeCoupon1
+                case 3:
+                    raffleType = .raffleBronze
+                    coffeeType = .coffeeCoupon2
+                case 4:
+                    raffleType = .raffleSilver
+                    coffeeType = .coffeePoint10K
+                case 5:
+                    raffleType = .raffleGold
+                    coffeeType = .coffeePoint20K
+                default:
+                    return
+                }
+           
+                let giftResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
+                                                                              nftType: raffleType ?? .gift)
+                print("gift result: \(giftResult.data)")
+              
+                try await firestoreManager.saveReward(userIndex: user.userIndex, reward: coffeeType ?? .coffeeCoupon1)
+               
+                UPlusLogger.logger.info("There is level update from \(String(describing: level)) to \(String(describing: result.newLevel)).")
             }
-            /*
+            catch {
+                UPlusLogger.logger.error("Error requesting single nft -- \(String(describing: error))")
+            }
             
-            let giftResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
-                                                                          nftType: raffleType ?? .gift)
-            print("gift result: \(giftResult.data)")
-          
-            try await firestoreManager.saveReward(userIndex: user.userIndex, reward: coffeeType ?? .coffeeCoupon1)
-            */
-            UPlusLogger.logger.info("There is level update from \(String(describing: level)) to \(String(describing: result.newLevel)).")
         } else {
             UPlusLogger.logger.info("There is no level update.")
         }

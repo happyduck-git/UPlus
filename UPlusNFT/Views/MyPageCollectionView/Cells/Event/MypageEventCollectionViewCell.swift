@@ -34,6 +34,7 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
     private let eventDescription: UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .medium)
         return label
     }()
@@ -74,7 +75,9 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
  
     override func prepareForReuse() {
         self.pointLabel.textColor = UPlusColor.blue03
+        self.pointContainerView.backgroundColor = UPlusColor.blue01
         self.pointContainerView.isHidden = false
+        self.contentView.backgroundColor = .white
     }
 }
 
@@ -87,13 +90,17 @@ extension MypageEventCollectionViewCell {
             self.eventTitle.text = mission.missionContentTitle
             self.eventDescription.text = mission.missionContentText
             self.pointLabel.text = String(describing: mission.missionRewardPoint) + "P"
+        
         case .close:
             self.eventTitle.text = "레벨 \(mission.missionPermitAvatarLevel)에 오픈"
             self.pointContainerView.isHidden = true
+            
         case .participated:
+            self.contentView.backgroundColor = UPlusColor.gray02
+            self.pointLabel.textColor = UPlusColor.gray06
+            self.pointContainerView.backgroundColor = UPlusColor.gray04
             self.eventTitle.text = mission.missionContentTitle
-            self.eventDescription.text = "참여 완료"
-            self.pointLabel.textColor = .systemGray
+            self.pointLabel.text = String(describing: MissionConstants.participated)
         }
     }
     
@@ -121,10 +128,10 @@ extension MypageEventCollectionViewCell {
             self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
             self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 2),
-            self.titleStack.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.leadingAnchor, multiplier: 2),
             
             self.pointContainerView.topAnchor.constraint(equalTo: self.eventTitle.topAnchor),
-            self.pointContainerView.widthAnchor.constraint(equalToConstant: 52),
+            self.pointContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.titleStack.trailingAnchor, multiplier: 1),
+            self.pointContainerView.widthAnchor.constraint(equalToConstant: 70),
             self.pointContainerView.heightAnchor.constraint(equalToConstant: 30),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 1)
         ])

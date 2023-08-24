@@ -130,7 +130,9 @@ final class LevelUpBottomSheetViewController: BottomSheetViewController {
         
         self.setUI()
         self.setLayout()
+        
         self.configure()
+        self.bind()
     }
     
 }

@@ -74,6 +74,7 @@ extension TotalRankCollectionViewCell {
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
         
+        /*
         vm.$totalRankerList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -83,14 +84,26 @@ extension TotalRankCollectionViewCell {
                 
             }
             .store(in: &bindings)
+        */
         
         vm.$top3RankUserList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
-                self.rankTableView.reloadData()
+                self.rankTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
             }
             .store(in: &bindings)
+        
+        vm.$exceptTop3RankerList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                self.rankTableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+                self.spinner.stopAnimating()
+                
+            }
+            .store(in: &bindings)
+    
     }
 }
 
@@ -127,7 +140,7 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
             return 1
         default:
             guard let vm = self.vm else { return 0 }
-            return vm.totalRankerList.count
+            return vm.exceptTop3RankerList.count
         }
     }
     
@@ -146,13 +159,13 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
             return cell
             
         default:
-            let cellVM = vm.totalRankerList[indexPath.row]
+            let cellVM = vm.exceptTop3RankerList[indexPath.row]
             
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalRankTableViewCell.identifier, for: indexPath) as? TotalRankTableViewCell else {
                 return UITableViewCell()
             }
             
-            cell.configure(with: cellVM, at: indexPath.row)
+            cell.configure(with: cellVM, at: indexPath.row + 3)
             return cell
         }
         

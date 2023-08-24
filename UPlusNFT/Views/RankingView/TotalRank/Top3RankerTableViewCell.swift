@@ -109,10 +109,10 @@ extension Top3RankerTableViewCell {
 extension Top3RankerTableViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.topLabel,
-                         self.thirdRankView,
-                         self.firstRankView,
-                         self.secondRankView,
-                         self.infoLabel)
+                                     self.thirdRankView,
+                                     self.firstRankView,
+                                     self.secondRankView,
+                                     self.infoLabel)
     }
     
     private func setLayout() {
@@ -133,7 +133,7 @@ extension Top3RankerTableViewCell {
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.secondRankView.trailingAnchor, multiplier: 2),
             self.secondRankView.bottomAnchor.constraint(equalTo: self.thirdRankView.bottomAnchor),
             
-            self.infoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.firstRankView.bottomAnchor, multiplier: 2),
+            self.infoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.firstRankView.bottomAnchor, multiplier: 1),
             self.infoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.infoLabel.trailingAnchor, multiplier: 2),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 2)

@@ -696,7 +696,7 @@ extension MyPageViewController {
             subitems: [item]
         )
         
-        group.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20)
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 10.0
@@ -884,10 +884,6 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return self.vm.event.regularEvents.count
                 
             case 2:
-//                print("LEVEL EVENT FROM NUMBER FO : \(self.vm.event.levelEvents)")
-                for ele in self.vm.event.levelEvents {
-                    print(ele)
-                }
                 return self.vm.event.levelEvents.count
                 
             default:
@@ -1180,8 +1176,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             }
             
         } else {
-            print("IndexPath: \(indexPath)")
-            //TODO: index path 별로 나누기
+   
             var anyMission: (any Mission)?
             
             switch indexPath.section {
@@ -1335,26 +1330,10 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
             // pop game
         case 3:
-            // NOTE: DEMO FOR NFT TRANSFER
        
             Task {
                 do {
-                    /*
-                    let result = try await NFTServiceManager.shared.requestSingleNft(userIndex: self.vm.user.userIndex, nftType: .gift)
-                    print("Result: \(result.data)")
-                    */
-                    
-                    /*
-                    let raffleResult = try await NFTServiceManager.shared.requestSingleNft(userIndex: 15,
-                                                                                             nftType: .gift)
-                    print("raffleResult result: \(raffleResult.data)")
-                    
-                    let newLevelResult = try await NFTServiceManager.shared.requestSingleNft(userIndex: 15,
-                                                                                             nftType: .avatar,
-                                                                                             level: 4)
-                    
-                    print("newLevelResult result: \(newLevelResult.data)")
-                     */
+                   
                 }
                 catch {
                     print("Error requesting single nft -- \(error)")

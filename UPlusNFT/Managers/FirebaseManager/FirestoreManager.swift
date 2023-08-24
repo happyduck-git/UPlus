@@ -64,7 +64,7 @@ extension FirestoreManager {
         
         let accountableEmails = data?[FirestoreConstants.accountableEmails] as? [String] ?? []
         let vipEmails = data?[FirestoreConstants.vipNftHolderEmails] as? [String] ?? []
-        
+        print("Accountable emails; \(accountableEmails)")
         // 1. Check is accountable
         let isAccountable = accountableEmails.contains {
             $0 == email
@@ -951,6 +951,7 @@ extension FirestoreManager {
     ///   - point: point.
     func saveParticipatedEventMission(
         formatType: MissionFormatType,
+        subFormatType: MissionSubFormatType,
         missionType: MissionType,
         eventId: String,
         selectedIndex: Int?,
@@ -991,14 +992,27 @@ extension FirestoreManager {
             .document(eventId)
         
         switch formatType {
-        case .contentReadOnly:
+            
+        case .answerQuiz, .choiceQuiz, .contentReadOnly:
             batch.setData(
                 [
-                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([userDocRef]) ]
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([eventDocPath]) ]
                 ],
                 forDocument: userDocRef,
                 merge: true
             )
+
+        case .photoAuth:
+            if subFormatType == .photoAuthNoManagement {
+                batch.setData(
+                    [
+                        FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([eventDocPath]) ]
+                    ],
+                    forDocument: userDocRef,
+                    merge: true
+                )
+            }
+
         case .shareMediaOnSlack:
             batch.setData(
                 [
@@ -1009,7 +1023,7 @@ extension FirestoreManager {
             )
             batch.setData(
                 [
-                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([userDocRef]) ]
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([eventDocPath]) ]
                 ],
                 forDocument: userDocRef,
                 merge: true
@@ -1020,6 +1034,14 @@ extension FirestoreManager {
                 print("Governance event에 선택된 답변이 없습니다.")
                 return
             }
+            
+            batch.setData(
+                [
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([eventDocPath]) ]
+                ],
+                forDocument: userDocRef,
+                merge: true
+            )
             
             batch.setData(
                 [
@@ -1035,8 +1057,8 @@ extension FirestoreManager {
                 return
             }
             
-            var recentComments: [String] = recentComments
-            recentComments.append(contentsOf: [user.userNickname, comment])
+            let recentComments: [String] = recentComments
+//            recentComments.append(contentsOf: [user.userNickname, comment])
             
             batch.setData(
                 [
@@ -1048,19 +1070,24 @@ extension FirestoreManager {
             )
             batch.setData(
                 [
-                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([userDocRef]) ]
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([eventDocPath]) ]
                 ],
                 forDocument: userDocRef,
                 merge: true
             )
-    
-        default:
-            break
+
         }
 
+        // Mission state user map
+        var missionUserState: MissionUserState = .succeeded
+        
+        if subFormatType == .photoAuthManagement {
+            missionUserState = .pending
+        }
+        
         batch.setData(
             [
-                FirestoreConstants.missionUserStateMap: [String(describing: user.userIndex): MissionUserState.succeeded.rawValue]
+                FirestoreConstants.missionUserStateMap: [String(describing: user.userIndex): missionUserState.rawValue]
             ],
             forDocument: eventDocPath,
             merge: true

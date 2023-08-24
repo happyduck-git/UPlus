@@ -19,6 +19,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        #if DEBUG
+        UPlusLogger.logger.info("🐞Current in DEBUG mode.")
+        #else
+        UPlusLogger.logger.info("🎉Current in Release mode.")
+        #endif
+        
         window = UIWindow(windowScene: windowScene)
         window?.overrideUserInterfaceStyle = .light
  

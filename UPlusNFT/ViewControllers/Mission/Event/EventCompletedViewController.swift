@@ -59,12 +59,15 @@ extension EventCompletedViewController {
                 guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else { return }
                 
                 switch subFormatType {
-                case .contentReadOnly:
-//                    guard let vm = self.vm as? ContentReadOnlyMissionViewViewModel else { return }
                     
-                    break
-                case .shareMediaOnSlack:
-                    guard let vm = self.vm as? ShareMediaOnSlackMissionViewViewModel else { return }
+                case .choiceQuizOX,
+                        .choiceQuizMore,
+                        .contentReadOnly,
+                        .shareMediaOnSlack,
+                        .choiceQuizVideo,
+                        .photoAuthManagement,
+                        .photoAuthNoManagement:
+
                     Task {
                         do {
                             try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
@@ -76,6 +79,9 @@ extension EventCompletedViewController {
                         }
                     }
                     
+                    
+                    break
+         
                 case .governanceElection:
                     guard let vm = self.vm as? GovernanceElectionMissionViewViewModel else { return }
                     
@@ -105,9 +111,9 @@ extension EventCompletedViewController {
                             self.logger.error("Error saving event participation -- \(String(describing: error))")
                         }
                     }
-                    
+                
                 default:
-                    return
+                    print("No action defined for this event")
                 }
                 
                 

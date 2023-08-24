@@ -156,6 +156,8 @@ struct MissionConstants {
     static let redeemPoint: String = "%dP 포인트 받기"
     static let routineProgress: String = "%d회 성공 /15회차"
     
+    static let vote: String = "투표하기"
+    
     /* Weekly Mission */
     static let timeLeft: String = "%d일 %d시간 후 종료"
     static let weeklyPoints: String = "600P+NFT"
@@ -192,6 +194,7 @@ struct MissionConstants {
     static let watchVideoDescription: String = "영상 시청 후 다음 페이지에서 답을 맞춰보세요."
     static let next: String = "다음"
     static let upload: String = "인증 사진 올리기"
+    static let goToQuiz: String = "문제 풀러 가기 (15초 뒤 활성화)"
     static let edit: String = "수정하기"
     static let submit: String = "제출하기"
     static let inputAnswer: String = "답변을 입력하세요"

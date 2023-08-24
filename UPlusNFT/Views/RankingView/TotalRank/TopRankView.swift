@@ -134,8 +134,8 @@ extension TopRankView {
         NSLayoutConstraint.activate([
             self.medalImage.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
             self.medalImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.medalImage.widthAnchor.constraint(equalToConstant: 45),
-            self.medalImage.heightAnchor.constraint(equalToConstant: 45),
+            self.medalImage.widthAnchor.constraint(equalToConstant: 35),
+            self.medalImage.heightAnchor.constraint(equalToConstant: 35),
             
             self.container.topAnchor.constraint(equalToSystemSpacingBelow: self.medalImage.bottomAnchor, multiplier: 1),
             self.container.leadingAnchor.constraint(equalTo: self.leadingAnchor),

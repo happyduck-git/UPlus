@@ -33,8 +33,10 @@ final class RankingViewViewModel {
     
     @Published var todayRankerList: [UPlusUser] = []
     @Published var totalRankerList: [UPlusUser] = []
+    
     @Published var yesterdayRankerList: [UPlusUser] = []
     @Published var top3RankUserList: [UPlusUser] = []
+    @Published var exceptTop3RankerList: [UPlusUser] = []
     
     @Published var currentUserTodayRank: UPlusUser?
     @Published var currentUserTotalRank: UPlusUser?
@@ -141,6 +143,8 @@ extension RankingViewViewModel {
       
         /* 누적 TOP3 */
         self.top3RankUserList = self.getTopThreeRankers(list: self.totalRankerList)
+        self.exceptTop3RankerList = self.getElementsExceptTopThree(list: self.totalRankerList)
+
     }
     
 }
@@ -154,5 +158,10 @@ extension RankingViewViewModel {
             return list
         }
     }
+    
+    private func getElementsExceptTopThree(list: [UPlusUser]) -> [UPlusUser] {
+        return Array(list.dropFirst(3))
+    }
+
 }
 

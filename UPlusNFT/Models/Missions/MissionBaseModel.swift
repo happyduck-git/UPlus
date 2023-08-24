@@ -90,7 +90,8 @@ extension MissionBaseModel {
                                       comment: String?) async throws {
         
         guard let missionFormatType = MissionFormatType(rawValue: self.mission.missionFormatType),
-        let missionType = MissionType(rawValue: self.mission.missionTopicType)
+              let missionType = MissionType(rawValue: self.mission.missionSubTopicType),
+              let missionSubformatType = MissionSubFormatType(rawValue: self.mission.missionSubFormatType)
         else {
             return
         }
@@ -98,6 +99,7 @@ extension MissionBaseModel {
         try await self.firestoreManager
             .saveParticipatedEventMission(
                 formatType: missionFormatType,
+                subFormatType: missionSubformatType,
                 missionType: missionType,
                 eventId: self.mission.missionId,
                 selectedIndex: selectedIndex,

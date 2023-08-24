@@ -135,6 +135,7 @@
 		937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76612A494F85001024D0 /* PostViewViewModel.swift */; };
 		937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76632A496106001024D0 /* PostDetailViewController.swift */; };
 		937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76652A497EBE001024D0 /* CampaignMetaData.swift */; };
+		937DDF242A972A730014AF15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF232A972A730014AF15 /* GoogleService-Info.plist */; };
 		9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */; };
 		9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */; };
 		939194702A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */; };
@@ -343,7 +344,6 @@
 		930D96DE2A443C1C0007801A /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		930D96E02A4516630007801A /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		930D96E22A453D8D0007801A /* BackToLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackToLoginViewController.swift; sourceTree = "<group>"; };
-		930D96E82A4578550007801A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../UPlusNFT-Firestore/dev-lguplus-nft-platfarm/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		932C34CA2A5254A70032192A /* Date+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extention.swift"; sourceTree = "<group>"; };
 		932C34CC2A5260410032192A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		932C34CE2A52B7520032192A /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -375,6 +375,7 @@
 		937C76612A494F85001024D0 /* PostViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewViewModel.swift; sourceTree = "<group>"; };
 		937C76632A496106001024D0 /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		937C76652A497EBE001024D0 /* CampaignMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMetaData.swift; sourceTree = "<group>"; };
+		937DDF232A972A730014AF15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewController.swift; sourceTree = "<group>"; };
 		9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewModel.swift; sourceTree = "<group>"; };
 		9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionProgressCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -948,7 +949,7 @@
 		930D96E72A4573C00007801A /* PROD */ = {
 			isa = PBXGroup;
 			children = (
-				930D96E82A4578550007801A /* GoogleService-Info.plist */,
+				937DDF232A972A730014AF15 /* GoogleService-Info.plist */,
 			);
 			path = PROD;
 			sourceTree = "<group>";
@@ -1444,6 +1445,7 @@
 			files = (
 				930D96AE2A416AC40007801A /* LaunchScreen.storyboard in Resources */,
 				930D96AB2A416AC40007801A /* Assets.xcassets in Resources */,
+				937DDF242A972A730014AF15 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

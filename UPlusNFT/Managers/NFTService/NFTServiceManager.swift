@@ -19,6 +19,8 @@ enum NFTServiceError: Error {
 /// Singleton Object Class for UPlus NFT Service
 final actor NFTServiceManager {
     
+    var time: Int = 0
+    
     //MARK: - Init
     static let shared = NFTServiceManager()
     private init() {}
@@ -45,6 +47,9 @@ extension NFTServiceManager {
     func requestSingleNft(userIndex: Int64,
                           nftType: UPlusNftDetailType,
                           level: Int = 0) async throws -> NFTResponse {
+        
+        UPlusLogger.logger.debug("Request single nft called! #\(String(describing:self.time + 1))")
+        
         var type = nftType.rawValue
         
         if nftType.rawValue.hasSuffix("%d") {

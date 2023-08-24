@@ -186,7 +186,7 @@ extension ChoiceQuizOXViewController {
 extension ChoiceQuizOXViewController {
     private func configure() {
         self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.quizLabel.text = self.vm.mission.missionContentTitle
+        self.quizLabel.text = self.vm.mission.missionContentText
         
         let dataSource = self.vm.mission as! ChoiceQuizMission
         self.circleMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[0], for: .normal)

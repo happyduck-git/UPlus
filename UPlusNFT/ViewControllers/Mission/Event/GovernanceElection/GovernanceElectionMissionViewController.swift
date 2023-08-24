@@ -22,15 +22,7 @@ final class GovernanceElectionMissionViewController: BaseMissionViewController {
     
     //MARK: - UI Elements
     private let loadingVC = LoadingViewController()
-    
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.backgroundColor = .systemGray3
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
+
     private let stack: UIStackView = {
        let stack = UIStackView()
         stack.axis = .vertical
@@ -60,6 +52,8 @@ final class GovernanceElectionMissionViewController: BaseMissionViewController {
         self.setUI()
         self.setLayout()
         self.createChart()
+        
+        self.configure()
         self.bind()
     }
 
@@ -75,6 +69,8 @@ extension GovernanceElectionMissionViewController {
             let button = ChoiceMultipleQuizButton()
             button.tag = i
             button.setQuizTitle(text: captions[i])
+            button.clipsToBounds = true
+            button.layer.cornerRadius = 8.0
             self.choiceButtons.append(button)
             self.stack.addArrangedSubview(button)
         }
@@ -83,6 +79,17 @@ extension GovernanceElectionMissionViewController {
     
 }
 
+// MARK: - Configure
+extension GovernanceElectionMissionViewController {
+    
+    private func configure() {
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        self.quizLabel.text = self.vm.mission.missionContentText
+    }
+    
+}
+
+// MARK: - Bind
 extension GovernanceElectionMissionViewController {
  
     private func bind() {
@@ -103,7 +110,8 @@ extension GovernanceElectionMissionViewController {
                                 self.choiceButtons[prev].layer.borderColor = UIColor.clear.cgColor
                                 self.choiceButtons[prev].toggleImage(hidden: true)
                             }
-                            self.choiceButtons[tag].layer.borderColor = UPlusColor.gray05.cgColor
+                            self.choiceButtons[tag].layer.borderColor = UPlusColor.mint03.cgColor
+                            self.choiceButtons[tag].layer.borderWidth = 2.0
                             
                             self.vm.buttonStatus[tag].toggle()
                             self.choiceButtons[tag].toggleImage(hidden: false)
@@ -174,20 +182,14 @@ extension GovernanceElectionMissionViewController {
 //MARK: - Set UI & Layout
 extension GovernanceElectionMissionViewController {
     private func setUI() {
-        self.view.addSubviews(
-            self.imageView,
-            self.stack
-        )
+        self.checkAnswerButton.setTitle(MissionConstants.vote, for: .normal)
+        
+        self.view.addSubviews(self.stack)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.imageView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 2),
-            self.imageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 5),
-            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.imageView.trailingAnchor, multiplier: 5),
-            self.imageView.heightAnchor.constraint(equalTo: self.imageView.widthAnchor),
-            
-            self.stack.topAnchor.constraint(equalToSystemSpacingBelow: self.imageView.bottomAnchor, multiplier: 2),
+            self.stack.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 2),
             self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 3),
             self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 3)

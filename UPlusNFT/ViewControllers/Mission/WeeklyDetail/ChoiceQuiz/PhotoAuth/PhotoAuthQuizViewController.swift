@@ -18,22 +18,34 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
-    private let container: UIImageView = {
-       let imageView = UIImageView()
+    private let uploadButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(MissionConstants.upload, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .white
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let uploadedPhotoView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.isHidden = true
         imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = UPlusColor.gray04
+        imageView.layer.cornerRadius = 8.0
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private let uploadButton: UIButton = {
-       let button = UIButton()
-        button.setTitle(MissionConstants.upload, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
+    private let goToQuizButton: UIButton = {
+        let button = UIButton()
         button.clipsToBounds = true
+        button.setTitle(MissionConstants.goToQuiz, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UPlusColor.gray03
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -54,6 +66,7 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
         return picker
     }()
     
+    // MARK: - Init
     init(vm: PhotoAuthQuizViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
@@ -69,6 +82,8 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
 
         self.setUI()
         self.setLayout()
+        self.setDelegate()
+        
         self.configure()
         self.bind()
     }
@@ -76,13 +91,16 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.uploadButton.layer.cornerRadius = self.uploadButton.frame.height / 2
+        self.goToQuizButton.layer.cornerRadius = self.goToQuizButton.frame.height / 2
     }
 }
 
+// MARK: - Configure
 extension PhotoAuthQuizViewController {
     
     private func configure() {
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        self.quizLabel.text = self.vm.mission.missionContentText
         self.checkAnswerButton.setTitle(MissionConstants.submit, for: .normal)
     }
     
@@ -124,13 +142,20 @@ extension PhotoAuthQuizViewController {
         
         self.vm.$selectedImage
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
+            .sink { [weak self] image in
                 guard let `self` = self else { return }
-                
-                self.uploadButton.isHidden = true
-                self.container.image = $0
-                self.checkAnswerButton.isUserInteractionEnabled = true
-                self.checkAnswerButton.backgroundColor = .black
+               
+                if image != nil {
+                    self.uploadButton.isHidden = true
+                    self.uploadedPhotoView.isHidden = false
+                    
+                    self.uploadedPhotoView.image = image
+                    
+                    self.checkAnswerButton.isUserInteractionEnabled = true
+                    self.checkAnswerButton.backgroundColor = .black
+                } else {
+                    print("No image")
+                }
             }
             .store(in: &bindings)
         
@@ -138,24 +163,33 @@ extension PhotoAuthQuizViewController {
     }
 }
 
+// MARK: - Set Delegate
+extension PhotoAuthQuizViewController {
+    private func setDelegate() {
+        self.photoPicker.delegate = self
+        self.camera.delegate = self
+    }
+}
 
+// MARK: - Set UI & Layout
 extension PhotoAuthQuizViewController {
     
     private func setUI() {
-        self.quizContainer.addSubviews(self.container,
-                                       self.uploadButton)
+        self.quizContainer.addSubviews(self.uploadButton,
+                                       self.uploadedPhotoView)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.container.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 5),
-            self.container.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
-            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.container.trailingAnchor, multiplier: 3),
-            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.container.bottomAnchor, multiplier: 5),
+            self.uploadButton.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 3),
+            self.uploadButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 3),
+            self.uploadButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadButton.trailingAnchor, multiplier: 2),
             
-            self.uploadButton.centerYAnchor.constraint(equalTo: self.container.centerYAnchor),
-            self.uploadButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.container.leadingAnchor, multiplier: 6),
-            self.container.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadButton.trailingAnchor, multiplier: 6)
+            self.uploadedPhotoView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 3),
+            self.uploadedPhotoView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 2),
+            self.uploadedPhotoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadedPhotoView.trailingAnchor, multiplier: 2),
         ])
     }
 }
@@ -205,6 +239,18 @@ extension PhotoAuthQuizViewController: PHPickerViewControllerDelegate {
         }
     }
     
+}
+
+extension PhotoAuthQuizViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let pickedImage = info[.originalImage] as? UIImage else { return }
+        self.vm.selectedImage = pickedImage
+        dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
 }
 
 extension PhotoAuthQuizViewController: BaseMissionCompletedViewControllerDelegate {
