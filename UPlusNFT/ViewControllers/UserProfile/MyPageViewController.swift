@@ -12,6 +12,9 @@ import OSLog
 
 final class MyPageViewController: UIViewController {
     
+    // MARK: - Notification
+    let notiCenter = UNUserNotificationCenter.current()
+    
     // MARK: - Dependency
     let vm: MyPageViewViewModel
     private var sideMenuVC: SideMenuViewController?
@@ -140,6 +143,9 @@ final class MyPageViewController: UIViewController {
         self.setUI()
         self.setLayout()
         self.setDelegate()
+        
+        // Send notification
+        self.requestAuthNoti()
         
     }
     
@@ -444,6 +450,7 @@ extension MyPageViewController {
     
     @objc func speakerDidTap() {
         //TODO: 공지사항 열람
+        self.requestSendNoti(seconds: 0.5)
     }
     
     private func setDelegate() {
@@ -1420,4 +1427,52 @@ extension MyPageViewController {
     }
 }
 
+extension MyPageViewController {
+ 
+    func requestSendNoti(seconds: Double) {
+          let notiContent = UNMutableNotificationContent()
+        
+        // 아침
+        /*
+         notiContent.title = "미션으로 아침을 시작해볼까요!"
+         notiContent.body = "출근하며 오늘의 미션을 완료해보세요"
+         notiContent.userInfo = ["targetView": "myPage"]
+         */
+        
+        // 점심
+        /*
+          notiContent.title = "아직 미션을 안하셨네요!"
+          notiContent.body = "점심시간이 지나기 전에 미션을 완료해보세요"
+          notiContent.userInfo = ["targetView": "myPage"] // 푸시 받을때 오는 데이터
+        */
+        
+        // 오후
+        notiContent.title = "잠시 휴식이 필요한 시간!"
+        notiContent.body = "완료하지 않은 여정을 다시 시작해볼까요?"
+        notiContent.userInfo = ["targetView": "myPage"]
 
+          // 알림이 trigger되는 시간 설정
+          let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false)
+
+          let request = UNNotificationRequest(
+              identifier: UUID().uuidString,
+              content: notiContent,
+              trigger: trigger
+          )
+
+        notiCenter.add(request) { (error) in
+              print(#function, error)
+          }
+        
+    }
+    
+    func requestAuthNoti() {
+        let notiAuthOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
+        notiCenter.requestAuthorization(options: notiAuthOptions) { (success, error) in
+            if let error = error {
+                print(#function, error)
+            }
+        }
+    }
+    
+}

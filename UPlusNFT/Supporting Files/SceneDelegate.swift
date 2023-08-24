@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 import OSLog
+import UserNotifications
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
