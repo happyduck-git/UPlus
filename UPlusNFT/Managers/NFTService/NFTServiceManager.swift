@@ -48,7 +48,7 @@ extension NFTServiceManager {
                           nftType: UPlusNftDetailType,
                           level: Int = 0) async throws -> NFTResponse {
         
-        UPlusLogger.logger.debug("Request single nft called! #\(String(describing:self.time + 1))")
+        UPlusLogger.logger.debug("Request single nft called!")
         
         var type = nftType.rawValue
         

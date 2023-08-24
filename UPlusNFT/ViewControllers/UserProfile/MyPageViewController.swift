@@ -477,7 +477,7 @@ extension MyPageViewController {
         }
         
         if !self.vm.isRefreshing && scrollView.contentOffset.y < self.initialTopOffset - 200 {
-            
+            logger.debug("Refreshing")
             self.vm.isRefreshing.toggle()
             
             self.refreshControl.beginRefreshing()

@@ -7,8 +7,13 @@
 
 import UIKit
 
+protocol BottomSheetViewControllerDelegate: AnyObject {
+    func bottomSheetDismissed()
+}
+
 class BottomSheetViewController: UIViewController {
     
+    //MARK: - UI Elements
     // 1
     lazy var containerView: UIView = {
         let view = UIView()
