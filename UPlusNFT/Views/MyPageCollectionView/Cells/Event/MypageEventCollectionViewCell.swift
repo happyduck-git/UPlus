@@ -105,9 +105,9 @@ extension MypageEventCollectionViewCell {
     }
     
     func resetCell() {
-        self.eventTitle.text = nil
-        self.eventDescription.text = nil
-        self.pointLabel.text = nil
+        self.eventTitle.text = " "
+        self.eventDescription.text = " "
+        self.pointLabel.text = " "
     }
 }
 

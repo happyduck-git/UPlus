@@ -132,7 +132,7 @@ struct MissionConstants {
     static let level: String = "Level"
     static let levelPrefix: String = "LV."
     static let retrieve: String = "받기"
-    static let todayMission: String = "오늘의 미션"
+    static let todayMission: String = "데일리 퀘스트"
     static let availableEvent: String = "참여 가능한 이벤트"
     static let dailyAttendanceMission: String = "데일리 퀴즈"
     static let expMission: String = "갓생 인증 미션"
@@ -143,8 +143,8 @@ struct MissionConstants {
     static let details: String = "자세히 보기"
     static let difficulty: String = "난이도"
     
-    static let level0Event: String = "참여 이벤트"
-    static let otherLevelEvent: String = "레벨 이벤트"
+    static let level0Event: String = "콘테스트"
+    static let otherLevelEvent: String = "스페셜 이벤트"
     
     static let quizMission: String = "퀴즈 미션"
     static let checkAnswer: String = "정답 확인하기"
@@ -308,7 +308,7 @@ struct SFSymbol {
 }
 
 struct ImageAsset {
-    static let level1InitialAvatar: String = "level1-avatar-initial"
+    static let level1InitialAvatar: String = "level4-avatar-initial"
     static let vipInitialBenefit: String = "vip-initial-benefit"
     
     static let speaker: String = "speaker"

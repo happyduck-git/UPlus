@@ -49,9 +49,9 @@ enum MissionType: String {
         case .dailyExpEnvironmentalist:
             return "업무 루틴 미션"
         case .eventRegularMission:
-            return "참여 이벤트"
+            return "콘테스트"
         case .eventLevelMission:
-            return "레벨 이벤트"
+            return "스페셜 이벤트"
         default:
             return "주간 퀴즈"
         }
@@ -113,6 +113,40 @@ enum MissionUserState: String {
 struct MissionModel: Mission, Codable {
     var missionId: String
     
+    var missionTopicType: String
+    
+    var missionSubTopicType: String
+    
+    var missionFormatType: String
+    
+    var missionSubFormatType: String
+    
+    var missionContentTitle: String?
+    
+    var missionContentText: String?
+    
+    var missionContentImagePaths: [String]?
+    
+    var missionCreationTime: Timestamp
+    
+    var missionStartTime: Timestamp
+    
+    var missionUserStateMap: [String : String]?
+    
+    var missionRewardPoint: Int64
+    
+    var missionPermitAvatarLevel: Int64
+    
+    
+}
+
+// MARK: - Model for MyPageVC Event Part
+struct MissionWithLevel: Mission {
+
+    var level: Int
+    
+    var missionId: String
+
     var missionTopicType: String
     
     var missionSubTopicType: String

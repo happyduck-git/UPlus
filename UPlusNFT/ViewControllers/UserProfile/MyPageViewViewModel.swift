@@ -21,8 +21,8 @@ final class MyPageViewViewModel {
     //MARK: - Sections
     enum MyPageViewMissionSectionType: String, CaseIterable {
         case today
-        case routine = "루틴 미션"
-        case weekly = "여정 미션"
+        case routine = "마스터의 성공 습관 만들기"
+        case weekly = "월드클래스 기업 만들기"
         case button
         case calendar
         case history
@@ -46,7 +46,13 @@ final class MyPageViewViewModel {
     @Published var userProfileViewModel: UserProfileViewViewModel?
     @Published var newPoint: Int64 = 0
     @Published var rank: Int = UPlusServiceInfoConstant.totalMembers
-    @Published var updatedNfts: [String] = []
+    @Published var updatedNfts: [String] = [] {
+        didSet {
+            updatedNfts2 = updatedNfts
+        }
+    }
+    
+    var updatedNfts2: [String] = []
     
     var isRefreshing: Bool = false
     
@@ -114,11 +120,18 @@ final class MyPageViewViewModel {
         
         @Published var missionPerLevel: [Int64: [any Mission]] = [:] {
             didSet {
+                
+                /*
+                if mission.level != nil {
+                    // 레벨 셀 보여주기
+                } else {
+                    // 레벨 아닌 셀 보여주기
+                }
+                */
                 var others: [(any Mission)?] = []
                
                 others.append(nil)
                 others.append(contentsOf: missionPerLevel[0] ?? [])
-                others.append(nil)
                 others.append(contentsOf: missionPerLevel[1] ?? [])
                 others.append(nil)
                 others.append(contentsOf: missionPerLevel[2] ?? [])
@@ -271,6 +284,7 @@ extension MyPageViewViewModel {
         let token = await self.getTopLevelNftToken() ?? "no-token"
         let nftUrl = await self.firestoreManager.getNft(tokenId: token)?.nftContentImageUrl ?? "no-url"
         let level = self.getUserLevel()
+        
         print("Userlevel: \(level)")
         self.userProfileViewModel = UserProfileViewViewModel(
             profileImage: nftUrl,
@@ -278,7 +292,7 @@ extension MyPageViewViewModel {
             points: self.user.userTotalPoint ?? 0,
             maxPoints: 15,
             level: level,
-            timeLeft: 12
+            timeLeft: self.hoursLeftUntilEndOfDay()
         )
         
     }
@@ -372,8 +386,8 @@ extension MyPageViewViewModel {
             
             let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
             
-            logger.info("Old tokens: \(savedTokens)")
-            logger.info("New tokens: \(newestTokens)")
+            logger.info("FireBase tokens: \(savedTokens)")
+            logger.info("Luniverse tokens: \(newestTokens)")
             
             // 3. Compare differences.
             self.differences(savedTokens, newestTokens)
@@ -497,9 +511,16 @@ extension MyPageViewViewModel {
         return String(format: MissionConstants.timeLeft, days, hours)
     }
     
+    private func hoursLeftUntilEndOfDay() -> Int {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        if let endOfDay = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: now)?.addingTimeInterval(24 * 60 * 60) {
+            let components = calendar.dateComponents([.hour], from: now, to: endOfDay)
+            return components.hour ?? 0
+        }
+        
+        return 0
+    }
 }
 
-extension MyPageViewViewModel {
- 
-    
-}

@@ -8,9 +8,16 @@
 import UIKit
 import Combine
 
+protocol NftBottomSheetDelegate: AnyObject {
+    func redeemButtonDidTap()
+}
+
 final class LevelUpBottomSheetViewController: BottomSheetViewController {
     
     private let newLevel: Int
+    
+    //MARK: - Delegate
+    weak var delegate: NftBottomSheetDelegate?
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -155,7 +162,10 @@ extension LevelUpBottomSheetViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     
-                    self.dismissView()
+                    self.dismissView {
+                        self.delegate?.redeemButtonDidTap()
+                    }
+                    
                 }
                 .store(in: &bindings)
         }

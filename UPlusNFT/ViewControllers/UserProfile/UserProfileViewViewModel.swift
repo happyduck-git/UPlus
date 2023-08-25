@@ -19,14 +19,14 @@ final class UserProfileViewViewModel {
     let level: Int64
     
     /* Today Mission Section */
-    let timeLeft: Int64
+    let timeLeft: Int
     
     init(profileImage: String,
          username: String,
          points: Int64,
          maxPoints: Int64,
          level: Int64,
-         timeLeft: Int64
+         timeLeft: Int
     ) {
         self.profileImage = profileImage
         self.username = username

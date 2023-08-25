@@ -10,16 +10,12 @@ import Combine
 import Nuke
 import OSLog
 
-protocol NewNFTNoticeBottomSheetDelegate: AnyObject {
-    func redeemButtonDidTap()
-}
-
 final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
     
     private let logger = Logger()
     
     //MARK: - Delegate
-    weak var delegate: NewNFTNoticeBottomSheetDelegate?
+    weak var delegate: NftBottomSheetDelegate?
     
     // MARK: - Dependency
     private let vm: NewNFTNoticeBottomSheetViewViewModel
@@ -113,8 +109,10 @@ extension NewNFTNoticeBottomSheetViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     
-                    self.dismissView()
-                    self.delegate?.redeemButtonDidTap()
+                    self.dismissView {
+                        self.delegate?.redeemButtonDidTap()
+                    }
+                    
                 }
                 .store(in: &bindings)
             

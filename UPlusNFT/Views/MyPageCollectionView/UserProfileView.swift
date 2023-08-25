@@ -8,6 +8,7 @@
 import UIKit
 import Nuke
 import Combine
+import Gifu
 
 final class UserProfileView: PassThroughView {
     
@@ -17,14 +18,14 @@ final class UserProfileView: PassThroughView {
     // MARK: - UI Elements
     let gradientLayer = CAGradientLayer()
     
-    private let profileImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.layer.borderWidth = 3.0
-        imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.image = UIImage(named: ImageAsset.level1InitialAvatar)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let profileImage: GIFImageView = {
+        let gifView = GIFImageView()
+        gifView.clipsToBounds = true
+        gifView.layer.borderWidth = 3.0
+        gifView.layer.borderColor = UIColor.white.cgColor
+        gifView.image = UIImage(named: ImageAsset.level1InitialAvatar)
+        gifView.translatesAutoresizingMaskIntoConstraints = false
+        return gifView
     }()
 
     private let usernameLabel: UILabel = {
@@ -95,14 +96,9 @@ extension UserProfileView {
                 guard let `self` = self,
                       let image = result?.profileImage else { return }
                 Task {
-                    do {
-                        let url = URL(string: image)!
-                        self.profileImage.image = try await ImagePipeline.shared.image(for: url)
-                        
-                    }
-                    catch {
-                        print("Error converting profile image -- \(error)")
-                    }
+                    let url = URL(string: image)!
+                    self.profileImage.animate(withGIFURL: url)
+                    self.profileImage.prepareForAnimation(withGIFURL: url)
                 }
                 self.usernameLabel.text = vm.user.userNickname
                 self.userMissionDataView.configure(vm: vm)
