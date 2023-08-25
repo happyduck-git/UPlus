@@ -214,7 +214,9 @@ extension VipHolderBottomSheetViewController {
             async let _ = self.vm.saveVipInitialPoint()
         }
         
-        self.dismissView()
+        self.dismissView {
+            print("Vip holder bottom sheet dismissed.")
+        }
     }
     
 }

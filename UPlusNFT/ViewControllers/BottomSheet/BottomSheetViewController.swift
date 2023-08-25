@@ -7,8 +7,13 @@
 
 import UIKit
 
+protocol BottomSheetViewControllerDelegate: AnyObject {
+    func bottomSheetDismissed()
+}
+
 class BottomSheetViewController: UIViewController {
     
+    //MARK: - UI Elements
     // 1
     lazy var containerView: UIView = {
         let view = UIView()
@@ -82,12 +87,14 @@ extension BottomSheetViewController {
     }
     
     @objc private func animateDismissView() {
-        self.dismissView()
+        self.dismissView {
+            
+        }
     }
     
     
     /// Dismiss the view controller with the custom animation.
-    func dismissView() {
+    func dismissView(completion: @escaping () -> ()) {
         // hide main container view by updating bottom constraint in animation block
         UIView.animate(withDuration: 0.3) {
             self.containerViewBottomConstraint?.constant = self.defaultHeight
@@ -101,7 +108,9 @@ extension BottomSheetViewController {
             self.dimmedView.alpha = 0
         } completion: { _ in
             // once done, dismiss without animation
-            self.dismiss(animated: false)
+            self.dismiss(animated: false) {
+                completion()
+            }
         }
     }
     

@@ -84,7 +84,9 @@ extension WalletAddressBottomSheetViewController {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    self.dismissView()
+                    self.dismissView {
+                        
+                    }
                 }
                 .store(in: &bindings)
             

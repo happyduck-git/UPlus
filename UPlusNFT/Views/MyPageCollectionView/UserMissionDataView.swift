@@ -42,6 +42,7 @@ final class UserMissionDataView: PassThroughView {
     
     private let pointLabel: UILabel = {
         let label = UILabel()
+        label.text = " "
         label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
         label.textColor = UPlusColor.deepGreen
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -50,6 +51,7 @@ final class UserMissionDataView: PassThroughView {
     
     private let levelDescriptionLabel: UILabel = {
         let label = UILabel()
+        label.text = " "
         label.font = .systemFont(ofSize: UPlusFont.caption1)
         label.textColor = UPlusColor.lightGreen
         label.translatesAutoresizingMaskIntoConstraints = false

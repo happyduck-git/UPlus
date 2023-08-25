@@ -69,7 +69,7 @@ extension UserLevelPoint {
         print("Total Points: \(totalPoints)")
         if result.update {
             do {
-                
+                print("Update level update, called. for userindex: \(user.userIndex), level: \(result.newLevel)")
                 let newLevelResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
                                                                                   nftType: .avatar,
                                                                                   level: result.newLevel)
@@ -93,7 +93,8 @@ extension UserLevelPoint {
                     raffleType = .raffleGold
                     coffeeType = .coffeePoint20K
                 default:
-                    return
+                    raffleType = .gift
+                    coffeeType = .coffeeCoupon1
                 }
            
                 let giftResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,

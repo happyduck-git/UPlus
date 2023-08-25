@@ -623,7 +623,7 @@ extension FirestoreManager {
                 case .governanceElection:
                     missions.append(try doc.data(as: GovernanceMission.self, decoder: self.decoder))
                     
-                case .commentCount:
+                case .userComment:
                     missions.append(try doc.data(as: CommentCountMission.self, decoder: self.decoder))
                     
                 case .choiceQuiz:
@@ -1051,7 +1051,7 @@ extension FirestoreManager {
                 merge: true
             )
             
-        case .commentCount:
+        case .userComment:
             guard let comment = comment else {
                 print("Comment event에 제출된 답변이 없습니다.")
                 return

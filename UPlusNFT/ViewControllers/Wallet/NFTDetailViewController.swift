@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import Nuke
+import Gifu
 
 final class NFTDetailViewController: UIViewController {
     
@@ -24,12 +25,12 @@ final class NFTDetailViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private let nftImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 10.0
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let nftImageView: GIFImageView = {
+        let gifView = GIFImageView()
+        gifView.clipsToBounds = true
+        gifView.layer.cornerRadius = 10.0
+        gifView.translatesAutoresizingMaskIntoConstraints = false
+        return gifView
     }()
     
     private let nftInfoContainer: UIView = {
@@ -239,7 +240,8 @@ extension NFTDetailViewController {
         Task {
             do {
                 if let url = URL(string: vm.nftContentImageUrl) {
-                    self.nftImageView.image = try await ImagePipeline.shared.image(for: url)
+                    self.nftImageView.animate(withGIFURL: url)
+                    self.nftImageView.prepareForAnimation(withGIFURL: url)
                 }
                 
                 let user = try UPlusUser.getCurrentUser()

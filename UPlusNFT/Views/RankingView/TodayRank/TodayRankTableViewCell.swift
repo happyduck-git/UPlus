@@ -127,8 +127,8 @@ final class TodayRankTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.rankImageView.isHidden = false
-        self.rankLabel.isHidden = true
+        self.rankImageView.isHidden = true
+        self.rankLabel.isHidden = false
     }
     
     internal func resetCell() {

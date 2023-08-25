@@ -161,12 +161,13 @@ extension CommentCountMissionViewController {
                     self.checkAnswerButton.backgroundColor = .systemGray
                     
                     Task {
+                        print("Task called")
                         do {
                             try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
                                                                            recentComments: self.vm.comments,
                                                                            comment: text)
                             // Check level update.
-                            async let _ = self.vm.checkLevelUpdate()
+                            try await self.vm.checkLevelUpdate()
                         }
                         catch {
                             UPlusLogger.logger.error("Error saving event participation status  -- \(String(describing: error))")

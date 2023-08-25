@@ -12,6 +12,8 @@ import OSLog
 
 final class MyPageViewController: UIViewController {
     
+    let nftServiceManager = NFTServiceManager.shared
+    
     // MARK: - Notification
     let notiCenter = UNUserNotificationCenter.current()
     
@@ -333,16 +335,8 @@ extension MyPageViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] nfts in
                     guard let `self` = self else { return }
-                    
-                    for nft in nfts {
-                        let level = NftLevel.level(tokenId: Int64(nft) ?? 0)
-                        if level < 10 && level > 1 {
-                            self.showLevelUpBottomSheet(level: level)
-                        } else if level == 10 {
-                            self.showNewNftBottomSheet(tokenId: nft)
-                        } else {
-                            continue
-                        }
+                    if !nfts.isEmpty {
+                        self.startPresenting()
                     }
                     
                 }
@@ -484,7 +478,7 @@ extension MyPageViewController {
         }
         
         if !self.vm.isRefreshing && scrollView.contentOffset.y < self.initialTopOffset - 200 {
-            
+            logger.debug("Refreshing")
             self.vm.isRefreshing.toggle()
             
             self.refreshControl.beginRefreshing()
@@ -520,11 +514,6 @@ extension MyPageViewController {
         )
         
         collectionView.refreshControl = self.refreshControl
-        
-        collectionView.register(
-            TestCollectionViewCell.self,
-            forCellWithReuseIdentifier: TestCollectionViewCell.identifier
-        )
         
         // 1. Register header
         collectionView.register(MissionCollectionViewHeader.self,
@@ -1016,10 +1005,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 
             default:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TestCollectionViewCell.identifier, for: indexPath) as? TestCollectionViewCell else {
-                    fatalError()
-                }
-                return cell
+                
+                return UICollectionViewCell()
             }
         } else {
             switch indexPath.section {
@@ -1195,7 +1182,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return
             }
             guard let mission = anyMission else { return }
-            let type = MissionSubFormatType(rawValue: mission.missionSubFormatType) ?? .commentCount
+            let type = MissionSubFormatType(rawValue: mission.missionSubFormatType) ?? .userComment
             
             switch type {
             case .photoAuthManagement, .photoAuthNoManagement:
@@ -1230,7 +1217,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 self.show(vc, sender: self)
                 
-            case .commentCount:
+            case .userComment:
                 guard let mission = mission as? CommentCountMission else { return }
                 let vm = CommentCountMissionViewViewModel(type: .event, mission: mission)
                 let vc = CommentCountMissionViewController(vm: vm)
@@ -1337,15 +1324,6 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
             // pop game
         case 3:
-       
-            Task {
-                do {
-                   
-                }
-                catch {
-                    print("Error requesting single nft -- \(error)")
-                }
-            }
            
             break
             
@@ -1410,19 +1388,57 @@ extension MyPageViewController: VipHolderBottomSheetViewControllerDelegate {
 }
 
 // MARK: - Private
-extension MyPageViewController {
+extension MyPageViewController: NftBottomSheetDelegate {
+    
+    func redeemButtonDidTap() {
+        self.presentBottomSheets()
+    }
+    
+    private func presentBottomSheets() {
+        logger.info("Present bottom sheets: \(self.vm.updatedNfts2)")
+        
+        guard !self.vm.updatedNfts2.isEmpty else {
+            logger.info("No more nfts")
+            return
+        }
+        
+        let nft = self.vm.updatedNfts2.removeFirst()
+        let level = NftLevel.level(tokenId: Int64(nft) ?? 0)
+        
+        if level < 10 && level > 1 {
+            logger.info("Show level up: \(String(describing: level))")
+            self.showLevelUpBottomSheet(level: level)
+            
+        } else if level == 10 {
+            logger.info("Show new nft: \(String(describing: nft))")
+            self.showNewNftBottomSheet(tokenId: nft)
+        
+        } else {
+            logger.info("Skip: token no. \(nft)")
+            self.redeemButtonDidTap()
+        }
+
+    }
+    
+    // Call this function initially to start presenting
+    private func startPresenting() {
+        self.presentBottomSheets()
+    }
+    
     private func showNewNftBottomSheet(tokenId: String) {
         let vm = NewNFTNoticeBottomSheetViewViewModel(tokenId: tokenId)
         let vc = NewNFTNoticeBottomSheetViewController(vm: vm)
         vc.modalPresentationStyle = .overCurrentContext
-
+        vc.delegate = self
+        
         self.present(vc, animated: false)
     }
     
     private func showLevelUpBottomSheet(level: Int) {
         let vc = LevelUpBottomSheetViewController(newLevel: level)
         vc.modalPresentationStyle = .overCurrentContext
-
+        vc.delegate = self
+        logger.info("Showing...")
         self.present(vc, animated: false)
     }
 }
@@ -1476,3 +1492,4 @@ extension MyPageViewController {
     }
     
 }
+

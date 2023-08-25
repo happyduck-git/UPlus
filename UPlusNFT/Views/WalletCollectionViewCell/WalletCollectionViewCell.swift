@@ -7,15 +7,16 @@
 
 import UIKit
 import Nuke
+import Gifu
 
 final class WalletCollectionViewCell: UICollectionViewCell {
     
     private var nftImageViewHeight: NSLayoutConstraint?
-    
-    private let nftImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+
+    private let nftImageView: GIFImageView = {
+        let gifView = GIFImageView()
+        gifView.translatesAutoresizingMaskIntoConstraints = false
+        return gifView
     }()
     
     private let nftTypeView: InsetLabelView = {
@@ -100,14 +101,12 @@ extension WalletCollectionViewCell {
 extension WalletCollectionViewCell {
     func configure(with data: UPlusNft) {
         Task {
-            do {
-                if let url = URL(string: data.nftContentImageUrl) {
-                    self.nftImageView.image = try await ImagePipeline.shared.image(for: url)
-                }
+            
+            if let url = URL(string: data.nftContentImageUrl) {
+                self.nftImageView.animate(withGIFURL: url)
+                self.nftImageView.prepareForAnimation(withGIFURL: url)
             }
-            catch {
-                print("Error fetching nft image -- \(error)")
-            }
+
             self.nftTypeView.setNameTitle(text: data.nftDetailType)
             self.nftTitle.text = data.nftDetailType
         

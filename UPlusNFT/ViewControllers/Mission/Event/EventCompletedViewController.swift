@@ -96,7 +96,8 @@ extension EventCompletedViewController {
                         }
                     }
                     
-                case .commentCount:
+                
+                case .userComment:
                     guard let vm = self.vm as? CommentCountMissionViewViewModel,
                           let mission = self.vm.mission as? CommentCountMission
                     else { return }
@@ -120,15 +121,18 @@ extension EventCompletedViewController {
                 Task {
                     do {
                         // Check level update.
-                        async let _ = self.vm.checkLevelUpdate()
-                      
+                        try await self.vm.checkLevelUpdate()
+
                         self.delegate?.redeemDidTap()
-                        self.loadingVC.removeViewController()
                         
-                        guard let vcs = self.navigationController?.viewControllers else { return }
-                        for vc in vcs where vc is MyPageViewController {
-                            DispatchQueue.main.async {
-                                self.navigationController?.popToViewController(vc, animated: true)
+                        DispatchQueue.main.async {
+                            self.loadingVC.removeViewController()
+                            
+                            guard let vcs = self.navigationController?.viewControllers else { return }
+                            for vc in vcs where vc is MyPageViewController {
+                                DispatchQueue.main.async {
+                                    self.navigationController?.popToViewController(vc, animated: true)
+                                }
                             }
                         }
                     }

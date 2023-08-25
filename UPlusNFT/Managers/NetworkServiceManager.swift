@@ -7,10 +7,11 @@
 
 import Foundation
 
-final class NetworkServiceManager {
+final actor NetworkServiceManager {
     static func execute<T: Decodable>(expecting type: T.Type,
-                                       request: URLRequest) async throws -> T {
-        let (data, response) = try await URLSession.shared.data(for: request)
+                                      request: URLRequest) async throws -> T {
+        
+        let (data, response) = try await URLSession.shared.data(for: request) // error here: Error Domain=NSURLErrorDomain Code=-999 "cancelled"
         guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
             throw URLError(.cannotParseResponse)
         }
@@ -21,6 +22,11 @@ final class NetworkServiceManager {
         } else {
             throw URLError(.badServerResponse)
         }
+        
+    }
+    
+    enum NetworkServiceError: Error {
+        case dataError
     }
 }
 

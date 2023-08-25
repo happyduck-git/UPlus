@@ -7,15 +7,16 @@
 
 import UIKit
 import Nuke
+import Gifu
 
 final class WalletDetailCollectionViewCell: UICollectionViewCell {
     
-    private let nftImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8.0
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let nftImageView: GIFImageView = {
+        let gifView = GIFImageView()
+        gifView.clipsToBounds = true
+        gifView.layer.cornerRadius = 8.0
+        gifView.translatesAutoresizingMaskIntoConstraints = false
+        return gifView
     }()
     
     private let nftType: UILabel = {
@@ -61,7 +62,10 @@ extension WalletDetailCollectionViewCell {
         Task {
             do {
                 if let url = URL(string: data.nftContentImageUrl) {
-                    self.nftImageView.image = try await ImagePipeline.shared.image(for: url)
+                    
+                    self.nftImageView.animate(withGIFURL: url)
+                    self.nftImageView.prepareForAnimation(withGIFURL: url)
+                    
                 }
             }
             catch {

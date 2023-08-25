@@ -65,14 +65,16 @@ extension WeeklyMissionCompleteViewController {
                         try await self.vm.saveWeeklyMissionParticipationStatus()
                         
                         // Check level update.
-                        async let _ = self.vm.checkLevelUpdate()
+                        try await self.vm.checkLevelUpdate()
                       
                         self.delegate?.redeemDidTap()
                         self.loadingVC.removeViewController()
                         
-                        guard let vcs = self.navigationController?.viewControllers else { return }
-                        for vc in vcs where vc is WeeklyMissionOverViewViewController {
-                            self.navigationController?.popToViewController(vc, animated: true)
+                        DispatchQueue.main.async {
+                            guard let vcs = self.navigationController?.viewControllers else { return }
+                            for vc in vcs where vc is WeeklyMissionOverViewViewController {
+                                self.navigationController?.popToViewController(vc, animated: true)
+                            }
                         }
                         
                         // Weekly mission 완료 상태 확인

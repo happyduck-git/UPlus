@@ -14,6 +14,9 @@ final class NewNFTNoticeBottomSheetViewController: BottomSheetViewController {
     
     private let logger = Logger()
     
+    //MARK: - Delegate
+    weak var delegate: NftBottomSheetDelegate?
+    
     // MARK: - Dependency
     private let vm: NewNFTNoticeBottomSheetViewViewModel
     
@@ -106,7 +109,10 @@ extension NewNFTNoticeBottomSheetViewController {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     
-                    self.dismissView()
+                    self.dismissView {
+                        self.delegate?.redeemButtonDidTap()
+                    }
+                    
                 }
                 .store(in: &bindings)
             

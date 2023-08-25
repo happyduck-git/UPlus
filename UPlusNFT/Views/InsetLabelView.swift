@@ -11,6 +11,7 @@ final class InsetLabelView: UIView {
 
     private let nameLabel: UILabel = {
         let label = UILabel()
+        label.text = RewardsConstants.empty
         label.textAlignment = .center
         label.textColor = UPlusColor.gray06
         label.translatesAutoresizingMaskIntoConstraints = false
