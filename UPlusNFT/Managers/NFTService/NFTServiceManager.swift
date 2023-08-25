@@ -12,8 +12,18 @@ enum NFTServiceStatus: String {
     case fail
 }
 
-enum NFTServiceError: Error {
+enum NFTServiceError: Error, LocalizedError {
     case issueFailed
+    case senderError
+    
+    public var errorDescription: String? {
+        switch self {
+        case .issueFailed:
+            return NSLocalizedString("Error issueing nft.", comment: "Single NFT Request Error")
+        case .senderError:
+            return NSLocalizedString("Sender cannot be same with Receiver.", comment: "NFT Transfer Error")
+        }
+    }
 }
 
 /// Singleton Object Class for UPlus NFT Service
@@ -82,6 +92,11 @@ extension NFTServiceManager {
     func requestNftTransfer(from senderIndex: Int64,
                             to receiverIndex: Int64,
                             tokenId: Int64) async throws -> NFTResponse {
+        
+        if senderIndex == receiverIndex {
+            throw NFTServiceError.senderError
+        }
+        
         let urlRequest = try self.buildUrlRequest(
             method: .post,
             endPoint: .transfer,

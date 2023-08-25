@@ -95,29 +95,11 @@ extension EventCompletedViewController {
                             self.logger.error("Error saving event participation -- \(String(describing: error))")
                         }
                     }
-                    
-                
-                case .userComment:
-                    guard let vm = self.vm as? CommentCountMissionViewViewModel,
-                          let mission = self.vm.mission as? CommentCountMission
-                    else { return }
-                    
-                    Task {
-                        do {
-                            try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
-                                                                           recentComments: mission.commentUserRecents,
-                                                                           comment: vm.comment)
-                        }
-                        catch {
-                            self.logger.error("Error saving event participation -- \(String(describing: error))")
-                        }
-                    }
-                
+
                 default:
                     print("No action defined for this event")
                 }
-                
-                
+                  
                 Task {
                     do {
                         // Check level update.

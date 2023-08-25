@@ -64,6 +64,17 @@ extension GiftViewControllerViewViewModel {
             }
         }
         catch {
+            if error is NFTServiceError {
+                let err = error as? NFTServiceError
+                switch err {
+                case .senderError:
+                    // TODO: Sender Error인 경우 UI에 alert 표시
+                    break
+                default:
+                    break
+                }
+            }
+            
             logger.error("Error requesting nft transfer -- \(String(describing: error))")
             return false
         }
