@@ -36,46 +36,30 @@ final class VipHolderBottomSheetViewController: BottomSheetViewController {
     
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = UPlusColor.grayBackground
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.vipPoint)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private let benefitContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UPlusColor.blue03
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let benefitLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
-        label.text = MyPageConstants.vipPoints
-        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .heavy)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     private let greetingsLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
-        label.textAlignment = .center
         label.text = " "
-        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .heavy)
         label.numberOfLines = 2
+        label.textAlignment = .center
+        label.textColor = UPlusColor.mint04
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private lazy var receiveButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .black
+        button.backgroundColor = UPlusColor.mint03
         button.clipsToBounds = true
-        button.layer.cornerRadius = 10.0
-        button.setTitleColor(.white, for: .normal)
-        button.setTitle(MissionConstants.retrieve, for: .normal)
+        button.layer.cornerRadius = 8.0
+        button.setTitleColor(UPlusColor.gray08, for: .normal)
+        button.setTitle(MissionConstants.receive, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -119,12 +103,12 @@ extension VipHolderBottomSheetViewController {
     private func bind() {
         
         func bindViewToViewModel() {
-         
+            
             self.receiveButton.tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     guard let `self` = self else { return }
-                    self.levelUpDidTap()
+                    self.receiveDidTap()
                 }
                 .store(in: &bindings)
             
@@ -145,7 +129,7 @@ extension VipHolderBottomSheetViewController {
         bindViewToViewModel()
         bindViewModelToView()
     }
-
+    
 }
 
 extension VipHolderBottomSheetViewController {
@@ -153,11 +137,8 @@ extension VipHolderBottomSheetViewController {
     private func setUI() {
         self.containerView.addSubviews(self.titleLabel,
                                        self.nftImageView,
-                                       self.benefitContainerView,
                                        self.greetingsLabel,
                                        self.receiveButton)
-        
-        self.benefitContainerView.addSubviews(self.benefitLabel)
     }
     
     private func setLayout() {
@@ -167,31 +148,20 @@ extension VipHolderBottomSheetViewController {
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 2),
             
             self.nftImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 4),
-            self.nftImageView.widthAnchor.constraint(equalToConstant: 150),
-            self.nftImageView.heightAnchor.constraint(equalToConstant: 150),
+            self.nftImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
+            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftImageView.trailingAnchor, multiplier: 3),
             self.nftImageView.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
             
-            self.benefitContainerView.centerYAnchor.constraint(equalTo: self.nftImageView.bottomAnchor),
-            self.benefitContainerView.centerXAnchor.constraint(equalTo: self.nftImageView.centerXAnchor),
-            
-            self.greetingsLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.bottomAnchor, multiplier: 4),
+            self.greetingsLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 4),
             self.greetingsLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 1),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.greetingsLabel.trailingAnchor, multiplier: 1),
             
             self.receiveButton.topAnchor.constraint(equalToSystemSpacingBelow: self.greetingsLabel.bottomAnchor, multiplier: 3),
+            self.receiveButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
             self.receiveButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.receiveButton.trailingAnchor, multiplier: 2),
             self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.receiveButton.bottomAnchor, multiplier: 3)
         ])
-        
-        NSLayoutConstraint.activate([
-            self.benefitLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.topAnchor, multiplier: 1),
-            self.benefitLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 1),
-            self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitLabel.trailingAnchor, multiplier: 1),
-            self.benefitContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.benefitLabel.bottomAnchor, multiplier: 1)
-        ])
-        
-        self.nftImageView.layer.cornerRadius = 150 / 2
         
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.greetingsLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
@@ -199,16 +169,11 @@ extension VipHolderBottomSheetViewController {
         
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        self.benefitContainerView.layer.cornerRadius = self.benefitContainerView.frame.height / 2
-    }
 }
 
 extension VipHolderBottomSheetViewController {
     
-    private func levelUpDidTap() {
+    private func receiveDidTap() {
         Task {
             async let _ = self.vm.requestVipNft()
             async let _ = self.vm.saveVipInitialPoint()
@@ -221,7 +186,7 @@ extension VipHolderBottomSheetViewController {
     
 }
 
- 
+
 #if canImport(SwiftUI) && DEBUG
 import SwiftUI
 

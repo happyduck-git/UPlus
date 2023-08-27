@@ -25,7 +25,8 @@ final class LoginViewViewModel {
     @Published var password: String = ""
     @Published var errorDescription: String = ""
     @Published var isKeepMeSignedIntTapped: Bool = false
-
+    @Published var isPasswordHidden: Bool = true
+    
     let isLoginSuccess = PassthroughSubject<Bool, Never>()
     
     private(set) lazy var isCredentialNotEmpty = Publishers.CombineLatest($email, $password)
@@ -45,7 +46,7 @@ final class LoginViewViewModel {
             }
             catch (let error) {
                 print("Error loging in user: \(error.localizedDescription)")
-                self.errorDescription = "이메일/비밀번호를 확인해주세요."
+                self.errorDescription = LoginConstants.wrongCredential
                 self.isLoginSuccess.send(false)
             }
         }

@@ -16,7 +16,23 @@ final class UserProfileView: PassThroughView {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    let gradientLayer = CAGradientLayer()
+    private let backgroundImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.backgroundStar)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let usernameLabel: UILabel = {
+        let label = UILabel()
+        label.text = " "
+        label.numberOfLines = 2
+        label.textColor = .white
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     private let profileImage: GIFImageView = {
         let gifView = GIFImageView()
@@ -26,15 +42,6 @@ final class UserProfileView: PassThroughView {
         gifView.backgroundColor = UPlusColor.grayBackground
         gifView.translatesAutoresizingMaskIntoConstraints = false
         return gifView
-    }()
-
-    private let usernameLabel: UILabel = {
-        let label = UILabel()
-        label.text = " "
-        label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }()
     
     private let dailyRankView: DailyRankView = {
@@ -56,11 +63,11 @@ final class UserProfileView: PassThroughView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.backgroundColor = UPlusColor.gray09
+        
         self.clipsToBounds = true
         self.layer.cornerRadius = 30
         self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-       
-        self.layer.addSublayer(gradientLayer)
         
         self.setUI()
         self.setLayout()
@@ -68,11 +75,6 @@ final class UserProfileView: PassThroughView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        self.setGradientLayer()
     }
 
 }
@@ -100,7 +102,7 @@ extension UserProfileView {
                 self.profileImage.animate(withGIFURL: url)
                 self.profileImage.prepareForAnimation(withGIFURL: url)
                 
-                self.usernameLabel.text = vm.user.userNickname
+                self.usernameLabel.text = String(format: MyPageConstants.usernameSuffix, vm.user.userNickname)
                 self.userMissionDataView.configure(vm: vm)
             }
             .store(in: &bindings)
@@ -118,14 +120,10 @@ extension UserProfileView {
 }
 
 extension UserProfileView {
-    
-    private func setGradientLayer() {
-        gradientLayer.frame = self.bounds
-        gradientLayer.colors = [UPlusColor.gradient09light.cgColor, UPlusColor.gradient09deep.cgColor]
-    }
-    
+
     private func setUI() {
-        self.addSubviews(profileImage,
+        self.addSubviews(backgroundImage,
+                         profileImage,
                          usernameLabel,
                          dailyRankView,
                          userMissionDataView)
@@ -133,21 +131,30 @@ extension UserProfileView {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.profileImage.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 3),
+            self.backgroundImage.topAnchor.constraint(equalTo: self.topAnchor),
+            self.backgroundImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.backgroundImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.backgroundImage.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            
+            self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 2),
+            self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 4),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 4),
+            
+            self.profileImage.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 3),
             self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 8),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 8),
             self.profileImage.heightAnchor.constraint(equalTo: self.profileImage.widthAnchor),
 
-            self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 4),
-            self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
-           
-            self.dailyRankView.topAnchor.constraint(equalTo: self.usernameLabel.topAnchor),
-            self.dailyRankView.bottomAnchor.constraint(equalTo: self.usernameLabel.bottomAnchor),
+            self.dailyRankView.topAnchor.constraint(equalTo: self.profileImage.topAnchor),
+            self.dailyRankView.heightAnchor.constraint(equalToConstant: 30),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.dailyRankView.trailingAnchor, multiplier: 2),
             
-            self.userMissionDataView.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 2),
-            self.userMissionDataView.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor),
-            self.userMissionDataView.trailingAnchor.constraint(equalTo: self.dailyRankView.trailingAnchor),
+            self.userMissionDataView.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 2),
+            self.userMissionDataView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.userMissionDataView.trailingAnchor, multiplier: 2),
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.userMissionDataView.bottomAnchor, multiplier: 4)
         ])
         

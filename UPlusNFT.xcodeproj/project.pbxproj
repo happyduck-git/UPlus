@@ -30,8 +30,11 @@
 		240269632A84D1AD00850E65 /* NetworkServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240269622A84D1AD00850E65 /* NetworkServiceManager.swift */; };
 		240269662A84D36000850E65 /* LuniverseAuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240269652A84D36000850E65 /* LuniverseAuthResponse.swift */; };
 		240269682A84D90C00850E65 /* LuniverseNftListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240269672A84D90C00850E65 /* LuniverseNftListResponse.swift */; };
+		241116DF2A9A59A20010579C /* LogOutBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241116DE2A9A59A10010579C /* LogOutBottomSheetViewController.swift */; };
+		241116E12A9B8A260010579C /* CAGradientLayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241116E02A9B8A260010579C /* CAGradientLayer+Extension.swift */; };
+		241116E32A9B8BF50010579C /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241116E22A9B8BF50010579C /* UIImage+Extension.swift */; };
 		2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A59A2A67A9ED00AEC530 /* OnBoardingViewController.swift */; };
-		2417A59E2A67C4E500AEC530 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */; };
+		2417A59E2A67C4E500AEC530 /* EditPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A59D2A67C4E500AEC530 /* EditPasswordViewController.swift */; };
 		2417A5A12A67C96900AEC530 /* InformationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A02A67C96900AEC530 /* InformationInputView.swift */; };
 		2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */; };
 		2417A5A52A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2417A5A42A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift */; };
@@ -155,7 +158,7 @@
 		9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391948B2A8089E10035FEB1 /* CommentCountMission.swift */; };
 		9391948F2A80A24E0035FEB1 /* WalletCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */; };
 		939194912A80C2720035FEB1 /* RoutineMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194902A80C2720035FEB1 /* RoutineMission.swift */; };
-		939194982A80ED920035FEB1 /* EditUserInfoViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */; };
+		939194982A80ED920035FEB1 /* EditPasswordViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194972A80ED920035FEB1 /* EditPasswordViewViewModel.swift */; };
 		939194A02A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391949F2A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift */; };
 		939194EC2A89CAAC0035FEB1 /* NftLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194EB2A89CAAC0035FEB1 /* NftLevel.swift */; };
 		939194EE2A89F1750035FEB1 /* UserLevelPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939194ED2A89F1750035FEB1 /* UserLevelPoint.swift */; };
@@ -272,8 +275,11 @@
 		240269622A84D1AD00850E65 /* NetworkServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceManager.swift; sourceTree = "<group>"; };
 		240269652A84D36000850E65 /* LuniverseAuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuniverseAuthResponse.swift; sourceTree = "<group>"; };
 		240269672A84D90C00850E65 /* LuniverseNftListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuniverseNftListResponse.swift; sourceTree = "<group>"; };
+		241116DE2A9A59A10010579C /* LogOutBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutBottomSheetViewController.swift; sourceTree = "<group>"; };
+		241116E02A9B8A260010579C /* CAGradientLayer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+Extension.swift"; sourceTree = "<group>"; };
+		241116E22A9B8BF50010579C /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		2417A59A2A67A9ED00AEC530 /* OnBoardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingViewController.swift; sourceTree = "<group>"; };
-		2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewController.swift; sourceTree = "<group>"; };
+		2417A59D2A67C4E500AEC530 /* EditPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordViewController.swift; sourceTree = "<group>"; };
 		2417A5A02A67C96900AEC530 /* InformationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationInputView.swift; sourceTree = "<group>"; };
 		2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Preview.swift"; sourceTree = "<group>"; };
 		2417A5A42A68146E00AEC530 /* DailyMissionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMissionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
@@ -395,7 +401,7 @@
 		9391948B2A8089E10035FEB1 /* CommentCountMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountMission.swift; sourceTree = "<group>"; };
 		9391948E2A80A24E0035FEB1 /* WalletCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCollectionViewCell.swift; sourceTree = "<group>"; };
 		939194902A80C2720035FEB1 /* RoutineMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMission.swift; sourceTree = "<group>"; };
-		939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewViewModel.swift; sourceTree = "<group>"; };
+		939194972A80ED920035FEB1 /* EditPasswordViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordViewViewModel.swift; sourceTree = "<group>"; };
 		9391949F2A820C3B0035FEB1 /* MypageEventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MypageEventCollectionViewCell.swift; sourceTree = "<group>"; };
 		939194EB2A89CAAC0035FEB1 /* NftLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLevel.swift; sourceTree = "<group>"; };
 		939194ED2A89F1750035FEB1 /* UserLevelPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLevelPoint.swift; sourceTree = "<group>"; };
@@ -621,11 +627,11 @@
 		2417A59C2A67C4C600AEC530 /* UserProfile */ = {
 			isa = PBXGroup;
 			children = (
-				2417A59D2A67C4E500AEC530 /* EditUserInfoViewController.swift */,
+				2417A59D2A67C4E500AEC530 /* EditPasswordViewController.swift */,
 				93A2ED802A6A54D900C2287D /* MyPageViewController.swift */,
 				24542D542A70DE7D00F82CEA /* MyPageViewViewModel.swift */,
 				93E013942A66260A0005E342 /* UserProfileViewViewModel.swift */,
-				939194972A80ED920035FEB1 /* EditUserInfoViewViewModel.swift */,
+				939194972A80ED920035FEB1 /* EditPasswordViewViewModel.swift */,
 				246BD1D92A8A673B00CA7356 /* TestCollectionViewCell.swift */,
 				24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */,
 			);
@@ -718,6 +724,7 @@
 				93DA584F2A8CC49800525BEC /* NewNFTNoticeBottomSheetViewController.swift */,
 				93DA58512A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift */,
 				93DA58672A8F020E00525BEC /* GiftSentBottomSheetViewController.swift */,
+				241116DE2A9A59A10010579C /* LogOutBottomSheetViewController.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -907,6 +914,8 @@
 				93E0139C2A666E070005E342 /* UIStackView+Extension.swift */,
 				2417A5A22A67D84600AEC530 /* UIViewController+Preview.swift */,
 				24624B9B2A9650CE00C9A42E /* UITableViewHeaderFooterView+Extension.swift */,
+				241116E02A9B8A260010579C /* CAGradientLayer+Extension.swift */,
+				241116E22A9B8BF50010579C /* UIImage+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1515,6 +1524,7 @@
 				93DA586D2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift in Sources */,
 				93DA58622A8EF0CF00525BEC /* InsetLabelView.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
+				241116E12A9B8A260010579C /* CAGradientLayer+Extension.swift in Sources */,
 				93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */,
 				93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */,
 				93A2EDC22A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift in Sources */,
@@ -1585,7 +1595,7 @@
 				2402693F2A83C0BA00850E65 /* GovernanceElectionMissionViewController.swift in Sources */,
 				930D96A22A416AC30007801A /* AppDelegate.swift in Sources */,
 				93A2ED872A6A5ADE00C2287D /* UserMissionDataView.swift in Sources */,
-				939194982A80ED920035FEB1 /* EditUserInfoViewViewModel.swift in Sources */,
+				939194982A80ED920035FEB1 /* EditPasswordViewViewModel.swift in Sources */,
 				93DA584E2A8CC46500525BEC /* LevelUpBottomSheetViewController.swift in Sources */,
 				93D1748A2A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift in Sources */,
 				240269492A83E31800850E65 /* ChoiceQuizVideoViewViewModel.swift in Sources */,
@@ -1602,7 +1612,7 @@
 				24542D552A70DE7D00F82CEA /* MyPageViewViewModel.swift in Sources */,
 				9391948F2A80A24E0035FEB1 /* WalletCollectionViewCell.swift in Sources */,
 				932C34E22A5BCE0B0032192A /* CampaignCommentEditView.swift in Sources */,
-				2417A59E2A67C4E500AEC530 /* EditUserInfoViewController.swift in Sources */,
+				2417A59E2A67C4E500AEC530 /* EditPasswordViewController.swift in Sources */,
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
 				93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */,
@@ -1622,6 +1632,7 @@
 				932C34D22A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift in Sources */,
 				93A2ED902A6E0BD000C2287D /* RewardsViewViewModel.swift in Sources */,
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
+				241116E32A9B8BF50010579C /* UIImage+Extension.swift in Sources */,
 				93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */,
 				93DA58522A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift in Sources */,
 				24542D512A70AC0800F82CEA /* ChoiceQuizMission.swift in Sources */,
@@ -1649,6 +1660,7 @@
 				9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */,
 				9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */,
 				24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */,
+				241116DF2A9A59A20010579C /* LogOutBottomSheetViewController.swift in Sources */,
 				93A2ED892A6A6C4100C2287D /* MyNftsCollectionViewCell.swift in Sources */,
 				93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */,
 				2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */,

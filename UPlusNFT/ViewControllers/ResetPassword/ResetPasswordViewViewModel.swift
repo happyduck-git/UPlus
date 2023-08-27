@@ -39,6 +39,7 @@ final class ResetPasswordViewViewModel {
                     if wrapped.code == .invalidEmail {
                         self.errorDescription = "유효하지 않은 이메일 형식입니다."
                     }
+                    self.errorDescription = ResetPasswordConstants.checkEmail
                 }
                 logger.error("Error sending password reset email -- \(error.localizedDescription)")
                 self.hasEmailSent.send(false)

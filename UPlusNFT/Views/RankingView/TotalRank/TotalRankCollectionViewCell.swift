@@ -171,6 +171,14 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
         
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 356
+        } else {
+            return 60
+        }
+    }
+    
 }
 
 //MARK: - Footer

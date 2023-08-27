@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Combine
 
 protocol SideMenuViewControllerDelegate: AnyObject {
     func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int)
@@ -37,8 +38,7 @@ final class SideMenuViewController: UIViewController {
         button.setTitle(SideMenuConstants.resetPassword, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 12.0)
-        button.setUnderline(1.0)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         return button
     }()
     
@@ -48,8 +48,16 @@ final class SideMenuViewController: UIViewController {
         button.setTitle(SideMenuConstants.logout, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 12.0)
-        button.setUnderline(1.0)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        return button
+    }()
+    
+    private lazy var agreementButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(SideMenuConstants.agreement, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         return button
     }()
     
@@ -68,6 +76,8 @@ final class SideMenuViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.setUI()
+        self.setLayout()
+        
         self.menuTable.delegate = self
         self.menuTable.dataSource = self
     }
@@ -103,8 +113,11 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     private func setUI() {
         view.addSubviews(self.menuTable,
                          self.resetPasswordButton,
-                         self.logoutButton)
-        
+                         self.logoutButton,
+                         self.agreementButton)
+    }
+    
+    private func setLayout() {
         NSLayoutConstraint.activate([
             self.menuTable.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.menuTable.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
@@ -117,7 +130,12 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
             
             self.logoutButton.leadingAnchor.constraint(equalTo: self.resetPasswordButton.leadingAnchor),
             self.logoutButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 20),
-            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.logoutButton.bottomAnchor, multiplier: 3)
+            self.logoutButton.bottomAnchor.constraint(equalTo: self.agreementButton.topAnchor),
+            
+            self.agreementButton.leadingAnchor.constraint(equalTo: self.resetPasswordButton.leadingAnchor),
+            self.agreementButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 20),
+            
+            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.agreementButton.bottomAnchor, multiplier: 3)
             
         ])
     }

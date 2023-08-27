@@ -15,70 +15,173 @@ final class ResetPasswordViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
-    private let emailLabel: UILabel = {
+    private let pwResetContainer: UIView = {
+        let view = UIView()
+        view.accessibilityIdentifier = "pwResetContainer"
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let findInfoLabel: UILabel = {
         let label = UILabel()
-        label.text = LoginConstants.emailLabel
-        label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.numberOfLines = 2
+        
+        let bold: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
+        let regular: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        
+        let attributedString = NSMutableAttributedString(string: ResetPasswordConstants.findInfo, attributes: [
+            .font: bold
+        ])
+        
+        let regularString = NSAttributedString(string: ResetPasswordConstants.findDescription, attributes: [
+            .font: regular
+        ])
+        
+        attributedString.append(regularString)
+        label.attributedText = attributedString
+        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
-    private let emailValidationText: UILabel = {
+    
+    private let emailLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .thin)
-        label.textColor = .systemRed
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        let attributedString = NSMutableAttributedString(string: LoginConstants.emailLabel, attributes: [
+            .foregroundColor: UIColor.black,
+            .font: font
+        ])
+        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
+            .foregroundColor: UPlusColor.mint04,
+            .font: font
+        ])
+        
+        attributedString.append(star)
+        label.attributedText = attributedString
+        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let emailTextField: UITextField = {
         let textField = UITextField()
+        textField.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         textField.borderStyle = .roundedRect
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
-    private lazy var sendButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(ResetPasswordConstants.sendButton, for: .normal)
-        button.addTarget(self, action: #selector(sendResetEmailDidTap), for: .touchUpInside)
-        button.backgroundColor = .systemGray
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let placeHolderView: UIView = {
+        let view = UIView()
+        return view
     }()
     
-    private let emailSentLabel: UILabel = {
+    private let placeHolderLabel: UILabel = {
         let label = UILabel()
-        label.isHidden = true
-        label.text = LoginConstants.emailSentLabel
-        label.numberOfLines = 2
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.text = LoginConstants.uplusEmailSuffix
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var backToLoginButton: UIButton = {
+    private let emailValidationStack: UIStackView = {
+        let stack = UIStackView()
+        stack.isHidden = true
+        stack.axis = .horizontal
+        stack.spacing = 5.0
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let emailValidationImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.infoRed)
+        return imageView
+    }()
+    
+    private let emailValidationText: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.orange01
+        label.text = ResetPasswordConstants.checkEmail
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var sendEmailButton: UIButton = {
         let button = UIButton()
-        button.isHidden = true
-        button.setTitle(ResetPasswordConstants.backToLoginButton, for: .normal)
-        button.addTarget(self, action: #selector(backToLoginDidTap), for: .touchUpInside)
-        button.backgroundColor = .systemGray
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
+        button.setTitle(ResetPasswordConstants.sendEmailButton, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    private lazy var backToLoginButton: UIButton = {
+        let button = UIButton()
+        button.accessibilityIdentifier = "backToLoginButton"
+        button.isHidden = true
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
+        button.setTitle(ResetPasswordConstants.login, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UPlusColor.mint03
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    //MARK: - UI Elements (After email sent)
+    private let emailSentContainer: UIView = {
+        let view = UIView()
+        view.accessibilityIdentifier = "emailSentContainer"
+        view.isHidden = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let emailImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.emailBig)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let checkEmailLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = ResetPasswordConstants.checkMailBox
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
+        label.textColor = UPlusColor.mint04
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let emailSentLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = ResetPasswordConstants.emailSent
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.textColor = UPlusColor.gray05
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "비밀번호 변경"
-        view.backgroundColor = .tertiarySystemBackground
+        self.title = ResetPasswordConstants.findPassword
+        self.view.backgroundColor = .white
         
-        setUI()
-        setLayout()
-        setDelegate()
+        self.setUI()
+        self.setLayout()
+        self.setEmailSentLayout()
         
-        bind()
+        self.setDelegate()
+        
+        self.bind()
     }
     
     // MARK: - Init
@@ -90,42 +193,11 @@ final class ResetPasswordViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    //MARK: - Set UI & Layout
-    private func setUI() {
-        view.addSubviews(
-            emailLabel,
-            emailValidationText,
-            emailTextField,
-            sendButton,
-            emailSentLabel,
-            backToLoginButton
-        )
-    }
 
-    private func setLayout() {
-        NSLayoutConstraint.activate([
-            emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 5),
-            emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
-            emailValidationText.centerYAnchor.constraint(equalTo: emailLabel.centerYAnchor),
-            emailValidationText.leadingAnchor.constraint(equalToSystemSpacingAfter: emailLabel.trailingAnchor, multiplier: 1),
-            emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailLabel.bottomAnchor, multiplier: 2),
-            emailTextField.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
-            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: emailTextField.trailingAnchor, multiplier: 3),
-            sendButton.topAnchor.constraint(equalToSystemSpacingBelow: emailTextField.bottomAnchor, multiplier: 2),
-            sendButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            emailSentLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emailSentLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            backToLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            backToLoginButton.topAnchor.constraint(equalToSystemSpacingBelow: emailSentLabel.bottomAnchor, multiplier: 2)
-        ])
-    }
+}
 
-    private func setDelegate() {
-        emailTextField.delegate = self
-    }
+//MARK: - Bind
+extension ResetPasswordViewController {
     
     private func bind() {
         func bindViewToViewModel() {
@@ -133,6 +205,24 @@ final class ResetPasswordViewController: UIViewController {
                 .removeDuplicates()
                 .debounce(for: 0.5, scheduler: RunLoop.main)
                 .assign(to: \.email, on: viewModel)
+                .store(in: &bindings)
+            
+            self.sendEmailButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] value in
+                    guard let `self` = self else { return }
+                    
+                    self.sendResetEmailDidTap()
+                }
+                .store(in: &bindings)
+            
+            self.backToLoginButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] value in
+                    guard let `self` = self else { return }
+                    
+                    self.backToLoginDidTap()
+                }
                 .store(in: &bindings)
         }
         
@@ -142,18 +232,37 @@ final class ResetPasswordViewController: UIViewController {
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
                     if value {
-                        let vc = BackToLoginViewController(desc: LoginConstants.emailSentLabel)
-                        navigationController?.pushViewController(vc, animated: true)
+                        self.emailValidationStack.isHidden = true
+                        self.pwResetContainer.isHidden = true
+                        self.emailSentContainer.isHidden = false
+                        self.sendEmailButton.setTitle(ResetPasswordConstants.login, for: .normal)
                     } else {
+                        self.emailValidationStack.isHidden = false
                         self.emailValidationText.text = viewModel.errorDescription
                     }
                 }
                 .store(in: &bindings)
             
-            viewModel.$email.sink { value in
+            viewModel.$email.sink { [weak self] value in
+                guard let `self` = self else { return }
+            
+                var isInteractive = false
+                var bgColor: UIColor?
+                var textColor: UIColor?
+                
                 if value.isEmpty {
-                    self.emailValidationText.text = ""
+                    isInteractive = false
+                    bgColor = UPlusColor.gray02
+                    textColor = .white
+                } else {
+                    isInteractive = true
+                    bgColor = UPlusColor.mint03
+                    textColor = UPlusColor.gray08
                 }
+                
+                self.sendEmailButton.isUserInteractionEnabled = isInteractive
+                self.sendEmailButton.backgroundColor = bgColor
+                self.sendEmailButton.setTitleColor(textColor, for: .normal)
             }
             .store(in: &bindings)
             
@@ -162,16 +271,118 @@ final class ResetPasswordViewController: UIViewController {
         bindViewToViewModel()
         bindViewModelToView()
     }
+}
+
+//MARK: - Private
+extension ResetPasswordViewController {
     
-    @objc func sendResetEmailDidTap() {
-        viewModel.sendResetEmail()
+    
+    private func sendResetEmailDidTap() {
+        self.viewModel.sendResetEmail()
     }
     
-    @objc func backToLoginDidTap() {
-        navigationController?.popViewController(animated: true)
+    private func backToLoginDidTap() {
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
+//MARK: - TextFieldDelegate
 extension ResetPasswordViewController: UITextFieldDelegate {
     
+}
+
+//MARK: - Set UI & Layout
+extension ResetPasswordViewController {
+    private func setUI() {
+        self.view.addSubviews(self.pwResetContainer,
+                              self.emailSentContainer,
+                              self.sendEmailButton,
+                              self.backToLoginButton)
+        
+        self.pwResetContainer.addSubviews(self.findInfoLabel,
+                                          self.emailLabel,
+                                          self.emailValidationStack,
+                                          self.emailTextField)
+        
+        self.emailSentContainer.addSubviews(self.emailImage,
+                                            self.checkEmailLabel,
+                                            self.emailSentLabel)
+        
+        self.placeHolderView.addSubview(self.placeHolderLabel)
+        self.emailTextField.rightView = self.placeHolderView
+        self.emailTextField.rightViewMode = .always
+        
+        self.emailValidationStack.addArrangedSubviews(self.emailValidationImage,
+                                                      self.emailValidationText)
+    }
+
+    private func setLayout() {
+        NSLayoutConstraint.activate([
+            self.pwResetContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.pwResetContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.pwResetContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.pwResetContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.findInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pwResetContainer.topAnchor, multiplier: 3),
+            self.findInfoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pwResetContainer.leadingAnchor, multiplier: 2),
+            self.pwResetContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.findInfoLabel.trailingAnchor, multiplier: 2),
+            
+            self.emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.findInfoLabel.bottomAnchor, multiplier: 6),
+            self.emailLabel.leadingAnchor.constraint(equalTo: self.findInfoLabel.leadingAnchor),
+            
+            self.emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailLabel.bottomAnchor, multiplier: 1),
+            self.emailTextField.leadingAnchor.constraint(equalTo: emailLabel.leadingAnchor),
+            self.emailTextField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
+            self.emailTextField.trailingAnchor.constraint(equalTo: self.findInfoLabel.trailingAnchor),
+            
+            self.emailValidationStack.topAnchor.constraint(equalToSystemSpacingBelow: self.emailTextField.bottomAnchor, multiplier: 1),
+            self.emailValidationStack.leadingAnchor.constraint(equalTo: self.emailTextField.leadingAnchor),
+            
+            self.sendEmailButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
+            self.sendEmailButton.leadingAnchor.constraint(equalTo: self.findInfoLabel.leadingAnchor),
+            self.sendEmailButton.trailingAnchor.constraint(equalTo: self.findInfoLabel.trailingAnchor),
+            self.pwResetContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.sendEmailButton.bottomAnchor, multiplier: 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderView.topAnchor, multiplier: 1),
+            self.placeHolderLabel.leadingAnchor.constraint(equalTo: self.placeHolderView.leadingAnchor),
+            self.placeHolderView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.placeHolderLabel.trailingAnchor, multiplier: 1),
+            self.placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderLabel.bottomAnchor, multiplier: 1)
+        ])
+    }
+    
+    private func setEmailSentLayout() {
+        NSLayoutConstraint.activate([
+            self.emailSentContainer.topAnchor.constraint(equalTo: self.pwResetContainer.topAnchor),
+            self.emailSentContainer.leadingAnchor.constraint(equalTo: self.pwResetContainer.leadingAnchor),
+            self.emailSentContainer.trailingAnchor.constraint(equalTo: self.pwResetContainer.trailingAnchor),
+            self.emailSentContainer.bottomAnchor.constraint(equalTo: self.pwResetContainer.bottomAnchor),
+            
+            self.backToLoginButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
+            self.backToLoginButton.leadingAnchor.constraint(equalTo: self.findInfoLabel.leadingAnchor),
+            self.backToLoginButton.trailingAnchor.constraint(equalTo: self.findInfoLabel.trailingAnchor),
+            self.pwResetContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.backToLoginButton.bottomAnchor, multiplier: 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.emailImage.topAnchor.constraint(equalToSystemSpacingBelow: self.emailSentContainer.topAnchor, multiplier: 20),
+            self.emailImage.centerXAnchor.constraint(equalTo: self.emailSentContainer.centerXAnchor),
+            
+            self.checkEmailLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.emailImage.bottomAnchor, multiplier: 2),
+            self.checkEmailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.emailSentContainer.leadingAnchor, multiplier: 2),
+            self.emailSentContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.checkEmailLabel.trailingAnchor, multiplier: 2),
+            
+            self.emailSentLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.checkEmailLabel.bottomAnchor, multiplier: 2),
+            self.emailSentLabel.leadingAnchor.constraint(equalTo: self.checkEmailLabel.leadingAnchor),
+            self.emailSentLabel.trailingAnchor.constraint(equalTo: self.checkEmailLabel.trailingAnchor)
+        ])
+    }
+    
+
+    private func setDelegate() {
+        emailTextField.delegate = self
+    }
 }

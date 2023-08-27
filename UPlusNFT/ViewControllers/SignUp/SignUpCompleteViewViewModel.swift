@@ -13,7 +13,7 @@ final class SignUpCompleteViewViewModel {
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - Data
-    @Published var welcomeNftImage: String?
+//    @Published var welcomeNftImage: String?
     @Published var nickname: String?
     
     // MARK: - Init
@@ -30,12 +30,13 @@ extension SignUpCompleteViewViewModel {
                 let user = try UPlusUser.getCurrentUser()
                 
                 self.nickname = user.userNickname
-                
+                /*
                 self.welcomeNftImage = try await self.firestoreManager
                     .getMemberNft(userIndex: user.userIndex,
                                   isVip: user.userHasVipNft)
                 
                 print("Welcome nft image: \(self.welcomeNftImage ?? "no-image")")
+                 */
             }
             catch {
                 print("Error fetching nft url -- \(error)")

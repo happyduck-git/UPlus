@@ -23,7 +23,9 @@ struct UserDefaultsConstants {
 
 struct OnBoardingConstants {
     static let showMore: String = "PoC 소개 더 보기"
-    static let start: String = "시작하기"
+    static let start: String = "월드클래스 기업 만들기"
+    static let membersInfo: String = "이미 %d명의 마스터님이 회사를 운영하고 있어요"
+    static let numOfMembers: String = "%d명의 마스터님이"
 }
 
 struct LoginConstants {
@@ -34,19 +36,26 @@ struct LoginConstants {
     static let logoutButtonTitle: String = "Log Out"
     static let photoButtonTitle: String = "Photo"
     static let singInButtonTitle: String = "회원가입하기"
-    static let changePassword: String = "비밀번호 찾기"
+    static let wrongCredential: String = "이메일 혹은 비밀번호가 올바르지 않습니다."
+    static let changePassword: String = "비밀번호를 잊으셨나요?"
     static let emailSentLabel: String = "이메일을 확인하여 비밀번호를 변경해주세요."
     static let stackSpacing: CGFloat = 1.0
+    static let textFieldHeight: CGFloat = 56.0
+    static let buttonHeight: CGFloat = 56.0
     static let uplusEmailSuffix: String = "@lguplus.co.kr"
+    static let createAccount: String = "아직 계정이 없으신가요?"
 }
 
 struct SignUpConstants {
+    static let signUp: String = "회원가입"
     static let emailComponent: String = "@"
     static let emailLabel: String = "사내 이메일"
     static let passwordLabel: String = "비밀번호"
     static let passwordCheckLabel: String = "비밀번호 확인"
+    static let star: String = "*"
+    
     static let nicknameLabel: String = "닉네임"
-    static let register: String = "가입 완료하기"
+    static let register: String = "가입하기"
     static let authenticate: String = "이메일 인증하기"
     static let authCompleted: String = "이메일 인증이 완료되었습니다."
     static let emailSuffix: String = "@platfarm.net" //"@platfarm.net" //"@gmail.com" //"@uplus.net"
@@ -56,18 +65,30 @@ struct SignUpConstants {
     static let sinUpSuccessLabel: String = "회원가입이 완료되었습다."
     static let emailCorrectFormat: String = "가입 가능한 이메일입니다."
     static let passwordValidation: String = "비밀번호는 6자 이상 입력하여야 합니다."
-    static let passwordCheckValidation: String = "비밀번호가 일치하지 않습니다."
+    static let passwordMatch: String = "비밀번호가 일치합니다."
+    static let passwordNotMatch: String = "비밀번호가 일치하지 않습니다."
     
-    static let greetings: String = "님의\nNFT 멤버십이 시작됐어요"
-    static let nftInfo: String = "미션을 수행하며 월드클래스 기업으로 성장시켜보세요"
-    static let redeemGift: String = "웰컴 선물 받기"
+    static let personalInfo: String = "개인정보 수집 이용에 동의합니다."
+    static let required: String = "(필수)"
+    static let showAll: String = "전문보기"
+    
+    static let greetings: String = "마스터님의\nNFT 멤버십이 시작됐어요"
+    static let startDescription: String = "미션을 수행하며 월드클래스 기업으로 성장시켜보세요"
+    static let worldClass: String = "월드클래스"
+    static let startMembership: String = "NFT 받고 도전하기"
     
     static let vipHolderInitialPoint: Int64 = 400
 }
 
 struct ResetPasswordConstants {
-    static let sendButton: String = "비밀번호 재설정"
-    static let backToLoginButton: String = "로그인하기"
+    static let findPassword: String = "비밀번호 찾기"
+    static let findInfo: String = "비밀번호 재설정 안내"
+    static let findDescription: String = "를 위해\n가입 시 등록한 사내 이메일을 입력해주세요."
+    static let checkEmail: String = "이메일을 다시 한번 확인해주세요"
+    static let sendEmailButton: String = "안내 메일 받기"
+    static let checkMailBox: String = "사내 메일함을 확인해주세요"
+    static let emailSent: String = "입력하신 사내 이메일로 안내 메일을 전송했습니다."
+    static let login: String = "로그인하기"
 }
 
 struct WritePostConstants {
@@ -96,14 +117,16 @@ struct SideMenuConstants {
     static let faq: String = "FAQ 및 문의"
     static let resetPassword: String = "비밀번호 수정"
     static let logout: String = "로그아웃"
+    static let agreement: String = "개인정보수집동의"
 }
 
 struct MyPageConstants {
+    static let usernameSuffix: String = "%@ 마스터님,\n오늘도 월드클래스를 향해 아자~!"
     static let goToMission: String = "미션 하러가기"
     static let ownedRewards: String = "보유한 경품"
     static let levelUp: String = "Lv.%d 달성"
     static let benefit: String = "특별 BONUS 혜택"
-    static let vipBenefitTitle: String = "특별 혜택"
+    static let vipBenefitTitle: String = "서태호 홀더 특별 혜택"
     static let coffee: String = "아메리카노"
     static let raffle: String = "래플권"
     static let eventOpened: String = "이벤트 오픈"
@@ -131,7 +154,7 @@ struct MissionConstants {
     static let pointSuffix: String = "pt"
     static let level: String = "Level"
     static let levelPrefix: String = "LV."
-    static let retrieve: String = "받기"
+    static let receive: String = "받기"
     static let todayMission: String = "데일리 퀘스트"
     static let availableEvent: String = "참여 가능한 이벤트"
     static let dailyAttendanceMission: String = "데일리 퀴즈"
@@ -272,9 +295,10 @@ struct GiftConstants {
     static let sentNft: String = "선물한 NFT"
 }
 
-struct EditUserInfo {
+struct EditPasswordConstants {
+    static let emailInfo: String = "가입하신 사내 이메일 아이디입니다."
     static let editVCTitle: String = "비밀번호 수정"
-    static let confirm: String = "수정완료"
+    static let edit: String = "수정하기"
 }
 
 // MARK: - Assets
@@ -311,7 +335,6 @@ struct ImageAsset {
     static let level1InitialAvatar: String = "level4-avatar-initial"
     static let vipInitialBenefit: String = "vip-initial-benefit"
     
-    static let speaker: String = "speaker"
     static let pointSticker: String = "point-sticker"
     static let trophy: String = "trophy"
     static let xMarkBlack: String = "xmark-black"
@@ -323,12 +346,33 @@ struct ImageAsset {
     static let arrowHeadUp: String = "arrow-head-up"
     static let arrowHeadRight: String = "arrow-head-right"
     
+    /* OnBoardingVC */
+    static let onBoarding: String = "on-boarding"
+    
+    /* LoginVC */
+    static let eyeOpened: String = "eye-open"
+    static let eyeClosed: String = "eye-closed"
+    static let infoRed: String = "info-red"
+    static let infoBlue: String = "info-blue"
+    
+    /* SginupVC */
+    static let checkBoxEmpty: String = "check-box-empty"
+    static let checkBoxTicked: String = "check-box-ticked"
+    
+    /* SignupCompletedVC */
+    static let backgroundStar: String = "star-background"
+    static let initialNft: String = "avatar-welcome"
+    static let reflectionNft: String = "avatar-reflection"
+    
+    /* ResetPWVC */
+    static let emailBig: String = "mail-big"
+    
     /* Side Menu */
     static let home: String = "home-mint"
-    static let wallet: String = "wallet-mint"
-    static let ranking: String = "tropy-mint"
+    static let walletMint: String = "wallet-mint"
+    static let ranking: String = "rank-mint"
     static let notice: String = "speaker-mint"
-    static let questionCircle: String = "question-circle"
+    static let questionMint: String = "question-mint"
     
     /* HomeVC */
     static let questionBox: String = "question-box"
@@ -339,11 +383,19 @@ struct ImageAsset {
     static let computer: String = "computer"
     static let lock: String = "lock"
     static let hand: String = "hand"
+    static let hamburgerMenu: String = "hamburger-menu"
+    static let wallet: String = "wallet"
+    static let speaker: String = "speaker"
     
     /* RankVC */
-    static let bronze: String = "bronze-medal"
-    static let silver: String = "silver-medal"
-    static let gold: String = "golden-medal"
+    static let bronzeMedal: String = "bronze-medal"
+    static let silverMedal: String = "silver-medal"
+    static let goldMedal: String = "golden-medal"
+    static let goldTrophy: String = "golden-trophy"
+    static let silverTrophy: String = "silver-trophy"
+    static let bronzeTrophy: String = "bronze-trophy"
+    static let top3Title: String = "top3-title"
+    static let yesterdayTitle: String = "yesterday-title"
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
@@ -368,6 +420,9 @@ struct ImageAsset {
     
     /* GiftVC */
     static let giftColored: String = "gift-colored"
+    
+    /* VIPBottomVC*/
+    static let vipPoint: String = "vip-point"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }

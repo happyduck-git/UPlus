@@ -28,7 +28,7 @@ final class TotalRankTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let userProfileImageView: UIImageView = {
+    private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.borderColor = UIColor(ciColor: .white).cgColor
@@ -78,14 +78,14 @@ final class TotalRankTableViewCell: UITableViewCell {
     
     override func layoutIfNeeded() {
         super.layoutIfNeeded()
-        userProfileImageView.layer.cornerRadius = userProfileImageView.frame.size.width / 2
+        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
     }
     
     // MARK: - Private
     private func setUI() {
         self.contentView.addSubviews(rankImageView,
                                      rankLabel,
-                                     userProfileImageView,
+                                     profileImageView,
                                      username,
                                      level,
                                      popScoreLabel)
@@ -105,13 +105,13 @@ final class TotalRankTableViewCell: UITableViewCell {
             self.rankLabel.leadingAnchor.constraint(equalTo: self.rankImageView.leadingAnchor),
             contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.rankLabel.bottomAnchor, multiplier: 1),
             
-            self.userProfileImageView.topAnchor.constraint(equalTo: self.rankImageView.topAnchor),
-            self.userProfileImageView.widthAnchor.constraint(equalTo: self.userProfileImageView.heightAnchor),
-            self.userProfileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            self.userProfileImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.rankImageView.trailingAnchor, multiplier: 2),
+            self.profileImageView.topAnchor.constraint(equalTo: self.rankImageView.topAnchor),
+            self.profileImageView.widthAnchor.constraint(equalTo: self.profileImageView.heightAnchor),
+            self.profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            self.profileImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.rankImageView.trailingAnchor, multiplier: 2),
             
             self.username.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 1),
-            self.username.leadingAnchor.constraint(equalToSystemSpacingAfter: self.userProfileImageView.trailingAnchor, multiplier: 1),
+            self.username.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImageView.trailingAnchor, multiplier: 1),
             self.username.bottomAnchor.constraint(equalToSystemSpacingBelow: self.level.topAnchor, multiplier: 1),
             
             self.level.leadingAnchor.constraint(equalTo: self.username.leadingAnchor),
@@ -134,7 +134,7 @@ final class TotalRankTableViewCell: UITableViewCell {
     internal func resetCell() {
         self.rankLabel.text = nil
         self.rankImageView.image = nil
-        self.userProfileImageView.image = nil
+        self.profileImageView.image = nil
         self.popScoreLabel.text = nil
         self.popScoreLabel.textColor = .white
         self.contentView.backgroundColor = nil
@@ -146,7 +146,6 @@ final class TotalRankTableViewCell: UITableViewCell {
         self.username.text = vm.userNickname
         self.level.text = "Lv.n"
         self.popScoreLabel.text = "\(vm.userTotalPoint ?? 0)P"
-        print("Score: \(vm.userTotalPoint)")
     }
     
     public func setAsCollectionInfoCell() {

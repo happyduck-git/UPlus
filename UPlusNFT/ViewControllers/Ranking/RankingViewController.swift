@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class RankingViewController: UIViewController {
+final class RankingViewController: UIViewController {
 
     // MARK: - Dependency
     private let vm: RankingViewViewModel
@@ -32,6 +32,7 @@ class RankingViewController: UIViewController {
         collection.register(TodayRankCollectionViewCell.self, forCellWithReuseIdentifier: TodayRankCollectionViewCell.identifier)
         collection.register(TotalRankCollectionViewCell.self, forCellWithReuseIdentifier: TotalRankCollectionViewCell.identifier)
         
+        collection.backgroundColor = UPlusColor.grayBackground
         collection.showsHorizontalScrollIndicator = false
         collection.isPagingEnabled = true
         collection.translatesAutoresizingMaskIntoConstraints = false

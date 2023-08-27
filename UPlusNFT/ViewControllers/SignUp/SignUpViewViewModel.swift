@@ -31,6 +31,8 @@ final class SignUpViewViewModel {
     }
     @Published var password = ""
     @Published var passwordCheck = ""
+    @Published var isPersonalInfoChecked: Bool = false
+    
     var isUserCreated = PassthroughSubject<Bool, Never>()
     var isEmailSent = PassthroughSubject<Bool, Never>()
     
@@ -48,12 +50,12 @@ final class SignUpViewViewModel {
     
     private(set) lazy var isPasswordSame = Publishers.CombineLatest($password, $passwordCheck)
         .map {
-            $0 == $1
+            return $0 == $1 && !$0.isEmpty && !$1.isEmpty
         }.eraseToAnyPublisher()
     
-    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest(isPasswordValid, isPasswordSame)
+    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest3(isPasswordValid, isPasswordSame, $isPersonalInfoChecked)
         .map {
-            return $0 && $1
+            return $0 && $1 && $2
         }.eraseToAnyPublisher()
     
 }

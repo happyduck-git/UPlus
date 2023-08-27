@@ -51,7 +51,7 @@ final class MyPageViewController: UIViewController {
     
     private let containerView: PassThroughView = {
         let view = PassThroughView()
-        view.backgroundColor = UPlusColor.gradient09light
+        view.backgroundColor = UPlusColor.gray09
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -427,19 +427,24 @@ extension MyPageViewController {
     }
     
     private func setNavigationItem() {
-        self.title = SideMenuConstants.home
-        let menuItem = UIBarButtonItem(image: UIImage(systemName: SFSymbol.list)?.withTintColor(.black, renderingMode: .alwaysOriginal),
+        
+        let menuItem = UIBarButtonItem(image: UIImage(systemName: ImageAsset.hamburgerMenu)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                        style: .plain,
                                        target: self,
                                        action: #selector(openSideMenu))
         
-        let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+        let walletItem = UIBarButtonItem(image: UIImage(named: ImageAsset.wallet)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+                                         style: .plain,
+                                         target: self,
+                                         action: #selector(speakerDidTap))
+        
+        let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                           style: .plain,
                                           target: self,
                                           action: #selector(speakerDidTap))
         
         self.navigationItem.setLeftBarButton(menuItem, animated: true)
-        self.navigationItem.setRightBarButton(speakerItem, animated: true)
+        self.navigationItem.setRightBarButtonItems([speakerItem, walletItem], animated: true)
     }
     
     @objc func speakerDidTap() {
@@ -1351,8 +1356,8 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
     }
     
     func resetPasswordDidTap() {
-        let vm = EditUserInfoViewViewModel()
-        let vc = EditUserInfoViewController(vm: vm)
+        let vm = EditPasswordViewViewModel()
+        let vc = EditPasswordViewController(vm: vm)
         self.addChildViewController(vc)
         self.sideMenuVC?.dismiss(animated: true)
     }

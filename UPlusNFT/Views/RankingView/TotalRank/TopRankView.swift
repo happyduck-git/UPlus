@@ -15,22 +15,15 @@ final class TopRankView: UIView {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.backgroundColor = .white
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
-    }()
-    
-    private let container: UIView = {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 8.0
-        view.backgroundColor = UPlusColor.grayBackground
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }()
     
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = UPlusColor.gray03
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -38,8 +31,7 @@ final class TopRankView: UIView {
 
     private let usernameLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
-        label.lineBreakMode = .byTruncatingMiddle
+        label.lineBreakMode = .byTruncatingTail
         label.textColor = UPlusColor.gray09
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -67,6 +59,8 @@ final class TopRankView: UIView {
         super.init(frame: frame)
         
         self.backgroundColor = .white
+        self.layer.borderColor = UPlusColor.blue01.cgColor
+        self.layer.borderWidth = 4.0
         
         self.setUI()
         self.setLayout()
@@ -121,46 +115,41 @@ extension TopRankView {
     
     private func setUI() {
         self.addSubviews(self.medalImage,
-                         self.container)
-        
-        self.container.addSubviews(self.profileImage,
-                                   self.usernameLabel,
-                                   self.pointImage,
-                                   self.pointLabel)
+                         self.profileImage,
+                         self.usernameLabel,
+                         self.pointImage,
+                         self.pointLabel)
     }
     
     private func setLayout() {
         
         NSLayoutConstraint.activate([
             self.medalImage.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
-            self.medalImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.medalImage.widthAnchor.constraint(equalToConstant: 35),
-            self.medalImage.heightAnchor.constraint(equalToConstant: 35),
+            self.medalImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.medalImage.bottomAnchor, multiplier: 1),
             
-            self.container.topAnchor.constraint(equalToSystemSpacingBelow: self.medalImage.bottomAnchor, multiplier: 1),
-            self.container.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.container.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.container.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            self.profileImage.topAnchor.constraint(equalTo: self.medalImage.topAnchor),
+            self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.medalImage.trailingAnchor, multiplier: 2),
+            self.profileImage.widthAnchor.constraint(equalTo: self.profileImage.heightAnchor),
+            self.profileImage.bottomAnchor.constraint(equalTo: self.medalImage.bottomAnchor),
+            
+            self.usernameLabel.centerYAnchor.constraint(equalTo: self.profileImage.centerYAnchor),
+            self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 1),
+            
+            self.pointImage.topAnchor.constraint(equalTo: self.profileImage.topAnchor),
+            self.pointImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 2),
+            self.pointImage.bottomAnchor.constraint(equalTo: self.profileImage.bottomAnchor),
+            
+            self.pointLabel.centerYAnchor.constraint(equalTo: self.pointImage.centerYAnchor),
+            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointImage.trailingAnchor, multiplier: 1),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 2)
         ])
         
-        NSLayoutConstraint.activate([
-            self.profileImage.topAnchor.constraint(equalToSystemSpacingBelow: self.container.topAnchor, multiplier: 2),
-            self.profileImage.centerXAnchor.constraint(equalTo: self.container.centerXAnchor),
-            self.profileImage.widthAnchor.constraint(equalToConstant: 48),
-            self.profileImage.heightAnchor.constraint(equalToConstant: 48),
-
-            self.usernameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 2),
-            self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.container.leadingAnchor, multiplier: 2),
-            self.container.trailingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 2),
-
-            self.pointImage.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 2),
-            self.pointImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.container.leadingAnchor, multiplier: 2),
-
-            self.pointLabel.topAnchor.constraint(equalTo: self.pointImage.topAnchor),
-            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointImage.trailingAnchor, multiplier: 1),
-            self.container.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 2),
-            self.container.bottomAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 2)
-        ])
+        self.medalImage.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        self.pointImage.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        self.pointLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        self.profileImage.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        self.usernameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
     
 }

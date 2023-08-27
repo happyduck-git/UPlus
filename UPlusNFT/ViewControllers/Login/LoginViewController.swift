@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
     private let emailLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.emailLabel
-        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -55,6 +55,7 @@ class LoginViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.textContentType = .username
         textField.keyboardType = .emailAddress
+        textField.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         textField.text = "rkrudtls" // for debug
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -63,9 +64,21 @@ class LoginViewController: UIViewController {
     private let passwordLabel: UILabel = {
         let label = UILabel()
         label.text = LoginConstants.passwordLabel
-        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private let eyeContainerView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private let eyeButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "eye-closed"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
 
     private let passwordTextField: UITextField = {
@@ -74,23 +87,39 @@ class LoginViewController: UIViewController {
         textField.isSecureTextEntry = true
         textField.textContentType = .password
         textField.text = "Pass1234" // for debug
+        textField.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
+    
+    private let credentialStack: UIStackView = {
+        let stack = UIStackView()
+        stack.isHidden = true
+        stack.axis = .horizontal
+        stack.spacing = 5.0
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
 
+    private let infoImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.infoRed)
+        return imageView
+    }()
+    
     private let credentialValidationText: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .thin)
-        label.text = " "
-        label.textColor = .systemRed
-        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.textColor = UPlusColor.orange01
         return label
     }()
 
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.setTitle(LoginConstants.loginButtonTitle, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         button.setTitleColor(.white, for: .normal)
         button.isUserInteractionEnabled = false
         button.layer.cornerRadius = 3
@@ -99,33 +128,40 @@ class LoginViewController: UIViewController {
         return button
     }()
 
-    /// for debug
-    private lazy var logoutButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(LoginConstants.logoutButtonTitle, for: .normal)
-        button.addTarget(self, action: #selector(logoutUser), for: .touchUpInside)
-        button.isHidden = true
-        button.backgroundColor = .systemGray
+    private lazy var changePasswordButton: UIButton = {
+       let button = UIButton()
+        button.setTitle(LoginConstants.changePassword, for: .normal)
+        button.setTitleColor(UPlusColor.gray06, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body2)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
-    private lazy var changePasswordButton: UIButton = {
-       let button = UIButton()
-        button.setTitle(LoginConstants.changePassword, for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 12.0)
-        button.setUnderline(1.0)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let createAccountStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8.0
+        stack.distribution = .equalSpacing
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    private let createAccountLabel: UILabel = {
+        let label = UILabel()
+        label.text = LoginConstants.createAccount
+        label.textColor = UPlusColor.gray07
+        label.font = .systemFont(ofSize: UPlusFont.body2)
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private lazy var createAccountButton: UIButton = {
         let button = UIButton()
         button.setTitle(LoginConstants.singInButtonTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 12.0)
+        button.setTitleColor(UPlusColor.mint04, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         button.setUnderline(1.0)
         return button
     }()
@@ -219,7 +255,15 @@ extension LoginViewController {
                     self.changePassword()
                 }
                 .store(in: &bindings)
-         
+            
+            self.eyeButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.viewModel.isPasswordHidden.toggle()
+                }
+                .store(in: &bindings)
         }
         
         func bindViewModelToView() {
@@ -228,13 +272,13 @@ extension LoginViewController {
                 .sink { [weak self] value in
                     guard let `self` = self else { return }
                     if value {
-                        self.loginButton.backgroundColor = .black
+                        self.loginButton.backgroundColor = UPlusColor.mint03
                         self.loginButton.isUserInteractionEnabled = true
                     } else {
-                        self.loginButton.backgroundColor = .systemGray
+                        self.loginButton.backgroundColor = UPlusColor.gray03
                         self.loginButton.isUserInteractionEnabled = false
                     }
-                    self.credentialValidationText.text = ""
+                    self.credentialStack.isHidden = true
                 }
                 .store(in: &bindings)
             
@@ -270,12 +314,31 @@ extension LoginViewController {
                         }
                         
                     } else {
+                        self.credentialStack.isHidden = false
                         self.credentialValidationText.text = viewModel.errorDescription
                         self.loadingVC.removeViewController()
                     }
                 }
                 .store(in: &bindings)
 
+            self.viewModel.$isPasswordHidden
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isHidden in
+                    guard let `self` = self else { return }
+                    
+                    var image: UIImage?
+                    
+                    if isHidden {
+                        image = UIImage(named: ImageAsset.eyeClosed)
+                        passwordTextField.isSecureTextEntry = true
+                    } else {
+                        image = UIImage(named: ImageAsset.eyeOpened)
+                        passwordTextField.isSecureTextEntry = false
+                    }
+                    self.eyeButton.setImage(image, for: .normal)
+                    
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -295,16 +358,23 @@ extension LoginViewController {
             self.passwordLabel,
             self.emailTextField,
             self.passwordTextField,
-            self.credentialValidationText,
+            self.credentialStack,
             self.changePasswordButton,
             self.loginButton,
+            self.createAccountStack
+        )
+
+        self.credentialStack.addArrangedSubviews(
+            self.infoImage,
+            self.credentialValidationText
+        )
+        
+        self.createAccountStack.addArrangedSubviews(
+            self.createAccountLabel,
             self.createAccountButton
         )
 
-        // Adding a PlaceHolderView
-        self.placeHolderView.addSubview(placeHolderLabel)
-        self.emailTextField.rightView = placeHolderView
-        self.emailTextField.rightViewMode = .always
+        self.setUpTextFieldRightView()
     }
 
     private func setLayout() {
@@ -315,35 +385,46 @@ extension LoginViewController {
             self.emailLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
             self.emailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
             self.emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.emailLabel.bottomAnchor, multiplier: 1),
+            self.emailTextField.heightAnchor.constraint(equalToConstant: 52),
             self.emailTextField.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.emailTextField.trailingAnchor, multiplier: 3),
             
             self.passwordLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.emailTextField.bottomAnchor, multiplier: 2),
             self.passwordLabel.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
             self.passwordTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.passwordLabel.bottomAnchor, multiplier: 1),
+            self.passwordTextField.heightAnchor.constraint(equalToConstant: 52),
             self.passwordTextField.leadingAnchor.constraint(equalTo: self.emailTextField.leadingAnchor),
             self.passwordTextField.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
             
-            self.credentialValidationText.topAnchor.constraint(equalToSystemSpacingBelow: self.passwordTextField.bottomAnchor, multiplier: 1),
-            self.credentialValidationText.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
+            self.credentialStack.topAnchor.constraint(equalToSystemSpacingBelow: self.passwordTextField.bottomAnchor, multiplier: 1),
+            self.credentialStack.leadingAnchor.constraint(equalTo: self.emailLabel.leadingAnchor),
             
             self.changePasswordButton.topAnchor.constraint(equalToSystemSpacingBelow: self.credentialValidationText.bottomAnchor, multiplier: 1),
             self.changePasswordButton.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
             
             self.loginButton.topAnchor.constraint(equalToSystemSpacingBelow: self.changePasswordButton.bottomAnchor, multiplier: 2),
+            self.loginButton.heightAnchor.constraint(equalToConstant: 52),
             self.loginButton.leadingAnchor.constraint(equalTo: self.emailTextField.leadingAnchor),
             self.loginButton.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
             
-            self.createAccountButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.createAccountButton.topAnchor.constraint(equalToSystemSpacingBelow: self.loginButton.bottomAnchor, multiplier: 2),
-            
-            self.placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderView.topAnchor, multiplier: 1),
-            self.placeHolderLabel.leadingAnchor.constraint(equalTo: self.placeHolderView.leadingAnchor),
-            self.placeHolderView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.placeHolderLabel.trailingAnchor, multiplier: 1),
-            self.placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderLabel.bottomAnchor, multiplier: 1)
+            self.createAccountStack.topAnchor.constraint(equalToSystemSpacingBelow: self.loginButton.bottomAnchor, multiplier: 4),
+            self.createAccountStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+     
         ])
 
         self.changePasswordButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        
+        NSLayoutConstraint.activate([
+            self.placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderView.topAnchor, multiplier: 1),
+            self.placeHolderLabel.leadingAnchor.constraint(equalTo: self.placeHolderView.leadingAnchor),
+            self.placeHolderView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.placeHolderLabel.trailingAnchor, multiplier: 1),
+            self.placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.placeHolderLabel.bottomAnchor, multiplier: 1),
+            
+            self.eyeButton.topAnchor.constraint(equalToSystemSpacingBelow: self.eyeContainerView.topAnchor, multiplier: 1),
+            self.eyeButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.eyeContainerView.leadingAnchor, multiplier: 1),
+            self.eyeContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.eyeButton.bottomAnchor, multiplier: 1),
+            self.eyeContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.eyeButton.trailingAnchor, multiplier: 1)
+        ])
     }
 
     private func setDelegate() {
@@ -384,6 +465,17 @@ extension LoginViewController {
         }
     }
 
+    // set ui textField right views
+    private func setUpTextFieldRightView() {
+        // Adding a PlaceHolderView
+        self.placeHolderView.addSubview(placeHolderLabel)
+        self.emailTextField.rightView = placeHolderView
+        self.emailTextField.rightViewMode = .always
+        
+        self.eyeContainerView.addSubview(eyeButton)
+        self.passwordTextField.rightView = eyeContainerView
+        self.passwordTextField.rightViewMode = .always
+    }
 }
 // MARK: - UITextFieldDelegate
 extension LoginViewController: UITextFieldDelegate {
