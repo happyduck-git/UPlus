@@ -17,6 +17,16 @@ final class RoutineMissionStampCollectionViewCell: UICollectionViewCell {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
+    private let completeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.mint04
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        label.text = MissionConstants.untilCompletion
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let progressLabel: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.blue04
@@ -47,7 +57,7 @@ final class RoutineMissionStampCollectionViewCell: UICollectionViewCell {
         self.contentView.clipsToBounds = true
         self.contentView.layer.cornerRadius = 16.0
         self.contentView.layer.borderColor = UPlusColor.mint03.cgColor
-        self.contentView.layer.borderWidth = 1.0
+        self.contentView.layer.borderWidth = 4.0
         
         self.setUI()
         self.setLayout()
@@ -69,7 +79,7 @@ extension RoutineMissionStampCollectionViewCell {
         
         self.vm = vm
         
-        vm.$athleteMissions
+        vm.$goodWorkerMissions
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
@@ -81,7 +91,7 @@ extension RoutineMissionStampCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
-                self.progressLabel.text = String(format: MissionConstants.routineProgress, $0)
+                self.progressLabel.attributedText = setLabelAttributes(current: $0, max: MissionConstants.routineMissionLimit)
             }
             .store(in: &self.bindings)
         
@@ -102,6 +112,32 @@ extension RoutineMissionStampCollectionViewCell {
     
 }
 
+//MARK: - Private
+extension RoutineMissionStampCollectionViewCell {
+
+    private func setLabelAttributes(current: Int, max: Int) -> NSAttributedString {
+        
+        let currentText = String(format: MissionConstants.currentProgress, current)
+        let maxText = String(format: MissionConstants.maxProgress, max)
+        
+        let bold: UIFont = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
+        let regular: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        
+        let attributedString = NSMutableAttributedString(string: currentText, attributes: [
+            .font: bold,
+            .foregroundColor: UPlusColor.blue05
+        ])
+        
+        let regularString = NSAttributedString(string: maxText, attributes: [
+            .font: regular,
+            .foregroundColor: UPlusColor.gray04
+        ])
+        
+        attributedString.append(regularString)
+        return attributedString
+    }
+}
+
 // MARK: - Set UI & Layout
 extension RoutineMissionStampCollectionViewCell {
     
@@ -111,18 +147,22 @@ extension RoutineMissionStampCollectionViewCell {
     }
     
     private func setUI() {
-        self.contentView.addSubviews(self.progressLabel,
+        self.contentView.addSubviews(self.completeLabel,
+                                     self.progressLabel,
                                      self.stampCollectionView)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.progressLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
-            self.progressLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 3),
+            self.completeLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.completeLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            
+            self.progressLabel.topAnchor.constraint(equalTo: self.completeLabel.topAnchor),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.progressLabel.trailingAnchor, multiplier: 2),
         
             self.stampCollectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.progressLabel.bottomAnchor, multiplier: 2),
-            self.stampCollectionView.leadingAnchor.constraint(equalTo: self.progressLabel.leadingAnchor),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stampCollectionView.trailingAnchor, multiplier: 2),
+            self.stampCollectionView.leadingAnchor.constraint(equalTo: self.completeLabel.leadingAnchor),
+            self.stampCollectionView.trailingAnchor.constraint(equalTo: self.progressLabel.trailingAnchor),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stampCollectionView.bottomAnchor, multiplier: 2)
         ])
         
@@ -147,20 +187,20 @@ extension RoutineMissionStampCollectionViewCell: UICollectionViewDelegate, UICol
         
         cell.resetCell()
         
-        if indexPath.item >= cellVM.athleteMissions.count {
-            cell.showGiftMark(at: indexPath.item)
+        if indexPath.item >= cellVM.goodWorkerMissions.count {
+            cell.markNotYetParticipated(at: indexPath.item)
             return cell
         } else {
-            cell.showCheckMark(at: indexPath.item)
+            cell.checkAsParticipated(at: indexPath.item)
             return cell
         }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellHeight = self.stampCollectionView.frame.height / 3 - 20
-        
-        return CGSize(width: cellHeight, height: cellHeight)
+//        let cellHeight = self.stampCollectionView.frame.height / 3 - 20
+        let cellWidth = (self.stampCollectionView.frame.width - 80) / 5
+        return CGSize(width: cellWidth, height: cellWidth)
     }
     
 }

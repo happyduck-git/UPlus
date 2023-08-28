@@ -55,7 +55,7 @@
 		24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */; };
 		24624B8B2A8E55E600C9A42E /* MyPageViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */; };
 		24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8C2A8E812700C9A42E /* UIViewPreview.swift */; };
-		24624B8F2A8E843900C9A42E /* RoutineUploadPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8E2A8E843900C9A42E /* RoutineUploadPhotoView.swift */; };
+		24624B8F2A8E843900C9A42E /* RoutineUploadPhotoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8E2A8E843900C9A42E /* RoutineUploadPhotoButton.swift */; };
 		24624B912A90DE1000C9A42E /* RightArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B902A90DE1000C9A42E /* RightArrowButton.swift */; };
 		24624B942A9274B500C9A42E /* LevelDividerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */; };
 		24624B962A94FCA800C9A42E /* MissionBaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B952A94FCA800C9A42E /* MissionBaseModel.swift */; };
@@ -305,7 +305,7 @@
 		24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMissionScrollViewController.swift; sourceTree = "<group>"; };
 		24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyPageViewController+Extensions.swift"; sourceTree = "<group>"; };
 		24624B8C2A8E812700C9A42E /* UIViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewPreview.swift; sourceTree = "<group>"; };
-		24624B8E2A8E843900C9A42E /* RoutineUploadPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineUploadPhotoView.swift; sourceTree = "<group>"; };
+		24624B8E2A8E843900C9A42E /* RoutineUploadPhotoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineUploadPhotoButton.swift; sourceTree = "<group>"; };
 		24624B902A90DE1000C9A42E /* RightArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightArrowButton.swift; sourceTree = "<group>"; };
 		24624B932A9274B500C9A42E /* LevelDividerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDividerCollectionViewCell.swift; sourceTree = "<group>"; };
 		24624B952A94FCA800C9A42E /* MissionBaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionBaseModel.swift; sourceTree = "<group>"; };
@@ -708,7 +708,7 @@
 				93DA586B2A8F678600525BEC /* Weekly */,
 				93E0138D2A6527D60005E342 /* MissionCollectionViewCell */,
 				246BD1FE2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift */,
-				24624B8E2A8E843900C9A42E /* RoutineUploadPhotoView.swift */,
+				24624B8E2A8E843900C9A42E /* RoutineUploadPhotoButton.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -1537,7 +1537,7 @@
 				93DA58582A8E059400525BEC /* BaseMissionCompletedViewController.swift in Sources */,
 				930D96DF2A443C1C0007801A /* UIViewController+Extension.swift in Sources */,
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
-				24624B8F2A8E843900C9A42E /* RoutineUploadPhotoView.swift in Sources */,
+				24624B8F2A8E843900C9A42E /* RoutineUploadPhotoButton.swift in Sources */,
 				9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */,
 				93DA587A2A95CC3E00525BEC /* WeeklyLockedCollectionViewCell.swift in Sources */,
 				93DA58602A8EEFEF00525BEC /* GiftDetailView.swift in Sources */,

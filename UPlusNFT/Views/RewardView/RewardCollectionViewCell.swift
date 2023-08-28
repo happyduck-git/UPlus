@@ -87,12 +87,12 @@ extension RewardCollectionViewCell {
                 if let url = URL(string: data.rewardImagePath ?? "no-image"){
                     image = try await ImagePipeline.shared.image(for: url)
                 } else {
-                    image = UIImage(systemName: SFSymbol.heartFill)
+                    image = UIImage(named: ImageAsset.starbucks)
                 }
             }
             catch {
                 logger.error("Error showing image -- \(error)")
-                image = UIImage(systemName: SFSymbol.heartFill)
+                image = UIImage(named: ImageAsset.starbucks)
             }
             self.rewardImage.image = image
         }

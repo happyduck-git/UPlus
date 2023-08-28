@@ -30,8 +30,8 @@ final class MyPageViewViewModel {
     
     enum MyPageViewEventSectionType: String, CaseIterable {
         case availableEvent
-        case regularEvent = "참여 이벤트"
-        case levelEvent = "레벨 이벤트"
+        case regularEvent = "콘테스트"
+        case levelEvent = "스페셜 이벤트"
     }
     
     let missionSections: [MyPageViewMissionSectionType] = MyPageViewMissionSectionType.allCases

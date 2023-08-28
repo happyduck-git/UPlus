@@ -16,7 +16,6 @@ final class RoutineStampCollectionViewCellHeader: UICollectionViewCell {
     // MARK: - UI Elements
     private let quizDescription: UILabel = {
         let label = UILabel()
-        label.text = MissionConstants.routineTitle
         label.textColor = UPlusColor.gray09
         label.textAlignment = .center
         label.numberOfLines = 0

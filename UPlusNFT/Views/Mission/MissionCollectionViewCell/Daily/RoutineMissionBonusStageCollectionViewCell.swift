@@ -83,7 +83,7 @@ extension RoutineMissionBonusStageCollectionViewCell {
         
         self.vm = vm
         
-        vm.$athleteMissions
+        vm.$goodWorkerMissions
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
@@ -164,11 +164,11 @@ extension RoutineMissionBonusStageCollectionViewCell: UICollectionViewDelegate, 
         
         cell.resetCell()
         
-        if indexPath.item + MissionConstants.routineMissionLimit >= cellVM.athleteMissions.count {
-            cell.showGiftMark(at: indexPath.item)
+        if indexPath.item + MissionConstants.routineMissionLimit >= cellVM.goodWorkerMissions.count {
+            cell.markNotYetParticipated(at: indexPath.item)
             return cell
         } else {
-            cell.showCheckMark(at: indexPath.item)
+            cell.checkAsParticipated(at: indexPath.item)
             return cell
         }
     }

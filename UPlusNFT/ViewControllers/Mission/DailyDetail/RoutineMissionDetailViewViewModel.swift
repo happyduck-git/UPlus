@@ -31,9 +31,9 @@ final class RoutineMissionDetailViewViewModel {
     
     /* Routine Mission */
     @Published var daysLeft: String = ""
-    @Published var athleteMissions: [AthleteMission] = [] {
+    @Published var goodWorkerMissions: [GoodWorkerMission] = [] {
         didSet {
-            self.successedMissionsCount = athleteMissions.count
+            self.successedMissionsCount = goodWorkerMissions.count
         }
     }
     @Published var isFinishedRoutines: Bool?
@@ -74,7 +74,7 @@ extension RoutineMissionDetailViewViewModel {
 
                 let (daysLeft, missions) = try await self.firestoreManager.getRoutineMissionInfo(missionType: .dailyExpGoodWorker, userIndex: user.userIndex)
                 self.daysLeft = daysLeft
-                self.athleteMissions = missions
+                self.goodWorkerMissions = missions
                 
                 if missions.count >= MissionConstants.routineMissionLimit {
                     

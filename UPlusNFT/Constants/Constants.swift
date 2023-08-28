@@ -129,6 +129,7 @@ struct SideMenuConstants {
 
 struct MyPageConstants {
     static let usernameSuffix: String = "%@ 마스터님,\n오늘도 월드클래스를 향해 아자~!"
+    static let dailyQuestDesc: String = "오늘 할 일을 기록하고 월드클래스 기업으로 성장시키세요!"
     static let dailyRank: String = "일일랭킹"
     static let rank: String = "%d위"
     static let goToMission: String = "미션 하러가기"
@@ -142,7 +143,9 @@ struct MyPageConstants {
     static let redeemLevelUpBenefits: String = "레벨업 보상 받기"
     static let routineMissionProgress: String = "%d / 15회"
     static let routinMissionLimit: Int = 15
-    static let pointLeftTillNextLevel: String = "다음 레벨 업까지 %dP"
+    static let untilNextLevel: String = "다음 등급까지"
+    static let currentPoint: String = "%dP"
+    static let nextLevelPoint: String = "/%d"
     static let eventLevel: String = "레벨 %d"
     static let missionPoint: String = "+%dP"
     static let vipPoints: String = "400P"
@@ -187,7 +190,10 @@ struct MissionConstants {
     static let missionTerminated: String = "미션 종료"
     static let participated: String = "참여 완료"
     static let redeemPoint: String = "%dP 포인트 받기"
-    static let routineProgress: String = "%d회 성공 /15회차"
+    static let currentProgress: String = "%d회 성공"
+    static let maxProgress: String = "/15회차"
+    static let routineProgress: String = "%d회 성공/6회차"
+    static let goToQuizAfterSec: String = "문제 풀러 가기 (%d초 뒤 활성화)"
     
     static let vote: String = "투표하기"
     
@@ -200,13 +206,16 @@ struct MissionConstants {
     static let episode1Desc: String = "천리길도 한걸음부터! 같이 일할 사원을 뽑아보아요."
     static let episode2Desc: String = "이번 주도 열심히! 서비스를 런칭해서 기업을 성장시켜요."
     static let episode3Desc: String = "기업 제휴로 월드클래스 기업까지 한발짝! 더 나아가요."
+    static let noResubmitDesc: String = "제출 이후엔 수정이 불가합니다"
     
     /* Routine Mission */
     static let startupMaster: String = "스타트업 마스터 되기"
     static let masterCerti: String = "마스터 인증서"
     static let routineMissionInfo: String = "15회차를 완주하고 마스터 인증서를 받으세요!"
-    static let routineDesc: String = "오늘 할 일 1가지를 적어 사진 인증을 해주세요!"
-    static let routineTitle: String = "TO-DO 미션"
+    static let routineDate: String = "날짜"
+    static let routineTodo: String = "할 일 1가지"
+    static let routineDesc: String = "오늘 날짜와 할 일 1가지를 모두 적은 손글씨 사진 찍기"
+    
     static let routineSubTitle: String = "미션 완주하고 루틴 미션 완주 인증서를 받으세요!"
     static let dailyMissionComplete: String = "15일 챌린지 완주를 축하해요!"
     static let routineMissionLimit: Int = 15
@@ -220,6 +229,7 @@ struct MissionConstants {
     static let missionSubmissionNotice: String = "평가 완료 후 %dP 보상, 내일 중 지급될 수 있습니다"
     static let complete: String = "완료하기"
     static let mission5nCompleted: String = "스타트업 마스터 되기 %d회차 성공!\n특별 포인트를 드려요."
+    static let untilCompletion: String = "완주까지"
     
     static let bonusMissionLimit: Int = 6
     static let certificate: String = "경험인증서 NFT"
@@ -440,6 +450,8 @@ struct ImageAsset {
     static let stampPointEmpty: String = "routine-point-empty"
     static let stampGiftFill: String = "routine-gift-fill"
     static let stampPointFill: String = "routine-point-fill"
+    static let uploadGray: String = "upload-gray"
+    static let infoMint: String = "info-mint"
     
     static let titleBackground: String = "title-background"
     static let eventBackground: String = "event-wall"
@@ -483,6 +495,7 @@ struct ImageAsset {
     
     /* RewardVC */
     static let bellGray: String = "bell-gray"
+    static let starbucks: String = "starbucks"
     
     /* GiftVC */
     static let giftMultiColored: String = "gift-multi"

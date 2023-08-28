@@ -71,6 +71,7 @@ final class CommentCountMissionViewController: UIViewController {
     
     private let commentTable: UITableView = {
         let table = UITableView()
+        table.backgroundColor = .clear
         table.register(CommentCountMissionTableViewCell.self,
                        forCellReuseIdentifier: CommentCountMissionTableViewCell.identifier)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -111,6 +112,25 @@ extension CommentCountMissionViewController {
         do {
             let user = try UPlusUser.getCurrentUser()
             
+            self.vm.$comment
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self,
+                    let comment = $0
+                    else { return }
+                    
+                    let commentEmpty = comment.isEmpty
+                    let interactive: Bool = commentEmpty ? false : true
+                    let bgColor: UIColor = commentEmpty ? UPlusColor.gray02 : UPlusColor.mint03
+                    let textColor: UIColor = commentEmpty ? .white : UPlusColor.gray08
+                    
+                    self.checkAnswerButton.isUserInteractionEnabled = interactive
+                    self.checkAnswerButton.backgroundColor = bgColor
+                    self.checkAnswerButton.setTitleColor(textColor, for: .normal)
+                    
+                }
+                .store(in: &bindings)
+            
             self.vm.$participated
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
@@ -118,7 +138,8 @@ extension CommentCountMissionViewController {
                     
                     if $0 {
                         self.checkAnswerButton.isEnabled = false
-                        self.checkAnswerButton.backgroundColor = .systemGray
+                        self.checkAnswerButton.backgroundColor = UPlusColor.gray02
+                        self.checkAnswerButton.setTitleColor(.white, for: .normal)
                         self.checkAnswerButton.setTitle("이미 참여하였습니다.", for: .normal)
                     }
                     

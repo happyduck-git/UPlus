@@ -194,9 +194,9 @@ extension UserProfileView {
             
             self.profileImage.heightAnchor.constraint(equalTo: self.profileImage.widthAnchor),
 
-            self.lottieButton.trailingAnchor.constraint(equalTo: self.profileImage.trailingAnchor),
-            self.lottieButton.bottomAnchor.constraint(equalTo: self.profileImage.bottomAnchor),
-            
+            self.profileImage.trailingAnchor.constraint(equalTo: self.lottieButton.trailingAnchor, constant: 2),
+            self.lottieButton.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 1),
+        
             self.dailyRankView.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.topAnchor, multiplier: 2),
             self.dailyRankView.heightAnchor.constraint(equalToConstant: 30),
             self.dailyRankView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.leadingAnchor, multiplier: 2),

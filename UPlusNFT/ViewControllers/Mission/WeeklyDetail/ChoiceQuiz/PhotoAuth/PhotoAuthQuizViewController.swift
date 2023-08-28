@@ -21,9 +21,11 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
     private let uploadButton: UIButton = {
         let button = UIButton()
         button.setTitle(MissionConstants.upload, for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UPlusColor.gray06, for: .normal)
         button.backgroundColor = .white
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
+        button.setImage(UIImage(named: ImageAsset.uploadGray), for: .normal)
+        button.alignVerticalCenter()
         button.clipsToBounds = true
         button.layer.cornerRadius = 8.0
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -35,8 +37,47 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
         imageView.isHidden = true
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8.0
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
+    }()
+    
+    private let infoStack: UIStackView = {
+        let stack = UIStackView()
+        stack.isHidden = true
+        stack.axis = .horizontal
+        stack.spacing = 5.0
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let infoImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.infoRed)
+        return imageView
+    }()
+    
+    private let infoText: UILabel = {
+        let label = UILabel()
+        label.text = MissionConstants.noResubmitDesc
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.textColor = UPlusColor.orange01
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let editButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.setTitleColor(UPlusColor.gray08, for: .normal)
+        button.setTitle(MissionConstants.edit, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
+        button.backgroundColor = UPlusColor.mint01
+        button.clipsToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let goToQuizButton: UIButton = {
@@ -91,6 +132,7 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        self.editButton.layer.cornerRadius = self.editButton.frame.height / 2
         self.goToQuizButton.layer.cornerRadius = self.goToQuizButton.frame.height / 2
     }
 }
@@ -106,6 +148,19 @@ extension PhotoAuthQuizViewController {
     
     private func bind() {
         self.uploadButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                
+                self.present(
+                    photoPicker,
+                    animated: true,
+                    completion: nil
+                )
+            }
+            .store(in: &bindings)
+        
+        self.editButton.tapPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let `self` = self else { return }
@@ -148,6 +203,8 @@ extension PhotoAuthQuizViewController {
                 if image != nil {
                     self.uploadButton.isHidden = true
                     self.uploadedPhotoView.isHidden = false
+                    self.infoStack.isHidden = false
+                    self.editButton.isHidden = false
                     
                     self.uploadedPhotoView.image = image
                     
@@ -176,20 +233,33 @@ extension PhotoAuthQuizViewController {
     
     private func setUI() {
         self.quizContainer.addSubviews(self.uploadButton,
-                                       self.uploadedPhotoView)
+                                       self.uploadedPhotoView,
+                                       self.infoStack,
+                                       self.editButton)
+        
+        self.infoStack.addArrangedSubviews(self.infoImage,
+                                           self.infoText)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.uploadButton.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 3),
-            self.uploadButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 3),
+            self.uploadButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 5),
             self.uploadButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadButton.trailingAnchor, multiplier: 2),
             
             self.uploadedPhotoView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 3),
-            self.uploadedPhotoView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 2),
+            self.uploadedPhotoView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 3),
             self.uploadedPhotoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadedPhotoView.trailingAnchor, multiplier: 2),
+            
+            self.infoStack.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadedPhotoView.bottomAnchor, multiplier: 1),
+            self.infoStack.centerXAnchor.constraint(equalTo: self.quizContainer.centerXAnchor),
+            
+            self.editButton.topAnchor.constraint(equalToSystemSpacingBelow: self.infoStack.bottomAnchor, multiplier: 1),
+            self.editButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.uploadedPhotoView.leadingAnchor, multiplier: 4),
+            self.uploadedPhotoView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.editButton.trailingAnchor, multiplier: 4),
+            self.editButton.heightAnchor.constraint(equalToConstant: 46)
         ])
     }
 }

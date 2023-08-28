@@ -35,7 +35,8 @@ extension UIButton {
 
 // MARK: - Align Image and Text Vertically
 extension UIButton {
-    func alignVerticalCenter(padding: CGFloat = 7.0) {
+    func alignVerticalCenter(padding: CGFloat = 10.0) {
+        titleLabel?.textAlignment = .center
             guard let imageSize = imageView?.frame.size,
                   let titleText = titleLabel?.text,
                   let titleFont = titleLabel?.font else {

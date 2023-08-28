@@ -12,10 +12,14 @@ import OSLog
 
 final class OnBoardingViewController2: UIViewController {
     
+    private var isTapped: Bool = false
+    
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
+    private let loadingVC = LoadingViewController()
+    
     private let scrollView: UIScrollView = {
         let view = UIScrollView()
         view.isScrollEnabled = true
@@ -114,8 +118,15 @@ extension OnBoardingViewController2 {
         func bindViewToViewModel() {
             self.startButton.tapPublisher
                 .receive(on: DispatchQueue.main)
-                .sink { _ in
-                    self.startButtonDidTap()
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    if !self.isTapped {
+                        self.isTapped.toggle()
+                        self.addChildViewController(self.loadingVC)
+                        self.startButtonDidTap()
+                    }
+                    
                 }
                 .store(in: &bindings)
         }
@@ -146,12 +157,15 @@ extension OnBoardingViewController2 {
                                              memberShip: (false, userInfo.userHasVipNft))
                 let myPageVC = MyPageViewController(vm: vm)
                 
+                self.loadingVC.removeViewController()
                 self.navigationController?.pushViewController(loginVC, animated: false)
                 self.navigationController?.pushViewController(myPageVC, animated: true)
             }
             
         } else {
             UPlusLogger.logger.info("User is not logged in.")
+            self.loadingVC.removeViewController()
+            
             let loginVM = LoginViewViewModel()
             let loginVC = LoginViewController(vm: loginVM)
             self.show(loginVC, sender: self)

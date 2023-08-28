@@ -124,6 +124,10 @@ final class RoutineMissionDetailViewController2: UIViewController {
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.backgroundColor = UPlusColor.blue05
+        collection.isPagingEnabled = true
+        
+        collection.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        collection.showsHorizontalScrollIndicator = false
         
         collection.register(UICollectionViewCell.self,
                             forCellWithReuseIdentifier: UICollectionViewCell.identifier)
@@ -157,8 +161,10 @@ final class RoutineMissionDetailViewController2: UIViewController {
         return view
     }()
     
-    private let uploadPhotoView: RoutineUploadPhotoView = {
-        let view = RoutineUploadPhotoView()
+    private let uploadPhotoButton: RoutineUploadPhotoButton = {
+        let view = RoutineUploadPhotoButton()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 8.0
         view.layer.borderColor = UPlusColor.gray04.cgColor
         view.layer.borderWidth = 1.0
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -168,8 +174,8 @@ final class RoutineMissionDetailViewController2: UIViewController {
     private let submitButton: UIButton = {
         let button = UIButton()
         button.setTitle(MissionConstants.submit, for: .normal)
-        button.backgroundColor = .white
-        button.setTitleColor(UPlusColor.gray03, for: .normal)
+        button.backgroundColor = UPlusColor.gray02
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         button.clipsToBounds = true
         button.layer.cornerRadius = 8.0
@@ -180,9 +186,43 @@ final class RoutineMissionDetailViewController2: UIViewController {
     /* Photo View Container */
     private let photoContainerView: UIView = {
         let view = UIView()
+        view.isHidden = true
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    private let photoView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8.0
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let submitStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 5.0
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let submitImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.infoMint)
+        return imageView
+    }()
+    
+    private let submitText: UILabel = {
+        let label = UILabel()
+        label.text = MissionConstants.noResubmitDesc
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.textColor = UPlusColor.mint03
+        return label
     }()
     
     private let buttonStack: UIStackView = {
@@ -265,8 +305,8 @@ final class RoutineMissionDetailViewController2: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = .white
         self.title = MissionConstants.startupMaster
-        self.view.backgroundColor = UPlusColor.blue05
         
         self.setUI()
         self.setLayout()
@@ -283,9 +323,50 @@ extension RoutineMissionDetailViewController2 {
     
     private func bind() {
         func bindViewToViewModel() {
+            self.uploadPhotoButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.showPhotoBottomAlert()
+                }
+                .store(in: &bindings)
             
+            self.editButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.showPhotoBottomAlert()
+                }
+                .store(in: &bindings)
+            
+            self.submitButton2.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+                    
+                    self.confirmDidTap()
+                    self.delegate?.submitDidTap()
+                }
+                .store(in: &bindings)
         }
         func bindViewModelToView() {
+            self.vm.$selectedImage
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] image in
+                    guard let `self` = self else { return }
+                    
+                    if image != nil {
+                        self.photoView.image = image
+                        
+                        self.uploadContainerView.isHidden = true
+                        self.photoContainerView.isHidden = false
+                    }
+                    
+                }
+                .store(in: &bindings)
+            
             self.vm.$isFinishedRoutines
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
@@ -324,10 +405,21 @@ extension RoutineMissionDetailViewController2 {
                                     self.collectionView,
                                     self.pageControl,
                                     self.uploadContainerView,
+                                    self.photoContainerView,
                                     self.infoView)
         
-        self.uploadContainerView.addSubviews(self.uploadPhotoView,
+        self.uploadContainerView.addSubviews(self.uploadPhotoButton,
                                              self.submitButton)
+        
+        self.photoContainerView.addSubviews(self.photoView,
+                                            self.submitStack,
+                                            self.buttonStack)
+        
+        self.submitStack.addArrangedSubviews(self.submitImage,
+                                             self.submitText)
+        
+        self.buttonStack.addArrangedSubviews(self.editButton,
+                                             self.submitButton2)
         
         self.topContainerView.addSubviews(self.topLabel)
     }
@@ -371,7 +463,7 @@ extension RoutineMissionDetailViewController2 {
             self.collectionView.topAnchor.constraint(equalToSystemSpacingBelow: self.routineDescLabel.bottomAnchor, multiplier: 3),
             self.collectionView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
-            self.collectionView.heightAnchor.constraint(equalToConstant: 300),
+            self.collectionView.heightAnchor.constraint(equalToConstant: 250),
             
             self.pageControl.topAnchor.constraint(equalToSystemSpacingBelow: self.collectionView.bottomAnchor, multiplier: 1),
             self.pageControl.centerXAnchor.constraint(equalTo: self.collectionView.centerXAnchor),
@@ -379,6 +471,11 @@ extension RoutineMissionDetailViewController2 {
             self.uploadContainerView.topAnchor.constraint(equalToSystemSpacingBelow: self.pageControl.bottomAnchor, multiplier: 3),
             self.uploadContainerView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
             self.uploadContainerView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            
+            self.photoContainerView.topAnchor.constraint(equalTo: self.uploadContainerView.topAnchor),
+            self.photoContainerView.leadingAnchor.constraint(equalTo: self.uploadContainerView.leadingAnchor),
+            self.photoContainerView.trailingAnchor.constraint(equalTo: self.uploadContainerView.trailingAnchor),
+            self.photoContainerView.bottomAnchor.constraint(equalTo: self.uploadContainerView.bottomAnchor),
             
             self.infoView.topAnchor.constraint(equalTo: self.uploadContainerView.bottomAnchor),
             self.infoView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
@@ -388,20 +485,33 @@ extension RoutineMissionDetailViewController2 {
         ])
         
         NSLayoutConstraint.activate([
-            self.uploadPhotoView.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadContainerView.topAnchor, multiplier: 2),
-            self.uploadPhotoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.uploadContainerView.leadingAnchor, multiplier: 2),
-            self.uploadContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadPhotoView.trailingAnchor, multiplier: 2),
+            self.uploadPhotoButton.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadContainerView.topAnchor, multiplier: 2),
+            self.uploadPhotoButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.uploadContainerView.leadingAnchor, multiplier: 2),
+            self.uploadContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadPhotoButton.trailingAnchor, multiplier: 2),
             
-            self.submitButton.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadPhotoView.bottomAnchor, multiplier: 2),
+            self.submitButton.topAnchor.constraint(equalToSystemSpacingBelow: self.uploadPhotoButton.bottomAnchor, multiplier: 2),
             self.submitButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
-            self.submitButton.leadingAnchor.constraint(equalTo: self.uploadPhotoView.leadingAnchor),
-            self.submitButton.trailingAnchor.constraint(equalTo: self.uploadPhotoView.trailingAnchor),
+            self.submitButton.leadingAnchor.constraint(equalTo: self.uploadPhotoButton.leadingAnchor),
+            self.submitButton.trailingAnchor.constraint(equalTo: self.uploadPhotoButton.trailingAnchor),
             self.uploadContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.submitButton.bottomAnchor, multiplier: 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.photoView.topAnchor.constraint(equalTo: self.photoContainerView.topAnchor),
+            self.photoView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 3),
+            self.photoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.photoContainerView.leadingAnchor, multiplier: 2),
+            self.photoContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.photoView.trailingAnchor, multiplier: 2),
+            
+            self.submitStack.topAnchor.constraint(equalToSystemSpacingBelow: self.photoView.bottomAnchor, multiplier: 1),
+            self.submitStack.centerXAnchor.constraint(equalTo: self.photoContainerView.centerXAnchor),
+            
+            self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.submitStack.bottomAnchor, multiplier: 1),
+            self.buttonStack.leadingAnchor.constraint(equalTo: self.photoView.leadingAnchor),
+            self.buttonStack.trailingAnchor.constraint(equalTo: self.photoView.trailingAnchor),
+            self.photoContainerView.bottomAnchor.constraint(equalTo: self.buttonStack.bottomAnchor, constant: 2)
         ])
     }
 }
-
-
 
 extension RoutineMissionDetailViewController2: UICollectionViewDelegate, UICollectionViewDataSource {
 
@@ -493,6 +603,72 @@ extension RoutineMissionDetailViewController2: RoutineMissionDetailViewViewModel
     }
 }
 
+//MARK: - Private
+extension RoutineMissionDetailViewController2 {
+    private func showPhotoBottomAlert() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(
+            title: "카메라",
+            style: .default,
+            handler: { [weak self] _ in
+                guard let `self` = self else { return }
+                self.present(
+                    camera,
+                    animated: true,
+                    completion: nil
+                )
+            }))
+        
+        alert.addAction(UIAlertAction(
+            title: "사진, 동영상 선택",
+            style: .default,
+            handler: { [weak self] _ in
+                guard let `self` = self else { return }
+                self.present(
+                    photoPicker,
+                    animated: true,
+                    completion: nil
+                )
+            }))
+        
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        
+        self.present(alert, animated: true)
+    }
+    
+    private func confirmDidTap() {
+        
+        self.addChildViewController(self.loadingVC)
+        
+        Task {
+            do {
+                // 1. Save participation info to Storage
+                try await self.vm.saveRoutineParticipationStatus()
+        
+                // 2. Check level update
+                let mission = try await self.vm.getTodayMissionInfo()
+                
+                try await self.vm.checkLevelUpdate(mission: mission)
+                
+                // 3. Point 수여 complete vc
+                let vm = RoutineParticipationViewViewModel(mission: mission)
+                let vc = RoutineParticipatedViewController(vm: vm)
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.loadingVC.removeViewController()
+                    guard let `self` = self else { return }
+                    self.show(vc, sender: self)
+                }
+                
+            }
+            catch {
+                // TODO: 오류 발생 alert
+                UPlusLogger.logger.error("Error process confirm button -- \(String(describing: error))")
+            }
+        }
+    }
+}
 // MARK: - PHPickerViewControllerDelegate
 extension RoutineMissionDetailViewController2: PHPickerViewControllerDelegate {
     

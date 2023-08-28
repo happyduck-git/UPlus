@@ -93,7 +93,7 @@ final class MyPageViewController: UIViewController {
         button.tag = 0
         button.addTarget(self, action: #selector(buttonDidTap(_:)), for: .touchUpInside)
         button.backgroundColor = .white
-        button.setTitleColor(UPlusColor.blue04, for: .normal)
+        button.setTitleColor(UPlusColor.mint04, for: .normal)
         button.setTitle("미션", for: .normal)
         return button
     }()
@@ -110,7 +110,7 @@ final class MyPageViewController: UIViewController {
     
     private let buttonBottomBar1: PassThroughView = {
         let view = PassThroughView()
-        view.backgroundColor = UPlusColor.blue04
+        view.backgroundColor = UPlusColor.mint04
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -118,7 +118,7 @@ final class MyPageViewController: UIViewController {
     private let buttonBottomBar2: PassThroughView = {
         let view = PassThroughView()
         view.isHidden = true
-        view.backgroundColor = UPlusColor.blue04
+        view.backgroundColor = UPlusColor.mint04
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -203,7 +203,7 @@ final class MyPageViewController: UIViewController {
             UIView.animate(withDuration: 0.3) {
                 self.buttonBottomBar1.isHidden = false
                 self.buttonBottomBar2.isHidden = true
-                self.missionButton.setTitleColor(UPlusColor.blue04, for: .normal)
+                self.missionButton.setTitleColor(UPlusColor.mint04, for: .normal)
                 self.eventButton.setTitleColor(UPlusColor.gray03, for: .normal)
             }
             
@@ -211,7 +211,7 @@ final class MyPageViewController: UIViewController {
             self.buttonBottomBar1.isHidden = true
             self.buttonBottomBar2.isHidden = false
             self.missionButton.setTitleColor(UPlusColor.gray03, for: .normal)
-            self.eventButton.setTitleColor(UPlusColor.blue04, for: .normal)
+            self.eventButton.setTitleColor(UPlusColor.mint04, for: .normal)
         }
         
     }
@@ -449,7 +449,7 @@ extension MyPageViewController {
     
     @objc func speakerDidTap() {
         //TODO: 공지사항 열람
-        self.requestSendNoti(seconds: 0.5)
+        
     }
     
     private func setDelegate() {
@@ -498,7 +498,7 @@ extension MyPageViewController {
         
         self.topConstraint?.constant = self.initialTopOffset - scrollView.contentOffset.y
         let offset = -scrollView.contentOffset.y
-        let newAlpha = (offset)/self.initialHeight
+        let newAlpha = (offset)/(self.initialHeight / 1.5)
         
         self.shadowView.alpha = newAlpha
         self.userProfileView.alpha = newAlpha
@@ -987,9 +987,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return cell
                 
             case 5:
-                guard let goToMissionCell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryNoParticipationCollectionViewCell.identifier, for: indexPath) as? MissionHistoryNoParticipationCollectionViewCell else {
-                    fatalError()
-                }
+//                guard let goToMissionCell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryNoParticipationCollectionViewCell.identifier, for: indexPath) as? MissionHistoryNoParticipationCollectionViewCell else {
+//                    fatalError()
+//                }
                 
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryDetailCollectionViewCell.identifier, for: indexPath) as? MissionHistoryDetailCollectionViewCell else {
                     fatalError()

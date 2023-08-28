@@ -10,7 +10,7 @@ import Combine
 
 final class CommentCountMissionViewViewModel: MissionBaseModel {
 
-    var comment: String?
+    @Published var comment: String?
     
     @Published var imageUrls: [URL] = [] {
         willSet {

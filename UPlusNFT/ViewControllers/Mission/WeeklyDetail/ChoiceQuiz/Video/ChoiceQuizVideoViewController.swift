@@ -218,7 +218,8 @@ extension ChoiceQuizVideoViewController {
                     self.videoDescriptionLabel.isHidden = true
                     
                     self.containerView.isHidden = false
-                    self.checkAnswerButton.setTitle(MissionConstants.checkAnswer, for: .normal)
+                    // TODO: 몇 초 뒤인지 명시 필요
+                    self.checkAnswerButton.setTitle(MissionConstants.goToQuizAfterSec, for: .normal)
                     self.checkAnswerButton.isUserInteractionEnabled = false
                     
                     self.quizHintText.text = self.vm.mission.missionContentTitle

@@ -27,8 +27,8 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
     
     // MARK: - UI Elements
 
-    private let uploadPhotoView: RoutineUploadPhotoView = {
-        let view = RoutineUploadPhotoView()
+    private let uploadPhotoView: RoutineUploadPhotoButton = {
+        let view = RoutineUploadPhotoButton()
         view.layer.borderColor = UPlusColor.gray04.cgColor
         view.layer.borderWidth = 1.0
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -78,8 +78,6 @@ final class UploadPhotoButtonCollectionViewCell: UICollectionViewCell {
         self.contentView.backgroundColor = .systemGray5
         self.setUI()
         self.setLayout()
-
-        self.uploadPhotoView.delegate = self
         
     }
     
@@ -98,7 +96,6 @@ extension UploadPhotoButtonCollectionViewCell {
         self.bindings.removeAll()
         
         self.vm = vm
-        self.uploadPhotoView.bind(with: vm)
         
         func bindViewToViewModel() {
             
@@ -163,13 +160,6 @@ extension UploadPhotoButtonCollectionViewCell {
     
 }
 
-extension UploadPhotoButtonCollectionViewCell: RoutineUploadPhotoViewDelegate {
-
-    func uploadButtonDidTap() {
-        self.delegate?.uploadButtonDidTap()
-    }
-
-}
 
 #if canImport(SwiftUI) && DEBUG
 import SwiftUI

@@ -1320,7 +1320,7 @@ extension FirestoreManager {
     */
     
     // NOTE: mission type이 한가지로 정해지면 missionType argument 삭제 가능.
-    func getRoutineMissionInfo(missionType: MissionType, userIndex: Int64) async throws -> (daysLeft: String, participatedMission: [AthleteMission]) {
+    func getRoutineMissionInfo(missionType: MissionType, userIndex: Int64) async throws -> (daysLeft: String, participatedMission: [GoodWorkerMission]) {
         
         let daysLeft = try await self.getRoutineMissionPeriod(missonType: missionType)
         let participatedMission = try await getParticipatedRoutineMissionList(userIndex: userIndex, missionType: missionType)
@@ -1344,7 +1344,7 @@ extension FirestoreManager {
         return String(describing: daysLeft)
     }
     
-    private func getParticipatedRoutineMissionList(userIndex: Int64, missionType: MissionType) async throws -> [AthleteMission] {
+    private func getParticipatedRoutineMissionList(userIndex: Int64, missionType: MissionType) async throws -> [GoodWorkerMission] {
         let data = try await threadsSetCollectionPath2
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
@@ -1352,12 +1352,12 @@ extension FirestoreManager {
             .getDocument()
             .data()
         
-        var missions: [AthleteMission] = []
+        var missions: [GoodWorkerMission] = []
         let map = data?[FirestoreConstants.userTypeMissionArrayMap] as? [String: [DocumentReference]]
         let refList = map?[missionType.rawValue] ?? []
         
         for ref in refList {
-            await missions.append(try ref.getDocument().data(as: AthleteMission.self, decoder: self.decoder))
+            await missions.append(try ref.getDocument().data(as: GoodWorkerMission.self, decoder: self.decoder))
         }
         return missions
     }

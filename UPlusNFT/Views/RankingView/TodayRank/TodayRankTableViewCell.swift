@@ -21,7 +21,6 @@ final class TodayRankTableViewCell: UITableViewCell {
     private let rankImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.isHidden = true
-        imageView.backgroundColor = UPlusColor.grayBackground
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

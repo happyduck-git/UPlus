@@ -53,7 +53,7 @@ final class RankingMenuBar: UIView {
     
     private let indicatorBar: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = UPlusColor.mint04
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -114,7 +114,7 @@ extension RankingMenuBar {
             self.buttonStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
             self.indicatorBar.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.indicatorBar.heightAnchor.constraint(equalToConstant: 1)
+            self.indicatorBar.heightAnchor.constraint(equalToConstant: 2)
         ])
         self.indicatorLeading = indicatorBar.leadingAnchor.constraint(equalTo: self.todayRankButton.leadingAnchor)
         self.indicatorTrailing = indicatorBar.trailingAnchor.constraint(equalTo: self.todayRankButton.trailingAnchor)
