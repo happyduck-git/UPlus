@@ -20,7 +20,7 @@ final class RoutineParticipatedViewController: UIViewController {
     
     private let backgroundConfetti: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.confetti)
+        imageView.image = UIImage(named: ImageAsset.confettiBackground)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -28,7 +28,7 @@ final class RoutineParticipatedViewController: UIViewController {
     private let resultLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
-        label.text = MissionConstants.missionParticipated
+        label.text = MissionConstants.questCompleted
         label.textAlignment = .center
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -24,6 +24,13 @@ final class CommentCountMissionViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
+    private let backgroundImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.eventBackground)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = MissionConstants.quizMission
@@ -190,6 +197,7 @@ extension CommentCountMissionViewController {
 extension CommentCountMissionViewController {
     private func setUI() {
         self.view.addSubviews(
+            self.backgroundImage,
             self.titleLabel,
             self.quizLabel,
             self.textField,
@@ -200,6 +208,11 @@ extension CommentCountMissionViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
+            self.backgroundImage.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.backgroundImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundImage.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundImage.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
             self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
             self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 2),
@@ -242,7 +255,8 @@ extension CommentCountMissionViewController: UITableViewDelegate, UITableViewDat
         let nickname = self.vm.comments[indexPath.row * 2]
         let comment = self.vm.comments[(indexPath.row * 2) + 1]
         
-        cell.configure(image: "image", nickname: nickname, comment: comment)
+        cell.bind(with: self.vm)
+        cell.configure(image: "image", nickname: nickname, comment: comment, likes: 10)
         
         return cell
     }

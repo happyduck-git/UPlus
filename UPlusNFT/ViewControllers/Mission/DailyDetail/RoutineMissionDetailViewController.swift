@@ -19,8 +19,6 @@ final class RoutineMissionDetailViewController: UIViewController {
     // MARK: - Dependency
     private let vm: RoutineMissionDetailViewViewModel
     
-    private let firestoreManager = FirestoreManager.shared
-    
     // MARK: - Delegate
     weak var delegate: RoutineMissionDetailViewControllerDelegate?
     

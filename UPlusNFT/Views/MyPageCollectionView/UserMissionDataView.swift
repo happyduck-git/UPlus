@@ -15,27 +15,15 @@ final class UserMissionDataView: PassThroughView {
     //MARK: - UI Elements
     private let infoButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: SFSymbol.infoFill)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal), for: .normal)
-        button.setTitle("레벨 등급 안내", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.caption1, weight: .regular)
-        button.setTitleColor(.systemGray, for: .normal)
+        button.setImage(UIImage(named: ImageAsset.infoGray), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    private let levelLabel: UILabel = {
-        let label = UILabel()
-        label.text = " "
-        label.textColor = UPlusColor.gradientDeepBlue
-        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let pointImage: UIImageView = {
-       let imageView = UIImageView()
+    private let levelImage: UIImageView = {
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.point)
+        imageView.image = UIImage(named: ImageAsset.level1Title)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -73,9 +61,8 @@ final class UserMissionDataView: PassThroughView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = UPlusColor.lightBlue.withAlphaComponent(0.5)
-        self.layer.borderColor = UIColor.white.cgColor
-        self.layer.borderWidth = 5.0
+        self.backgroundColor = .white
+       
         self.setUI()
         self.setLayout()
 
@@ -104,8 +91,26 @@ extension UserMissionDataView {
         let max = UserLevel(rawValue: level)?.scoreRange.upperBound ?? 0
         
         self.pointLabel.text = String(describing: point)
-        self.levelLabel.text = MissionConstants.levelPrefix + String(describing: level)
         self.levelDescriptionLabel.text = String(format: MyPageConstants.pointLeftTillNextLevel, max - point)
+        
+        var levelImage: String = " "
+        switch level {
+        case 1:
+            levelImage = ImageAsset.level1Title
+        case 2:
+            levelImage = ImageAsset.level2Title
+        case 3:
+            levelImage = ImageAsset.level3Title
+        case 4:
+            levelImage = ImageAsset.level4Title
+        case 5:
+            levelImage = ImageAsset.level5Title
+        default:
+            levelImage = ImageAsset.level1Title
+        }
+        
+        self.levelImage.image = UIImage(named: levelImage)
+        
         
         self.setProgress(point: point, level: level, maxPoint: Int(max))
         self.bind(with: vm)
@@ -131,34 +136,32 @@ extension UserMissionDataView {
 
 extension UserMissionDataView {
     private func setUI() {
-        self.addSubviews(infoButton,
-                         levelLabel,
-                         pointImage,
-                         pointLabel,
-                         levelDescriptionLabel,
-                         levelProgressBar)
+        self.addSubviews(self.infoButton,
+                         self.levelImage,
+                         self.pointLabel,
+                         self.levelDescriptionLabel,
+                         self.levelProgressBar)
     }
     
     private func setLayout() {
     
         NSLayoutConstraint.activate([
-            self.levelLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 2),
-            self.levelLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
+            self.levelImage.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 2),
+            self.levelImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelImage.bottomAnchor, multiplier: 2),
             
-            self.infoButton.topAnchor.constraint(equalTo: self.levelLabel.topAnchor),
+            self.infoButton.topAnchor.constraint(equalTo: self.levelImage.topAnchor),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.infoButton.trailingAnchor, multiplier: 2),
             
-            self.pointImage.topAnchor.constraint(equalToSystemSpacingBelow: self.levelLabel.bottomAnchor, multiplier: 1),
-            self.pointImage.leadingAnchor.constraint(equalTo: self.levelLabel.leadingAnchor),
-            self.pointLabel.topAnchor.constraint(equalTo: self.pointImage.topAnchor),
-            self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointImage.trailingAnchor, multiplier: 1),
-            self.levelDescriptionLabel.topAnchor.constraint(equalTo: self.pointImage.topAnchor),
-            self.levelDescriptionLabel.trailingAnchor.constraint(equalTo: self.infoButton.trailingAnchor),
-            
-            self.levelProgressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.levelDescriptionLabel.bottomAnchor, multiplier: 1),
-            self.levelProgressBar.leadingAnchor.constraint(equalTo: self.levelLabel.leadingAnchor),
+            self.levelProgressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.infoButton.bottomAnchor, multiplier: 2),
+            self.levelProgressBar.leadingAnchor.constraint(equalToSystemSpacingAfter: self.levelImage.trailingAnchor, multiplier: 3),
             self.levelProgressBar.trailingAnchor.constraint(equalTo: self.infoButton.trailingAnchor),
-            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.levelProgressBar.bottomAnchor, multiplier: 2)
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 1),
+            
+            self.pointLabel.topAnchor.constraint(equalTo: self.levelProgressBar.bottomAnchor),
+            self.pointLabel.leadingAnchor.constraint(equalTo: self.levelProgressBar.leadingAnchor),
+            self.levelDescriptionLabel.topAnchor.constraint(equalTo: self.pointLabel.topAnchor),
+            self.levelDescriptionLabel.trailingAnchor.constraint(equalTo: self.levelProgressBar.trailingAnchor)
         ])
         self.levelProgressBar.setContentHuggingPriority(.defaultLow, for: .vertical)
     }

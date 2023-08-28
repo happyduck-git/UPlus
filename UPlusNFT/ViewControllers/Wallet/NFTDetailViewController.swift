@@ -25,6 +25,14 @@ final class NFTDetailViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
+    
+    private let nftContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = UPlusColor.gray06
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let nftImageView: GIFImageView = {
         let gifView = GIFImageView()
         gifView.clipsToBounds = true
@@ -271,7 +279,8 @@ extension NFTDetailViewController {
 
 extension NFTDetailViewController {
     private func setUI() {
-        self.view.addSubviews(self.nftImageView,
+        self.view.addSubviews(self.nftContainer,
+                              self.nftImageView,
                               self.nftInfoContainer,
                               self.traitContainer)
         
@@ -296,7 +305,12 @@ extension NFTDetailViewController {
     
     private func setBaseLayout() {
         NSLayoutConstraint.activate([
-            self.nftImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
+            self.nftContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.nftContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.nftContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.nftContainer.bottomAnchor.constraint(equalTo: self.nftInfoContainer.topAnchor),
+            
+            self.nftImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
             self.nftImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 8),
             self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftImageView.trailingAnchor, multiplier: 8),
             self.nftImageView.heightAnchor.constraint(equalTo: self.nftImageView.widthAnchor),

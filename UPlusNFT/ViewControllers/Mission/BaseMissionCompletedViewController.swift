@@ -21,7 +21,7 @@ class BaseMissionCompletedViewController: UIViewController {
     
     let backgroundConfetti: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.confetti)
+        imageView.image = UIImage(named: ImageAsset.confettiBackground)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -29,7 +29,7 @@ class BaseMissionCompletedViewController: UIViewController {
     let resultLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
-        label.text = MissionConstants.missionParticipated
+        label.text = MissionConstants.questCompleted
         label.textAlignment = .center
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -37,6 +37,14 @@ class BaseMissionCompletedViewController: UIViewController {
     }()
     
     let missionCompleteIcon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.pointBig)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let shadowIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: ImageAsset.pointShadow)
         imageView.contentMode = .scaleAspectFit
@@ -46,11 +54,11 @@ class BaseMissionCompletedViewController: UIViewController {
     
     lazy var confirmButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitleColor(UPlusColor.gray08, for: .normal)
+        button.backgroundColor = UPlusColor.mint03
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         button.clipsToBounds = true
-        button.layer.cornerRadius = 10
+        button.layer.cornerRadius = 8.0
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -71,6 +79,7 @@ extension BaseMissionCompletedViewController {
         self.view.addSubviews(self.backgroundConfetti,
                               self.resultLabel,
                               self.missionCompleteIcon,
+                              self.shadowIcon,
                               self.confirmButton)
     }
     
@@ -85,9 +94,13 @@ extension BaseMissionCompletedViewController {
             self.missionCompleteIcon.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 10),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.missionCompleteIcon.trailingAnchor, multiplier: 10),
             
-            self.confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: self.missionCompleteIcon.bottomAnchor, multiplier: 5),
+            self.shadowIcon.topAnchor.constraint(equalTo: self.missionCompleteIcon.bottomAnchor),
+            self.shadowIcon.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.shadowIcon.trailingAnchor, multiplier: 2),
+            
+            self.confirmButton.topAnchor.constraint(equalToSystemSpacingBelow: self.shadowIcon.bottomAnchor, multiplier: 5),
             self.confirmButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
-            self.confirmButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 15),
+            self.confirmButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.confirmButton.trailingAnchor, multiplier: 3),
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.confirmButton.bottomAnchor, multiplier: 3)
         ])
@@ -98,3 +111,13 @@ extension BaseMissionCompletedViewController {
         self.navigationItem.hidesBackButton = true
     }
 }
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct BaseMissionCompletedViewController_Preview: PreviewProvider {
+    static var previews: some View {
+        
+        BaseMissionCompletedViewController().toPreview()
+    }
+}
+#endif

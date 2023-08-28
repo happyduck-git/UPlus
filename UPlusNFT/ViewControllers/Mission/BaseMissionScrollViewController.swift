@@ -29,6 +29,13 @@ class BaseMissionScrollViewController: UIViewController {
         return view
     }()
     
+    private let backgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.eventBackground)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = RewardsConstants.empty
@@ -82,7 +89,8 @@ extension BaseMissionScrollViewController {
     private func setUI() {
         self.view.addSubview(self.scrollView)
         self.scrollView.addSubview(self.canvasView)
-        self.canvasView.addSubviews(self.titleLabel,
+        self.canvasView.addSubviews(self.backgroundImageView,
+                                    self.titleLabel,
                                     self.subTitleLabel,
                                     self.containerView,
                                     self.checkAnswerButton)
@@ -92,7 +100,7 @@ extension BaseMissionScrollViewController {
         NSLayoutConstraint.activate([
             self.scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
            
             self.canvasView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
@@ -104,6 +112,11 @@ extension BaseMissionScrollViewController {
         ])
 
         NSLayoutConstraint.activate([
+            self.backgroundImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
             self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.canvasView.topAnchor, multiplier: 2),
             self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 1),
             self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 1),

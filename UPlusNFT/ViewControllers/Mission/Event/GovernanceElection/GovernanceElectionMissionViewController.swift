@@ -101,7 +101,8 @@ extension GovernanceElectionMissionViewController {
                     .sink { _ in
                         self.answerInfoLabel.isHidden = true
                         self.checkAnswerButton.isUserInteractionEnabled = true
-                        self.checkAnswerButton.backgroundColor = UPlusColor.gray09
+                        self.checkAnswerButton.setTitleColor(UPlusColor.gray08, for: .normal)
+                        self.checkAnswerButton.backgroundColor = UPlusColor.mint03
                         
                         let tag = button.tag
                         if !self.vm.buttonStatus[tag] {
@@ -111,7 +112,7 @@ extension GovernanceElectionMissionViewController {
                                 self.choiceButtons[prev].toggleImage(hidden: true)
                             }
                             self.choiceButtons[tag].layer.borderColor = UPlusColor.mint03.cgColor
-                            self.choiceButtons[tag].layer.borderWidth = 2.0
+                            self.choiceButtons[tag].layer.borderWidth = 3.0
                             
                             self.vm.buttonStatus[tag].toggle()
                             self.choiceButtons[tag].toggleImage(hidden: false)
@@ -194,6 +195,8 @@ extension GovernanceElectionMissionViewController {
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 3),
             self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 3)
         ])
+        
+        self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
 

@@ -23,7 +23,8 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
     // MARK: - UI Elements
     private let giftImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.giftColored)
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.giftMultiColored)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -93,6 +94,7 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
     private let toNameLabel: UILabel = {
         let label = UILabel()
         label.text = "받는 사람"
+        label.textAlignment = .right
         label.textColor = .black
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         return label
@@ -101,6 +103,7 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
     private let sentNftNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.textAlignment = .right
         label.text = "선물한 NFT"
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         return label
@@ -109,7 +112,7 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
     private let sendInfoLabel: UILabel = {
         let label = UILabel()
         label.text = GiftConstants.sendInfo
-        label.textColor = UPlusColor.gray06
+        label.textColor = UPlusColor.blue04
         label.textAlignment = .center
         label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -118,9 +121,12 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
     
     private let completeButton: UIButton = {
         let button = UIButton()
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
         button.setTitle(GiftConstants.confirm, for: .normal)
-        button.backgroundColor = .black
-        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UPlusColor.mint03
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
+        button.setTitleColor(UPlusColor.gray08, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -134,7 +140,7 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
         self.bind()
     }
     
-    override init(defaultHeight: CGFloat = 500) {
+    override init(defaultHeight: CGFloat = 450) {
         super.init(defaultHeight: defaultHeight)
     }
     
@@ -192,25 +198,29 @@ extension GiftSentBottomSheetViewController {
     }
     
     private func setLayout() {
+        let giftHeight: CGFloat = 80
+        
         NSLayoutConstraint.activate([
-            self.giftImageView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 2),
             self.giftImageView.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
-            self.giftImageView.heightAnchor.constraint(equalToConstant: 82),
-            self.giftImageView.widthAnchor.constraint(equalToConstant: 56),
+            self.containerView.topAnchor.constraint(equalTo: self.giftImageView.centerYAnchor),
+           
+            self.giftImageView.heightAnchor.constraint(equalToConstant: giftHeight),
+            self.giftImageView.widthAnchor.constraint(equalToConstant: giftHeight),
             
             self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 10),
             self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 2),
 
             self.giftContainerView.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 6),
-            self.giftContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
-            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.giftContainerView.trailingAnchor, multiplier: 2),
+            self.giftContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
+            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.giftContainerView.trailingAnchor, multiplier: 3),
 
             self.sendInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.giftContainerView.bottomAnchor, multiplier: 5),
             self.sendInfoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
             self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.sendInfoLabel.trailingAnchor, multiplier: 2),
 
             self.completeButton.topAnchor.constraint(equalToSystemSpacingBelow: self.sendInfoLabel.bottomAnchor, multiplier: 5),
+            self.completeButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
             self.completeButton.leadingAnchor.constraint(equalTo: self.giftContainerView.leadingAnchor),
             self.completeButton.trailingAnchor.constraint(equalTo: self.giftContainerView.trailingAnchor),
             self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.completeButton.bottomAnchor, multiplier: 5)

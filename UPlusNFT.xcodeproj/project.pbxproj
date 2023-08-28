@@ -140,6 +140,11 @@
 		937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76652A497EBE001024D0 /* CampaignMetaData.swift */; };
 		937DDF242A972A730014AF15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF232A972A730014AF15 /* GoogleService-Info.plist */; };
 		937DDF6B2A982E950014AF15 /* Gifu in Frameworks */ = {isa = PBXBuildFile; productRef = 937DDF6A2A982E950014AF15 /* Gifu */; };
+		937DDF6E2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF6D2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift */; };
+		937DDF702A9C69570014AF15 /* RoutineMissionDetailViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF6F2A9C69570014AF15 /* RoutineMissionDetailViewController2.swift */; };
+		937DDF722A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF712A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift */; };
+		937DDF742A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF732A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift */; };
+		937DDF762A9C94230014AF15 /* WeeklyEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF752A9C94230014AF15 /* WeeklyEpisode.swift */; };
 		9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */; };
 		9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */; };
 		939194702A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */; };
@@ -383,6 +388,11 @@
 		937C76632A496106001024D0 /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		937C76652A497EBE001024D0 /* CampaignMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMetaData.swift; sourceTree = "<group>"; };
 		937DDF232A972A730014AF15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		937DDF6D2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumpyBottomSheetViewController.swift; sourceTree = "<group>"; };
+		937DDF6F2A9C69570014AF15 /* RoutineMissionDetailViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionDetailViewController2.swift; sourceTree = "<group>"; };
+		937DDF712A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionBottomSheetViewController.swift; sourceTree = "<group>"; };
+		937DDF732A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewTableViewFooter.swift; sourceTree = "<group>"; };
+		937DDF752A9C94230014AF15 /* WeeklyEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyEpisode.swift; sourceTree = "<group>"; };
 		9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewController.swift; sourceTree = "<group>"; };
 		9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewModel.swift; sourceTree = "<group>"; };
 		9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionProgressCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -715,7 +725,7 @@
 		247FC60A2A677672001F3974 /* BottomSheet */ = {
 			isa = PBXGroup;
 			children = (
-				247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */,
+				937DDF6C2A9C3A2E0014AF15 /* Parents */,
 				247FC60D2A678036001F3974 /* VipHolderBottomSheetViewController.swift */,
 				247FC60F2A678E27001F3974 /* VipHolderBottomSheetViewViewModel.swift */,
 				93DA583A2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift */,
@@ -725,6 +735,7 @@
 				93DA58512A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift */,
 				93DA58672A8F020E00525BEC /* GiftSentBottomSheetViewController.swift */,
 				241116DE2A9A59A10010579C /* LogOutBottomSheetViewController.swift */,
+				937DDF712A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -1065,6 +1076,15 @@
 			path = PostTableView;
 			sourceTree = "<group>";
 		};
+		937DDF6C2A9C3A2E0014AF15 /* Parents */ = {
+			isa = PBXGroup;
+			children = (
+				247FC60B2A6776A2001F3974 /* BottomSheetViewController.swift */,
+				937DDF6D2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift */,
+			);
+			path = Parents;
+			sourceTree = "<group>";
+		};
 		9391946E2A7A1D3B0035FEB1 /* DailyMission */ = {
 			isa = PBXGroup;
 			children = (
@@ -1116,6 +1136,7 @@
 				939194872A80827F0035FEB1 /* MediaShareMission.swift */,
 				939194892A8082E00035FEB1 /* GovernanceMission.swift */,
 				9391948B2A8089E10035FEB1 /* CommentCountMission.swift */,
+				937DDF752A9C94230014AF15 /* WeeklyEpisode.swift */,
 			);
 			path = Weekly;
 			sourceTree = "<group>";
@@ -1226,6 +1247,7 @@
 				93D1748D2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift */,
 				93DA58472A8CA1C500525BEC /* RoutineParticipationViewViewModel.swift */,
 				93DA58492A8CA23500525BEC /* RoutineParticipatedViewController.swift */,
+				937DDF6F2A9C69570014AF15 /* RoutineMissionDetailViewController2.swift */,
 			);
 			path = DailyDetail;
 			sourceTree = "<group>";
@@ -1233,9 +1255,11 @@
 		93D1747F2A73827800F5B1B1 /* Weekly */ = {
 			isa = PBXGroup;
 			children = (
+				939194772A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift */,
 				93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */,
 				93D174932A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift */,
 				93DA58702A93630B00525BEC /* CommentCountMissionTableViewCell.swift */,
+				937DDF732A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift */,
 			);
 			path = Weekly;
 			sourceTree = "<group>";
@@ -1363,7 +1387,6 @@
 				93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */,
 				24542D4C2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift */,
 				93D1748F2A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift */,
-				939194772A7B4DC20035FEB1 /* WeeklyMissionOverViewTableViewHeader.swift */,
 			);
 			path = MissionCollectionViewCell;
 			sourceTree = "<group>";
@@ -1570,6 +1593,7 @@
 				24DB21AD2A82F8E000AE0174 /* NFTServiceManager.swift in Sources */,
 				93DA58842A96118700525BEC /* TotalRankTableViewCell.swift in Sources */,
 				93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */,
+				937DDF722A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift in Sources */,
 				93DA584A2A8CA23500525BEC /* RoutineParticipatedViewController.swift in Sources */,
 				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
 				937C76562A4586F6001024D0 /* Recomment.swift in Sources */,
@@ -1614,6 +1638,7 @@
 				932C34E22A5BCE0B0032192A /* CampaignCommentEditView.swift in Sources */,
 				2417A59E2A67C4E500AEC530 /* EditPasswordViewController.swift in Sources */,
 				932C34DC2A5401B80032192A /* CampaignPostViewViewModel.swift in Sources */,
+				937DDF762A9C94230014AF15 /* WeeklyEpisode.swift in Sources */,
 				932C34DE2A540D2B0032192A /* PostDetailCollectionViewHeader.swift in Sources */,
 				93DA58712A93630B00525BEC /* CommentCountMissionTableViewCell.swift in Sources */,
 				24624B9A2A963A7E00C9A42E /* TopRankView.swift in Sources */,
@@ -1684,12 +1709,14 @@
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				932C34E42A5BCE700032192A /* CampaignCommentDefaultView.swift in Sources */,
 				93D1748E2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift in Sources */,
+				937DDF702A9C69570014AF15 /* RoutineMissionDetailViewController2.swift in Sources */,
 				93D174942A7797DB00F5B1B1 /* WeeklyMissionCollectionViewCell.swift in Sources */,
 				246BD1FC2A8B321900CA7356 /* RewardInfoView.swift in Sources */,
 				240269322A83B23E00850E65 /* FirebaseStorageManager.swift in Sources */,
 				246BD2042A8BD1A500CA7356 /* PhotoAuthQuizViewViewModel.swift in Sources */,
 				930D96CB2A4194E50007801A /* SignUpViewViewModel.swift in Sources */,
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
+				937DDF6E2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
 				939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */,
 				93DA585A2A8E1B9100525BEC /* EventBaseModel.swift in Sources */,
@@ -1712,6 +1739,7 @@
 				240269302A83B21500850E65 /* ContentReadOnlyMissionViewController.swift in Sources */,
 				24542D4D2A7016A500F82CEA /* MyMissionsCollectionViewCellViewModel.swift in Sources */,
 				93A2ED8C2A6DFECF00C2287D /* Reward.swift in Sources */,
+				937DDF742A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift in Sources */,
 				937C76542A4586E5001024D0 /* Comment.swift in Sources */,
 				246BD1FF2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift in Sources */,
 				932C34CF2A52B7520032192A /* UIColor+Extension.swift in Sources */,

@@ -9,6 +9,13 @@ import UIKit
 
 final class RightArrowButton: UIButton {
     
+    private let backgroundImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.buttonPattern)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private let title: UILabel = {
         let label = UILabel()
         label.text = WalletConstants.ownedReward
@@ -60,13 +67,19 @@ extension RightArrowButton {
 extension RightArrowButton {
     
     private func setUI() {
-        self.addSubviews(self.title,
+        self.addSubviews(self.backgroundImage,
+                         self.title,
                          self.subTitle,
                          self.buttonImage)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
+            self.backgroundImage.topAnchor.constraint(equalTo: self.topAnchor),
+            self.backgroundImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.backgroundImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.backgroundImage.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
             self.title.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
             self.title.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 3),
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.title.bottomAnchor, multiplier: 1),

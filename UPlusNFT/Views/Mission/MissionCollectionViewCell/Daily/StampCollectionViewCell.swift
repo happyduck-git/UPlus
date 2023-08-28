@@ -63,9 +63,14 @@ final class StampCollectionViewCell: UICollectionViewCell {
 extension StampCollectionViewCell {
     
     func showGiftMark(at item: Int) {
+        var image: UIImage?
+        
         if (item + 1) % 5 == 0 {
-            self.markImageView.image = UIImage(named: ImageAsset.stampGift)
+            image = UIImage(named: ImageAsset.stampGiftEmpty)
+            
         }
+        
+        self.markImageView.image = image
     }
     
     func showCheckMark(at item: Int) {
@@ -73,9 +78,9 @@ extension StampCollectionViewCell {
         var image: String = ""
         
         if (item + 1) % 5 == 0 {
-            image = ImageAsset.stampPoint
+            image = ImageAsset.stampPointEmpty
         } else {
-            image = ImageAsset.checkWhite
+            image = ImageAsset.stampGiftEmpty
         }
         self.markImageView.image = UIImage(named: image)
     }
@@ -84,7 +89,7 @@ extension StampCollectionViewCell {
 extension StampCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.pointView,
-                                    self.markImageView)
+                                     self.markImageView)
     }
     
     private func setLayout() {

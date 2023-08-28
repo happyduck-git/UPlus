@@ -46,6 +46,13 @@ struct LoginConstants {
     static let createAccount: String = "아직 계정이 없으신가요?"
 }
 
+struct LogoutConstants {
+    static let logout: String = "로그아웃"
+    static let logoutDesc: String = "로그아웃 하시겠어요?"
+    static let cancel: String = "취소"
+    static let doLogout: String = "로그아웃하기"
+}
+
 struct SignUpConstants {
     static let signUp: String = "회원가입"
     static let emailComponent: String = "@"
@@ -122,9 +129,11 @@ struct SideMenuConstants {
 
 struct MyPageConstants {
     static let usernameSuffix: String = "%@ 마스터님,\n오늘도 월드클래스를 향해 아자~!"
+    static let dailyRank: String = "일일랭킹"
+    static let rank: String = "%d위"
     static let goToMission: String = "미션 하러가기"
     static let ownedRewards: String = "보유한 경품"
-    static let levelUp: String = "Lv.%d 달성"
+    static let levelUp: String = "Lv.%d NFT"
     static let benefit: String = "특별 BONUS 혜택"
     static let vipBenefitTitle: String = "서태호 홀더 특별 혜택"
     static let coffee: String = "아메리카노"
@@ -139,7 +148,8 @@ struct MyPageConstants {
     static let vipPoints: String = "400P"
     static let vipHolderGreeting: String = "서태호 NFT 홀더 %@님,\n특별 포인트를 드려요"
     static let noParticipate: String = "미션에 참여하지 않았습니다."
-    static let makeTodoList: String =  "오늘 할 일 정하기"
+    static let makeTodoList: String = "오늘 할 일 정하기"
+    static let missionCompleteMsg: String = "스타트업 마스터 되기 미션 완주를\n축하드려요!"
 }
 
 struct RewardsConstants {
@@ -172,7 +182,7 @@ struct MissionConstants {
     static let quizMission: String = "퀴즈 미션"
     static let checkAnswer: String = "정답 확인하기"
     static let confirm: String = "확인"
-    static let missionParticipated: String = "미션 참여 완료"
+    static let questCompleted: String = "퀘스트 완료"
     static let missionCompleted: String = "미션 완주"
     static let missionTerminated: String = "미션 종료"
     static let participated: String = "참여 완료"
@@ -185,8 +195,17 @@ struct MissionConstants {
     static let timeLeft: String = "%d일 %d시간 후 종료"
     static let weeklyPoints: String = "600P+NFT"
     static let weeklyMissionProgress: String = "%d/15회"
+    static let episodeCerti: String = "에피소드 인증서"
+    static let weeklyTopTitle: String = "%d월 %d일까지 완주하고 에피소드 인증서를 받으세요!"
+    static let episode1Desc: String = "천리길도 한걸음부터! 같이 일할 사원을 뽑아보아요."
+    static let episode2Desc: String = "이번 주도 열심히! 서비스를 런칭해서 기업을 성장시켜요."
+    static let episode3Desc: String = "기업 제휴로 월드클래스 기업까지 한발짝! 더 나아가요."
     
     /* Routine Mission */
+    static let startupMaster: String = "스타트업 마스터 되기"
+    static let masterCerti: String = "마스터 인증서"
+    static let routineMissionInfo: String = "15회차를 완주하고 마스터 인증서를 받으세요!"
+    static let routineDesc: String = "오늘 할 일 1가지를 적어 사진 인증을 해주세요!"
     static let routineTitle: String = "TO-DO 미션"
     static let routineSubTitle: String = "미션 완주하고 루틴 미션 완주 인증서를 받으세요!"
     static let dailyMissionComplete: String = "15일 챌린지 완주를 축하해요!"
@@ -200,6 +219,7 @@ struct MissionConstants {
     static let photoEditWarning: String = "제출 이후엔 수정이 불가합니다"
     static let missionSubmissionNotice: String = "평가 완료 후 %dP 보상, 내일 중 지급될 수 있습니다"
     static let complete: String = "완료하기"
+    static let mission5nCompleted: String = "스타트업 마스터 되기 %d회차 성공!\n특별 포인트를 드려요."
     
     static let bonusMissionLimit: Int = 6
     static let certificate: String = "경험인증서 NFT"
@@ -268,8 +288,9 @@ struct WalletConstants {
     static let level: String = "레벨"
     static let ownedReward: String = "보유 경품"
     static let traits: String = "특징"
-    static let goToMissionInfo: String = "월드클래스 기업 만들기에 참여하여\n여정 인증서 NFT를 받으세요!"
-    static let goToMission: String = "여정 미션 참여하기"
+    static let episodeNft: String = "에피소드 NFT"
+    static let goToMissionInfo: String = "월드클래스 기업 만들기에 참여해\n에피소드 NFT를 받으세요!"
+    static let goToMission: String = "위클리 퀘스트 하러가기"
 }
 
 struct LottieConstants {
@@ -290,7 +311,7 @@ struct GiftConstants {
     static let giftSent: String = "선물 완료"
     static let giftSentDescription: String = "%@ 님에게\n포인트 선물 완료!"
     static let sendInfo: String = "실제 선물 전송까지 약간의 시간이 소요될 수 있습니다."
-    static let confirm: String = "확인"
+    static let confirm: String = "완료하기"
     static let sendTo: String = "받는 사람"
     static let sentNft: String = "선물한 NFT"
 }
@@ -336,7 +357,6 @@ struct ImageAsset {
     static let vipInitialBenefit: String = "vip-initial-benefit"
     
     static let pointSticker: String = "point-sticker"
-    static let trophy: String = "trophy"
     static let xMarkBlack: String = "xmark-black"
     static let levelBadge: String = "level-star-badge"
     
@@ -355,7 +375,10 @@ struct ImageAsset {
     static let infoRed: String = "info-red"
     static let infoBlue: String = "info-blue"
     
-    /* SginupVC */
+    /* LogoutVC */
+    static let logoutFace: String = "logout-face"
+    
+    /* SignupVC */
     static let checkBoxEmpty: String = "check-box-empty"
     static let checkBoxTicked: String = "check-box-ticked"
     
@@ -375,6 +398,9 @@ struct ImageAsset {
     static let questionMint: String = "question-mint"
     
     /* HomeVC */
+    static let dailyTrophy: String = "daily-trophy"
+    static let starButton: String = "star-button"
+    static let infoGray: String = "info-gray"
     static let questionBox: String = "question-box"
     static let point: String = "point-silver"
     static let couponFrame: String = "coupon-frame"
@@ -386,6 +412,12 @@ struct ImageAsset {
     static let hamburgerMenu: String = "hamburger-menu"
     static let wallet: String = "wallet"
     static let speaker: String = "speaker"
+    
+    static let level1Title: String = "level1-title"
+    static let level2Title: String = "level2-title"
+    static let level3Title: String = "level3-title"
+    static let level4Title: String = "level4-title"
+    static let level5Title: String = "level5-title"
     
     /* RankVC */
     static let bronzeMedal: String = "bronze-medal"
@@ -400,29 +432,66 @@ struct ImageAsset {
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"
     static let coloredNft: String = "uplus-nft-color"
-    static let pointShadow: String = "point-shadow"
-    static let confetti: String = "confetti"
+    static let confettiBackground: String = "confetti-wall"
     static let checkBlack: String = "check-black"
     static let checkWhite: String = "check-white"
     static let padlock: String = "padlock"
-    static let stampGift: String = "stamp-gift"
-    static let stampPoint: String = "stamp-point"
+    static let stampGiftEmpty: String = "routine-gift-empty"
+    static let stampPointEmpty: String = "routine-point-empty"
+    static let stampGiftFill: String = "routine-gift-fill"
+    static let stampPointFill: String = "routine-point-fill"
+    
     static let titleBackground: String = "title-background"
+    static let eventBackground: String = "event-wall"
+    static let routineBackground: String = "routine-wall"
+    static let routineTitle: String = "routine-title"
+    static let routineInfo: String = "routine-info"
+    static let pointBig: String = "point-big"
+    static let pointShadow: String = "point-shadow"
+    
+    static let episode1Wall: String = "episode1-wall"
+    static let episode2Wall: String = "episode2-wall"
+    static let episode3Wall: String = "episode3-wall"
+    
+    static let episode1Sub: String = "episode1-sub"
+    static let episode2Sub: String = "episode2-sub"
+    static let episode3Sub: String = "episode3-sub"
+    
+    static let episode1Title: String = "episode1-title"
+    static let episode2Title: String = "episode2-title"
+    static let episode3Title: String = "episode3-title"
+    
+    static let episode1Empty: String = "episode1-empty"
+    static let episode2Empty: String = "episode2-empty"
+    static let episode3Empty: String = "episode3-empty"
+    
+    static let episode1Footer: String = "episode1-bottom"
+    static let episode2Footer: String = "episode2-bottom"
+    static let episode3Footer: String = "episode3-bottom"
+    
+    static let heartFill: String = "heart-fill"
+    static let heartEmpty: String = "heart-empty"
+    
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"
+    static let walletWhite: String = "wallet-white"
     static let arrowRight: String = "arrow-right-mint"
     static let sparkle: String = "sparkle"
     static let walletBuilding: String = "wallet-building"
+    static let buttonPattern: String = "pattern-rec"
     
     /* RewardVC */
     static let bellGray: String = "bell-gray"
     
     /* GiftVC */
-    static let giftColored: String = "gift-colored"
+    static let giftMultiColored: String = "gift-multi"
     
     /* VIPBottomVC*/
     static let vipPoint: String = "vip-point"
+    
+    /* NewNFTVC */
+    static let raffle: String = "raffle"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }

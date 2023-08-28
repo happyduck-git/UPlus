@@ -53,6 +53,7 @@ struct UPlusColor {
     static let blue02 = UIColor(hex: 0xA8CBFF)
     static let blue03 = UIColor(hex: 0x699BF7)
     static let blue04 = UIColor(hex: 0x2C76FF)
+    static let blue05 = UIColor(hex: 0x192D47)
     
     static let yellow01 = UIColor(hex: 0xFFC700)
     static let orange01 = UIColor(hex: 0xFF612F)
@@ -76,5 +77,5 @@ struct UPlusColor {
 // MARK: - Per UI Elements
 extension UPlusColor {
     static let buttonDeactivated = UIColor(hex: 0xD6DCE2)
-    static let buttonActivated = UIColor(hex: 0x59E3E3)
+    static let buttonActivated = UIColor(hex: 0x00A4AE)
 }

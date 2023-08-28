@@ -73,8 +73,8 @@ final class RoutineStampCollectionViewCellHeader: UICollectionViewCell {
 extension RoutineStampCollectionViewCellHeader {
     func bind(with vm: RoutineMissionDetailViewViewModel) {
         
-        bindings.forEach { $0.cancel() }
-        bindings.removeAll()
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
         
         vm.$daysLeft
             .receive(on: DispatchQueue.main)

@@ -17,13 +17,30 @@ final class WeeklyMissionOverViewViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
+
+    private let backgroundImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.episode1Wall)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private let header: WeeklyMissionOverViewTableViewHeader = {
         let header = WeeklyMissionOverViewTableViewHeader()
+        header.backgroundColor = .clear
         return header
+    }()
+    
+    private let footer: WeeklyMissionOverViewTableViewFooter = {
+        let footer = WeeklyMissionOverViewTableViewFooter()
+        footer.backgroundColor = .clear
+        return footer
     }()
     
     private let tableView: UITableView = {
         let table = UITableView()
+        table.backgroundColor = .clear
+        
         table.register(WeeklyOverViewTableViewCell.self,
                        forCellReuseIdentifier: WeeklyOverViewTableViewCell.identifier)
         table.separatorStyle = .none
@@ -35,6 +52,7 @@ final class WeeklyMissionOverViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "여정 미션"
+        
     }
     
     // MARK: - Init
@@ -42,7 +60,7 @@ final class WeeklyMissionOverViewViewController: UIViewController {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         
-        self.view.backgroundColor = UPlusColor.gray02
+        self.view.backgroundColor = UPlusColor.blue05
         
         self.setUI()
         self.setDelegate()
@@ -50,6 +68,7 @@ final class WeeklyMissionOverViewViewController: UIViewController {
         self.bind()
         
         self.header.configure(with: vm)
+        self.footer.configure(with: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -98,11 +117,16 @@ extension WeeklyMissionOverViewViewController {
 // MARK: - Set UI & Layout
 extension WeeklyMissionOverViewViewController {
     private func setUI() {
-        self.view.addSubview(self.tableView)
+        self.view.addSubviews(self.backgroundImage,
+                             self.tableView)
+        self.backgroundImage.frame = self.view.bounds
         self.tableView.frame = self.view.bounds
         
-        self.header.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height / 3)
+        self.header.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height / 2)
+        self.footer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height / 5)
+        
         self.tableView.tableHeaderView = self.header
+        self.tableView.tableFooterView = self.footer
     }
     
     private func setDelegate() {
@@ -123,6 +147,8 @@ extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewD
             return UITableViewCell()
         }
 
+        cell.backgroundColor = .clear
+        
         let mission = self.vm.weeklyMissions[indexPath.row]
         
         let hasParticipated = self.vm.missionParticipation[mission.missionId] ?? false
@@ -136,12 +162,6 @@ extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewD
         return 120
     }
 
-}
-
-extension WeeklyMissionOverViewViewController {
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "UPLUS 알아가기"
-    }
 }
 
 extension WeeklyMissionOverViewViewController {

@@ -20,7 +20,8 @@ final class DailyRankView: UIView {
     
     private let rankingTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "일일랭킹"
+        label.text = MyPageConstants.dailyRank
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
         label.textColor = .white
         return label
     }()
@@ -28,24 +29,25 @@ final class DailyRankView: UIView {
     private let rankingImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.trophy)
+        imageView.image = UIImage(named: ImageAsset.dailyTrophy)
         return imageView
     }()
     
-    private let rankingButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("13위", for: .normal)
-        button.setImage(UIImage(named: ImageAsset.arrowHeadRight), for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.semanticContentAttribute = .forceRightToLeft
-        return button
+    private let rankingLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .medium)
+        return label
     }()
 
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = UPlusColor.grayNavy.withAlphaComponent(0.3)
+        self.backgroundColor = UPlusColor.gray07.withAlphaComponent(0.9)
+        self.layer.borderColor = UPlusColor.gray05.cgColor
+        self.layer.borderWidth = 1.0
+        
         self.setUI()
         self.setLayout()
     }
@@ -58,7 +60,7 @@ final class DailyRankView: UIView {
 //MARK: - Configure
 extension DailyRankView {
     func configure(rank: Int) {
-        self.rankingButton.setTitle(String(describing: rank) + "위", for: .normal)
+        self.rankingLabel.text = String(format: MyPageConstants.rank, rank)
     }
 }
 
@@ -67,8 +69,8 @@ extension DailyRankView {
     private func setUI() {
         self.addSubview(self.rankStackView)
         self.rankStackView.addArrangedSubviews(self.rankingTitleLabel,
-                                                self.rankingImageView,
-                                                self.rankingButton)
+                                               self.rankingImageView,
+                                               self.rankingLabel)
     }
     
     private func setLayout() {

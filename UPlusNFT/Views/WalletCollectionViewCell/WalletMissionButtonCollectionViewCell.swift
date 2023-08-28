@@ -31,11 +31,29 @@ final class WalletMissionButtonCollectionViewCell: UICollectionViewCell {
     
     private let infoLabel: UILabel = {
         let label = UILabel()
-        label.text = WalletConstants.goToMissionInfo
-        label.textColor = UPlusColor.gray06
+        
+        let normalFont: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        let boldFont: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
+        
+        let attributedString = NSMutableAttributedString(string: WalletConstants.goToMissionInfo,
+                                                         attributes: [
+                                                            .foregroundColor: UPlusColor.gray06,
+                                                            .font: normalFont
+                                                         ])
+        
+        if let range = attributedString.string.range(of: WalletConstants.episodeNft) {
+            let nsRange = NSRange(range, in: attributedString.string)
+            
+            attributedString.addAttributes([
+                .foregroundColor: UPlusColor.gray06,
+                .font: boldFont
+            ], range: nsRange)
+        }
+
+        label.attributedText = attributedString
+        
         label.numberOfLines = 2
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.body2)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

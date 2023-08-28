@@ -36,6 +36,13 @@ final class OnBoardingViewController2: UIViewController {
         return imageView
     }()
     
+    private let infoBottomView: UIView = {
+       let view = UIView()
+        view.backgroundColor = UPlusColor.gray05
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let bottomContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UPlusColor.gray08
@@ -89,6 +96,13 @@ final class OnBoardingViewController2: UIViewController {
         self.setLayout()
         
         self.bind()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let navHeight = self.navigationController?.navigationBar.frame.height ?? 0
+        
+        self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor, constant: -navHeight).isActive = true
     }
     
 }
@@ -154,9 +168,9 @@ extension OnBoardingViewController2 {
                               self.startButton)
         
         self.scrollView.addSubview(self.canvasView)
-        self.canvasView.addSubviews(self.onBoardImageView)
+        self.canvasView.addSubviews(self.onBoardImageView,
+                                    self.infoBottomView)
         
-        self.bottomContainer.addSubviews()
     }
     
     private func setLayout() {
@@ -175,11 +189,15 @@ extension OnBoardingViewController2 {
         ])
         
         NSLayoutConstraint.activate([
-            self.canvasView.topAnchor.constraint(equalToSystemSpacingBelow: self.onBoardImageView.topAnchor, multiplier: 10),
-            //            self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
+//            self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
             self.onBoardImageView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
             self.onBoardImageView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
-            self.onBoardImageView.bottomAnchor.constraint(equalTo: self.canvasView.bottomAnchor),
+            
+            self.infoBottomView.topAnchor.constraint(equalTo: self.onBoardImageView.bottomAnchor),
+            self.infoBottomView.heightAnchor.constraint(equalToConstant: 300),
+            self.infoBottomView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
+            self.infoBottomView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            self.infoBottomView.bottomAnchor.constraint(equalTo: self.canvasView.bottomAnchor)
         ])
         
         NSLayoutConstraint.activate([

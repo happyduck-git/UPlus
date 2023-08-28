@@ -34,16 +34,41 @@ final class UserProfileView: PassThroughView {
         return label
     }()
     
+    private let shadowView: PassThroughView = {
+        let view = PassThroughView()
+        view.backgroundColor = UPlusColor.gray09
+        view.layer.shadowOpacity = 0.9
+        view.layer.shadowRadius = 30.0
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.shadowColor = UPlusColor.mint03.cgColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let profileContainer: PassThroughView = {
+       let view = PassThroughView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 20.0
+        view.layer.borderWidth = 6.0
+        view.layer.borderColor = UPlusColor.mint03.cgColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let profileImage: GIFImageView = {
         let gifView = GIFImageView()
-        gifView.clipsToBounds = true
-        gifView.layer.borderWidth = 3.0
-        gifView.layer.borderColor = UIColor.white.cgColor
         gifView.backgroundColor = UPlusColor.grayBackground
         gifView.translatesAutoresizingMaskIntoConstraints = false
         return gifView
     }()
     
+    private let lottieButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: ImageAsset.starButton), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+        
     private let dailyRankView: DailyRankView = {
        let view = DailyRankView()
         view.clipsToBounds = true
@@ -53,8 +78,6 @@ final class UserProfileView: PassThroughView {
     
     private let userMissionDataView: UserMissionDataView = {
         let view = UserMissionDataView()
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -77,6 +100,14 @@ final class UserProfileView: PassThroughView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        DispatchQueue.main.async {
+            self.dailyRankView.layer.cornerRadius = self.dailyRankView.frame.height / 2
+        }
+    }
+    
 }
 
 extension UserProfileView {
@@ -84,7 +115,6 @@ extension UserProfileView {
     func configure(with vm: MyPageViewViewModel) {
         
         self.bind(with: vm)
-        self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
     }
     
     
@@ -103,6 +133,7 @@ extension UserProfileView {
                 self.profileImage.prepareForAnimation(withGIFURL: url)
                 
                 self.usernameLabel.text = String(format: MyPageConstants.usernameSuffix, vm.user.userNickname)
+                print("Nickname: \(vm.user.userNickname)")
                 self.userMissionDataView.configure(vm: vm)
             }
             .store(in: &bindings)
@@ -122,11 +153,15 @@ extension UserProfileView {
 extension UserProfileView {
 
     private func setUI() {
-        self.addSubviews(backgroundImage,
-                         profileImage,
-                         usernameLabel,
-                         dailyRankView,
-                         userMissionDataView)
+        self.addSubviews(self.backgroundImage,
+                         self.usernameLabel,
+                         self.shadowView,
+                         self.profileContainer)
+        
+        self.profileContainer.addSubviews(self.profileImage,
+                                          self.lottieButton,
+                                          self.dailyRankView,
+                                          self.userMissionDataView)
     }
     
     private func setLayout() {
@@ -143,31 +178,38 @@ extension UserProfileView {
             self.usernameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 4),
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.usernameLabel.trailingAnchor, multiplier: 4),
             
-            self.profileImage.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 3),
-            self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 8),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 8),
+            self.profileContainer.topAnchor.constraint(equalToSystemSpacingBelow: self.usernameLabel.bottomAnchor, multiplier: 2),
+            self.profileContainer.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 5),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.profileContainer.trailingAnchor, multiplier: 5),
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.profileContainer.bottomAnchor, multiplier: 4),
+            
+            self.shadowView.topAnchor.constraint(equalToSystemSpacingBelow: self.profileContainer.topAnchor, multiplier: 1),
+            self.shadowView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileContainer.leadingAnchor, multiplier: 1),
+            self.profileContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.shadowView.trailingAnchor, multiplier: 1),
+            self.profileContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.shadowView.bottomAnchor, multiplier: 1),
+            
+            self.profileImage.topAnchor.constraint(equalTo: self.profileContainer.topAnchor),
+            self.profileImage.leadingAnchor.constraint(equalTo: self.profileContainer.leadingAnchor),
+            self.profileImage.trailingAnchor.constraint(equalTo: self.profileContainer.trailingAnchor),
+            
             self.profileImage.heightAnchor.constraint(equalTo: self.profileImage.widthAnchor),
 
-            self.dailyRankView.topAnchor.constraint(equalTo: self.profileImage.topAnchor),
-            self.dailyRankView.heightAnchor.constraint(equalToConstant: 30),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.dailyRankView.trailingAnchor, multiplier: 2),
+            self.lottieButton.trailingAnchor.constraint(equalTo: self.profileImage.trailingAnchor),
+            self.lottieButton.bottomAnchor.constraint(equalTo: self.profileImage.bottomAnchor),
             
-            self.userMissionDataView.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.bottomAnchor, multiplier: 2),
-            self.userMissionDataView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 2),
-            self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.userMissionDataView.trailingAnchor, multiplier: 2),
-            self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.userMissionDataView.bottomAnchor, multiplier: 4)
+            self.dailyRankView.topAnchor.constraint(equalToSystemSpacingBelow: self.profileImage.topAnchor, multiplier: 2),
+            self.dailyRankView.heightAnchor.constraint(equalToConstant: 30),
+            self.dailyRankView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.leadingAnchor, multiplier: 2),
+            
+            self.userMissionDataView.topAnchor.constraint(equalTo: self.profileImage.bottomAnchor),
+            self.userMissionDataView.leadingAnchor.constraint(equalTo: self.profileImage.leadingAnchor),
+            self.userMissionDataView.trailingAnchor.constraint(equalTo: self.profileImage.trailingAnchor),
+            self.userMissionDataView.bottomAnchor.constraint(equalTo: self.profileContainer.bottomAnchor)
+            
         ])
         
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        DispatchQueue.main.async {
-            self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 3
-            self.dailyRankView.layer.cornerRadius = self.dailyRankView.frame.height / 2
-        }
-    }
 }
 
 extension UserProfileView {
@@ -176,3 +218,16 @@ extension UserProfileView {
         return hitView == self ? nil : hitView
     }
 }
+
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct UserProfileViewPreView: PreviewProvider{
+    static var previews: some View {
+        UIViewPreview {
+            let view = UserProfileView(frame: .zero)
+            return view
+        }.previewLayout(.sizeThatFits)
+    }
+}
+#endif

@@ -16,6 +16,13 @@ class BaseMissionViewController: UIViewController {
     weak var delegate: BaseMissionViewControllerDelegate?
     
     // MARK: - UI Elements
+    private let backgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAsset.eventBackground)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = MissionConstants.quizMission
@@ -62,6 +69,7 @@ class BaseMissionViewController: UIViewController {
         let button = UIButton()
         button.setTitle(MissionConstants.checkAnswer, for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         button.backgroundColor = .systemGray
         button.clipsToBounds = true
         button.layer.cornerRadius = 8.0
@@ -85,7 +93,8 @@ class BaseMissionViewController: UIViewController {
 //MARK: - Set UI & Layout
 extension BaseMissionViewController {
     private func setUI() {
-        self.view.addSubviews(self.titleLabel,
+        self.view.addSubviews(self.backgroundImageView,
+                              self.titleLabel,
                               self.quizLabel,
                               self.quizContainer,
                               self.answerInfoLabel,
@@ -94,6 +103,11 @@ extension BaseMissionViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
+            self.backgroundImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
             self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 1),
             self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 1),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 1),
@@ -113,14 +127,14 @@ extension BaseMissionViewController {
             self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.answerInfoLabel.bottomAnchor, multiplier: 2),
             self.checkAnswerButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.checkAnswerButton.trailingAnchor, multiplier: 5),
-            self.checkAnswerButton.heightAnchor.constraint(equalToConstant: self.view.frame.height / 12),
+            self.checkAnswerButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
             self.checkAnswerButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
             
         ])
         
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.quizLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.answerInfoLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+//        self.answerInfoLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 
 }

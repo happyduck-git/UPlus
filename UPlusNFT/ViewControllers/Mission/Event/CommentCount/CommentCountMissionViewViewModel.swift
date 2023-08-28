@@ -34,6 +34,8 @@ final class CommentCountMissionViewViewModel: MissionBaseModel {
     
     @Published var participated: Bool = false
     
+    @Published var isLiked: Bool = false
+    
     //MARK: - Init
     override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
         super.init(type: type, mission: mission)

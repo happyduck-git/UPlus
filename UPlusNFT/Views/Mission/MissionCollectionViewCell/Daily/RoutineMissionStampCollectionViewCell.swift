@@ -158,9 +158,9 @@ extension RoutineMissionStampCollectionViewCell: UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellWidth = self.stampCollectionView.frame.height / 3 - 8
+        let cellHeight = self.stampCollectionView.frame.height / 3 - 20
         
-        return CGSize(width: cellWidth, height: cellWidth)
+        return CGSize(width: cellHeight, height: cellHeight)
     }
     
 }

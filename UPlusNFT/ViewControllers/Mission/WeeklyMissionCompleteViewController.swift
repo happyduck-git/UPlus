@@ -23,9 +23,6 @@ final class WeeklyMissionCompleteViewController: BaseMissionCompletedViewControl
     // MARK: - Dependency
     private let vm: MissionBaseModel
     
-    //MARK: - Delegate
-//    weak var delegate: WeeklyMissionCompleteViewControllerDelegate?
-    
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     

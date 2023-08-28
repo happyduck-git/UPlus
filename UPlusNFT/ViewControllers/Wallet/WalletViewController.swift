@@ -63,10 +63,10 @@ final class WalletViewController: UIViewController {
     private let walletAdButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = UPlusColor.gray02
-        button.setImage(UIImage(named: ImageAsset.walletGray), for: .normal)
+        button.backgroundColor = UPlusColor.gray07
+        button.setImage(UIImage(named: ImageAsset.walletWhite), for: .normal)
         button.setTitle(WalletConstants.walletAddress, for: .normal)
-        button.setTitleColor(UPlusColor.gray06, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -211,6 +211,7 @@ extension WalletViewController {
             self.walletAdButton.heightAnchor.constraint(equalToConstant: 32),
             
             self.numberOfRaffles.topAnchor.constraint(equalToSystemSpacingBelow: self.walletAdButton.bottomAnchor, multiplier: 4),
+            self.numberOfRaffles.heightAnchor.constraint(equalToConstant: 48),
             self.numberOfRaffles.leadingAnchor.constraint(equalTo: self.myNftsLabel.leadingAnchor),
             self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.numberOfRaffles.trailingAnchor, multiplier: 2),
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfRaffles.bottomAnchor, multiplier: 3)

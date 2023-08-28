@@ -428,7 +428,7 @@ extension MyPageViewController {
     
     private func setNavigationItem() {
         
-        let menuItem = UIBarButtonItem(image: UIImage(systemName: ImageAsset.hamburgerMenu)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+        let menuItem = UIBarButtonItem(image: UIImage(named: ImageAsset.hamburgerMenu)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                        style: .plain,
                                        target: self,
                                        action: #selector(openSideMenu))
@@ -1149,7 +1149,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 self.addChildViewController(self.loadingVC)
                 let vm = RoutineMissionDetailViewViewModel(missionType: .dailyExpGoodWorker)
-                let vc = RoutineMissionDetailViewController(vm: vm)
+                let vc = RoutineMissionDetailViewController2(vm: vm)
                 vc.delegate = self
                 
                 self.loadingVC.removeViewController()
@@ -1283,7 +1283,7 @@ extension MyPageViewController {
 }
 
 // MARK: - Routine Detail VC Delegate
-extension MyPageViewController: RoutineMissionDetailViewControllerDelegate {
+extension MyPageViewController: RoutineMissionDetailViewController2Delegate {
     func submitDidTap() {
         self.vm.mission.routineParticipationStatus = .pending
     }
@@ -1364,7 +1364,13 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
     
     func signOutDidTap() {
         self.sideMenuVC?.dismiss(animated: false)
-        self.navigationController?.popViewController(animated: true)
+        
+        let vc = LogOutBottomSheetViewController()
+        vc.modalPresentationStyle = .overCurrentContext
+//        vc.delegate = self
+        
+        self.present(vc, animated: false)
+
     }
 }
 

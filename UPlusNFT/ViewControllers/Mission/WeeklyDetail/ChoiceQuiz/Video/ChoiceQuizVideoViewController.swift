@@ -49,6 +49,8 @@ final class ChoiceQuizVideoViewController: BaseMissionViewController {
         view.isHidden = true
         view.layer.cornerRadius = 8.0
         view.clipsToBounds = true
+        view.layer.borderColor = UPlusColor.gray03.cgColor
+        view.layer.borderWidth = 2.0
         view.backgroundColor = UPlusColor.gray02
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -145,7 +147,7 @@ extension ChoiceQuizVideoViewController {
     private func setUI() {
         self.quizContainer.addSubviews(self.videoPlayer,
                                        self.videoDescriptionLabel,
-                              self.containerView)
+                                       self.containerView)
         
         self.containerView.addSubviews(self.quizHintText,
                                        self.buttonStack)

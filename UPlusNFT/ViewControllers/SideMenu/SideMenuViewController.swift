@@ -19,6 +19,9 @@ final class SideMenuViewController: UIViewController {
 
     // MARK: - Dependency
     private let vm: SideMenuViewViewModel
+
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - Delegate
     weak var delegate: SideMenuViewControllerDelegate?
@@ -34,7 +37,6 @@ final class SideMenuViewController: UIViewController {
     
     private lazy var resetPasswordButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(openResetPasswordVC), for: .touchUpInside)
         button.setTitle(SideMenuConstants.resetPassword, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
@@ -44,7 +46,6 @@ final class SideMenuViewController: UIViewController {
     
     private lazy var logoutButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(userLogOut), for: .touchUpInside)
         button.setTitle(SideMenuConstants.logout, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
@@ -77,6 +78,7 @@ final class SideMenuViewController: UIViewController {
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
+        self.bind()
         
         self.menuTable.delegate = self
         self.menuTable.dataSource = self
@@ -84,28 +86,59 @@ final class SideMenuViewController: UIViewController {
 
 }
 
+// MARK: - Bind
 extension SideMenuViewController {
+    
+    private func bind() {
+        func bindViewToViewModel() {
+            self.resetPasswordButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.openResetPasswordVC()
+                    
+                }
+                .store(in: &bindings)
+            
+            self.logoutButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.userLogOut()
+                    
+                }
+                .store(in: &bindings)
+            
+            self.agreementButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    //TODO: 개인정보수집동의 관련 action 설정 필요
+                    
+                }
+                .store(in: &bindings)
+        }
+        func bindViewModelToView() {
+            
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+    
+}
+
+// MARK: - Private
+extension SideMenuViewController {
+    
     @objc private func openResetPasswordVC() {
         self.delegate?.resetPasswordDidTap()
     }
     
     @objc private func userLogOut() {
-        do {
-            try Auth.auth().signOut()
-            self.delegate?.signOutDidTap()
-        }
-        catch {
-            let alert = UIAlertController(
-                title: "로그아웃 실패",
-                message: "로그아웃에 실패하였습니다. 잠시 후 다시 시도해주세요.",
-                preferredStyle: .alert
-            )
-        let action = UIAlertAction(title: "확인", style: .cancel)
-        alert.addAction(action)
-            
-            self.present(alert, animated: true)
-        }
+        self.delegate?.signOutDidTap()
     }
+    
 }
 
 // MARK: - TableView Delegate & DataSource
@@ -160,5 +193,11 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.delegate?.menuTableViewController(controller: self, didSelectRow: indexPath.row)
+    }
+}
+
+extension SideMenuViewController: LogOutBottomSheetViewControllerDelegate {
+    func signOutDidTap() {
+//        self.delegate?.signOutDidTap()
     }
 }

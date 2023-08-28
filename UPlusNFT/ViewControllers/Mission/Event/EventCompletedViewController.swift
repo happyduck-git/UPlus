@@ -38,6 +38,7 @@ final class EventCompletedViewController: BaseMissionCompletedViewController {
         self.bind()
         self.view.backgroundColor = .white
         self.resultLabel.text = MissionConstants.eventCompleted
+        
         self.confirmButton.setTitle(String(format: MissionConstants.redeemPoint, self.vm.mission.missionRewardPoint), for: .normal)
     }
 
