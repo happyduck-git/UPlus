@@ -384,7 +384,7 @@ extension MyPageViewViewModel {
             // 2. Fetch NFTs from Firestore.
             let savedNfts = try UPlusUser.getCurrentUser().userNfts ?? []
             
-            let savedTokens = savedNfts.compactMap { self.extractNumberString(from: $0.path) }
+            let savedTokens = savedNfts.compactMap { $0.path.extractAfterSlash() }
             
             logger.info("FireBase tokens: \(savedTokens)")
             logger.info("Luniverse tokens: \(newestTokens)")
@@ -475,12 +475,7 @@ extension MyPageViewViewModel {
 
 //MARK: - Utilities
 extension MyPageViewViewModel {
-    private func extractNumberString(from string: String) -> String? {
-        
-        let components = string.split(separator: "/")
-        return components.last.map { String($0) }
-    }
-    
+
     private func differences(_ oldArr: [String], _ newArr: [String]) {
         let diffs = newArr.difference(from: oldArr)
         var newlyAddedNfts: [String] = []

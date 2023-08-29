@@ -139,11 +139,17 @@ extension CommentCountMissionViewController {
     private func configure() {
         self.titleLabel.text = self.vm.mission.missionContentTitle
         
-        if let html = vm.mission.missionContentText,
-           let attributedString = vm.retrieveHtmlString(html: html) {
-            self.weblinkButton.isHidden = false
-            weblinkButton.setAttributedTitle(attributedString, for: .normal)
+        switch self.vm.type {
+        case .event:
+            return
+        case .weekly:
+            if let html = vm.mission.missionContentText,
+               let attributedString = vm.retrieveHtmlString(html: html) {
+                self.weblinkButton.isHidden = false
+                weblinkButton.setAttributedTitle(attributedString, for: .normal)
+            }
         }
+
     }
 }
 

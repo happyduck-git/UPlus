@@ -166,6 +166,7 @@ extension IDCardView {
     }
     
     @objc private func shareOnSlack() {
+        print("Tapped")
         self.delegate?.shareOnSlackDidTap()
     }
 }

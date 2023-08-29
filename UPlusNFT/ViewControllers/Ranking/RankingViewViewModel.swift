@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import FirebaseFirestore
 
 final class RankingViewViewModel {
     
@@ -32,7 +33,12 @@ final class RankingViewViewModel {
     @Published var totakRankerFetched: Bool = false
     
     @Published var todayRankerList: [UPlusUser] = []
-    @Published var totalRankerList: [UPlusUser] = []
+    @Published var totalRankerList: [UPlusUser] = [] {
+        didSet {
+            let results = self.getTopNftOfUsers(users: totalRankerList)
+            self.topNfts = results
+        }
+    }
     
     @Published var yesterdayRankerList: [UPlusUser] = []
     @Published var top3RankUserList: [UPlusUser] = []
@@ -40,6 +46,8 @@ final class RankingViewViewModel {
     
     @Published var currentUserTodayRank: UPlusUser?
     @Published var currentUserTotalRank: UPlusUser?
+    
+    @Published var topNfts: [Int64: DocumentReference?] = [:]
     
     init() {
 
@@ -54,6 +62,38 @@ final class RankingViewViewModel {
         
     }
     
+}
+
+extension RankingViewViewModel {
+    
+    struct NftInfo {
+        let ref: DocumentReference
+        let tokenId: Int64
+    }
+    
+    private func getTopNftOfUsers(users: [UPlusUser]) -> [Int64: DocumentReference?] {
+        var refs: [Int64: DocumentReference?] = [:]
+        
+        for user in users {
+            guard let nfts = user.userNfts else {
+                refs[user.userIndex] = nil
+                continue
+            }
+         
+            let nftInfos = nfts.compactMap { ref -> NftInfo? in
+                guard let extractedString = ref.path.extractAfterSlash(),
+                      let tokenId = Int64(extractedString) else {
+                    return nil
+                }
+                return NftInfo(ref: ref, tokenId: tokenId)
+            }
+
+            let filteredNftInfos = nftInfos.filter { NftLevel.level(tokenId: $0.tokenId) <= 5 }
+            let maxNftInfo = filteredNftInfos.max { a, b in a.tokenId < b.tokenId }?.ref
+            refs[user.userIndex] = maxNftInfo
+        }
+        return refs
+    }
 }
 
 extension RankingViewViewModel {
@@ -145,6 +185,10 @@ extension RankingViewViewModel {
         self.top3RankUserList = self.getTopThreeRankers(list: self.totalRankerList)
         self.exceptTop3RankerList = self.getElementsExceptTopThree(list: self.totalRankerList)
 
+    }
+    
+    func getAllUsers() {
+        
     }
     
 }

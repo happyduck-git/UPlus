@@ -62,7 +62,6 @@ final class UserMissionDataView: PassThroughView {
        
         self.setUI()
         self.setLayout()
-
     }
     
     required init?(coder: NSCoder) {

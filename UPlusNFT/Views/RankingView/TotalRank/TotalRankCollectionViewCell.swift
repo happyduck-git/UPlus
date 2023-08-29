@@ -160,12 +160,13 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
             
         default:
             let cellVM = vm.exceptTop3RankerList[indexPath.row]
+            let topNft = vm.topNfts[cellVM.userIndex]
             
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalRankTableViewCell.identifier, for: indexPath) as? TotalRankTableViewCell else {
                 return UITableViewCell()
             }
             
-            cell.configure(with: cellVM, at: indexPath.row + 3)
+            cell.configure(with: cellVM, doc: topNft, at: indexPath.row + 3)
             return cell
         }
         

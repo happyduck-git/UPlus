@@ -8,6 +8,10 @@
 import UIKit
 import Combine
 
+protocol SlackShareTextFieldViewDelegate: AnyObject {
+    func keyboardShown()
+}
+
 final class SlackShareTextFieldView: UIView {
 
     // MARK: - Dependency
@@ -16,9 +20,13 @@ final class SlackShareTextFieldView: UIView {
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
+    //MARK: - Delegate
+    weak var delegate: SlackShareTextFieldViewDelegate?
+    
     // MARK: - UI Elements
     private let title: UILabel = {
         let label = UILabel()
+        label.text = "STEP 3"
         label.textAlignment = .center
         label.textColor = UPlusColor.mint05
         label.font = .systemFont(ofSize: UPlusFont.h1, weight: .bold)
@@ -56,11 +64,20 @@ final class SlackShareTextFieldView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.answerTextField.setTextFieldUnderline(color: UPlusColor.gray04)
+        self.backgroundColor = .white
+        
+        self.setUI()
+        self.setLayout()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.answerTextField.setTextFieldUnderline(color: UPlusColor.gray04)
     }
     
 }
@@ -97,7 +114,8 @@ extension SlackShareTextFieldView {
     private func setUI() {
         self.addSubviews(self.title,
                          self.subTitle,
-                         self.answerTextField)
+                         self.answerTextField,
+                         self.infoLabel)
     }
     
     private func setLayout() {
@@ -111,6 +129,7 @@ extension SlackShareTextFieldView {
             self.title.trailingAnchor.constraint(equalToSystemSpacingAfter: self.subTitle.trailingAnchor, multiplier: 1),
             
             self.answerTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.subTitle.bottomAnchor, multiplier: 2),
+            self.answerTextField.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
             self.answerTextField.leadingAnchor.constraint(equalTo: self.subTitle.leadingAnchor),
             self.answerTextField.trailingAnchor.constraint(equalTo: self.subTitle.trailingAnchor),
             
@@ -118,5 +137,11 @@ extension SlackShareTextFieldView {
             self.infoLabel.leadingAnchor.constraint(equalTo: self.answerTextField.leadingAnchor),
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 2)
         ])
+    }
+}
+
+extension SlackShareTextFieldView: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.delegate?.keyboardShown()
     }
 }

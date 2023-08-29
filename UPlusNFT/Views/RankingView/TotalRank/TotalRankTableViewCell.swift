@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import Nuke
 
 final class TotalRankTableViewCell: UITableViewCell {
     
@@ -126,8 +128,8 @@ final class TotalRankTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.rankImageView.isHidden = false
-        self.rankLabel.isHidden = true
+//        self.rankImageView.isHidden = false
+        self.rankLabel.isHidden = false
     }
     
     internal func resetCell() {
@@ -140,11 +142,24 @@ final class TotalRankTableViewCell: UITableViewCell {
     }
     
     // MARK: - Public
-    public func configure(with vm: UPlusUser, at row: Int) {
+    public func configure(with vm: UPlusUser, doc: DocumentReference??, at row: Int) {
         self.rankLabel.text = "\(row + 1)"
         self.username.text = vm.userNickname
         self.level.text = "Lv.n"
         self.popScoreLabel.text = "\(vm.userTotalPoint ?? 0)P"
+        
+        guard let document = doc,
+              let realDoc = document
+        else { return }
+        
+        Task {
+            do {
+                // TODO: Ref에서 NFT 보여주기
+            }
+            catch {
+                
+            }
+        }
     }
     
     public func setAsCollectionInfoCell() {

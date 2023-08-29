@@ -620,7 +620,7 @@ extension FirestoreManager {
             .getDocuments()
             .documents
         
-        return self.sortMission(documents: documents)
+        return await self.sortMission(documents: documents)
     }
     
     func getRegularEvents() async throws -> [any Mission] {
@@ -630,10 +630,10 @@ extension FirestoreManager {
             .getDocuments()
             .documents
         
-        return self.sortMission(documents: documents)
+        return await self.sortMission(documents: documents)
     }
     
-    private func sortMission(documents: [QueryDocumentSnapshot]) -> [any Mission] {
+    private func sortMission(documents: [QueryDocumentSnapshot]) async -> [any Mission] {
         var missions: [any Mission] = []
         
         for doc in documents {
@@ -656,9 +656,16 @@ extension FirestoreManager {
                     missions.append(try doc.data(as: GovernanceMission.self, decoder: self.decoder))
                     
                 case .userComment:
-                    missions.append(try doc.data(as: CommentCountMission.self, decoder: self.decoder))
-                    // TODO: user comment set query 추가
+                    var commentMission = try doc.data(as: CommentCountMission.self, decoder: self.decoder)
                     
+                    let commentDocs = try await doc.reference
+                        .collection(FirestoreConstants.commentSet)
+                        .getDocuments()
+                        .documents
+                    
+                    let comments = try self.getMissionComments(documents: commentDocs)
+                    commentMission.userCommnetSet = comments
+                    missions.append(commentMission)
                 case .choiceQuiz:
                     missions.append(try doc.data(as: ChoiceQuizMission.self, decoder: self.decoder))
                     

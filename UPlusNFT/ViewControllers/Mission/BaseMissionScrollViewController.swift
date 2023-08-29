@@ -16,14 +16,14 @@ class BaseMissionScrollViewController: UIViewController {
     weak var delegate: BaseMissionScrollViewControllerDelegate?
     
     //MARK: - UI Elements
-    private let scrollView: UIScrollView = {
+    let scrollView: UIScrollView = {
         let view = UIScrollView()
         view.isScrollEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let canvasView: UIView = {
+    let canvasView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -69,6 +69,7 @@ class BaseMissionScrollViewController: UIViewController {
         button.layer.cornerRadius = 8.0
         button.backgroundColor = UPlusColor.mint03
         button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         button.setTitle(RewardsConstants.empty, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

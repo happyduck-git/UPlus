@@ -56,12 +56,15 @@ final class ShareMediaOnSlackMissionViewController: BaseMissionScrollViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.hideKeyboardWhenTappedAround()
+        
         self.view.backgroundColor = .white
         self.setUI()
         self.setLayout()
-        self.setDelegate()
         
         self.bind()
+        
+        self.checkAnswerButton.setTitle(MissionConstants.submit, for: .normal)
         
         DispatchQueue.main.async {
             self.step1CardView.playVideo()
@@ -78,6 +81,9 @@ extension ShareMediaOnSlackMissionViewController {
         self.step1CardView.configure(cardType: .step1)
         self.step2CardView.configure(cardType: .step2)
         self.textfieldView.configure(with: self.vm)
+        
+        self.step2CardView.delegate = self
+        self.textfieldView.delegate = self
     }
     
 }
@@ -150,8 +156,9 @@ extension ShareMediaOnSlackMissionViewController {
             self.textfieldView.topAnchor.constraint(equalToSystemSpacingBelow: self.step2CardView.bottomAnchor, multiplier: 4),
             self.textfieldView.leadingAnchor.constraint(equalTo: self.step1CardView.leadingAnchor),
             self.textfieldView.trailingAnchor.constraint(equalTo: self.step1CardView.trailingAnchor),
+            self.textfieldView.heightAnchor.constraint(equalToConstant: 200),
             
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.textfieldView.bottomAnchor, multiplier: 3)
+            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.textfieldView.bottomAnchor, multiplier: 2)
         ])
         
     }
@@ -173,5 +180,11 @@ extension ShareMediaOnSlackMissionViewController: IDCardViewDelegate {
         if UIApplication.shared.canOpenURL(slackUrl) {
             UIApplication.shared.open(slackUrl, options: [:], completionHandler: nil)
         }
+    }
+}
+
+extension ShareMediaOnSlackMissionViewController: SlackShareTextFieldViewDelegate {
+    func keyboardShown() {
+        self.scrollView.contentOffset.y
     }
 }

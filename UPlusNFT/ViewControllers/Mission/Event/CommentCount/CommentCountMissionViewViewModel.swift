@@ -36,7 +36,7 @@ final class CommentCountMissionViewViewModel: MissionBaseModel {
         super.init(type: type, mission: mission)
         
         self.comments = self.getMissionComments(mission: mission)
-
+        print("Commnets: \(self.comments)")
     }
 
 }
