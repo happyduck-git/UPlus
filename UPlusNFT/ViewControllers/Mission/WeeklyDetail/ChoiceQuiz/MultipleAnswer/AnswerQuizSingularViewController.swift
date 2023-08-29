@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import Nuke
 
 //ShortAnswerQuizMission
 final class AnswerQuizSingularViewController: BaseMissionViewController {
@@ -17,7 +18,7 @@ final class AnswerQuizSingularViewController: BaseMissionViewController {
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
-    //MARK: - UI Elements
+    //MARK: - UI Elements 
     private let answerTextField: UITextField = {
         let txtField = UITextField()
         txtField.borderStyle = .none
@@ -27,8 +28,8 @@ final class AnswerQuizSingularViewController: BaseMissionViewController {
     
     private let numberOfTextLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UPlusColor.mint05
-        label.font = .systemFont(ofSize: UPlusFont.body2)
+        label.textColor = UPlusColor.mint04
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -46,6 +47,7 @@ final class AnswerQuizSingularViewController: BaseMissionViewController {
     init(vm: AnswerQuizSingularViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        self.setBaseVM(vm: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -65,13 +67,16 @@ final class AnswerQuizSingularViewController: BaseMissionViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let underline = CALayer()
-        underline.frame = CGRect(x: 0, y: answerTextField.frame.size.height-1, width: answerTextField.frame.width, height: 1)
-        underline.backgroundColor = UPlusColor.gray05.cgColor
-        answerTextField.layer.addSublayer(underline)
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
+            
+            self.setTextFieldUnderline(color: UPlusColor.gray05)
+            
+        }
     }
 }
 
+// MARK: - Set UI & Layout
 extension AnswerQuizSingularViewController {
     private func setUI() {
         self.quizContainer.addSubviews(self.answerTextField,
@@ -80,8 +85,8 @@ extension AnswerQuizSingularViewController {
     }
     
     private func setLayout() {
-        NSLayoutConstraint.activate([
-            self.answerTextField.centerYAnchor.constraint(equalTo: self.quizContainer.centerYAnchor),
+        NSLayoutConstraint.activate([            
+            self.answerTextField.topAnchor.constraint(equalTo: self.quizContainer.topAnchor),
             self.answerTextField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.answerTextField.trailingAnchor, multiplier: 3),
             self.answerTextField.heightAnchor.constraint(equalToConstant: 60),
@@ -95,6 +100,7 @@ extension AnswerQuizSingularViewController {
     }
 }
 
+// MARK: - Configure & Bind
 extension AnswerQuizSingularViewController {
     private func configure() {
         guard let mission = self.vm.mission as? ShortAnswerQuizMission,
@@ -102,8 +108,6 @@ extension AnswerQuizSingularViewController {
               let answer = mission.missionAnswerQuizzes.last
         else { return }
         
-        self.titleLabel.text = mission.missionContentTitle
-        self.quizLabel.text = mission.missionContentText
         self.answerTextField.placeholder = hint
         self.numberOfTextLabel.text = String(format: MissionConstants.numberOfTexts, answer.count)
         
@@ -114,52 +118,80 @@ extension AnswerQuizSingularViewController {
               let answer = mission.missionAnswerQuizzes.last
         else { return }
         
-        self.answerTextField.textPublisher
-            .removeDuplicates()
-            .debounce(for: 0.1, scheduler: RunLoop.main)
-            .sink {
-                self.answerInfoLabel.isHidden = true
-                
-                if $0.count == answer.count {
-                    self.checkAnswerButton.isUserInteractionEnabled = true
-                    self.checkAnswerButton.backgroundColor = .black
-                } else {
-                    self.checkAnswerButton.isUserInteractionEnabled = false
-                    self.checkAnswerButton.backgroundColor = UPlusColor.gray03
-                }
-            }
-            .store(in: &bindings)
-        
-        self.checkAnswerButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink {
-                if (self.answerTextField.text ?? "") == answer {
+        func bindViewToViewModel() {
+            self.answerTextField.textPublisher
+                .removeDuplicates()
+                .debounce(for: 0.1, scheduler: RunLoop.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
                     
-                    var vc: BaseMissionCompletedViewController?
+                    self.answerInfoLabel.isHidden = true
                     
-                    switch self.vm.type {
-                    case .event:
-                        vc = EventCompletedViewController(vm: self.vm)
-                        vc?.delegate = self
-                    case .weekly:
-                        vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                        vc?.delegate = self
+                    if $0.count == answer.count {
+                        self.checkAnswerButton.isUserInteractionEnabled = true
+                        self.checkAnswerButton.setTitleColor(UPlusColor.gray08, for: .normal)
+                        self.checkAnswerButton.backgroundColor = UPlusColor.mint03
+                        self.setTextFieldUnderline(color: UPlusColor.mint03)
+                    } else {
+                        self.checkAnswerButton.isUserInteractionEnabled = false
+                        self.checkAnswerButton.setTitleColor(.white, for: .normal)
+                        self.checkAnswerButton.backgroundColor = UPlusColor.gray03
+                        self.setTextFieldUnderline(color: UPlusColor.gray03)
                     }
-                    
-                    guard let vc = vc else { return }
-                    self.navigationController?.modalPresentationStyle = .fullScreen
-                    self.show(vc, sender: self)
-                    
-                } else {
-                    self.answerInfoLabel.isHidden = false
-                    self.checkAnswerButton.isUserInteractionEnabled = false
-                    self.checkAnswerButton.backgroundColor = UPlusColor.gray03
                 }
-            }
-            .store(in: &bindings)
+                .store(in: &bindings)
+            
+            self.checkAnswerButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    if (self.answerTextField.text ?? "") == answer {
+                        
+                        var vc: BaseMissionCompletedViewController?
+                        
+                        switch self.vm.type {
+                        case .event:
+                            vc = EventCompletedViewController(vm: self.vm)
+                            vc?.delegate = self
+                        case .weekly:
+                            vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                            vc?.delegate = self
+                        }
+                        
+                        guard let vc = vc else { return }
+                        self.navigationController?.modalPresentationStyle = .fullScreen
+                        self.show(vc, sender: self)
+                        
+                    } else {
+                        self.answerInfoLabel.isHidden = false
+                        self.checkAnswerButton.isUserInteractionEnabled = false
+                        self.checkAnswerButton.backgroundColor = UPlusColor.gray03
+                    }
+                }
+                .store(in: &bindings)
+        }
+        
+        func bindViewModelToView() {
+
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+
+}
+
+extension AnswerQuizSingularViewController {
+    private func setTextFieldUnderline(color: UIColor) {
+        let underline = CALayer()
+        underline.frame = CGRect(x: 0, y: self.answerTextField.frame.size.height-1, width: self.answerTextField.frame.width, height: 2)
+        underline.backgroundColor = color.cgColor
+        self.answerTextField.layer.addSublayer(underline)
     }
 }
 
+// MARK: - BaseMissionCompletedViewControllerDelegate
 extension AnswerQuizSingularViewController: BaseMissionCompletedViewControllerDelegate {
     func redeemDidTap() {
         self.delegate?.redeemDidTap(vc: self)

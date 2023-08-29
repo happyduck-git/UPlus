@@ -246,6 +246,8 @@ final class SignUpViewController: UIViewController {
         self.setNavigationItem()
         
         self.bind()
+        
+        hideKeyboardWhenTappedAround()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

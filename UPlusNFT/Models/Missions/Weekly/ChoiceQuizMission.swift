@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct ChoiceQuizMission: Mission, Codable {
+    var missionContentExtraMap: [String : String]?
     var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String

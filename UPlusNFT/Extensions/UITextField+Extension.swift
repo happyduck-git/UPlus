@@ -17,3 +17,12 @@ extension UITextField {
             .eraseToAnyPublisher()
     }
 }
+
+extension UITextField {
+    func setTextFieldUnderline(color: UIColor) {
+        let underline = CALayer()
+        underline.frame = CGRect(x: 0, y: self.frame.size.height-1, width: self.frame.width, height: 2)
+        underline.backgroundColor = color.cgColor
+        self.layer.addSublayer(underline)
+    }
+}

@@ -46,7 +46,7 @@ final class ChoiceMultipleQuizButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        self.backgroundColor = .white
         self.setUI()
         self.setLayout()
     }

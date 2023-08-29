@@ -18,3 +18,6 @@ X_KEY_SECRET_VALUE = HLxGuKTrsbUr6cekwRYcZuiwxKcRej3Fn3GWkSXuLLGGhVEx2y36az9SN2T
 
 // NFT Service
 UPLUS_NFT_ACCESS_CODE = c2b79418-febc-4758-9172-b27a3b354705
+
+// Slack Link
+UPLUS_SLACK_URL = https://lgu-cto.slack.com/archives/C05Q42MDSSD

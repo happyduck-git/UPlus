@@ -541,12 +541,7 @@ extension MyPageViewController {
             TodayMissionCollectionViewCell.self,
             forCellWithReuseIdentifier: TodayMissionCollectionViewCell.identifier
         )
-        
-        collectionView.register(
-            RoutineMissionSelectCollectionViewCell.self,
-            forCellWithReuseIdentifier: RoutineMissionSelectCollectionViewCell.identifier
-        )
-        
+
         collectionView.register(
             RoutineMissionProgressCollectionViewCell.self,
             forCellWithReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier
@@ -950,7 +945,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                             fatalError()
                         }
                         cell.resetCell()
-                        cell.configure(title: title, period: timeLeft, point: weekTotalPoint)
+                        cell.configure(item: indexPath.item, title: title, period: timeLeft, point: weekTotalPoint)
 
                         return cell
                         
@@ -1186,6 +1181,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             default:
                 return
             }
+            
             guard let mission = anyMission else { return }
             let type = MissionSubFormatType(rawValue: mission.missionSubFormatType) ?? .userComment
             
@@ -1205,15 +1201,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
 //                vc.delegate = self
                 
                 self.show(vc, sender: self)
-                
-            case .shareMediaOnSlack:
-                guard let mission = mission as? MediaShareMission else { return }
-                let vm = ShareMediaOnSlackMissionViewViewModel(type: .event, mission: mission)
-                let vc = ShareMediaOnSlackMissionViewController(vm: vm)
-                vc.delegate = self
-                
-                self.show(vc, sender: self)
-                
+
             case .governanceElection:
                 guard let mission = mission as? GovernanceMission else { return }
                 let vm = GovernanceElectionMissionViewViewModel(type: .event, mission: mission)
@@ -1222,11 +1210,20 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 self.show(vc, sender: self)
                 
-            case .userComment:
+            case .userComment, .userCommentRich:
                 guard let mission = mission as? CommentCountMission else { return }
                 let vm = CommentCountMissionViewViewModel(type: .event, mission: mission)
                 let vc = CommentCountMissionViewController(vm: vm)
                 vc.delegate = self
+                
+                self.show(vc, sender: self)
+                
+            case .userCommentAuthSharing:
+                
+                guard let mission = mission as? CommentCountMission else { return }
+                let vm = ShareMediaOnSlackMissionViewViewModel(level: Int(self.vm.userProfileViewModel?.level ?? 0), type: .event, mission: mission)
+                let vc = ShareMediaOnSlackMissionViewController(vm: vm)
+//                vc.delegate = self
                 
                 self.show(vc, sender: self)
                 
@@ -1418,7 +1415,7 @@ extension MyPageViewController: NftBottomSheetDelegate {
         
         if level < 10 && level > 1 {
             logger.info("Show level up: \(String(describing: level))")
-            self.showLevelUpBottomSheet(level: level)
+            self.showLevelUpBottomSheet(level: level, tokenId: nft)
             
         } else if level == 10 {
             logger.info("Show new nft: \(String(describing: nft))")
@@ -1441,12 +1438,13 @@ extension MyPageViewController: NftBottomSheetDelegate {
         let vc = NewNFTNoticeBottomSheetViewController(vm: vm)
         vc.modalPresentationStyle = .overCurrentContext
         vc.delegate = self
-        
+        logger.info("Showing...")
         self.present(vc, animated: false)
     }
     
-    private func showLevelUpBottomSheet(level: Int) {
-        let vc = LevelUpBottomSheetViewController(newLevel: level)
+    private func showLevelUpBottomSheet(level: Int, tokenId: String) {
+        let vm = LevelUpBottomSheetViewViewModel(newLevel: level, tokenId: tokenId)
+        let vc = LevelUpBottomSheetViewController(vm: vm)
         vc.modalPresentationStyle = .overCurrentContext
         vc.delegate = self
         logger.info("Showing...")

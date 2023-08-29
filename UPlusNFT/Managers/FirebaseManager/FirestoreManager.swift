@@ -79,6 +79,23 @@ extension FirestoreManager {
     
 }
 
+// MARK: - UPlus All Users
+extension FirestoreManager {
+    
+    /// Get the total number of users that have registered.
+    /// - Returns: Number of registered users.
+    func getNumberOfRegisteredUsers() async throws -> Int {
+        return try await threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .whereField(FirestoreConstants.userUid, isNotEqualTo: NSNull())
+            .getDocuments()
+            .documents
+            .count
+    }
+    
+}
+
 /* uplus_missions_v3 */
 //MARK: - UPlus Current User
 extension FirestoreManager {
@@ -457,28 +474,28 @@ extension FirestoreManager {
     
 }
 
-/* uplus_missions_v3 - Getters */
+/* uplus_missions_v3 - Get Routine Mission */
 extension FirestoreManager {
     
     /// Get User Selected Routine MissionType.
     /// - Parameter userIndex: Current User's index.
     /// - Returns: Optional MissionType.
-//    func getUserSelectedRoutineMission(userIndex: Int64) async throws -> MissionType? {
-//        let data = try await self.threadsSetCollectionPath2
-//            .document(FirestoreConstants.users)
-//            .collection(FirestoreConstants.userSetCollection)
-//            .document(String(describing: userIndex))
-//            .getDocument()
-//            .data()
-//        guard let rawVal = data?[FirestoreConstants.selectedMissionTopic] as? String else {
-//            return nil
-//        }
-//        
-//        return MissionType(rawValue: rawVal)
-//    }
+    //    func getUserSelectedRoutineMission(userIndex: Int64) async throws -> MissionType? {
+    //        let data = try await self.threadsSetCollectionPath2
+    //            .document(FirestoreConstants.users)
+    //            .collection(FirestoreConstants.userSetCollection)
+    //            .document(String(describing: userIndex))
+    //            .getDocument()
+    //            .data()
+    //        guard let rawVal = data?[FirestoreConstants.selectedMissionTopic] as? String else {
+    //            return nil
+    //        }
+    //
+    //        return MissionType(rawValue: rawVal)
+    //    }
     
     /* Daily Mission */
-
+    
     func getRoutineMission(type: MissionType) async throws -> [any Mission] {
         let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
             .collection(type.storagePathFolderName)
@@ -541,15 +558,19 @@ extension FirestoreManager {
         }
         
         return status
-
+        
     }
-    
+}
+
+// MARK: - Get Weekly / Event Missions
+extension FirestoreManager {
     /* Weekly Mission */
     func getWeeklyMission(week: Int) async throws -> [any Mission] {
         
         let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
         
-        let documents = try await threadsSetCollectionPath2.document(FirestoreConstants.missions)
+        let documents = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
             .collection(weekCollection)
             .getDocuments()
             .documents
@@ -571,6 +592,17 @@ extension FirestoreManager {
                 missions.append(try doc.data(as: ShortAnswerQuizMission.self, decoder: self.decoder))
             case .contentReadOnly:
                 missions.append(try doc.data(as: ContentReadOnlyMission.self, decoder: self.decoder))
+            case .userComment:
+                var commentMission = try doc.data(as: CommentCountMission.self, decoder: self.decoder)
+                
+                let commentDocs = try await doc.reference
+                    .collection(FirestoreConstants.commentSet)
+                    .getDocuments()
+                    .documents
+                
+                let comments = try self.getMissionComments(documents: commentDocs)
+                commentMission.userCommnetSet = comments
+                missions.append(commentMission)
 
             default:
                 break
@@ -625,6 +657,7 @@ extension FirestoreManager {
                     
                 case .userComment:
                     missions.append(try doc.data(as: CommentCountMission.self, decoder: self.decoder))
+                    // TODO: user comment set query 추가
                     
                 case .choiceQuiz:
                     missions.append(try doc.data(as: ChoiceQuizMission.self, decoder: self.decoder))
@@ -673,6 +706,15 @@ extension FirestoreManager {
         return history
     }
  
+    // MARK: - Get
+    func getMissionComments(documents: [QueryDocumentSnapshot]) throws -> [UserCommentSet] {
+        var comments: [UserCommentSet] = []
+        for doc in documents {
+            comments.append(try doc.data(as: UserCommentSet.self, decoder: self.decoder))
+        }
+        return comments
+    }
+    
 }
 
 /* uplus_missions_v3 - Setters(Mission) */
@@ -767,13 +809,15 @@ extension FirestoreManager {
             today: today
         )
         
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayPrevPoint): FieldValue.increment(Int64(-1))]
-            ],
-            forDocument: userDocRef,
-            merge: true
-        )
+        if todayPrevPoint != 0 {
+            batch.setData(
+                [
+                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayPrevPoint): FieldValue.increment(Int64(-1))]
+                ],
+                forDocument: userDocRef,
+                merge: true
+            )
+        }
         
         batch.setData(
             [
@@ -801,12 +845,14 @@ extension FirestoreManager {
             merge: true)
         
         // dailyPointHistory
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
-            ],
-            forDocument: dailyPointHistoryDocPath,
-            merge: true)
+        if previousPoint != 0 {
+            batch.setData(
+                [
+                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
+                ],
+                forDocument: dailyPointHistoryDocPath,
+                merge: true)
+        }
         
         batch.setData(
             [
@@ -883,10 +929,18 @@ extension FirestoreManager {
 
         batch.setData(
             [
-                FirestoreConstants.missionUserStateMap: [String(describing: user.userIndex): MissionUserState.pending.rawValue]
+                FirestoreConstants.missionUserStateMap: [String(describing: user.userIndex): MissionUserState.succeeded.rawValue]
             ],
             forDocument: missionDocRef,
             merge: true)
+
+         batch.setData(
+             [
+                 FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([missionDocRef]) ]
+             ],
+             forDocument: userDocRef,
+             merge: true
+         )
 
         let ref = Storage.storage().reference(withPath: path)
         
@@ -991,6 +1045,14 @@ extension FirestoreManager {
             .collection(missionType.storagePathFolderName)
             .document(eventId)
         
+        // Comment doc path
+        let commentDocPath = threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(missionType.storagePathFolderName)
+            .document(eventId)
+            .collection(FirestoreConstants.commentSet)
+            .document()
+        
         switch formatType {
             
         case .answerQuiz, .choiceQuiz, .contentReadOnly:
@@ -1057,17 +1119,13 @@ extension FirestoreManager {
                 return
             }
             
-            let recentComments: [String] = recentComments
-//            recentComments.append(contentsOf: [user.userNickname, comment])
+            let newComment = UserCommentSet(commentId: commentDocPath.documentID,
+                                            commentUser: userDocRef,
+                                            commentText: comment,
+                                            commentTime: Timestamp())
             
-            batch.setData(
-                [
-                    FirestoreConstants.commentCountMap: [comment: FieldValue.increment(Int64(1))],
-                    FirestoreConstants.commentUserRecents: recentComments
-                ],
-                forDocument: eventDocPath,
-                merge: true
-            )
+            try batch.setData(from: newComment, forDocument: commentDocPath, encoder: self.encoder)
+           
             batch.setData(
                 [
                     FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([eventDocPath]) ]
@@ -1117,13 +1175,15 @@ extension FirestoreManager {
             today: today
         )
         
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayPrevPoint): FieldValue.increment(Int64(-1))]
-            ],
-            forDocument: userDocRef,
-            merge: true
-        )
+        if todayPrevPoint != 0 {
+            batch.setData(
+                [
+                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayPrevPoint): FieldValue.increment(Int64(-1))]
+                ],
+                forDocument: userDocRef,
+                merge: true
+            )
+        }
         
         batch.setData(
             [
@@ -1152,13 +1212,15 @@ extension FirestoreManager {
             merge: true)
         
         // pointHistoryUserCountMap
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
-            ],
-            forDocument: dailyPointHistoryDocPath,
-            merge: true)
-        
+        if previousPoint != 0 {
+            batch.setData(
+                [
+                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
+                ],
+                forDocument: dailyPointHistoryDocPath,
+                merge: true)
+        }
+
         batch.setData(
             [
                 FirestoreConstants.pointHistoryUserCountMap: [String(describing: newPoint): FieldValue.increment(Int64(1))]
@@ -1200,6 +1262,29 @@ extension FirestoreManager {
         return missionDocCounts == userSuccessedMissionCounts ? true : false
     }
     
+    func saveCommentLikes(missionType: MissionType,
+                          missionDoc: String,
+                          userIndex: Int64,
+                          commentIds: [String]) {
+        
+        let userDocRef = self.threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+        
+        for id in commentIds {
+            threadsSetCollectionPath2
+                .document(FirestoreConstants.missions)
+                .collection(missionType.storagePathFolderName)
+                .document(missionDoc)
+                .collection(FirestoreConstants.commentSet)
+                .document(id)
+                .setData([FirestoreConstants.commentLikeUsers: FieldValue.arrayUnion([userDocRef])],
+                         merge: true)
+        }
+        
+    }
+
 }
 
 /* uplus_missions_v3 - Mission Private */

@@ -38,6 +38,7 @@ final class GovernanceElectionMissionViewController: BaseMissionViewController {
     init(vm: GovernanceElectionMissionViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        self.setBaseVM(vm: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -53,7 +54,6 @@ final class GovernanceElectionMissionViewController: BaseMissionViewController {
         self.setLayout()
         self.createChart()
         
-        self.configure()
         self.bind()
     }
 
@@ -71,20 +71,11 @@ extension GovernanceElectionMissionViewController {
             button.setQuizTitle(text: captions[i])
             button.clipsToBounds = true
             button.layer.cornerRadius = 8.0
+            button.heightAnchor.constraint(equalToConstant: 48).isActive = true
             self.choiceButtons.append(button)
             self.stack.addArrangedSubview(button)
         }
         self.vm.buttonStatus = Array(repeating: false, count: captions.count)
-    }
-    
-}
-
-// MARK: - Configure
-extension GovernanceElectionMissionViewController {
-    
-    private func configure() {
-        self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.quizLabel.text = self.vm.mission.missionContentText
     }
     
 }
@@ -191,8 +182,8 @@ extension GovernanceElectionMissionViewController {
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.stack.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 2),
-            self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
-            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 3),
+            self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 6),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 6),
             self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 3)
         ])
         

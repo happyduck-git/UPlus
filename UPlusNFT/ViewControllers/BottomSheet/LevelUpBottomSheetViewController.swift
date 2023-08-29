@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import Nuke
 
 protocol NftBottomSheetDelegate: AnyObject {
     func redeemButtonDidTap()
@@ -14,7 +15,7 @@ protocol NftBottomSheetDelegate: AnyObject {
 
 final class LevelUpBottomSheetViewController: HumpyBottomSheetViewController {
     
-    private let newLevel: Int
+    private let vm: LevelUpBottomSheetViewViewModel
     
     //MARK: - Delegate
     weak var delegate: NftBottomSheetDelegate?
@@ -88,11 +89,9 @@ final class LevelUpBottomSheetViewController: HumpyBottomSheetViewController {
     }()
     
     // MARK: - Init
-    
-    init(newLevel: Int) {
-        self.newLevel = newLevel
-        
-        super.init(defaultHeight: 500)
+    init(vm: LevelUpBottomSheetViewViewModel) {
+        self.vm = vm
+        super.init(defaultHeight: 450)
     }
     
     required init?(coder: NSCoder) {
@@ -114,13 +113,7 @@ final class LevelUpBottomSheetViewController: HumpyBottomSheetViewController {
 
 extension LevelUpBottomSheetViewController {
     private func configure() {
-        guard let level = UserLevel(rawValue: newLevel) else { return }
-        let coupon = level.coupon
-//        let raffle = level.raffle
-        
-        self.levelLabel.text = String(format: MyPageConstants.levelUp, level.rawValue)
-        self.couponLabel.text = coupon
-        
+              
     }
     
     private func bind() {
@@ -138,7 +131,33 @@ extension LevelUpBottomSheetViewController {
                 .store(in: &bindings)
         }
         func bindViewModelToView() {
-            
+            self.vm.nft
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self,
+                          let nft = $0
+                    else { return }
+
+                    self.levelLabel.text = String(format: MyPageConstants.levelUp, self.vm.level.rawValue)
+                    self.couponLabel.text = self.vm.level.coupon
+                    
+            //        let raffle = self.vm.level.raffle // <- Raffle도 레벨에 따라 구분해야 하는 경우에 사용
+                    
+                    guard let url = URL(string: nft.nftContentImageUrl) else {
+                        UPlusLogger.logger.warning("Error converting to url.")
+                        return
+                    }
+                    Task {
+                        do {
+                            self.topImageView.image = try await ImagePipeline.shared.image(for: url)
+                        }
+                        catch {
+                            UPlusLogger.logger.error("Error fetching image -- \(error).")
+                        }
+                    }
+                    
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -200,7 +219,8 @@ import SwiftUI
 
 struct LevelUpBottomSheetViewController_Preview: PreviewProvider {
     static var previews: some View {
-        LevelUpBottomSheetViewController(newLevel: 1).toPreview()
+        let vm = LevelUpBottomSheetViewViewModel(newLevel: 1, tokenId: "10070")
+        LevelUpBottomSheetViewController(vm: vm).toPreview()
     }
 }
 #endif

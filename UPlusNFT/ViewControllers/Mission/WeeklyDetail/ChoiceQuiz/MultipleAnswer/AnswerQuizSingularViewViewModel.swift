@@ -8,9 +8,4 @@
 import Foundation
 import Combine
 
-final class AnswerQuizSingularViewViewModel: MissionBaseModel {
-
-    
-    
-    
-}
+final class AnswerQuizSingularViewViewModel: MissionBaseModel {}

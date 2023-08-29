@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct RoutineMission: Codable, Mission {
+    var missionContentExtraMap: [String : String]?
     var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String

@@ -22,6 +22,7 @@ protocol Mission {
     var missionUserStateMap: [String: String]? { get set }
     var missionRewardPoint: Int64 { get set }
     var missionPermitAvatarLevel: Int64 { get set }
+    var missionContentExtraMap: [String: String]? { get set }
 }
 
 enum MissionType: String {
@@ -101,6 +102,8 @@ enum MissionSubFormatType: String {
     case shareMediaOnSlack = "share_media_on_slack"
     case governanceElection = "governance_election"
     case userComment = "user_comment"
+    case userCommentAuthSharing = "user_comment__auth_sharing"
+    case userCommentRich = "user_comment__rich"
 }
 
 enum MissionUserState: String {
@@ -111,6 +114,8 @@ enum MissionUserState: String {
 }
 
 struct MissionModel: Mission, Codable {
+    var missionContentExtraMap: [String : String]?
+    
     var missionId: String
     
     var missionTopicType: String
@@ -142,7 +147,8 @@ struct MissionModel: Mission, Codable {
 
 // MARK: - Model for MyPageVC Event Part
 struct MissionWithLevel: Mission {
-
+    var missionContentExtraMap: [String : String]?
+    
     var level: Int
     
     var missionId: String

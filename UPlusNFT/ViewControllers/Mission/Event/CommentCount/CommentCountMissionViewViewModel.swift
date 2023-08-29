@@ -7,74 +7,122 @@
 
 import Foundation
 import Combine
+import FirebaseFirestore
 
 final class CommentCountMissionViewViewModel: MissionBaseModel {
 
+    // MARK: - Dependency
+    private let firestoreManager = FirestoreManager.shared
+    
+    // MARK: - DataSource
     @Published var comment: String?
     
-    @Published var imageUrls: [URL] = [] {
-        willSet {
-            combinations["ImageUrls"] = newValue
-        }
-    }
-    
-    @Published var comments: [String] = [] {
+    @Published var comments: [MissionComment] = [] {
         didSet {
-            combinations["comments"] = comments
+            self.numberOfComments = comments.count
         }
     }
     
-    @Published var commentCountMap: [String: Int64] = [:] {
-        didSet {
-            combinations["commentCountMap"] = commentCountMap
-        }
-    }
-    
-    @Published var combinations: [String: Any] = [:]
+    @Published var numberOfComments: Int = 0
     
     @Published var participated: Bool = false
     
-    @Published var isLiked: Bool = false
+    @Published var commentList: [UserCommentSet] = []
+    @Published var isLikedList: [Bool] = []
+    @Published var likesCountList: [Int] = []
     
     //MARK: - Init
     override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
         super.init(type: type, mission: mission)
         
-        guard let mission = self.mission as? CommentCountMission else { return }
-        self.comments = mission.commentUserRecents ?? []
-        self.commentCountMap = mission.commentCountMap ?? [:]
-        
-        self.getImageUrls()
-        
-        do {
-            let user = try UPlusUser.getCurrentUser()
-            if self.comments.contains(user.userNickname) {
-                self.participated = true
-            }
-        }
-        catch {
-            print("Error fetching user info from UserDefaults -- \(error)")
-        }
-        
+        self.comments = self.getMissionComments(mission: mission)
+
     }
 
 }
 
 extension CommentCountMissionViewViewModel {
-    private func getImageUrls() {
-        Task {
-            do {
-                let imagePaths = mission.missionContentImagePaths ?? []
-                var imageUrls: [URL] = []
-                for imagePath in imagePaths {
-                    imageUrls.append(try await FirebaseStorageManager.shared.getDataUrl(reference: imagePath))
+    
+    func saveLikes() {
+        do {
+            let currentUser = try UPlusUser.getCurrentUser()
+            
+            var commentIds: [String] = []
+            
+            for i in 0..<isLikedList.count {
+                if self.isLikedList[i] {
+                    commentIds.append(self.commentList[i].commentId)
                 }
-                self.imageUrls = imageUrls
+                continue
             }
-            catch {
-                print("Error downloading image url -- \(error)")
-            }
+            
+            self.firestoreManager
+                .saveCommentLikes(missionType: MissionType(rawValue: self.mission.missionSubTopicType) ?? .weeklyQuiz1,
+                                  missionDoc: self.mission.missionId,
+                                  userIndex: currentUser.userIndex,
+                                  commentIds: commentIds)
+        }
+        catch {
+            UPlusLogger.logger.error("Error saving likes -- \(String(describing: error))")
         }
     }
+    
 }
 
+// MARK: - Private
+extension CommentCountMissionViewViewModel {
+    
+    private func getMissionComments(mission: any Mission) -> [MissionComment] {
+        guard let mission = mission as? CommentCountMission else { return [] }
+        let userCommentSet = mission.userCommnetSet ?? []
+        self.commentList = userCommentSet
+        
+        var comments: [MissionComment] = []
+        for comment in userCommentSet {
+            let isLiked: Bool = self.isLikedByCurrentUser(userRefs: comment.commentLikeUsers ?? [])
+            let likes: Int = comment.commentLikeUsers?.count ?? 0
+            
+            self.isLikedList.append(isLiked)
+            self.likesCountList.append(likes)
+            
+            comments.append(
+                MissionComment(userId: self.getUsernameFromReference(refString: comment.commentUser.path) ?? " ",
+                               commentText: comment.commentText ?? " ",
+                               likes: likes,
+                               isLikedByCurrentUser: isLiked)
+            )
+        }
+        return comments
+    }
+    
+    private func getUsernameFromReference(refString: String) -> String? {
+        let components = refString.components(separatedBy: "/")
+        return components.last
+    }
+    
+    private func isLikedByCurrentUser(userRefs: [DocumentReference]) -> Bool {
+        do {
+            let currentUser = try UPlusUser.getCurrentUser()
+            for ref in userRefs {
+                let username = self.getUsernameFromReference(refString: ref.path) ?? ""
+                if username == currentUser.userNickname {
+                    return true
+                }
+            }
+            return false
+        }
+        catch {
+            UPlusLogger.logger.error("Error getting current user from UserDefaults -- \(String(describing: error))")
+            return false
+        }
+    }
+    
+}
+
+// MARK: - Mission Comment Model
+struct MissionComment {
+    let userId: String
+    let commentText: String
+    let likes: Int
+    let isLikedByCurrentUser: Bool
+}

@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct CommentCountMission: Mission, Codable {
+    var missionContentExtraMap: [String : String]?
     var missionId: String
     var missionTopicType: String
     var missionSubTopicType: String
@@ -22,7 +23,19 @@ struct CommentCountMission: Mission, Codable {
     var missionUserStateMap: [String : String]?
     var missionRewardPoint: Int64
     var missionPermitAvatarLevel: Int64
-    
-    var commentCountMap: [String: Int64]?
-    var commentUserRecents: [String]?
+
+    var userCommentListVisible: Bool
+    var userCommentLikeEnabled: Bool
+    var userCommentMultipleEnabled: Bool
+
+    var userCommnetSet: [UserCommentSet]?
+}
+
+struct UserCommentSet: Codable {
+    var commentId: String
+    var commentUser: DocumentReference
+    var commentText: String?
+    var commentImagePath: String?
+    var commentTime: Timestamp
+    var commentLikeUsers: [DocumentReference]?
 }

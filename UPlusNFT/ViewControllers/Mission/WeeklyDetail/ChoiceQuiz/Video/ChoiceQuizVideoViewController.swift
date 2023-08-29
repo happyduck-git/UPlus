@@ -191,20 +191,12 @@ extension ChoiceQuizVideoViewController {
 extension ChoiceQuizVideoViewController {
     private func configure() {
         self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.quizLabel.text = self.vm.mission.missionContentText
+        
         self.checkAnswerButton.isUserInteractionEnabled = true
         self.checkAnswerButton.setTitle(MissionConstants.next, for: .normal)
     }
     
     private func bind() {
-        
-        self.vm.$imageUrls
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let `self` = self else { return }
-                
-            }
-            .store(in: &bindings)
         
         self.checkAnswerButton.tapPublisher
             .receive(on: DispatchQueue.main)

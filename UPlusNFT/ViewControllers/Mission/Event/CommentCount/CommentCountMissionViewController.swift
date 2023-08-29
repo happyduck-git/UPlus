@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import Nuke
 
 protocol CommentCountMissionViewControllerDelegate: AnyObject {
     func submitCommentDidTap()
@@ -24,6 +25,13 @@ final class CommentCountMissionViewController: UIViewController {
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
+    let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView()
+        spinner.style = .large
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        return spinner
+    }()
+    
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: ImageAsset.eventBackground)
@@ -33,6 +41,7 @@ final class CommentCountMissionViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.textAlignment = .center
         label.text = MissionConstants.quizMission
         label.textColor = .systemGray
         label.numberOfLines = 0
@@ -40,14 +49,21 @@ final class CommentCountMissionViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
+    private let quizImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = .clear
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
     
-    private let quizLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = .systemFont(ofSize: UPlusFont.head4, weight: .bold)
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let weblinkButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.titleLabel?.lineBreakMode = .byTruncatingMiddle
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let textField: UITextField = {
@@ -60,13 +76,19 @@ final class CommentCountMissionViewController: UIViewController {
     
     private let checkAnswerButton: UIButton = {
         let button = UIButton()
-        button.setTitle("추천하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitle(MissionConstants.recommend, for: .normal)
         button.clipsToBounds = true
-        button.layer.cornerRadius = 10.0
+        button.layer.cornerRadius = 8.0
+        button.backgroundColor = UPlusColor.gray02
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+
+    private let tableHeaderView: UILabel = {
+        let label = UILabel()
+        label.textColor = UPlusColor.gray07
+        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .semibold)
+        return label
     }()
     
     private let commentTable: UITableView = {
@@ -94,23 +116,63 @@ final class CommentCountMissionViewController: UIViewController {
         super.viewDidLoad()
 
         self.view.backgroundColor = .white
+        
+//        self.commentTable.tableHeaderView = tableHeaderView
+        
         self.setUI()
         self.setLayout()
         self.setDelegate()
         
         self.bind()
-        
-        self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.quizLabel.text = self.vm.mission.missionContentText
+        self.configure()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // TODO: Like 저장
+        self.saveLikes()
+    }
+    
 }
 
 extension CommentCountMissionViewController {
+    private func configure() {
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        
+        if let html = vm.mission.missionContentText,
+           let attributedString = vm.retrieveHtmlString(html: html) {
+            self.weblinkButton.isHidden = false
+            weblinkButton.setAttributedTitle(attributedString, for: .normal)
+        }
+    }
+}
+
+// MARK: - Bind with ViewModel
+extension CommentCountMissionViewController {
     
     private func bind() {
-        do {
-            let user = try UPlusUser.getCurrentUser()
+        
+        func bindViewToViewModel() {
+            
+            self.vm.$imageUrls
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] urls in
+                    guard let `self` = self,
+                          let url = urls.first else { return }
+                    self.spinner.startAnimating()
+                    
+                    Task {
+                        do {
+                            self.quizImageView.image = try await ImagePipeline.shared.image(for: url)
+                            self.spinner.stopAnimating()
+                        }
+                        catch {
+                            print("Error")
+                        }
+                    }
+    
+                }
+                .store(in: &bindings)
             
             self.vm.$comment
                 .receive(on: DispatchQueue.main)
@@ -148,68 +210,76 @@ extension CommentCountMissionViewController {
             
             self.vm.$comments
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
+                .sink { [weak self] comments in
                     guard let `self` = self else { return }
-                    
                     self.commentTable.reloadData()
                 }
                 .store(in: &bindings)
-            
-            self.vm.$combinations
+
+        }
+        
+        func bindViewModelToView() {
+            self.weblinkButton.tapPublisher
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
+                .sink { [weak self] urls in
                     guard let `self` = self else { return }
-                    
-                    let imageCount = $0["ImageUrls"] as? [URL]
-                    
-               
-                    
-                    /*
-                    self.label.text = "ImageUrls: \(imageCount?.count ?? 0)개\n\n"
-                    + "Comments: \($0["comments"])\n\n"
-                    + "commentCountMap: \($0["commentCountMap"])"
-                     */
+                    if let html = vm.mission.missionContentText {
+                        vm.openURL(from: html)
+                    }
                 }
                 .store(in: &bindings)
-
-            self.checkAnswerButton // Point 바로 수여X
+            
+            self.textField.textPublisher
+                .removeDuplicates()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] text in
+                    guard let `self` = self else { return }
+                        self.vm.comment = text
+                }
+                .store(in: &bindings)
+            
+            self.checkAnswerButton
                 .tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     guard let `self` = self,
-                          let text = textField.text
+                          let comment = self.vm.comment
                     else { return }
                     
-                    self.vm.comment = text
-                    self.vm.comments.append(contentsOf: [user.userNickname, text])
-                    let val = self.vm.commentCountMap[text] ?? 0
-                    self.vm.commentCountMap[text] = val + 1
-                    
-                    self.checkAnswerButton.isEnabled = false
-                    self.checkAnswerButton.backgroundColor = .systemGray
-                    
-                    Task {
-                        print("Task called")
-                        do {
+                    do {
+                        let user = try UPlusUser.getCurrentUser()
+                        
+                        let newComment = MissionComment(userId: user.userNickname,
+                                                        commentText: comment,
+                                                        likes: 0,
+                                                        isLikedByCurrentUser: false)
+                        self.vm.comments.append(newComment)
+
+                        self.checkAnswerButton.isUserInteractionEnabled = false
+                        self.checkAnswerButton.backgroundColor = .systemGray
+                        
+                        Task {
+                            // TODO: Save comments
                             try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
-                                                                           recentComments: self.vm.comments,
-                                                                           comment: text)
+                                                                           recentComments: nil,
+                                                                           comment: comment)
                             // Check level update.
                             try await self.vm.checkLevelUpdate()
+                            
                         }
-                        catch {
-                            UPlusLogger.logger.error("Error saving event participation status  -- \(String(describing: error))")
-                        }
+                        
+                        self.delegate?.submitCommentDidTap()
+                    }
+                    catch {
+                        UPlusLogger.logger.error("Error saving event participation status  -- \(String(describing: error))")
                     }
                     
-                    self.delegate?.submitCommentDidTap()
                 }
                 .store(in: &bindings)
         }
-        catch {
-         print("Error getting user info from UserDefaults -- \(error)")
-        }
-  
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
     
 }
@@ -220,7 +290,9 @@ extension CommentCountMissionViewController {
         self.view.addSubviews(
             self.backgroundImage,
             self.titleLabel,
-            self.quizLabel,
+            self.spinner,
+            self.quizImageView,
+            self.weblinkButton,
             self.textField,
             self.checkAnswerButton,
             self.commentTable
@@ -229,7 +301,7 @@ extension CommentCountMissionViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.backgroundImage.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.backgroundImage.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.backgroundImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.backgroundImage.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.backgroundImage.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
@@ -238,12 +310,19 @@ extension CommentCountMissionViewController {
             self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 2),
             
-            self.quizLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 2),
-            self.quizLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizLabel.trailingAnchor, multiplier: 2),
+            self.quizImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 1),
+            self.quizImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 1),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizImageView.trailingAnchor, multiplier: 1),
+            self.quizImageView.heightAnchor.constraint(equalToConstant: 200),
             
+            self.spinner.centerXAnchor.constraint(equalTo: self.quizImageView.centerXAnchor),
+            self.spinner.centerYAnchor.constraint(equalTo: self.quizImageView.centerYAnchor),
             
-            self.textField.topAnchor.constraint(equalToSystemSpacingBelow: self.quizLabel.bottomAnchor, multiplier: 3),
+            self.weblinkButton.topAnchor.constraint(equalToSystemSpacingBelow: self.quizImageView.bottomAnchor, multiplier: 1),
+            self.weblinkButton.leadingAnchor.constraint(equalTo: self.quizImageView.leadingAnchor),
+            self.weblinkButton.trailingAnchor.constraint(equalTo: self.quizImageView.trailingAnchor),
+            
+            self.textField.topAnchor.constraint(equalToSystemSpacingBelow: self.weblinkButton.bottomAnchor, multiplier: 3),
             self.textField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
             self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.textField.trailingAnchor, multiplier: 2),
             
@@ -265,6 +344,15 @@ extension CommentCountMissionViewController {
     }
 }
 
+extension CommentCountMissionViewController {
+    
+    private func saveLikes() {
+        self.vm.saveLikes()
+    }
+    
+}
+
+// MARK: - TableView Delegate & DataSource
 extension CommentCountMissionViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -272,12 +360,16 @@ extension CommentCountMissionViewController: UITableViewDelegate, UITableViewDat
                                                  for: indexPath) as? CommentCountMissionTableViewCell else {
             return UITableViewCell()
         }
-      
-        let nickname = self.vm.comments[indexPath.row * 2]
-        let comment = self.vm.comments[(indexPath.row * 2) + 1]
+        cell.selectionStyle = .none
         
-        cell.bind(with: self.vm)
-        cell.configure(image: "image", nickname: nickname, comment: comment, likes: 10)
+        let comment = self.vm.comments[indexPath.row]
+        
+        cell.bind(with: self.vm, at: indexPath.row)
+        cell.configure(image: "image",
+                       nickname: comment.userId,
+                       comment: comment.commentText,
+                       likes: comment.likes,
+                       isLiked: comment.isLikedByCurrentUser)
         
         return cell
     }
@@ -289,4 +381,5 @@ extension CommentCountMissionViewController: UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
+    
 }

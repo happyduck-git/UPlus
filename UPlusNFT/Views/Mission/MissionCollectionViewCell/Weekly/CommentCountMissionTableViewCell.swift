@@ -35,6 +35,7 @@ final class CommentCountMissionTableViewCell: UITableViewCell {
     private let commentLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -78,7 +79,7 @@ final class CommentCountMissionTableViewCell: UITableViewCell {
 // MARK: - Bind
 extension CommentCountMissionTableViewCell {
     
-    func bind(with vm: CommentCountMissionViewViewModel) {
+    func bind(with vm: CommentCountMissionViewViewModel, at row: Int) {
         
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
@@ -88,21 +89,39 @@ extension CommentCountMissionTableViewCell {
             self.likeButton.tapPublisher
                 .receive(on: DispatchQueue.main)
                 .sink {
-                    vm.isLiked.toggle()
+                    vm.isLikedList[row].toggle()
+                    if vm.isLikedList[row] {
+                        vm.likesCountList[row] += 1
+                    } else {
+                        vm.likesCountList[row] -= 1
+                    }
                     
                 }
                 .store(in: &bindings)
         }
         
         func bindViewModelToView() {
-            vm.$isLiked
+            vm.$isLikedList
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
+                .sink { [weak self] list in
                     guard let `self` = self else { return }
                     
-                    let likeImage: UIImage? = $0 ? UIImage(named: ImageAsset.heartFill) : UIImage(named: ImageAsset.heartEmpty)
+                    let like = list[row]
+                    let likeImage: UIImage? = like ? UIImage(named: ImageAsset.heartFill) : UIImage(named: ImageAsset.heartEmpty)
                     
                     self.likeButton.setImage(likeImage, for: .normal)
+                    
+                }
+                .store(in: &bindings)
+            
+            vm.$likesCountList
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] list in
+                    guard let `self` = self else { return }
+                    
+                    let count = list[row]
+                    
+                    self.likeCount.text = String(describing: count)
                     
                 }
                 .store(in: &bindings)
@@ -117,13 +136,15 @@ extension CommentCountMissionTableViewCell {
 // MARK: - Configure
 extension CommentCountMissionTableViewCell {
     
-    func configure(image: String, nickname: String, comment: String, likes: Int) {
+    func configure(image: String, nickname: String, comment: String, likes: Int, isLiked: Bool) {
         self.nicknameLabel.text = nickname
         self.commentLabel.text = comment
         self.likeCount.text = String(describing: likes)
+    
+        let image = isLiked ? UIImage(named: ImageAsset.heartFill) : UIImage(named: ImageAsset.heartEmpty)
+        self.likeButton.setImage(image, for: .normal)
         
         // TODO: profile image?
-        
     }
     
 }
@@ -160,7 +181,7 @@ extension CommentCountMissionTableViewCell {
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.commentLabel.bottomAnchor, multiplier: 1),
             
             self.likeStack.topAnchor.constraint(equalTo: self.nicknameLabel.topAnchor),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.likeStack.trailingAnchor, multiplier: 2),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.likeStack.trailingAnchor, multiplier: 1),
             
         ])
     }

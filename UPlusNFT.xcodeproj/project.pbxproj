@@ -138,13 +138,21 @@
 		937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76612A494F85001024D0 /* PostViewViewModel.swift */; };
 		937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76632A496106001024D0 /* PostDetailViewController.swift */; };
 		937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C76652A497EBE001024D0 /* CampaignMetaData.swift */; };
-		937DDF242A972A730014AF15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF232A972A730014AF15 /* GoogleService-Info.plist */; };
 		937DDF6B2A982E950014AF15 /* Gifu in Frameworks */ = {isa = PBXBuildFile; productRef = 937DDF6A2A982E950014AF15 /* Gifu */; };
 		937DDF6E2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF6D2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift */; };
 		937DDF702A9C69570014AF15 /* RoutineMissionDetailViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF6F2A9C69570014AF15 /* RoutineMissionDetailViewController2.swift */; };
 		937DDF722A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF712A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift */; };
 		937DDF742A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF732A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift */; };
 		937DDF762A9C94230014AF15 /* WeeklyEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF752A9C94230014AF15 /* WeeklyEpisode.swift */; };
+		937DDF782A9D6CA30014AF15 /* OnBoardingViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF772A9D6CA30014AF15 /* OnBoardingViewViewModel.swift */; };
+		937DDF7A2A9D85590014AF15 /* LevelUpBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF792A9D85590014AF15 /* LevelUpBottomSheetViewViewModel.swift */; };
+		937DDF9E2A9DF4A90014AF15 /* IDCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDF9D2A9DF4A90014AF15 /* IDCardView.swift */; };
+		937DDFAB2A9E041F0014AF15 /* ID CARD_3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 937DDFA62A9E041E0014AF15 /* ID CARD_3.mp4 */; };
+		937DDFAC2A9E041F0014AF15 /* ID CARD_1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 937DDFA72A9E041E0014AF15 /* ID CARD_1.mp4 */; };
+		937DDFAD2A9E041F0014AF15 /* ID CARD_5.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 937DDFA82A9E041F0014AF15 /* ID CARD_5.mp4 */; };
+		937DDFAE2A9E041F0014AF15 /* ID CARD_4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 937DDFA92A9E041F0014AF15 /* ID CARD_4.mp4 */; };
+		937DDFAF2A9E041F0014AF15 /* ID CARD_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 937DDFAA2A9E041F0014AF15 /* ID CARD_2.mp4 */; };
+		937DDFB22A9E0FD80014AF15 /* SlackShareTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DDFB12A9E0FD80014AF15 /* SlackShareTextFieldView.swift */; };
 		9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */; };
 		9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */; };
 		939194702A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */; };
@@ -186,6 +194,7 @@
 		93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 93A2EDC62A6FA74400C2287D /* FSCalendar */; };
 		93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */; };
 		93A2EDCB2A725B4E00C2287D /* RoutineMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDCA2A725B4E00C2287D /* RoutineMissionDetailViewController.swift */; };
+		93CBD6CE2A9E18F300870019 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */; };
 		93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */; };
 		93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */; };
 		93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747D2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift */; };
@@ -387,12 +396,21 @@
 		937C76612A494F85001024D0 /* PostViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewViewModel.swift; sourceTree = "<group>"; };
 		937C76632A496106001024D0 /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		937C76652A497EBE001024D0 /* CampaignMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMetaData.swift; sourceTree = "<group>"; };
-		937DDF232A972A730014AF15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		937DDF6D2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumpyBottomSheetViewController.swift; sourceTree = "<group>"; };
 		937DDF6F2A9C69570014AF15 /* RoutineMissionDetailViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionDetailViewController2.swift; sourceTree = "<group>"; };
 		937DDF712A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionBottomSheetViewController.swift; sourceTree = "<group>"; };
 		937DDF732A9C92C90014AF15 /* WeeklyMissionOverViewTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyMissionOverViewTableViewFooter.swift; sourceTree = "<group>"; };
 		937DDF752A9C94230014AF15 /* WeeklyEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyEpisode.swift; sourceTree = "<group>"; };
+		937DDF772A9D6CA30014AF15 /* OnBoardingViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingViewViewModel.swift; sourceTree = "<group>"; };
+		937DDF792A9D85590014AF15 /* LevelUpBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelUpBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
+		937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		937DDF9D2A9DF4A90014AF15 /* IDCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDCardView.swift; sourceTree = "<group>"; };
+		937DDFA62A9E041E0014AF15 /* ID CARD_3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ID CARD_3.mp4"; sourceTree = "<group>"; };
+		937DDFA72A9E041E0014AF15 /* ID CARD_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ID CARD_1.mp4"; sourceTree = "<group>"; };
+		937DDFA82A9E041F0014AF15 /* ID CARD_5.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ID CARD_5.mp4"; sourceTree = "<group>"; };
+		937DDFA92A9E041F0014AF15 /* ID CARD_4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ID CARD_4.mp4"; sourceTree = "<group>"; };
+		937DDFAA2A9E041F0014AF15 /* ID CARD_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ID CARD_2.mp4"; sourceTree = "<group>"; };
+		937DDFB12A9E0FD80014AF15 /* SlackShareTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlackShareTextFieldView.swift; sourceTree = "<group>"; };
 		9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewController.swift; sourceTree = "<group>"; };
 		9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSelectBottomSheetViewModel.swift; sourceTree = "<group>"; };
 		9391946F2A7A1D9A0035FEB1 /* RoutineMissionProgressCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionProgressCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -630,6 +648,7 @@
 			children = (
 				2417A59A2A67A9ED00AEC530 /* OnBoardingViewController.swift */,
 				93DA587B2A95EF2700525BEC /* OnBoardingViewController2.swift */,
+				937DDF772A9D6CA30014AF15 /* OnBoardingViewViewModel.swift */,
 			);
 			path = OnBoarding;
 			sourceTree = "<group>";
@@ -709,6 +728,8 @@
 				93E0138D2A6527D60005E342 /* MissionCollectionViewCell */,
 				246BD1FE2A8B6E4600CA7356 /* ChoiceMultipleQuizButton.swift */,
 				24624B8E2A8E843900C9A42E /* RoutineUploadPhotoButton.swift */,
+				937DDF9D2A9DF4A90014AF15 /* IDCardView.swift */,
+				937DDFB12A9E0FD80014AF15 /* SlackShareTextFieldView.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -736,6 +757,7 @@
 				93DA58672A8F020E00525BEC /* GiftSentBottomSheetViewController.swift */,
 				241116DE2A9A59A10010579C /* LogOutBottomSheetViewController.swift */,
 				937DDF712A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift */,
+				937DDF792A9D85590014AF15 /* LevelUpBottomSheetViewViewModel.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -825,6 +847,7 @@
 		930D96A02A416AC30007801A /* UPlusNFT */ = {
 			isa = PBXGroup;
 			children = (
+				937DDFA52A9E040A0014AF15 /* Contents */,
 				930D96B52A416AE10007801A /* Supporting Files */,
 				24984ABB2A5A6D25001F28CF /* Managers */,
 				930D96CC2A4197E90007801A /* Extensions */,
@@ -971,7 +994,7 @@
 		930D96E72A4573C00007801A /* PROD */ = {
 			isa = PBXGroup;
 			children = (
-				937DDF232A972A730014AF15 /* GoogleService-Info.plist */,
+				937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */,
 			);
 			path = PROD;
 			sourceTree = "<group>";
@@ -1083,6 +1106,18 @@
 				937DDF6D2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift */,
 			);
 			path = Parents;
+			sourceTree = "<group>";
+		};
+		937DDFA52A9E040A0014AF15 /* Contents */ = {
+			isa = PBXGroup;
+			children = (
+				937DDFA72A9E041E0014AF15 /* ID CARD_1.mp4 */,
+				937DDFAA2A9E041F0014AF15 /* ID CARD_2.mp4 */,
+				937DDFA62A9E041E0014AF15 /* ID CARD_3.mp4 */,
+				937DDFA92A9E041F0014AF15 /* ID CARD_4.mp4 */,
+				937DDFA82A9E041F0014AF15 /* ID CARD_5.mp4 */,
+			);
+			path = Contents;
 			sourceTree = "<group>";
 		};
 		9391946E2A7A1D3B0035FEB1 /* DailyMission */ = {
@@ -1480,8 +1515,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				930D96AE2A416AC40007801A /* LaunchScreen.storyboard in Resources */,
+				93CBD6CE2A9E18F300870019 /* GoogleService-Info.plist in Resources */,
+				937DDFAB2A9E041F0014AF15 /* ID CARD_3.mp4 in Resources */,
+				937DDFAE2A9E041F0014AF15 /* ID CARD_4.mp4 in Resources */,
+				937DDFAF2A9E041F0014AF15 /* ID CARD_2.mp4 in Resources */,
+				937DDFAD2A9E041F0014AF15 /* ID CARD_5.mp4 in Resources */,
+				937DDFAC2A9E041F0014AF15 /* ID CARD_1.mp4 in Resources */,
 				930D96AB2A416AC40007801A /* Assets.xcassets in Resources */,
-				937DDF242A972A730014AF15 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1543,9 +1583,11 @@
 				93DA58602A8EEFEF00525BEC /* GiftDetailView.swift in Sources */,
 				24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */,
 				93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */,
+				937DDFB22A9E0FD80014AF15 /* SlackShareTextFieldView.swift in Sources */,
 				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
 				93DA586D2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift in Sources */,
 				93DA58622A8EF0CF00525BEC /* InsetLabelView.swift in Sources */,
+				937DDF7A2A9D85590014AF15 /* LevelUpBottomSheetViewViewModel.swift in Sources */,
 				930D96E32A453D8D0007801A /* BackToLoginViewController.swift in Sources */,
 				241116E12A9B8A260010579C /* CAGradientLayer+Extension.swift in Sources */,
 				93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */,
@@ -1624,6 +1666,7 @@
 				93D1748A2A77376100F5B1B1 /* UploadPhotoButtonCollectionViewCellFooter.swift in Sources */,
 				240269492A83E31800850E65 /* ChoiceQuizVideoViewViewModel.swift in Sources */,
 				240269582A846BDC00850E65 /* AnswerQuizPluralViewController.swift in Sources */,
+				937DDF9E2A9DF4A90014AF15 /* IDCardView.swift in Sources */,
 				246BD1DA2A8A673B00CA7356 /* TestCollectionViewCell.swift in Sources */,
 				932C34D42A53AF300032192A /* CampaignCollectionViewCellViewModel.swift in Sources */,
 				93A2ED8E2A6E025000C2287D /* RewardsViewController.swift in Sources */,
@@ -1706,6 +1749,7 @@
 				244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */,
 				93A2ED952A6E12A000C2287D /* UPlusUser.swift in Sources */,
 				240269342A83B51200850E65 /* ContentReadOnlyMissionViewViewModel.swift in Sources */,
+				937DDF782A9D6CA30014AF15 /* OnBoardingViewViewModel.swift in Sources */,
 				930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */,
 				932C34E42A5BCE700032192A /* CampaignCommentDefaultView.swift in Sources */,
 				93D1748E2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift in Sources */,

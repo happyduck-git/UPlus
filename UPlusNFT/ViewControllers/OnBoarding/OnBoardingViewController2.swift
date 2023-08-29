@@ -12,7 +12,8 @@ import OSLog
 
 final class OnBoardingViewController2: UIViewController {
     
-    private var isTapped: Bool = false
+    // MARK: - Dependency
+    private let vm: OnBoardingViewViewModel
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -58,24 +59,6 @@ final class OnBoardingViewController2: UIViewController {
     private let infoLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        let font: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
-        
-        let attributedString = NSMutableAttributedString(string: OnBoardingConstants.membersInfo,
-                                                         attributes: [
-                                                            .foregroundColor: UPlusColor.gray01,
-                                                            .font: font
-                                                         ])
-        
-        if let range = attributedString.string.range(of: OnBoardingConstants.numOfMembers) {
-            let nsRange = NSRange(range, in: attributedString.string)
-            
-            attributedString.addAttributes([
-                .foregroundColor: UPlusColor.mint02
-            ], range: nsRange)
-        }
-        
-        label.attributedText = attributedString
-        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -92,6 +75,17 @@ final class OnBoardingViewController2: UIViewController {
         return button
     }()
     
+    // MARK: - Init
+    init(vm: OnBoardingViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,9 +98,10 @@ final class OnBoardingViewController2: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        let statusBarHeight = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         let navHeight = self.navigationController?.navigationBar.frame.height ?? 0
-        
-        self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor, constant: -navHeight).isActive = true
+
+        self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor, constant: -navHeight - statusBarHeight).isActive = true
     }
     
 }
@@ -121,8 +116,8 @@ extension OnBoardingViewController2 {
                 .sink { [weak self] _ in
                     guard let `self` = self else { return }
                     
-                    if !self.isTapped {
-                        self.isTapped.toggle()
+                    if !self.vm.isTapped {
+                        self.vm.isTapped.toggle()
                         self.addChildViewController(self.loadingVC)
                         self.startButtonDidTap()
                     }
@@ -130,8 +125,16 @@ extension OnBoardingViewController2 {
                 }
                 .store(in: &bindings)
         }
+        
         func bindViewModelToView() {
-            
+            self.vm.$numberOfUsers
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] num in
+                    guard let `self` = self else { return }
+                    
+                    self.infoLabel.attributedText = self.setAttributedText(numberOfUsers: num)
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -232,6 +235,33 @@ extension OnBoardingViewController2 {
             self.startButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+}
+
+extension OnBoardingViewController2 {
+    
+    private func setAttributedText(numberOfUsers: Int) -> NSAttributedString {
+        let allString = String(format: OnBoardingConstants.membersInfo, numberOfUsers)
+        let rangedString = String(format: OnBoardingConstants.numOfMembers, numberOfUsers)
+        
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        
+        let attributedString = NSMutableAttributedString(string: allString,
+                                                         attributes: [
+                                                            .foregroundColor: UPlusColor.gray01,
+                                                            .font: font
+                                                         ])
+        
+        if let range = attributedString.string.range(of: rangedString) {
+            let nsRange = NSRange(range, in: attributedString.string)
+            
+            attributedString.addAttributes([
+                .foregroundColor: UPlusColor.mint02
+            ], range: nsRange)
+        }
+        
+        return attributedString
+    }
+    
 }
 
 extension OnBoardingViewController2 {

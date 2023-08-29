@@ -50,6 +50,7 @@ final class ChoiceQuizOXViewController: BaseMissionViewController {
     init(vm: ChoiceQuizzOXViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        self.setBaseVM(vm: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -186,11 +187,11 @@ extension ChoiceQuizOXViewController {
 extension ChoiceQuizOXViewController {
     private func configure() {
         self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.quizLabel.text = self.vm.mission.missionContentText
         
         let dataSource = self.vm.mission as! ChoiceQuizMission
         self.circleMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[0], for: .normal)
         self.xMarkButton.setTitle(dataSource.missionChoiceQuizCaptions[1], for: .normal)
+        
     }
 }
 
@@ -206,10 +207,10 @@ extension ChoiceQuizOXViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.stackView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 5),
+            self.stackView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 2),
             self.stackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stackView.trailingAnchor, multiplier: 2),
-            self.stackView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 5)
+            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stackView.bottomAnchor, multiplier: 2)
         ])
     }
 

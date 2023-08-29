@@ -261,7 +261,16 @@ extension WeeklyMissionOverViewViewController {
                 let vc = PhotoAuthQuizViewController(vm: vm)
                 
                 self.show(vc, sender: self)
+                
+            } else if anyMission is CommentCountMission {
+                let mission = anyMission as! CommentCountMission
+                
+                let vm = CommentCountMissionViewViewModel(type: .weekly, mission: mission)
+                let vc = CommentCountMissionViewController(vm: vm)
+                
+                self.show(vc, sender: self)
             }
+            
         case .participated:
             return
         }

@@ -44,6 +44,7 @@ final class ChoiceQuizMoreViewController: BaseMissionViewController {
     init(vm: ChoiceQuizMoreViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        self.setBaseVM(vm: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -60,9 +61,6 @@ extension ChoiceQuizMoreViewController {
     private func bind() {
         
         guard let mission = self.vm.mission as? ChoiceQuizMission else { return }
-        
-        self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.quizLabel.text = self.vm.mission.missionContentText
         
         for button in choiceButtons {
             button.tapPublisher
@@ -124,13 +122,6 @@ extension ChoiceQuizMoreViewController {
                 self.checkAnswerButton.backgroundColor = UPlusColor.gray03
 
             }.store(in: &bindings)
-        
-        //        self.vm.$imageUrls
-        //            .receive(on: DispatchQueue.main)
-        //            .sink { [weak self] in
-        //                guard let `self` = self else { return }
-        //                self.label.text = "Captions:\n" + String(describing: self.vm.mission.missionChoiceQuizCaptions) + "\n" + "ImageUrls:\n" + String(describing: $0)
-        //            }.store(in: &bindings)
 
     }
     
@@ -148,6 +139,7 @@ extension ChoiceQuizMoreViewController {
             button.backgroundColor = .white
             button.layer.borderWidth = 2.0
             button.layer.borderColor = UIColor.clear.cgColor
+            button.frame.size.height = 48.0
             button.setQuizTitle(text: captions[i])
             self.choiceButtons.append(button)
         }
@@ -166,10 +158,11 @@ extension ChoiceQuizMoreViewController {
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 5),
+//            self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 5),
             self.buttonStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.buttonStack.trailingAnchor, multiplier: 2),
-            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 5),
+//            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 5),
+            self.buttonStack.centerYAnchor.constraint(equalTo: self.quizContainer.centerYAnchor)
         ])
     }
 }

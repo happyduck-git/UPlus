@@ -67,8 +67,8 @@ class BaseMissionScrollViewController: UIViewController {
         let button = UIButton()
         button.clipsToBounds = true
         button.layer.cornerRadius = 8.0
-        button.backgroundColor = .black
-        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UPlusColor.mint03
+        button.setTitleColor(.black, for: .normal)
         button.setTitle(RewardsConstants.empty, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -101,7 +101,7 @@ extension BaseMissionScrollViewController {
             self.scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
            
             self.canvasView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
             self.canvasView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
@@ -112,7 +112,7 @@ extension BaseMissionScrollViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.backgroundImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.backgroundImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
             self.backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
@@ -133,7 +133,7 @@ extension BaseMissionScrollViewController {
             self.checkAnswerButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
             self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.checkAnswerButton.trailingAnchor, multiplier: 2),
             self.canvasView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 3),
-//            self.checkAnswerButton.heightAnchor.constraint(equalToConstant: 60)
+            self.checkAnswerButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight)
         ])
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.subTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)

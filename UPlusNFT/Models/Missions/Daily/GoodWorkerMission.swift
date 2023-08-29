@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct GoodWorkerMission: Codable, Hashable, Mission {
+    var missionContentExtraMap: [String : String]?
     var missionId: String
     var missionTopicType: String
     var missionFormatType: String

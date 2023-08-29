@@ -132,7 +132,7 @@ extension ContentReadOnlyMissionViewController {
             do {
                 for i in 0..<urls.count {
                     let imageView = UIImageView()
-                    imageView.contentMode = .scaleAspectFit
+//                    imageView.contentMode = .scaleAspectFit
                     imageView.frame.size = CGSize(width: self.stack.frame.width, height: self.view.frame.size.height / 4)
                     imageView.image = try await ImagePipeline.shared.image(for: urls[i])
                     self.stack.addArrangedSubview(imageView)

@@ -207,6 +207,7 @@ struct MissionConstants {
     static let episode2Desc: String = "이번 주도 열심히! 서비스를 런칭해서 기업을 성장시켜요."
     static let episode3Desc: String = "기업 제휴로 월드클래스 기업까지 한발짝! 더 나아가요."
     static let noResubmitDesc: String = "제출 이후엔 수정이 불가합니다"
+    static let recommend: String = "추천하기"
     
     /* Routine Mission */
     static let startupMaster: String = "스타트업 마스터 되기"
@@ -226,7 +227,7 @@ struct MissionConstants {
     static let info: String = "주의사항"
     static let infoDetail: String = "주의사항 내용 1번 주의사항입니다.\n2번 주의사항입니다.\n3번 주의사항입니다."
     static let photoEditWarning: String = "제출 이후엔 수정이 불가합니다"
-    static let missionSubmissionNotice: String = "평가 완료 후 %dP 보상, 내일 중 지급될 수 있습니다"
+    static let missionSubmissionNotice: String = "%d포인트를 보상 받았어요"
     static let complete: String = "완료하기"
     static let mission5nCompleted: String = "스타트업 마스터 되기 %d회차 성공!\n특별 포인트를 드려요."
     static let untilCompletion: String = "완주까지"
@@ -239,6 +240,7 @@ struct MissionConstants {
     static let slackScheme: String = "slack://"
     static let rewardRedeemed: String = "보상 획득 완료"
     static let reupload: String = "재업로드"
+    static let pasteUrl: String = "URL 붙여넣기"
     
     static let numberOfTexts: String = "%d글자"
     static let hintDescription: String = "밑줄에 들어갈 단어를 맞춰보세요"
@@ -419,6 +421,7 @@ struct ImageAsset {
     static let computer: String = "computer"
     static let lock: String = "lock"
     static let hand: String = "hand"
+    static let company: String = "company"
     static let hamburgerMenu: String = "hamburger-menu"
     static let wallet: String = "wallet"
     static let speaker: String = "speaker"
@@ -452,6 +455,8 @@ struct ImageAsset {
     static let stampPointFill: String = "routine-point-fill"
     static let uploadGray: String = "upload-gray"
     static let infoMint: String = "info-mint"
+    static let idCardExample: String = "id-card-example"
+    static let exNftExample: String = "ex-nft-example"
     
     static let titleBackground: String = "title-background"
     static let eventBackground: String = "event-wall"
@@ -484,6 +489,8 @@ struct ImageAsset {
     static let heartFill: String = "heart-fill"
     static let heartEmpty: String = "heart-empty"
     
+    static let slackBlack: String = "slack-black"
+    static let downloadBlack: String = "download-black"
     
     /* WalletVC */
     static let walletGray: String = "wallet-gray"
@@ -550,6 +557,8 @@ struct FirestoreConstants {
     static let goodWorkerMission = "exp_good_worker_mission_set"
     static let suddenMission = "sudden_mission_set"
     static let missionBeginEndTimeMap = "missions_begin_end_time_map"
+    static let eventResubTitle = "event_resub_title"
+    static let eventSubTitle = "event_sub_title"
     
     /* Configuration */
     static let accountableEmails = "accountable_emails"
@@ -586,6 +595,7 @@ struct FirestoreConstants {
     static let cachedCommentCount: String = "cached_comment_count"
     static let cachedCommentLikedCount: String = "cached_comment_liked_count"
     static let cachedLikedCount: String = "cached_liked_count"
+    static let commentLikeUsers: String = "comment_like_users"
     
     /* Comment */
     static let commentSet = "comment_set"

@@ -10,11 +10,17 @@ import Combine
 
 final class ShareMediaOnSlackMissionViewViewModel: MissionBaseModel {
     
-    @Published var imageUrls: [URL] = []
-
-}
-
-extension ShareMediaOnSlackMissionViewViewModel {
-   
+    private let level: Int
+    
+    @Published var textFieldText: String = ""
+    
+    
+    // MARK: - Init
+    init(level: Int, type: MissionBaseModel.`Type`, mission: Mission, numberOfWeek: Int = 0) {
+        self.level = level
+        super.init(type: type, mission: mission)
+        
+    }
+  
 }
 

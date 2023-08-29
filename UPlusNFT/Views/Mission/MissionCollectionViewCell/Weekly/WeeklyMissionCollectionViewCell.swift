@@ -17,7 +17,8 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
     private let missionImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.computer)
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAsset.clock)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -33,8 +34,8 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
     private let clockImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: ImageAsset.clock)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -88,7 +89,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
         
         self.contentView.backgroundColor = .white
         self.contentView.clipsToBounds = true
-        self.contentView.layer.cornerRadius = 30
+        self.contentView.layer.cornerRadius = 16.0
         self.setUI()
         self.setLayout()
     }
@@ -102,6 +103,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     }
     
     func resetCell() {
+        self.missionImage.image = nil
         self.missionTitle.text = nil
         self.timeLeftLabel.text = nil
     }
@@ -110,10 +112,23 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
 // MARK: - Configure with View Model
 extension WeeklyMissionCollectionViewCell {
     
-    func configure(title: String,
+    func configure(item: Int,
+                   title: String,
                    period: String,
                    point: Int64) {
         
+        var image: String = ""
+        
+        switch item {
+        case 0:
+            image = ImageAsset.hand
+        case 1:
+            image = ImageAsset.computer
+        default:
+            image = ImageAsset.company
+        }
+        
+        self.missionImage.image = UIImage(named: image)
         self.missionTitle.text = title
         self.timeLeftLabel.text = period
         self.numberOfParticipation.text = MissionConstants.weeklyMissionProgress
@@ -140,28 +155,30 @@ extension WeeklyMissionCollectionViewCell {
         
         NSLayoutConstraint.activate([
             self.missionImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
-            self.missionImage.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+            self.missionImage.widthAnchor.constraint(equalToConstant: 30),
+            self.missionImage.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.missionImage.bottomAnchor, multiplier: 1),
+
             self.missionTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
             self.missionTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionImage.trailingAnchor, multiplier: 2),
             self.clockImage.topAnchor.constraint(equalToSystemSpacingBelow: self.missionTitle.bottomAnchor, multiplier: 1),
             self.clockImage.leadingAnchor.constraint(equalTo: self.missionTitle.leadingAnchor),
-            
+
             self.timeLeftLabel.centerYAnchor.constraint(equalTo: self.clockImage.centerYAnchor),
             self.timeLeftLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.clockImage.trailingAnchor, multiplier: 1),
-            
+
             self.pointContainerView.topAnchor.constraint(equalTo: self.missionTitle.topAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 2),
             self.pointContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionTitle.trailingAnchor, multiplier: 2),
             self.pointContainerView.heightAnchor.constraint(equalToConstant: 30),
-            self.pointContainerView.widthAnchor.constraint(equalToConstant: 95),
-            
+
             self.progressBar.leadingAnchor.constraint(equalTo: self.missionImage.leadingAnchor),
             self.progressBar.trailingAnchor.constraint(equalTo: self.pointContainerView.trailingAnchor),
             self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.timeLeftLabel.bottomAnchor, multiplier: 2),
-            
+
             self.numberOfParticipation.topAnchor.constraint(equalToSystemSpacingBelow: self.progressBar.bottomAnchor, multiplier: 1),
             self.numberOfParticipation.trailingAnchor.constraint(equalTo: self.pointContainerView.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 2) 
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 2)
         ])
         
         NSLayoutConstraint.activate([

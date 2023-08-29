@@ -12,7 +12,7 @@ final class ChoiceQuizVideoViewViewModel: MissionBaseModel {
     
     
     
-    @Published var imageUrls: [URL] = []
+//    @Published var imageUrls: [URL] = []
     
     var videoId: String = ""
     
@@ -24,26 +24,26 @@ final class ChoiceQuizVideoViewViewModel: MissionBaseModel {
     override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
         super.init(type: type, mission: mission, numberOfWeek: numberOfWeek)
         
-        self.getImageUrls()
+//        self.getImageUrls()
     }
     
 }
 
 // MARK: - Get Image Urls
 extension ChoiceQuizVideoViewViewModel {
-    private func getImageUrls() {
-        Task {
-            do {
-                let imagePaths = mission.missionContentImagePaths ?? []
-                var imageUrls: [URL] = []
-                for imagePath in imagePaths {
-                    imageUrls.append(try await FirebaseStorageManager.shared.getDataUrl(reference: imagePath))
-                }
-                self.imageUrls = imageUrls
-            }
-            catch {
-                print("Error downloading image url -- \(error)")
-            }
-        }
-    }
+//    private func getImageUrls() {
+//        Task {
+//            do {
+//                let imagePaths = mission.missionContentImagePaths ?? []
+//                var imageUrls: [URL] = []
+//                for imagePath in imagePaths {
+//                    imageUrls.append(try await FirebaseStorageManager.shared.getDataUrl(reference: imagePath))
+//                }
+//                self.imageUrls = imageUrls
+//            }
+//            catch {
+//                print("Error downloading image url -- \(error)")
+//            }
+//        }
+//    }
 }

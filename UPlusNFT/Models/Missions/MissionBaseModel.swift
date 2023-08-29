@@ -5,7 +5,7 @@
 //  Created by HappyDuck on 2023/08/22.
 //
 
-import Foundation
+import UIKit
 import OSLog
 
 class MissionBaseModel {
@@ -31,12 +31,77 @@ class MissionBaseModel {
     // WeeklyMission Completion
     @Published var weeklyMissionCompletion: Bool = false
     
+    // MARK: - ImageUrls
+    @Published var imageUrls: [URL] = []
+    
     //MARK: - Init
     init(type: Type, mission: any Mission, numberOfWeek: Int = 0) {
         self.type = type
         self.numberOfWeek = numberOfWeek
         self.mission = mission
         
+        self.getImageUrls()
+    }
+    
+}
+
+// MARK: - Get Image Urls
+extension MissionBaseModel {
+    func getImageUrls() {
+        Task {
+            do {
+                let imagePaths = mission.missionContentImagePaths ?? []
+                var imageUrls: [URL] = []
+                for imagePath in imagePaths {
+                    imageUrls.append(try await FirebaseStorageManager.shared.getDataUrl(reference: imagePath))
+                }
+                self.imageUrls = imageUrls
+            }
+            catch {
+                print("Error downloading image url -- \(error)")
+            }
+        }
+    }
+}
+
+extension MissionBaseModel {
+    // MARK: - HTML String
+    
+    func retrieveHtmlString(html: String) -> NSAttributedString? {
+        if let data = html.data(using: .unicode),
+           let attributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+            return attributedString
+        }
+        return nil
+    }
+    
+    func openURL(from html: String) {
+        let urlString = self.extractOutsideUrlString(from: html) ?? ""
+        
+        if let url = URL(string: urlString) {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+    }
+    
+    private func extractOutsideUrlString(from htmlString: String) -> String? {
+        let pattern = "href=\"([^\"]*)\""
+        
+        do {
+            let regex = try NSRegularExpression(pattern: pattern, options: [])
+            let range = NSRange(location: 0, length: htmlString.utf16.count)
+            
+            if let match = regex.firstMatch(in: htmlString, options: [], range: range) {
+                if let range = Range(match.range(at: 1), in: htmlString) {
+                    return String(htmlString[range])
+                }
+            }
+        } catch {
+            print("Invalid regular expression")
+        }
+        
+        return nil
     }
     
 }

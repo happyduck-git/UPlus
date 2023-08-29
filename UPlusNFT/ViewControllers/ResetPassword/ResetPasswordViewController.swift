@@ -18,7 +18,7 @@ final class ResetPasswordViewController: UIViewController {
     private let pwResetContainer: UIView = {
         let view = UIView()
         view.accessibilityIdentifier = "pwResetContainer"
-        view.isHidden = true
+        view.isHidden = false
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -137,7 +137,7 @@ final class ResetPasswordViewController: UIViewController {
     private let emailSentContainer: UIView = {
         let view = UIView()
         view.accessibilityIdentifier = "emailSentContainer"
-        view.isHidden = false
+        view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

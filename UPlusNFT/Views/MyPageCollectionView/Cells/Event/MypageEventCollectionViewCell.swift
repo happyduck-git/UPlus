@@ -85,10 +85,15 @@ final class MypageEventCollectionViewCell: UICollectionViewCell {
 extension MypageEventCollectionViewCell {
     func configure(type: EventStatus,
                    mission: any Mission) {
+        
+        let extraMap = mission.missionContentExtraMap ?? [:]
+        let title = extraMap[FirestoreConstants.eventSubTitle] ?? ""
+        let subTitle = extraMap[FirestoreConstants.eventResubTitle] ?? ""
+            
         switch type {
         case .open:
-            self.eventTitle.text = mission.missionContentTitle
-            self.eventDescription.text = mission.missionContentText
+            self.eventTitle.text = title
+            self.eventDescription.text = subTitle
             self.pointLabel.text = String(describing: mission.missionRewardPoint) + "P"
         
         case .close:
@@ -99,7 +104,7 @@ extension MypageEventCollectionViewCell {
             self.contentView.backgroundColor = UPlusColor.gray02
             self.pointLabel.textColor = UPlusColor.gray06
             self.pointContainerView.backgroundColor = UPlusColor.gray04
-            self.eventTitle.text = mission.missionContentTitle
+            self.eventTitle.text = title
             self.pointLabel.text = String(describing: MissionConstants.participated)
         }
     }

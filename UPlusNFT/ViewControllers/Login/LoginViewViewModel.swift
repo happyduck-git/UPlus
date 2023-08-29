@@ -39,6 +39,7 @@ final class LoginViewViewModel {
         
         Task {
             do {
+                print("Email: \(self.fullEmail), pw: \(self.password)")
                 try await Auth.auth().signIn(withEmail: self.fullEmail, password: self.password)
                 await self.saveLocalUserBasicInfo()
                 print("Signed in.")

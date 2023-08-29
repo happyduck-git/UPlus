@@ -111,6 +111,7 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
     init(vm: PhotoAuthQuizViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        self.setBaseVM(vm: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -140,9 +141,7 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
 // MARK: - Configure
 extension PhotoAuthQuizViewController {
     
-    private func configure() {
-        self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.quizLabel.text = self.vm.mission.missionContentText
+    private func configure() {        
         self.checkAnswerButton.setTitle(MissionConstants.submit, for: .normal)
     }
     
