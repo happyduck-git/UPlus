@@ -15,6 +15,8 @@ public enum EnvironmentConfig {
         case xKeySecretValue = "X_KEY_SECRET_VALUE"
         case uplusAccessCode = "UPLUS_NFT_ACCESS_CODE"
         case uplusSlackLink = "UPLUS_SLACK_URL"
+        case uplusNoticeLink = "UPLUS_NOTICE_URL"
+        case uplusFaqLink = "UPLUS_FAQ_URL"
     }
     
     private static let infoDictionary: [String: Any] = {
@@ -66,6 +68,22 @@ public enum EnvironmentConfig {
     
     static let uplusSlackLink: String = {
         guard let value = EnvironmentConfig.infoDictionary[Keys.uplusSlackLink.rawValue] as? String else {
+            fatalError("uplusAccessCode not set in plist for this environment")
+        }
+        
+        return value
+    }()
+    
+    static let uplusNoticeLink: String = {
+        guard let value = EnvironmentConfig.infoDictionary[Keys.uplusNoticeLink.rawValue] as? String else {
+            fatalError("uplusAccessCode not set in plist for this environment")
+        }
+        
+        return value
+    }()
+    
+    static let uplusFaqLink: String = {
+        guard let value = EnvironmentConfig.infoDictionary[Keys.uplusFaqLink.rawValue] as? String else {
             fatalError("uplusAccessCode not set in plist for this environment")
         }
         

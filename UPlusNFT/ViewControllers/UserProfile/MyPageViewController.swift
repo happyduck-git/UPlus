@@ -1347,20 +1347,32 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
             // pop game
         case 3:
-           
+            
             break
             
             // notice
         case 4:
+            self.openURL(from: EnvironmentConfig.uplusNoticeLink)
+            
             break
             // FAQ
         case 5:
+            print("\(EnvironmentConfig.uplusFaqLink)")
+            self.openURL(from: EnvironmentConfig.uplusFaqLink)
             break
         default:
             
             break
         }
         self.sideMenuVC?.dismiss(animated: true)
+    }
+    
+    private func openURL(from urlString: String) {
+        if let url = URL(string: urlString) {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
     }
     
     private func shareOnSlack() async -> Bool {

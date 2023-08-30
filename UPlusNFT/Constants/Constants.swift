@@ -465,6 +465,7 @@ struct ImageAsset {
     static let infoMint: String = "info-mint"
     static let idCardExample: String = "id-card-example"
     static let exNftExample: String = "ex-nft-example"
+    static let stageStar: String = "stage-star"
     
     static let titleBackground: String = "title-background"
     static let eventBackground: String = "event-wall"
@@ -573,6 +574,7 @@ struct FirestoreConstants {
     static let missionBeginEndTimeMap = "missions_begin_end_time_map"
     static let eventResubTitle = "event_resub_title"
     static let eventSubTitle = "event_sub_title"
+    static let nftContentImageUrl = "nft_content_image_url"
     
     /* Configuration */
     static let accountableEmails = "accountable_emails"

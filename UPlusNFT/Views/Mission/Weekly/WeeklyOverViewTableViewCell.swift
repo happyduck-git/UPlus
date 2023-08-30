@@ -7,6 +7,24 @@
 
 import UIKit
 
+enum MissionPointLevel: Int64 {
+    case easy = 50
+    case medium = 100
+    case hard = 150
+    
+    var description: String {
+        switch self {
+        case .easy:
+            return "쉬움"
+        case .medium:
+            return "보통"
+        case .hard:
+            return "어려움"
+        }
+    }
+    
+}
+
 enum WeeklyMissionStatus {
     case open
     case participated
@@ -40,10 +58,30 @@ final class WeeklyOverViewTableViewCell: UITableViewCell {
     
     private let levelDetail: UILabel = {
         let label = UILabel()
-        label.text = "어려움"
         label.textColor = UPlusColor.gray06
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
         return label
+    }()
+    
+    private var star1: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: ImageAsset.stageStar)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
+    private var star2: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: ImageAsset.stageStar)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
+    private var star3: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: ImageAsset.stageStar)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
     }()
     
     private let completedLabel: UILabel = {
@@ -114,6 +152,20 @@ extension WeeklyOverViewTableViewCell {
             self.levelStack.isHidden = true
             self.completedLabel.isHidden = false
         }
+        
+        let missionLevel = MissionPointLevel(rawValue: mission.missionRewardPoint) ?? .easy
+        levelDetail.text = missionLevel.description
+        
+        switch missionLevel {
+        case .easy:
+            star2.isHidden = true
+            star3.isHidden = true
+        case .medium:
+            star3.isHidden = true
+        case .hard:
+            break
+        }
+        
     }
     
     func resetCell() {
@@ -125,6 +177,9 @@ extension WeeklyOverViewTableViewCell {
     override func prepareForReuse() {
         self.levelStack.isHidden = false
         self.completedLabel.isHidden = true
+        self.star1.isHidden = true
+        self.star2.isHidden = true
+        self.star3.isHidden = true
     }
 }
 
@@ -137,7 +192,10 @@ extension WeeklyOverViewTableViewCell {
                                      self.pointContainerView)
         
         self.levelStack.addArrangedSubviews(self.levelTitle,
-                                            self.levelDetail)
+                                            self.levelDetail,
+                                            self.star1,
+                                            self.star2,
+                                            self.star3)
         
         self.pointContainerView.addSubview(self.pointLabel)
     }

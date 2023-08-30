@@ -150,12 +150,13 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
         switch indexPath.section {
         case 0:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: Top3RankerTableViewCell.identifier) as? Top3RankerTableViewCell,
-            let top3Users = self.vm?.top3RankUserList
+                  let top3Users = self.vm?.top3RankUserList,
+                  let top3UserNfts = self.vm?.top3UserNfts
             else {
                 return UITableViewCell()
             }
             
-            cell.configure(top3Users: top3Users)
+            cell.configure(top3Users: top3Users, doc: top3UserNfts)
             return cell
             
         default:
@@ -165,7 +166,7 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalRankTableViewCell.identifier, for: indexPath) as? TotalRankTableViewCell else {
                 return UITableViewCell()
             }
-            
+            cell.resetCell()
             cell.configure(with: cellVM, doc: topNft, at: indexPath.row + 3)
             return cell
         }
@@ -187,7 +188,7 @@ extension TotalRankCollectionViewCell {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 1 {
-            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 100.0))
+            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 50.0))
             footer.backgroundColor = .white
             return footer
         } else {

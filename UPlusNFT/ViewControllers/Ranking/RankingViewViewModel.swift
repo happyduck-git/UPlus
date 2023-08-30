@@ -30,7 +30,7 @@ final class RankingViewViewModel {
     //MARK: - Data
     private let currentUser: UPlusUser?
     
-    @Published var totakRankerFetched: Bool = false
+    @Published var totalRankerFetched: Bool = false
     
     @Published var todayRankerList: [UPlusUser] = []
     @Published var totalRankerList: [UPlusUser] = [] {
@@ -41,13 +41,19 @@ final class RankingViewViewModel {
     }
     
     @Published var yesterdayRankerList: [UPlusUser] = []
-    @Published var top3RankUserList: [UPlusUser] = []
+    @Published var top3RankUserList: [UPlusUser] = [] {
+        didSet {
+            let results = self.getTopNftOfUsers(users: top3RankUserList)
+            self.top3UserNfts = results
+        }
+    }
     @Published var exceptTop3RankerList: [UPlusUser] = []
     
     @Published var currentUserTodayRank: UPlusUser?
     @Published var currentUserTotalRank: UPlusUser?
     
     @Published var topNfts: [Int64: DocumentReference?] = [:]
+    @Published var top3UserNfts: [Int64: DocumentReference?] = [:]
     
     init() {
 
@@ -186,11 +192,7 @@ extension RankingViewViewModel {
         self.exceptTop3RankerList = self.getElementsExceptTopThree(list: self.totalRankerList)
 
     }
-    
-    func getAllUsers() {
-        
-    }
-    
+
 }
 
 //MARK: - Private

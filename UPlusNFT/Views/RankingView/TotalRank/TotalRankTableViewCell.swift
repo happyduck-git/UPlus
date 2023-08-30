@@ -154,10 +154,13 @@ final class TotalRankTableViewCell: UITableViewCell {
         
         Task {
             do {
-                // TODO: Ref에서 NFT 보여주기
+                let doc = try await realDoc.getDocument()
+                let imageUrl = doc[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                guard let url = URL(string: imageUrl) else { return }
+                self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
             }
             catch {
-                
+                UPlusLogger.logger.error("Error getting imagurl from nft document -- \(String(describing: error))")
             }
         }
     }

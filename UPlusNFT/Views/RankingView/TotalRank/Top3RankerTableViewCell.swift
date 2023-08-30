@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import Nuke
 
 final class Top3RankerTableViewCell: UITableViewCell {
 
@@ -78,27 +80,61 @@ final class Top3RankerTableViewCell: UITableViewCell {
 
 //MARK: - Configure
 extension Top3RankerTableViewCell {
-    func configure(top3Users: [UPlusUser]) {
+    func configure(top3Users: [UPlusUser], doc: [Int64: DocumentReference?]) {
         
         let first = top3Users.indices.contains(0) ? top3Users[0] : nil
         let second = top3Users.indices.contains(1) ? top3Users[1] : nil
         let third = top3Users.indices.contains(2) ? top3Users[2] : nil
         
-        self.firstRankView.configure(image: " ",
-                                     username: first?.userNickname ?? " ",
-                                     point: first?.userTotalPoint ?? 0)
-        
-        self.secondRankView.configure(image: " ",
-                                     username: second?.userNickname ?? " ",
-                                     point: second?.userTotalPoint ?? 0)
-        
-        self.thirdRankView.configure(image: " ",
-                                     username: third?.userNickname ?? " ",
-                                     point: third?.userTotalPoint ?? 0)
-        
         self.firstRankView.setMedalImage(name: ImageAsset.goldMedal)
         self.secondRankView.setMedalImage(name: ImageAsset.silverMedal)
         self.thirdRankView.setMedalImage(name: ImageAsset.bronzeMedal)
+        
+        /* NFT Image */
+        let firstUserIndex = first?.userIndex ?? 0
+        let secondUserIndex = second?.userIndex ?? 0
+        let thirdUserIndex = third?.userIndex ?? 0
+        
+        let firstUserNft = doc[firstUserIndex]
+        let secondUserNft = doc[secondUserIndex]
+        let thirdUserNft = doc[thirdUserIndex]
+        
+        guard let firstDoc = firstUserNft,
+              let secondDoc = secondUserNft,
+              let thirdDoc = thirdUserNft,
+              let realDoc1 = firstDoc,
+              let realDoc2 = secondDoc,
+              let realDoc3 = thirdDoc
+        else { return }
+        
+        Task {
+            do {
+                let doc1 = try await realDoc1.getDocument()
+                let doc2 = try await realDoc2.getDocument()
+                let doc3 = try await realDoc3.getDocument()
+                
+                let imageUrl1 = doc1[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                let imageUrl2 = doc2[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                let imageUrl3 = doc3[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                
+                self.firstRankView.configure(image: imageUrl1,
+                                             username: first?.userNickname ?? " ",
+                                             point: first?.userTotalPoint ?? 0)
+                
+                self.secondRankView.configure(image: imageUrl2,
+                                             username: second?.userNickname ?? " ",
+                                             point: second?.userTotalPoint ?? 0)
+                
+                self.thirdRankView.configure(image: imageUrl3,
+                                             username: third?.userNickname ?? " ",
+                                             point: third?.userTotalPoint ?? 0)
+                
+            }
+            catch {
+                UPlusLogger.logger.error("Error getting imagurl from nft document -- \(String(describing: error))")
+            }
+        }
+        
     }
     
 }

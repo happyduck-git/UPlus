@@ -52,7 +52,7 @@ final class RankingViewController: UIViewController {
         
 //        self.vm.getUserPoints()
         Task {
-            self.vm.totakRankerFetched = await self.vm.getAllUserTotalPoint()
+            self.vm.totalRankerFetched = await self.vm.getAllUserTotalPoint()
         }
     }
     
@@ -71,6 +71,7 @@ final class RankingViewController: UIViewController {
         self.setLayout()
         self.setDelegate()
         
+        self.bind()
         self.bottomFlatSheet.bind(with: self.vm, at: 0)
     }
     
@@ -81,6 +82,23 @@ final class RankingViewController: UIViewController {
             flowLayout.itemSize = CGSize(width: self.view.frame.width, height: self.collectionView.frame.height)
         }
     }
+}
+
+// MARK: - Bind
+extension RankingViewController {
+    
+    private func bind() {
+        func bindViewToViewModel() {
+            
+        }
+        func bindViewModelToView() {
+  
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+    
 }
 
 // MARK: - Set UI & Layout

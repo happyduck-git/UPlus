@@ -21,3 +21,9 @@ UPLUS_NFT_ACCESS_CODE = c2b79418-febc-4758-9172-b27a3b354705
 
 // Slack Link
 UPLUS_SLACK_URL = https://lgu-cto.slack.com/archives/C05Q42MDSSD
+
+// Notice Link
+UPLUS_NOTICE_URL = https://future-service-lab.notion.site/c14b249ad85f45799b44aadacf4c1d8e?pvs=4H
+
+// FAQ Link
+UPLUS_FAQ_URL = https://future-service-lab.notion.site/NFT-a8d78a697a2f44fe989aba307126672b?pvs=4

@@ -221,6 +221,7 @@ extension BaseMissionViewController {
             self.answerInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.bottomAnchor, multiplier: 3),
             self.answerInfoLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.answerInfoLabel.widthAnchor.constraint(equalToConstant: 135),
+            self.answerInfoLabel.heightAnchor.constraint(equalToConstant: 30),
             
             self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.answerInfoLabel.bottomAnchor, multiplier: 2),
             self.checkAnswerButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 5),
@@ -230,6 +231,7 @@ extension BaseMissionViewController {
             
         ])
         
+        self.quizImageView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         self.weblinkButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
 

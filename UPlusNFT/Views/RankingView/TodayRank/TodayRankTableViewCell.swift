@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import Nuke
 
 final class TodayRankTableViewCell: UITableViewCell {
     
@@ -110,7 +112,7 @@ final class TodayRankTableViewCell: UITableViewCell {
 //MARK: - Configure
 extension TodayRankTableViewCell {
     
-    func configureTop3(with vm: UPlusUser, at row: Int) {
+    func configureTop3(with vm: UPlusUser, doc: DocumentReference??, at row: Int) {
         self.rankImageView.isHidden = false
         self.rankLabel.isHidden = true
         
@@ -129,17 +131,49 @@ extension TodayRankTableViewCell {
         self.username.text = vm.userNickname
         self.level.text = "Lv.n"
         self.pointLabel.text = "\(vm.userPointHistory?.first?.userPointCount ?? 0)P"
+        
+        guard let document = doc,
+              let realDoc = document
+        else { return }
+        
+        Task {
+            do {
+                let doc = try await realDoc.getDocument()
+                let imageUrl = doc[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                guard let url = URL(string: imageUrl) else { return }
+                self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+            }
+            catch {
+                UPlusLogger.logger.error("Error getting imagurl from nft document -- \(String(describing: error))")
+            }
+        }
     }
     
     
-    func configureOthers(with vm: UPlusUser, at row: Int) {
+    func configureOthers(with vm: UPlusUser, doc: DocumentReference??, at row: Int) {
         self.rankLabel.isHidden = false
         self.rankImageView.isHidden = true
         
-        self.rankLabel.text = "\(row + 3)"
+        self.rankLabel.text = "\(row + 1)"
         self.username.text = vm.userNickname
         self.level.text = "Lv.n"
         self.pointLabel.text = "\(vm.userPointHistory?.first?.userPointCount ?? 0)P"
+        
+        guard let document = doc,
+              let realDoc = document
+        else { return }
+        
+        Task {
+            do {
+                let doc = try await realDoc.getDocument()
+                let imageUrl = doc[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                guard let url = URL(string: imageUrl) else { return }
+                self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+            }
+            catch {
+                UPlusLogger.logger.error("Error getting imagurl from nft document -- \(String(describing: error))")
+            }
+        }
     }
     
     func setUserTag() {

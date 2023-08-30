@@ -74,7 +74,7 @@ extension TodayRankCollectionViewCell {
         self.bindings.forEach { $0.cancel() }
         self.bindings.removeAll()
         
-        vm.$totakRankerFetched
+        vm.$totalRankerFetched
             .receive(on: RunLoop.current)
             .sink {
                 
@@ -100,7 +100,6 @@ extension TodayRankCollectionViewCell {
             }
             .store(in: &bindings)
         
-        // TODO: Header로 옮기기
         vm.$yesterdayRankerList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
@@ -159,14 +158,18 @@ extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
             guard let cell = tableView.dequeueReusableCell(withIdentifier: YesterdayRankerTableViewCell.identifier, for: indexPath) as? YesterdayRankerTableViewCell else {
                 return UITableViewCell()
             }
+            cell.selectionStyle = .none
+            
             let ranker = vm.yesterdayRankerList.first
+            let userIndex = ranker?.userIndex ?? 0
+            let topNft = vm.topNfts[userIndex]
             
-            cell.configure(ranker: ranker)
-            
+            cell.configure(ranker: ranker, doc: topNft)
             return cell
             
         default:
             let cellVM = vm.todayRankerList[indexPath.row]
+            let topNft = vm.topNfts[cellVM.userIndex]
             
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TodayRankTableViewCell.identifier, for: indexPath) as? TodayRankTableViewCell else {
                 return UITableViewCell()
@@ -175,9 +178,9 @@ extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
             
             switch indexPath.item {
             case 0, 1, 2:
-                cell.configureTop3(with: cellVM, at: indexPath.row)
+                cell.configureTop3(with: cellVM, doc: topNft, at: indexPath.row)
             default:
-                cell.configureOthers(with: cellVM, at: indexPath.row)
+                cell.configureOthers(with: cellVM, doc: topNft, at: indexPath.row)
             }
             
             return cell
@@ -198,7 +201,7 @@ extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
 extension TodayRankCollectionViewCell {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 1 {
-            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 80.0))
+            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 50.0))
             footer.backgroundColor = .white
             return footer
         } else {

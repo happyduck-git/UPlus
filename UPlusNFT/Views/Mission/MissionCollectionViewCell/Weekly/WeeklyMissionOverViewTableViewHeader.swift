@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import Combine
 
 final class WeeklyMissionOverViewTableViewHeader: UIView {
+    
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
     // MARK: - UI Elements
     private let topContainerView: UIView = {
@@ -99,6 +103,23 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Bind with View Model
+extension WeeklyMissionOverViewTableViewHeader {
+    func bind(with vm: WeeklyMissionOverViewViewModel) {
+        self.bindings.forEach { $0.cancel() }
+        self.bindings.removeAll()
+        
+        vm.numberOfCompeletion
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] (week, count) in
+                var image: String = "\(week)-\(count)"
+                self?.nftImageView.image = UIImage(named: image)
+            }
+            .store(in: &bindings)
+        
     }
 }
 

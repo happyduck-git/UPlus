@@ -60,14 +60,16 @@ final class WeeklyMissionOverViewViewController: UIViewController {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         
-        self.view.backgroundColor = UPlusColor.blue05
-        
+        self.view.backgroundColor = .white
+    
         self.setUI()
+        self.setLayout()
         self.setDelegate()
         
         self.bind()
         
         self.header.configure(with: vm)
+        self.header.bind(with: vm)
         self.footer.configure(with: vm)
     }
     
@@ -93,15 +95,12 @@ extension WeeklyMissionOverViewViewController {
                 .store(in: &bindings)
             
             self.vm.weeklyMissionCompletion
-                .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     if $0 {
                         print("여정 완료")
-              
-                        let bottomVC = WeeklyMissionCompleteBottomSheetViewController(vm: self.vm)
-                        bottomVC.modalPresentationStyle = .overCurrentContext
-                        self.present(bottomVC, animated: false)
+                        self.vm.requestJourneyNft()
+                        
                     } else {
                         print("여정 미완료")
                     }
@@ -119,14 +118,23 @@ extension WeeklyMissionOverViewViewController {
     private func setUI() {
         self.view.addSubviews(self.backgroundImage,
                              self.tableView)
-        self.backgroundImage.frame = self.view.bounds
-        self.tableView.frame = self.view.bounds
-        
+
         self.header.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height / 2)
         self.footer.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height / 5)
         
         self.tableView.tableHeaderView = self.header
         self.tableView.tableFooterView = self.footer
+    }
+    
+    private func setLayout() {
+        self.tableView.frame = self.view.bounds
+        
+        NSLayoutConstraint.activate([
+            self.backgroundImage.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.backgroundImage.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.backgroundImage.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.backgroundImage.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
     }
     
     private func setDelegate() {

@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import Nuke
 
 final class YesterdayRankerTableViewCell: UITableViewCell {
 
@@ -25,8 +27,9 @@ final class YesterdayRankerTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let profileImage: UIImageView = {
+    private let profileImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = UPlusColor.gray02
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -80,28 +83,41 @@ final class YesterdayRankerTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.profileImage.layer.cornerRadius = self.profileImage.frame.height / 2
+        self.profileImageView.layer.cornerRadius = self.profileImageView.frame.height / 2
         self.contentView.frame = self.contentView.frame.inset(by: UIEdgeInsets(top: 20, left: 30, bottom: 20, right: 30))
     }
 }
 
 //MARK: - Configure
 extension YesterdayRankerTableViewCell {
-    func configure(ranker: UPlusUser?) {
+    func configure(ranker: UPlusUser?, doc: DocumentReference??) {
         
         guard let ranker = ranker else {
-            self.medalImage.isHidden = true
-            self.profileImage.isHidden = true
-            
             self.rankerLabel.text = "랭커가 없습니다!"
             self.pointLabel.text = String(describing: 0)
             return
         }
         
         self.medalImage.isHidden = false
-        self.profileImage.isHidden = false
+        self.profileImageView.isHidden = false
         self.rankerLabel.text = ranker.userNickname
-        self.pointLabel.text = String(describing: ranker.userTotalPoint)
+        self.pointLabel.text = String(describing: ranker.userTotalPoint ?? 0)
+        
+        guard let document = doc,
+              let realDoc = document
+        else { return }
+        
+        Task {
+            do {
+                let doc = try await realDoc.getDocument()
+                let imageUrl = doc[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                guard let url = URL(string: imageUrl) else { return }
+                self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+            }
+            catch {
+                UPlusLogger.logger.error("Error getting imagurl from nft document -- \(String(describing: error))")
+            }
+        }
     }
 }
 
@@ -121,7 +137,7 @@ extension YesterdayRankerTableViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.titleImage,
                                      self.medalImage,
-                                     self.profileImage,
+                                     self.profileImageView,
                                      self.rankerLabel,
                                      self.pointImage,
                                      self.pointLabel)
@@ -138,12 +154,13 @@ extension YesterdayRankerTableViewCell {
             self.medalImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 3),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.medalImage.bottomAnchor, multiplier: 2),
             
-            self.profileImage.topAnchor.constraint(equalTo: self.medalImage.topAnchor),
-            self.profileImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.medalImage.trailingAnchor, multiplier: 2),
-            self.profileImage.bottomAnchor.constraint(equalTo: self.medalImage.bottomAnchor),
+            self.profileImageView.topAnchor.constraint(equalTo: self.medalImage.topAnchor),
+            self.profileImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.medalImage.trailingAnchor, multiplier: 2),
+            self.profileImageView.bottomAnchor.constraint(equalTo: self.medalImage.bottomAnchor),
+            self.profileImageView.widthAnchor.constraint(equalTo: self.profileImageView.heightAnchor),
             
             self.rankerLabel.centerYAnchor.constraint(equalTo: self.medalImage.centerYAnchor),
-            self.rankerLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImage.trailingAnchor, multiplier: 1),
+            self.rankerLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.profileImageView.trailingAnchor, multiplier: 1),
             
             self.pointImage.centerYAnchor.constraint(equalTo: self.rankerLabel.centerYAnchor),
             self.pointImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.rankerLabel.trailingAnchor, multiplier: 6),

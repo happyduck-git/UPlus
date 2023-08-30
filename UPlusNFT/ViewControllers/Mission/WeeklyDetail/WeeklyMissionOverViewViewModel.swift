@@ -32,6 +32,8 @@ final class WeeklyMissionOverViewViewModel {
             } else {
                 self.weeklyMissionCompletion.send(false)
             }
+            
+            self.numberOfCompeletion.send((self.week, self.countTrueValues(in: missionParticipation)))
         }
     }
     
@@ -57,7 +59,8 @@ final class WeeklyMissionOverViewViewModel {
             }
         }
     }
-    @Published var weeklyMissionCompletion = PassthroughSubject<Bool, Never>()
+    var weeklyMissionCompletion = PassthroughSubject<Bool, Never>()
+    var numberOfCompeletion = PassthroughSubject<(Int, Int), Never>()
     
     @Published var nftIssueStatus = PassthroughSubject<Bool, NFTServiceError>()
     
@@ -69,6 +72,7 @@ final class WeeklyMissionOverViewViewModel {
     
 }
 
+// MARK: - Firestore Service
 extension WeeklyMissionOverViewViewModel {
     
     func getWeeklyMissionInfo(week: Int) {
@@ -97,8 +101,6 @@ extension WeeklyMissionOverViewViewModel {
                     level: week
                 )
                 
-                print("Result: \(result)")
-                
                 guard let status = NFTServiceStatus(rawValue: result.data.status) else { return }
                 switch status {
                 case .pending:
@@ -111,5 +113,12 @@ extension WeeklyMissionOverViewViewModel {
                 print("Error requesting nft to NFTServiceInfra -- \(error)")
             }
         }
+    }
+}
+
+// MARK: - Private
+extension WeeklyMissionOverViewViewModel {
+    private func countTrueValues(in dictionary: [String: Bool]) -> Int {
+        return dictionary.values.filter { $0 == true }.count
     }
 }

@@ -69,6 +69,7 @@ class BaseMissionCompletedViewController: UIViewController {
 
         self.setUI()
         self.setLayout()
+        self.navigationItem.hidesBackButton = true
     }
 
 }

@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UPLUS_FAQ_URL</key>
+	<string>$(UPLUS_FAQ_URL)</string>
+	<key>UPLUS_NOTICE_URL</key>
+	<string>$(UPLUS_NOTICE_URL)</string>
 	<key>UPLUS_SLACK_URL</key>
 	<string>$(UPLUS_SLACK_URL)</string>
 	<key>CFBundleIdentifier</key>
