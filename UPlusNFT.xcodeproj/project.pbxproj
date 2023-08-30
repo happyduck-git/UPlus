@@ -53,6 +53,19 @@
 		24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */; };
 		24542D602A7113BD00F82CEA /* TotalRankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */; };
 		245E2DD22A87881600AAEFE6 /* Mission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245E2DD12A87881600AAEFE6 /* Mission.swift */; };
+		245FBB112A9F97B80021E86F /* SJSegmentedScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0A2A9F97B70021E86F /* SJSegmentedScrollView.swift */; };
+		245FBB122A9F97B80021E86F /* SJSegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0B2A9F97B70021E86F /* SJSegmentedViewController.swift */; };
+		245FBB132A9F97B80021E86F /* SJSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0C2A9F97B70021E86F /* SJSegmentView.swift */; };
+		245FBB142A9F97B80021E86F /* SJShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0D2A9F97B70021E86F /* SJShadow.swift */; };
+		245FBB152A9F97B80021E86F /* SJUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0E2A9F97B70021E86F /* SJUtil.swift */; };
+		245FBB162A9F97B80021E86F /* SJContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0F2A9F97B70021E86F /* SJContentView.swift */; };
+		245FBB172A9F97B80021E86F /* SJSegmentTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB102A9F97B80021E86F /* SJSegmentTab.swift */; };
+		245FBB192A9F989D0021E86F /* MyPageSegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB182A9F989D0021E86F /* MyPageSegmentedViewController.swift */; };
+		245FBB1C2A9F99520021E86F /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB1B2A9F99520021E86F /* FirstViewController.swift */; };
+		245FBB1E2A9F99600021E86F /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB1D2A9F99600021E86F /* SecondViewController.swift */; };
+		245FBB202A9F9A720021E86F /* ZeroHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB1F2A9F9A720021E86F /* ZeroHeaderViewController.swift */; };
+		245FBB222A9FA17A0021E86F /* MissionBaseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */; };
+		245FBB262A9FAD540021E86F /* NewEventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */; };
 		24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */; };
 		24624B8B2A8E55E600C9A42E /* MyPageViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */; };
 		24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8C2A8E812700C9A42E /* UIViewPreview.swift */; };
@@ -316,6 +329,20 @@
 		24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNftsCollectionViewHeader.swift; sourceTree = "<group>"; };
 		24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalRankCollectionViewCell.swift; sourceTree = "<group>"; };
 		245E2DD12A87881600AAEFE6 /* Mission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mission.swift; sourceTree = "<group>"; };
+		245FBB0A2A9F97B70021E86F /* SJSegmentedScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentedScrollView.swift; sourceTree = "<group>"; };
+		245FBB0B2A9F97B70021E86F /* SJSegmentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentedViewController.swift; sourceTree = "<group>"; };
+		245FBB0C2A9F97B70021E86F /* SJSegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentView.swift; sourceTree = "<group>"; };
+		245FBB0D2A9F97B70021E86F /* SJShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJShadow.swift; sourceTree = "<group>"; };
+		245FBB0E2A9F97B70021E86F /* SJUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJUtil.swift; sourceTree = "<group>"; };
+		245FBB0F2A9F97B70021E86F /* SJContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJContentView.swift; sourceTree = "<group>"; };
+		245FBB102A9F97B80021E86F /* SJSegmentTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentTab.swift; sourceTree = "<group>"; };
+		245FBB182A9F989D0021E86F /* MyPageSegmentedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSegmentedViewController.swift; sourceTree = "<group>"; };
+		245FBB1B2A9F99520021E86F /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
+		245FBB1D2A9F99600021E86F /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		245FBB1F2A9F9A720021E86F /* ZeroHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroHeaderViewController.swift; sourceTree = "<group>"; };
+		245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionBaseInfo.swift; sourceTree = "<group>"; };
+		245FBB232A9FAC7A0021E86F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEventCollectionViewCell.swift; sourceTree = "<group>"; };
 		24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMissionScrollViewController.swift; sourceTree = "<group>"; };
 		24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyPageViewController+Extensions.swift"; sourceTree = "<group>"; };
 		24624B8C2A8E812700C9A42E /* UIViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewPreview.swift; sourceTree = "<group>"; };
@@ -355,7 +382,6 @@
 		930D96AA2A416AC40007801A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		930D96AD2A416AC40007801A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		930D96AF2A416AC40007801A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		930D96B92A41824A0007801A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		930D96C52A41835B0007801A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		930D96C82A4193A40007801A /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		930D96CA2A4194E50007801A /* SignUpViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewViewModel.swift; sourceTree = "<group>"; };
@@ -720,6 +746,31 @@
 			path = Reward;
 			sourceTree = "<group>";
 		};
+		245FBB092A9F979B0021E86F /* SegmentedViewController */ = {
+			isa = PBXGroup;
+			children = (
+				245FBB0F2A9F97B70021E86F /* SJContentView.swift */,
+				245FBB0A2A9F97B70021E86F /* SJSegmentedScrollView.swift */,
+				245FBB0B2A9F97B70021E86F /* SJSegmentedViewController.swift */,
+				245FBB102A9F97B80021E86F /* SJSegmentTab.swift */,
+				245FBB0C2A9F97B70021E86F /* SJSegmentView.swift */,
+				245FBB0D2A9F97B70021E86F /* SJShadow.swift */,
+				245FBB0E2A9F97B70021E86F /* SJUtil.swift */,
+			);
+			path = SegmentedViewController;
+			sourceTree = "<group>";
+		};
+		245FBB1A2A9F993D0021E86F /* Segment */ = {
+			isa = PBXGroup;
+			children = (
+				245FBB182A9F989D0021E86F /* MyPageSegmentedViewController.swift */,
+				245FBB1B2A9F99520021E86F /* FirstViewController.swift */,
+				245FBB1D2A9F99600021E86F /* SecondViewController.swift */,
+				245FBB1F2A9F9A720021E86F /* ZeroHeaderViewController.swift */,
+			);
+			path = Segment;
+			sourceTree = "<group>";
+		};
 		24624B922A92749B00C9A42E /* Event */ = {
 			isa = PBXGroup;
 			children = (
@@ -857,6 +908,7 @@
 		930D96A02A416AC30007801A /* UPlusNFT */ = {
 			isa = PBXGroup;
 			children = (
+				245FBB092A9F979B0021E86F /* SegmentedViewController */,
 				93CBD6D52A9F6DA800870019 /* Fonts */,
 				937DDFA52A9E040A0014AF15 /* Contents */,
 				930D96B52A416AE10007801A /* Supporting Files */,
@@ -889,6 +941,7 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				245FBB1A2A9F993D0021E86F /* Segment */,
 				93DA585B2A8EEEA900525BEC /* Gift */,
 				245E2DD32A87C7F200AAEFE6 /* Reward */,
 				939194802A7CDDBD0035FEB1 /* Wallet */,
@@ -998,7 +1051,7 @@
 		930D96E62A4573B50007801A /* DEV */ = {
 			isa = PBXGroup;
 			children = (
-				930D96B92A41824A0007801A /* GoogleService-Info.plist */,
+				245FBB232A9FAC7A0021E86F /* GoogleService-Info.plist */,
 			);
 			path = DEV;
 			sourceTree = "<group>";
@@ -1249,6 +1302,7 @@
 				93A2ED882A6A6C4100C2287D /* MyNftsCollectionViewCell.swift */,
 				2417A5A62A6B980900AEC530 /* MyNftsCollectionViewFooter.swift */,
 				24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */,
+				245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1455,6 +1509,7 @@
 				93DA58532A8DA8EB00525BEC /* WeeklyBaseModel.swift */,
 				93DA58592A8E1B9100525BEC /* EventBaseModel.swift */,
 				24624B952A94FCA800C9A42E /* MissionBaseModel.swift */,
+				245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */,
 			);
 			path = Missions;
 			sourceTree = "<group>";
@@ -1579,8 +1634,10 @@
 				939194722A7B22360035FEB1 /* DailyRankView.swift in Sources */,
 				932C34CB2A5254A70032192A /* Date+Extention.swift in Sources */,
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
+				245FBB122A9F97B80021E86F /* SJSegmentedViewController.swift in Sources */,
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
+				245FBB162A9F97B80021E86F /* SJContentView.swift in Sources */,
 				93DA58562A8E04C900525BEC /* EventCompletedViewController.swift in Sources */,
 				93D174882A7734E000F5B1B1 /* RoutineStampCollectionViewCellHeader.swift in Sources */,
 				240269512A8468C900850E65 /* ChoiceQuizMoreViewViewModel.swift in Sources */,
@@ -1600,11 +1657,13 @@
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				24624B8F2A8E843900C9A42E /* RoutineUploadPhotoButton.swift in Sources */,
 				9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */,
+				245FBB1C2A9F99520021E86F /* FirstViewController.swift in Sources */,
 				93DA587A2A95CC3E00525BEC /* WeeklyLockedCollectionViewCell.swift in Sources */,
 				93DA58602A8EEFEF00525BEC /* GiftDetailView.swift in Sources */,
 				24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */,
 				93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */,
 				937DDFB22A9E0FD80014AF15 /* SlackShareTextFieldView.swift in Sources */,
+				245FBB1E2A9F99600021E86F /* SecondViewController.swift in Sources */,
 				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
 				93DA586D2A8F679D00525BEC /* WeeklyOverViewTableViewCell.swift in Sources */,
 				93DA58622A8EF0CF00525BEC /* InsetLabelView.swift in Sources */,
@@ -1614,6 +1673,7 @@
 				93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */,
 				93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */,
 				93A2EDC22A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift in Sources */,
+				245FBB202A9F9A720021E86F /* ZeroHeaderViewController.swift in Sources */,
 				93A2ED972A6E17BC00C2287D /* RankingViewViewModel.swift in Sources */,
 				93DA586A2A8F0F6E00525BEC /* GiftViewControllerViewViewModel.swift in Sources */,
 				2402693D2A83C07600850E65 /* GovernanceElectionMissionViewViewModel.swift in Sources */,
@@ -1639,9 +1699,11 @@
 				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,
 				93E013952A66260A0005E342 /* UserProfileViewViewModel.swift in Sources */,
 				93E013A62A68C0460005E342 /* WeeklyQuizMission.swift in Sources */,
+				245FBB192A9F989D0021E86F /* MyPageSegmentedViewController.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				93E013852A65175F0005E342 /* SideMenuPresentationManager.swift in Sources */,
 				240269472A83DEB300850E65 /* ChoiceQuizVideoViewController.swift in Sources */,
+				245FBB222A9FA17A0021E86F /* MissionBaseInfo.swift in Sources */,
 				939194882A80827F0035FEB1 /* MediaShareMission.swift in Sources */,
 				93D174862A738C1000F5B1B1 /* StampCollectionViewCell.swift in Sources */,
 				2417A59B2A67A9ED00AEC530 /* OnBoardingViewController.swift in Sources */,
@@ -1649,6 +1711,7 @@
 				93E013832A65091F0005E342 /* MissionSideMenuPresentationController.swift in Sources */,
 				93A2ED9E2A6E411900C2287D /* TodayRankCollectionViewCell.swift in Sources */,
 				93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */,
+				245FBB142A9F97B80021E86F /* SJShadow.swift in Sources */,
 				24542D532A70AC7A00F82CEA /* ShortAnswerQuizMission.swift in Sources */,
 				240269392A83BFE700850E65 /* ShareMediaOnSlackMissionViewController.swift in Sources */,
 				93DA587E2A9601E900525BEC /* MissionHistoryNoParticipationCollectionViewCell.swift in Sources */,
@@ -1657,6 +1720,7 @@
 				24DB21AD2A82F8E000AE0174 /* NFTServiceManager.swift in Sources */,
 				93DA58842A96118700525BEC /* TotalRankTableViewCell.swift in Sources */,
 				93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */,
+				245FBB132A9F97B80021E86F /* SJSegmentView.swift in Sources */,
 				937DDF722A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift in Sources */,
 				93DA584A2A8CA23500525BEC /* RoutineParticipatedViewController.swift in Sources */,
 				244BBB122A5561FA006C33D2 /* TextFieldCollectionViewCell.swift in Sources */,
@@ -1722,12 +1786,14 @@
 				932C34D22A53ADEA0032192A /* MultipleQuizCollectionViewCell.swift in Sources */,
 				93A2ED902A6E0BD000C2287D /* RewardsViewViewModel.swift in Sources */,
 				937C76622A494F85001024D0 /* PostViewViewModel.swift in Sources */,
+				245FBB262A9FAD540021E86F /* NewEventCollectionViewCell.swift in Sources */,
 				241116E32A9B8BF50010579C /* UIImage+Extension.swift in Sources */,
 				93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */,
 				93DA58522A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift in Sources */,
 				24542D512A70AC0800F82CEA /* ChoiceQuizMission.swift in Sources */,
 				93DA58362A8A102600525BEC /* NFTDetailViewController.swift in Sources */,
 				24A254752A854D5A0034534A /* EnvironmentConfig.swift in Sources */,
+				245FBB112A9F97B80021E86F /* SJSegmentedScrollView.swift in Sources */,
 				2402695A2A846BF700850E65 /* AnswerQuizPluralViewViewModel.swift in Sources */,
 				93DA587C2A95EF2800525BEC /* OnBoardingViewController2.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
@@ -1736,6 +1802,7 @@
 				93E0139D2A666E070005E342 /* UIStackView+Extension.swift in Sources */,
 				93DA58442A8C4F5E00525BEC /* RoutineCompleteCollectionViewCell.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
+				245FBB172A9F97B80021E86F /* SJSegmentTab.swift in Sources */,
 				9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */,
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
 				93DA58302A89FCF600525BEC /* WalletDetailCollectionViewCell.swift in Sources */,
@@ -1749,6 +1816,7 @@
 				93DA58682A8F020E00525BEC /* GiftSentBottomSheetViewController.swift in Sources */,
 				9391946D2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift in Sources */,
 				9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */,
+				245FBB152A9F97B80021E86F /* SJUtil.swift in Sources */,
 				24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */,
 				241116DF2A9A59A20010579C /* LogOutBottomSheetViewController.swift in Sources */,
 				93A2ED892A6A6C4100C2287D /* MyNftsCollectionViewCell.swift in Sources */,

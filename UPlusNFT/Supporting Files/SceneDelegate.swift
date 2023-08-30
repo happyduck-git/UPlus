@@ -32,11 +32,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vm = OnBoardingViewViewModel()
         let vc = OnBoardingViewController2(vm: vm)
         let navVC = UINavigationController(rootViewController: vc)
-        
-        for family in UIFont.familyNames.sorted() {
-            let names = UIFont.fontNames(forFamilyName: family)
-            print("Family: \(family) Font names: \(names)")
-        }
 
         window?.rootViewController = navVC
         window?.makeKeyAndVisible()

@@ -130,6 +130,7 @@ struct SideMenuConstants {
 struct MyPageConstants {
     static let usernameSuffix: String = "%@ 마스터님,\n오늘도 월드클래스를 향해 아자~!"
     static let dailyQuestDesc: String = "오늘 할 일을 기록하고 월드클래스 기업으로 성장시키세요!"
+    static let weeklyQuestDesc: String = "미션에 참여해 월드클래스 기업으로 성장시키세요!"
     static let dailyRank: String = "일일랭킹"
     static let rank: String = "%d위"
     static let goToMission: String = "미션 하러가기"
@@ -169,6 +170,7 @@ struct MissionConstants {
     static let levelPrefix: String = "LV."
     static let receive: String = "받기"
     static let todayMission: String = "데일리 퀘스트"
+    static let weeklyQuest: String = "위클리 퀘스트"
     static let availableEvent: String = "참여 가능한 이벤트"
     static let dailyAttendanceMission: String = "데일리 퀴즈"
     static let expMission: String = "갓생 인증 미션"
@@ -176,6 +178,7 @@ struct MissionConstants {
     static let pointUnit: String = "P"
     static let eventLeftSuffix: String = "%d개 남음"
     static let timeLeftSuffix: String = "%d시간 남음"
+    static let daysLeftSuffix: String = "%d일 남음"
     static let details: String = "자세히 보기"
     static let difficulty: String = "난이도"
     
@@ -440,6 +443,8 @@ struct ImageAsset {
     static let level4Title: String = "level4-title"
     static let level5Title: String = "level5-title"
     
+    static let newEventBanner: String = "new-event-banner"
+    
     /* RankVC */
     static let bronzeMedal: String = "bronze-medal"
     static let silverMedal: String = "silver-medal"
@@ -575,6 +580,11 @@ struct FirestoreConstants {
     static let eventResubTitle = "event_resub_title"
     static let eventSubTitle = "event_sub_title"
     static let nftContentImageUrl = "nft_content_image_url"
+//    static let extraDailyExpGoodWorker = "extra__daily_exp__good_worker"
+//    "extra__weekly_quiz__1"
+//    "extra__weekly_quiz__2"
+//    "extra__weekly_quiz__3"
+    
     
     /* Configuration */
     static let accountableEmails = "accountable_emails"

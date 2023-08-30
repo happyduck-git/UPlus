@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>38523686179-04qc44t282qlogc4r5sfaji7q1gqfc1e.apps.googleusercontent.com</string>
+	<string>769982477662-oe7u395t1vb7c38ci72lve7gvsor9444.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.38523686179-04qc44t282qlogc4r5sfaji7q1gqfc1e</string>
+	<string>com.googleusercontent.apps.769982477662-oe7u395t1vb7c38ci72lve7gvsor9444</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD74GgGTJKHdvaQ-LoB2KQVyz7w8mju3k8</string>
+	<string>AIzaSyDIYp7oEyejcSglDepi1F6wESCeDG7lqfQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>38523686179</string>
+	<string>769982477662</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>net.platfarm.UPlusNFT</string>
 	<key>PROJECT_ID</key>
-	<string>dev-lguplus-nft-platfarm</string>
+	<string>test-lguplus-nft-platfarm</string>
 	<key>STORAGE_BUCKET</key>
-	<string>dev-lguplus-nft-platfarm.appspot.com</string>
+	<string>test-lguplus-nft-platfarm.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:38523686179:ios:ee3c1cb9950aaa922ed096</string>
+	<string>1:769982477662:ios:cd81daaa528bbbf3194bcf</string>
 </dict>
 </plist>

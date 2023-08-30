@@ -12,11 +12,6 @@ import OSLog
 
 final class MyPageViewController: UIViewController {
     
-    let nftServiceManager = NFTServiceManager.shared
-    
-    // MARK: - Notification
-    let notiCenter = UNUserNotificationCenter.current()
-    
     // MARK: - Dependency
     let vm: MyPageViewViewModel
     private var sideMenuVC: SideMenuViewController?
@@ -538,6 +533,11 @@ extension MyPageViewController {
             TodayMissionCollectionViewCell.self,
             forCellWithReuseIdentifier: TodayMissionCollectionViewCell.identifier
         )
+        
+        collectionView.register(
+            NewEventCollectionViewCell.self,
+            forCellWithReuseIdentifier: NewEventCollectionViewCell.identifier
+        )
 
         collectionView.register(
             RoutineMissionProgressCollectionViewCell.self,
@@ -602,12 +602,14 @@ extension MyPageViewController {
         case 1:
             return self.createRoutineMissionSectionLayout()
         case 2:
-            return self.createWeeklyMissionSectionLayout()
+            return self.createTodayMissionSectionLayout()
         case 3:
-            return self.createHistoryButtonSectionLayout()
+            return self.createWeeklyMissionSectionLayout()
         case 4:
-            return self.createCalendarSectionLayout()
+            return self.createHistoryButtonSectionLayout()
         case 5:
+            return self.createCalendarSectionLayout()
+        case 6:
             return self.createHistorySectionLayout()
 
         default:
@@ -842,25 +844,29 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.screenToShow == 0 {
             switch section {
-            case 2:
+            case 0, 2, 4:
+                return 1
+            case 1:
+                return 2
+            case 3:
                 // NOTE: self.vm.weeklyMissions.count 시 에러 확인
                 //            return self.vm.weeklyMissions.count
                 return 3
-            case 4:
-                return self.vm.mission.isHistorySectionOpened ? 1 : 0
             case 5:
+                return self.vm.mission.isHistorySectionOpened ? 1 : 0
+            case 6:
                 var numberOfItems: Int = 0
                 
-                if self.vm.mission.isDateSelected { // 특정 날짜가 선택된 경우
+                if self.vm.mission.isDateSelected {
                     numberOfItems = self.vm.mission.selectedDateMissions.count
                     
-                } else { // 날짜가 선택되지 않은 경우
+                } else {
                     numberOfItems = self.vm.mission.participatedMissions.count
                 }
                 
                 return self.vm.mission.isHistorySectionOpened ? numberOfItems : 0
                 
-            case 6:
+            case 7:
                  return self.vm.mission.isHistorySectionOpened ? 1 : 0
                 
             default:
@@ -876,7 +882,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             case 1:
                 return self.vm.event.regularEvents.count
                 
-            case 2:
+            case 3:
                 return self.vm.event.levelEvents.count
                 
             default:
@@ -888,7 +894,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if self.screenToShow == 0{
+        if self.screenToShow == 0 {
             switch indexPath.section {
             case 0:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
@@ -898,27 +904,47 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     return cell
                 }
                 
-                cell.type = .mission
+                cell.type = .daily
                 cell.configure(with: vm)
                 return cell
                 
                 // Routine mission
             case 1:
-                
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
-                    fatalError()
+                if indexPath.item == 0 {
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RoutineMissionProgressCollectionViewCell.identifier, for: indexPath) as? RoutineMissionProgressCollectionViewCell else {
+                        fatalError()
+                    }
+                    cell.bind(with: self.vm)
+                    return cell
+                } else {
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewEventCollectionViewCell.identifier, for: indexPath) as? NewEventCollectionViewCell else {
+                        fatalError()
+                    }
+                    return cell
                 }
-                cell.bind(with: self.vm)
-                return cell
                 
                 // Weekly mission
             case 2:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMissionCollectionViewCell.identifier, for: indexPath) as? TodayMissionCollectionViewCell else {
+                    fatalError()
+                }
+                guard let vm = self.vm.userProfileViewModel else {
+                    return cell
+                }
                 
+                cell.type = .weekly
+                cell.configure(with: vm)
+                return cell
+                
+            case 3:
+                let baseCell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
+
                 if !self.vm.mission.weeklyMissions.isEmpty {
                     
-                    let (status, title) = self.weeklyMissionInfo(week: indexPath.item + 1)
+                    let (status, collectionId) = self.weeklyMissionInfo(week: indexPath.item + 1)
+                    let title = self.vm.mission.missionTitles[indexPath.item]
                     
-                    let missionInfo = self.vm.mission.weeklyMissions[title] ?? []
+                    let missionInfo = self.vm.mission.weeklyMissions[collectionId] ?? []
                     
                     let begin = missionInfo[0].dateValue()
                     let end = missionInfo[1].dateValue()
@@ -942,7 +968,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                             fatalError()
                         }
                         cell.resetCell()
-                        cell.configure(item: indexPath.item, title: title, period: timeLeft, point: weekTotalPoint)
+                        cell.configure(item: indexPath.item,
+                                       title: title,
+                                       period: timeLeft,
+                                       numberOfParticipation: vm.mission.numberOfFinishedMissions[indexPath.item],
+                                       point: weekTotalPoint)
 
                         return cell
                         
@@ -957,11 +987,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     }
 
                 } else {
-                    return UICollectionViewCell()
+                    return baseCell
                 }
                 
                 // Mission History button
-            case 3:
+            case 4:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryButtonCollectionViewCell.identifier, for: indexPath) as? MissionHistoryButtonCollectionViewCell else {
                     fatalError()
                 }
@@ -969,7 +999,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 cell.delegate = self
                 return cell
                 
-            case 4:
+            case 5:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryCalendarCollectionViewCell.identifier, for: indexPath) as? MissionHistoryCalendarCollectionViewCell else {
                     fatalError()
                 }
@@ -978,7 +1008,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 return cell
                 
-            case 5:
+            case 6:
 //                guard let goToMissionCell = collectionView.dequeueReusableCell(withReuseIdentifier: MissionHistoryNoParticipationCollectionViewCell.identifier, for: indexPath) as? MissionHistoryNoParticipationCollectionViewCell else {
 //                    fatalError()
 //                }
@@ -1048,7 +1078,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 return cell
                 
-            case 2:
+            case 3:
                 
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MypageEventCollectionViewCell.identifier, for: indexPath) as? MypageEventCollectionViewCell else {
                     fatalError()
@@ -1087,7 +1117,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return cell
                 
             default:
-                return UICollectionViewCell()
+                return collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionViewCell.identifier, for: indexPath)
+                
             }
         
         }
@@ -1111,9 +1142,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             if self.screenToShow == 0 {
                 
                 switch vm.missionSections[indexPath.section] {
-                case .routine:
+                case .todayDetail:
                     headerType = .master
-                case .weekly:
+                case .weeklyDetail:
                     headerType = .world
                 default:
                     break
@@ -1438,14 +1469,14 @@ extension MyPageViewController: NftBottomSheetDelegate {
     }
     
     private func presentBottomSheets() {
-        logger.info("Present bottom sheets: \(self.vm.updatedNfts2)")
+        logger.info("Present bottom sheets: \(self.vm.updatedNftsCopy)")
         
-        guard !self.vm.updatedNfts2.isEmpty else {
+        guard !self.vm.updatedNftsCopy.isEmpty else {
             logger.info("No more nfts")
             return
         }
         
-        let nft = self.vm.updatedNfts2.removeFirst()
+        let nft = self.vm.updatedNftsCopy.removeFirst()
         let level = NftLevel.level(tokenId: Int64(nft) ?? 0)
         
         if level < 10 && level > 1 {

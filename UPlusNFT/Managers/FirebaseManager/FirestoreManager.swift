@@ -682,6 +682,15 @@ extension FirestoreManager {
         return missions
     }
     
+    func getAllMissionBaseData() async throws -> MissionBaseInfo {
+        let data = try await threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .getDocument()
+            .data(as: MissionBaseInfo.self)
+        
+        return data
+    }
+    
     func getAllMissionDate() async throws -> [String: [Timestamp]] {
         let data = try await threadsSetCollectionPath2
             .document(FirestoreConstants.missions)

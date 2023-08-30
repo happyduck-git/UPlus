@@ -21,8 +21,9 @@ final class MyPageViewViewModel {
     //MARK: - Sections
     enum MyPageViewMissionSectionType: String, CaseIterable {
         case today
-        case routine = "마스터의 성공 습관 만들기"
-        case weekly = "월드클래스 기업 만들기"
+        case todayDetail = "마스터의 성공 습관 만들기"
+        case weekly
+        case weeklyDetail = "월드클래스 기업 만들기"
         case button
         case calendar
         case history
@@ -31,6 +32,7 @@ final class MyPageViewViewModel {
     enum MyPageViewEventSectionType: String, CaseIterable {
         case availableEvent
         case regularEvent = "콘테스트"
+        case empty
         case levelEvent = "스페셜 이벤트"
     }
     
@@ -48,11 +50,11 @@ final class MyPageViewViewModel {
     @Published var rank: Int = UPlusServiceInfoConstant.totalMembers
     @Published var updatedNfts: [String] = [] {
         didSet {
-            updatedNfts2 = updatedNfts
+            updatedNftsCopy = updatedNfts
         }
     }
     
-    var updatedNfts2: [String] = []
+    var updatedNftsCopy: [String] = []
     
     var isRefreshing: Bool = false
     
@@ -60,8 +62,25 @@ final class MyPageViewViewModel {
         
         weak var parent: MyPageViewViewModel?
         
+        @Published var missionBaseInfo: MissionBaseInfo? {
+            didSet {
+                // Timeline
+                let timelineMap = missionBaseInfo?.missionsBeginEndTimeMap ?? [:]
+                self.parent?.sortMissionsTimeline(timeline: timelineMap)
+                
+                // Title
+                self.missionTitles.append(missionBaseInfo?.extraWeeklyQuiz1.episodeTitle ?? "no-title")
+                self.missionTitles.append(missionBaseInfo?.extraWeeklyQuiz2.episodeTitle ?? "no-title")
+                self.missionTitles.append(missionBaseInfo?.extraWeeklyQuiz3.episodeTitle ?? "no-title")
+            }
+        }
+        
         @Published var weeklyMissions: [String: [Timestamp]] = [:]
         var dailyMissions: [String: [Timestamp]] = [:]
+        var missionTitles: [String] = []
+        
+        @Published var numberOfFinishedMissions: [Int] = []
+        
         @Published var isHistorySectionOpened: Bool = false
         
         @Published var routineParticipationStatus: MissionUserState?
@@ -171,41 +190,37 @@ final class MyPageViewViewModel {
         self.user = user
         self.memberShip = memberShip
         self.mission.parent = self
+        
         Task {
-            await self.getSelectedRoutine()
+            async let _ = self.getSelectedRoutine()
             
-            await self.createMissionMainViewViewModel()
-            
-            await self.getMissionsTimeline()
+            async let _ = self.createMissionMainViewViewModel()
 
-            await self.getTodayRank()
+            async let _ = self.getTodayRank()
+            
+            async let _ = self.getAllMissionBaseData()
+           
         }
         
+        self.getNumberOfParticipatedMissions()
+
     }
 }
 
 //MARK: - Fetch Data from FireStore
 extension MyPageViewViewModel {
-    
-    /// Get Start and End Time Map for All Missions
-    func getMissionsTimeline() async {
-        do {
-            let results = try await firestoreManager.getAllMissionDate()
-            let weeklyMissions = results.filter {
-                $0.key.hasPrefix("weekly")
-            }
-            self.mission.weeklyMissions = weeklyMissions
-            
-            let dailyMissions = results.filter {
-                $0.key.hasPrefix("daily")
-            }
-            self.mission.dailyMissions = dailyMissions
+
+    private func sortMissionsTimeline(timeline: [String : [Timestamp]]) {
+        let weeklyMissions = timeline.filter {
+            $0.key.hasPrefix("weekly")
         }
-        catch {
-            print("Error fetching missions by date -- \(error)")
+        self.mission.weeklyMissions = weeklyMissions
+        
+        let dailyMissions = timeline.filter {
+            $0.key.hasPrefix("daily")
         }
+        self.mission.dailyMissions = dailyMissions
     }
-    
     
     /// Get User Selected Routine Mission If Any.
     func getSelectedRoutine() async {
@@ -257,6 +272,15 @@ extension MyPageViewViewModel {
         }
     }
     
+    func getAllMissionBaseData() async {
+        do {
+            let results = try await firestoreManager.getAllMissionBaseData()
+            self.mission.missionBaseInfo = results
+        }
+        catch {
+            print("Error getting base mission data: \(error)")
+        }
+    }
     
     /// Get leveled events.
     func getLevelEvents() async {
@@ -344,6 +368,15 @@ extension MyPageViewViewModel {
             missions.append(mission)
         }
         return missions
+    }
+    
+    private func getNumberOfParticipatedMissions() {
+        let week1 = self.user.userTypeMissionArrayMap?["weekly_quiz__1"]?.count ?? 0
+        let week2 = self.user.userTypeMissionArrayMap?["weekly_quiz__2"]?.count ?? 0
+        let week3 = self.user.userTypeMissionArrayMap?["weekly_quiz__3"]?.count ?? 0
+        self.mission.numberOfFinishedMissions.append(week1)
+        self.mission.numberOfFinishedMissions.append(week2)
+        self.mission.numberOfFinishedMissions.append(week3)
     }
     
 }

@@ -17,23 +17,17 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     
     private let missionImage: UIImageView = {
        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: ImageAsset.routineImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
-    private let titleStack: UIStackView = {
-       let stack = UIStackView()
-        stack.axis = .vertical
-        stack.distribution = .fillEqually
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-    
     private let title: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -41,6 +35,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = UPlusColor.gray06
         label.font = .systemFont(ofSize: UPlusFont.h5, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -139,45 +134,47 @@ extension RoutineMissionProgressCollectionViewCell {
 extension RoutineMissionProgressCollectionViewCell {
     private func setUI() {
         self.contentView.addSubviews(self.missionImage,
-                                     self.titleStack,
+                                     self.title,
+                                     self.subTitle,
                                      self.pointContainerView,
                                      self.progressBar,
                                      self.numberOfParticipation)
-        
-        self.titleStack.addArrangedSubviews(self.title,
-                                            self.subTitle)
         
         self.pointContainerView.addSubview(self.pointLabel)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            
             self.missionImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
-            self.missionImage.centerYAnchor.constraint(equalTo: self.titleStack.centerYAnchor),
+            self.missionImage.widthAnchor.constraint(equalToConstant: 30),
+            self.missionImage.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.missionImage.bottomAnchor, multiplier: 1),
+
+            self.title.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
+            self.title.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionImage.trailingAnchor, multiplier: 2),
             
-            self.titleStack.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 3),
-            self.titleStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionImage.trailingAnchor, multiplier: 2),
-            
-            self.pointContainerView.topAnchor.constraint(equalTo: self.titleStack.topAnchor),
+            self.subTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.title.bottomAnchor, multiplier: 1),
+            self.subTitle.leadingAnchor.constraint(equalTo: self.title.leadingAnchor),
+
+            self.pointContainerView.topAnchor.constraint(equalTo: self.title.topAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 2),
-            self.pointContainerView.widthAnchor.constraint(equalToConstant: 60),
-            self.pointContainerView.heightAnchor.constraint(equalToConstant: 25),
-            
+            self.pointContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.title.trailingAnchor, multiplier: 2),
+            self.pointContainerView.heightAnchor.constraint(equalToConstant: 30),
+
+            self.progressBar.leadingAnchor.constraint(equalTo: self.missionImage.leadingAnchor),
+            self.progressBar.trailingAnchor.constraint(equalTo: self.pointContainerView.trailingAnchor),
+            self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.subTitle.bottomAnchor, multiplier: 2),
+
+            self.numberOfParticipation.topAnchor.constraint(equalToSystemSpacingBelow: self.progressBar.bottomAnchor, multiplier: 1),
+            self.numberOfParticipation.trailingAnchor.constraint(equalTo: self.pointContainerView.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 2)
+        ])
+        
+        NSLayoutConstraint.activate([
             self.pointLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.pointContainerView.topAnchor, multiplier: 1),
             self.pointLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.leadingAnchor, multiplier: 1),
             self.pointContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointLabel.trailingAnchor, multiplier: 1),
-            self.pointContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 1),
-            
-            self.progressBar.topAnchor.constraint(equalToSystemSpacingBelow: self.titleStack.bottomAnchor, multiplier: 2),
-            self.progressBar.leadingAnchor.constraint(equalTo: self.missionImage.leadingAnchor),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.progressBar.trailingAnchor, multiplier: 2),
-            
-            self.numberOfParticipation.topAnchor.constraint(equalToSystemSpacingBelow: self.progressBar.bottomAnchor, multiplier: 1),
-            self.numberOfParticipation.trailingAnchor.constraint(equalTo: self.progressBar.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.numberOfParticipation.bottomAnchor, multiplier: 3)
+            self.pointContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.pointLabel.bottomAnchor, multiplier: 1)
         ])
-        
-        self.numberOfParticipation.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }

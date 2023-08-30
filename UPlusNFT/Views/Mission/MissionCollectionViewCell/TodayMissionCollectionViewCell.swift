@@ -10,7 +10,8 @@ import UIKit
 final class TodayMissionCollectionViewCell: UICollectionViewCell {
     
     enum `Type` {
-        case mission
+        case daily
+        case weekly
         case event
     }
     
@@ -27,7 +28,6 @@ final class TodayMissionCollectionViewCell: UICollectionViewCell {
     
     private let missionDesc: UILabel = {
         let label = UILabel()
-        label.text = MyPageConstants.dailyQuestDesc
         label.textColor = UPlusColor.gray06
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -72,10 +72,17 @@ extension TodayMissionCollectionViewCell {
     
     func configure(with vm: UserProfileViewViewModel) {
         switch self.type {
-        case .mission:
+        case .daily:
             self.missionLabel.text = MissionConstants.todayMission
             self.missionDesc.isHidden = false
+            self.missionDesc.text = MyPageConstants.dailyQuestDesc
             self.timeLabel.text = String(format: MissionConstants.timeLeftSuffix, vm.timeLeft)
+            
+        case .weekly:
+            self.missionLabel.text = MissionConstants.weeklyQuest
+            self.missionDesc.isHidden = false
+            self.missionDesc.text = MyPageConstants.weeklyQuestDesc
+            self.timeLabel.text = String(format: MissionConstants.daysLeftSuffix, vm.daysLeft)
             
         case .event:
             self.missionLabel.text = MissionConstants.availableEvent

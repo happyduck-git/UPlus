@@ -115,6 +115,7 @@ extension WeeklyMissionCollectionViewCell {
     func configure(item: Int,
                    title: String,
                    period: String,
+                   numberOfParticipation: Int,
                    point: Int64) {
         
         var image: String = ""
@@ -131,8 +132,7 @@ extension WeeklyMissionCollectionViewCell {
         self.missionImage.image = UIImage(named: image)
         self.missionTitle.text = title
         self.timeLeftLabel.text = period
-        self.numberOfParticipation.text = MissionConstants.weeklyMissionProgress
-        
+        self.numberOfParticipation.text = String(format: MissionConstants.weeklyMissionProgress, numberOfParticipation)        
     }
     
 }

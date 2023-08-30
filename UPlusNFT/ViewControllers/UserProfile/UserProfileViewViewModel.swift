@@ -20,6 +20,7 @@ final class UserProfileViewViewModel {
     
     /* Today Mission Section */
     let timeLeft: Int
+    var daysLeft: Int = 0
     
     init(profileImage: String,
          username: String,
@@ -34,6 +35,27 @@ final class UserProfileViewViewModel {
         self.maxPoints = maxPoints
         self.level = level
         self.timeLeft = timeLeft
+        
+        self.daysLeft = self.calculateDaysLeft()
     }
     
+}
+
+extension UserProfileViewViewModel {
+    private func calculateDaysLeft() -> Int {
+        
+        let calendar = Calendar.current
+        let today = Date()
+        guard let todayWeekday = calendar.dateComponents([.weekday], from: today).weekday else { return -1 }
+        
+        // In the Gregorian calendar, Sunday is 1 and Saturday is 7. So, Friday is 6.
+        let friday = 6
+        
+        if todayWeekday <= friday {
+            return friday - todayWeekday + 1
+        } else {
+            return 7 - todayWeekday + friday + 1
+        }
+        
+    }
 }
