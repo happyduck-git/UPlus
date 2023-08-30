@@ -146,9 +146,6 @@ final class MyPageViewController: UIViewController {
         self.setLayout()
         self.setDelegate()
         
-        // Send notification
-        self.requestAuthNoti()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -1108,12 +1105,36 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return UICollectionReusableView()
             }
         
+            header.delegate = self
+            
+            var headerType: MissionHeaderType = .master
             if self.screenToShow == 0 {
-                header.configure(headerText: vm.missionSections[indexPath.section].rawValue,
+                
+                switch vm.missionSections[indexPath.section] {
+                case .routine:
+                    headerType = .master
+                case .weekly:
+                    headerType = .world
+                default:
+                    break
+                }
+                
+                header.configure(type: headerType,
+                                 headerText: vm.missionSections[indexPath.section].rawValue,
                                  buttonTitle: MissionConstants.details)
                 return header
             } else {
-                header.configure(headerText: vm.eventSections[indexPath.section].rawValue,
+                switch vm.eventSections[indexPath.section] {
+                case .regularEvent:
+                    headerType = .contest
+                case .levelEvent:
+                    headerType = .level
+                default:
+                    break
+                }
+                
+                header.configure(type: headerType,
+                                 headerText: vm.eventSections[indexPath.section].rawValue,
                                  buttonTitle: MissionConstants.details)
                 
                 return header
@@ -1452,53 +1473,25 @@ extension MyPageViewController: NftBottomSheetDelegate {
     }
 }
 
-extension MyPageViewController {
- 
-    func requestSendNoti(seconds: Double) {
-          let notiContent = UNMutableNotificationContent()
+extension MyPageViewController: MissionCollectionViewHeaderDelegate {
+    func detailButtonDidTap(type: MissionHeaderType) {
+        var vcHeight: CGFloat = 600
         
-        // 아침
-        /*
-         notiContent.title = "미션으로 아침을 시작해볼까요!"
-         notiContent.body = "출근하며 오늘의 미션을 완료해보세요"
-         notiContent.userInfo = ["targetView": "myPage"]
-         */
-        
-        // 점심
-        /*
-          notiContent.title = "아직 미션을 안하셨네요!"
-          notiContent.body = "점심시간이 지나기 전에 미션을 완료해보세요"
-          notiContent.userInfo = ["targetView": "myPage"] // 푸시 받을때 오는 데이터
-        */
-        
-        // 오후
-        notiContent.title = "잠시 휴식이 필요한 시간!"
-        notiContent.body = "완료하지 않은 여정을 다시 시작해볼까요?"
-        notiContent.userInfo = ["targetView": "myPage"]
-
-          // 알림이 trigger되는 시간 설정
-          let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false)
-
-          let request = UNNotificationRequest(
-              identifier: UUID().uuidString,
-              content: notiContent,
-              trigger: trigger
-          )
-
-        notiCenter.add(request) { (error) in
-              print(#function, error)
-          }
-        
-    }
-    
-    func requestAuthNoti() {
-        let notiAuthOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
-        notiCenter.requestAuthorization(options: notiAuthOptions) { (success, error) in
-            if let error = error {
-                print(#function, error)
-            }
+        switch type {
+        case .contest:
+            break
+        case .level:
+            vcHeight = 400
+        case .master:
+            vcHeight = 550
+        case .world:
+            vcHeight = 500
         }
-    }
-    
-}
+        let vm = DetailInftoBottomSheetViewViewModel(type: type)
+        let vc = DetailInftoBottomSheetViewController(vm: vm, defaultHeight: vcHeight)
+        
+        vc.modalPresentationStyle = .overCurrentContext
 
+        self.present(vc, animated: false)
+    }
+}

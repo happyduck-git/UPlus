@@ -74,7 +74,7 @@ final class UserMissionDataView: PassThroughView {
 extension UserMissionDataView {
     private func setProgress(point: Int64, level: Int, maxPoint: Int) {
         let progress: Float = Float(point) / Float(maxPoint)
-        self.levelProgressBar.setProgress(progress, animated: true)
+        self.levelProgressBar.setProgress(progress, animated: false)
     }
 }
 

@@ -18,9 +18,15 @@ final class ChoiceQuizVideoViewController: BaseMissionViewController {
     private var bindings = Set<AnyCancellable>()
     
     //MARK: - UI Elements
-    private var isVideoScreen: Bool = true
     
     // Video Watch View
+    private let videoContainerView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let videoPlayer: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.allowsInlineMediaPlayback = true
@@ -36,7 +42,7 @@ final class ChoiceQuizVideoViewController: BaseMissionViewController {
     private let videoDescriptionLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = MissionConstants.watchVideoDescription
+        label.numberOfLines = 0
         label.textColor = UPlusColor.mint05
         label.font = .systemFont(ofSize: UPlusFont.body2)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -44,27 +50,14 @@ final class ChoiceQuizVideoViewController: BaseMissionViewController {
     }()
     
     // Choice View
-    private let containerView: UIView = {
+    private let choiceContainerView: UIView = {
        let view = UIView()
         view.isHidden = true
-        view.layer.cornerRadius = 8.0
-        view.clipsToBounds = true
-        view.layer.borderColor = UPlusColor.gray03.cgColor
-        view.layer.borderWidth = 2.0
-        view.backgroundColor = UPlusColor.gray02
+        view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    private let quizHintText: UILabel = {
-       let label = UILabel()
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.body1)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+
     private let buttonStack: UIStackView = {
        let stack = UIStackView()
         stack.axis = .vertical
@@ -81,6 +74,7 @@ final class ChoiceQuizVideoViewController: BaseMissionViewController {
     init(vm: ChoiceQuizVideoViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
+        self.setBaseVM(vm: vm)
     }
     
     required init?(coder: NSCoder) {
@@ -115,9 +109,9 @@ extension ChoiceQuizVideoViewController {
         
         for i in 0..<numberOfCaptions/2 {
             let stack = UIStackView()
-            stack.axis = .horizontal
+            stack.axis = .vertical
             stack.distribution = .fillEqually
-            stack.spacing = 5.0
+            stack.spacing = 8.0
             self.stacks.append(stack)
             
             for j in 0+i..<2+i {
@@ -127,11 +121,12 @@ extension ChoiceQuizVideoViewController {
                 button.clipsToBounds = true
                 button.layer.cornerRadius = 8.0
                 button.backgroundColor = .white
+                button.layer.borderWidth = 2.0
+                button.layer.borderColor = UIColor.clear.cgColor
                 
                 if order < captions.count {
                     button.setQuizTitle(text: mission.missionChoiceQuizCaptions[order])
                 }
-               
                 
                 self.buttons.append(button)
                 stack.addArrangedSubview(button)
@@ -145,12 +140,13 @@ extension ChoiceQuizVideoViewController {
 //MARK: - Set UI & Layout
 extension ChoiceQuizVideoViewController {
     private func setUI() {
-        self.quizContainer.addSubviews(self.videoPlayer,
-                                       self.videoDescriptionLabel,
-                                       self.containerView)
+        self.quizContainer.addSubviews(self.videoContainerView,
+                                       self.choiceContainerView)
         
-        self.containerView.addSubviews(self.quizHintText,
-                                       self.buttonStack)
+        self.videoContainerView.addSubviews(self.videoPlayer,
+                                            self.videoDescriptionLabel)
+        
+        self.choiceContainerView.addSubviews(self.buttonStack)
         
         for i in 0..<self.stacks.count {
             self.buttonStack.addArrangedSubview(self.stacks[i])
@@ -158,31 +154,36 @@ extension ChoiceQuizVideoViewController {
     }
     
     private func setLayout() {
+        
         NSLayoutConstraint.activate([
-            self.videoPlayer.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 5),
-            self.videoPlayer.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 1),
-            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.videoPlayer.trailingAnchor, multiplier: 1),
+            self.videoContainerView.topAnchor.constraint(equalTo: self.quizContainer.topAnchor),
+            self.videoContainerView.leadingAnchor.constraint(equalTo: self.quizContainer.leadingAnchor),
+            self.videoContainerView.trailingAnchor.constraint(equalTo: self.quizContainer.trailingAnchor),
+            self.videoContainerView.bottomAnchor.constraint(equalTo: self.quizContainer.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.videoPlayer.topAnchor.constraint(equalToSystemSpacingBelow: self.videoContainerView.topAnchor, multiplier: 1),
+            self.videoPlayer.leadingAnchor.constraint(equalToSystemSpacingAfter: self.videoContainerView.leadingAnchor, multiplier: 1),
+            self.videoContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.videoPlayer.trailingAnchor, multiplier: 1),
             self.videoPlayer.heightAnchor.constraint(equalToConstant: self.view.frame.height / 3.5),
             
-            self.videoDescriptionLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.videoPlayer.bottomAnchor, multiplier: 2),
-            self.videoDescriptionLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
-            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.videoDescriptionLabel.trailingAnchor, multiplier: 2)
+            self.videoDescriptionLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.videoPlayer.bottomAnchor, multiplier: 1),
+            self.videoDescriptionLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.videoContainerView.leadingAnchor, multiplier: 2),
+            self.videoContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.videoDescriptionLabel.trailingAnchor, multiplier: 2),
+//            self.videoContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.videoDescriptionLabel.bottomAnchor, multiplier: 1)
         ])
 
         NSLayoutConstraint.activate([
-            self.containerView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 4),
-            self.containerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
-            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.trailingAnchor, multiplier: 3),
-            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.containerView.bottomAnchor, multiplier: 4),
+            self.choiceContainerView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 4),
+            self.choiceContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 5),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.choiceContainerView.trailingAnchor, multiplier: 5),
+            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.choiceContainerView.bottomAnchor, multiplier: 4),
             
-            self.quizHintText.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 1),
-            self.quizHintText.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
-            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizHintText.trailingAnchor, multiplier: 2),
-            
-            self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.quizHintText.bottomAnchor, multiplier: 8),
-            self.buttonStack.leadingAnchor.constraint(equalTo: self.quizHintText.leadingAnchor),
-            self.buttonStack.trailingAnchor.constraint(equalTo: self.quizHintText.trailingAnchor),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 5)
+            self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.choiceContainerView.topAnchor, multiplier: 1),
+            self.buttonStack.leadingAnchor.constraint(equalTo: self.choiceContainerView.leadingAnchor),
+            self.buttonStack.trailingAnchor.constraint(equalTo: self.choiceContainerView.trailingAnchor),
+            self.choiceContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 1)
         ])
       
     }
@@ -190,39 +191,127 @@ extension ChoiceQuizVideoViewController {
 
 extension ChoiceQuizVideoViewController {
     private func configure() {
-        self.titleLabel.text = self.vm.mission.missionContentTitle
+
+        if vm.mission.missionSubFormatType == MissionSubFormatType.choiceQuizVideo.rawValue {
+            let map = vm.mission.missionContentExtraMap ?? [:]
+            let frontTop = map[FirestoreConstants.videoQuizFrontTopText] ?? ""
+            let frontBottom = map[FirestoreConstants.videoQuizFrontBottomText] ?? ""
+            let rearTop = map[FirestoreConstants.videoQuizRearTopText] ?? ""
+            
+            self.vm.frontBottom = frontBottom
+            self.vm.rearTop = rearTop
+            
+            if let attributedString = vm.retrieveHtmlString(html: frontTop) {
+                self.weblinkButton.isHidden = false
+                weblinkButton.setAttributedTitle(attributedString, for: .normal)
+            }
+            
+            if let attributedString = vm.retrieveHtmlString(html: self.vm.frontBottom) {
+                self.videoDescriptionLabel.attributedText = attributedString
+            }
+
+        }
         
         self.checkAnswerButton.isUserInteractionEnabled = true
         self.checkAnswerButton.setTitle(MissionConstants.next, for: .normal)
     }
     
     private func bind() {
-        
-        self.checkAnswerButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let `self` = self else { return }
-                if self.isVideoScreen {
-                    self.isVideoScreen.toggle()
+        func bindViewToViewModel() {
+            self.weblinkButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
                     
-                    self.stopVideo()
-                    self.videoPlayer.isHidden = true
-                    self.videoDescriptionLabel.isHidden = true
+                    if !self.vm.isVideoScreen {
+                        if let attributedString = vm.retrieveHtmlString(html: self.vm.rearTop) {
+                            self.weblinkButton.setAttributedTitle(attributedString, for: .normal)
+                        }
+                        self.vm.openURL(from: self.vm.rearTop)
+                    }
                     
-                    self.containerView.isHidden = false
-                    // TODO: 몇 초 뒤인지 명시 필요
-                    self.checkAnswerButton.setTitle(MissionConstants.goToQuizAfterSec, for: .normal)
-                    self.checkAnswerButton.isUserInteractionEnabled = false
+                }
+                .store(in: &bindings)
+            
+            self.checkAnswerButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
                     
-                    self.quizHintText.text = self.vm.mission.missionContentTitle
-                    
-                } else {
-                    guard let mission = self.vm.mission as? ChoiceQuizMission,
-                          let selectedAnswer = self.vm.selectedButton
-                    else { return }
-                    
-                    if mission.missionChoiceQuizRightOrder == selectedAnswer {
+                    if self.vm.isVideoScreen {
+                        self.vm.isVideoScreen.toggle()
                         
+                        self.stopVideo()
+                        self.videoContainerView.isHidden = true
+                        self.choiceContainerView.isHidden = false
+                     
+                        if let attributedString = vm.retrieveHtmlString(html: self.vm.rearTop) {
+                            self.videoDescriptionLabel.attributedText = attributedString
+                        }
+                        
+                        self.checkAnswerButton.setTitle(MissionConstants.checkAnswer, for: .normal)
+                        self.toggleButtonActivation(status: false)
+                        
+                    } else {
+                        guard let mission = self.vm.mission as? ChoiceQuizMission,
+                              let selectedAnswer = self.vm.selectedButton
+                        else { return }
+                        
+                        if mission.missionChoiceQuizRightOrder == selectedAnswer {
+                            self.vm.isRightAnswerSubmitted.send(true)
+                            
+                        } else {
+                            self.vm.isRightAnswerSubmitted.send(false)
+                        }
+                    }
+     
+                }
+                .store(in: &bindings)
+            
+            for button in buttons {
+                button.tapPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] _ in
+                        guard let `self` = self else { return }
+                        
+                        self.answerInfoLabel.isHidden = true
+                        self.toggleButtonActivation(status: true)
+                        
+                        let tag = button.tag
+                        if !self.vm.buttonStatus[tag] {
+                            if let prev = self.vm.selectedButton {
+                                self.vm.buttonStatus[prev].toggle()
+                                self.buttons[prev].layer.borderColor = UIColor.clear.cgColor
+                                self.buttons[prev].toggleImage(hidden: true)
+                            }
+                            self.buttons[tag].layer.borderColor = UPlusColor.mint03.cgColor
+                            
+                            self.vm.buttonStatus[tag].toggle()
+                            self.buttons[tag].toggleImage(hidden: false)
+                            self.vm.selectedButton = tag
+                        }
+                    }
+                    .store(in: &bindings)
+            }
+        }
+        
+        func bindViewModelToView() {
+            self.vm.$isActivated
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] activated in
+                    guard let `self` = self else { return }
+                    
+                    self.toggleButtonActivation(status: activated)
+
+                }
+                .store(in: &bindings)
+            
+            self.vm.isRightAnswerSubmitted
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isRight in
+                    guard let `self` = self else { return }
+                    
+                    if isRight {
                         var vc: BaseMissionCompletedViewController?
                         
                         switch self.vm.type {
@@ -240,39 +329,17 @@ extension ChoiceQuizVideoViewController {
                         
                     } else {
                         self.answerInfoLabel.isHidden = false
-                    }
-                }
- 
-            }
-            .store(in: &bindings)
-        
-        for button in buttons {
-            button.tapPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
-                    guard let `self` = self else { return }
-                    
-                    self.answerInfoLabel.isHidden = true
-                    self.checkAnswerButton.isUserInteractionEnabled = true
-                    self.checkAnswerButton.backgroundColor = UPlusColor.gray09
-                    
-                    let tag = button.tag
-                    if !self.vm.buttonStatus[tag] {
-                        if let prev = self.vm.selectedButton {
-                            self.vm.buttonStatus[prev].toggle()
-                            self.buttons[prev].layer.borderColor = UIColor.clear.cgColor
-                            self.buttons[prev].toggleImage(hidden: true)
-                        }
-                        self.buttons[tag].layer.borderColor = UPlusColor.gray05.cgColor
-                        
-                        self.vm.buttonStatus[tag].toggle()
-                        self.buttons[tag].toggleImage(hidden: false)
-                        self.vm.selectedButton = tag
+                        let tag = self.vm.selectedButton ?? 0
+                        self.buttons[tag].layer.borderColor = UPlusColor.orange01.cgColor
                     }
                 }
                 .store(in: &bindings)
         }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
     }
+
 }
 
 //MARK: - Private
@@ -284,9 +351,17 @@ extension ChoiceQuizVideoViewController {
         let videoURL = self.convertToEmbedURL(from: urlString)
         else { return }
 
+        // Play video
         let request = URLRequest(url: videoURL)
         self.videoPlayer.load(request)
        
+        // Set button second
+        self.checkAnswerButton.setTitle(String(format: "문제 풀러 가기 (%@초 뒤 활성화)", self.vm.secondLeft), for: .normal)
+        self.checkAnswerButton.isUserInteractionEnabled = false
+        
+        self.returnTrueAfterDelay(seconds: self.vm.secondLeft) { finished in
+            self.vm.isActivated = finished
+        }
     }
     
     private func extractVideoID(from urlString: String) -> String? {
@@ -299,58 +374,65 @@ extension ChoiceQuizVideoViewController {
     }
 
     private func convertToEmbedURL(from urlString: String) -> URL? {
-        if let videoID = extractVideoID(from: urlString) {
-            let embedURLString = "https://www.youtube.com/embed/\(videoID)?autoplay=1"
-            return URL(string: embedURLString)
-        } else {
+        let (urlString, sec) = sliceBySemicolon(from: urlString)
+        
+        guard let url = urlString,
+              let secLeft = sec,
+              let videoID = self.extractVideoID(from: url) else {
             return nil
         }
+        let embedURLString = "https://www.youtube.com/embed/\(videoID)?autoplay=1"
+        
+        self.vm.secondLeft = secLeft
+        
+        return URL(string: embedURLString)
     }
     
-    // NOT IN USE
-    private func buildYTUrl(iframeString: String) -> URL? {
-    
-        guard let iframeString = self.vm.mission.missionContentText else { return nil }
-        let pattern = "src=\"([^\"]+)\""
-        let regex = try? NSRegularExpression(pattern: pattern, options: [])
-        let range = NSRange(iframeString.startIndex..<iframeString.endIndex, in: iframeString)
-        let matches = regex?.matches(in: iframeString, options: [], range: range)
-
-        if let match = matches?.first, let range = Range(match.range(at: 1), in: iframeString) {
-            let srcURL = self.appendAutoplayParameter(to: String(iframeString[range]))
-            print(srcURL)
-            return URL(string: srcURL)
-        } else {
-            return nil
-        }
-        
-        
-    }
-    
-    // NOT IN USE
-    private func appendAutoplayParameter(to url: String) -> String {
-        var result = url
-
-            if result.contains("?") {
-                result += "&autoplay=1"
-            } else {
-                result += "?autoplay=1"
-            }
-
-            if result.contains("?") {
-                result += "&enablejsapi=1"
-            } else {
-                result += "?enablejsapi=1"
-            }
-            
-            return result
+    func sliceBySemicolon(from string: String) -> (id: String?, sec: String?) {
+        let components = string.split(separator: ",", maxSplits: 1, omittingEmptySubsequences: true)
+        return components.count > 1 ? (String(components[0]), String(components[1])) : (nil, nil)
     }
     
     private func stopVideo() {
         self.videoPlayer.evaluateJavaScript("document.querySelector('video').stopVideo();", completionHandler: nil)
 
     }
+    
+    /// Return after seconds delay.
+    /// - Parameters:
+    ///   - seconds: seconds to delay.
+    ///   - completion: completion handler.
+    private func returnTrueAfterDelay(seconds: String, completion: @escaping (Bool) -> Void) {
+        guard let time = Double(seconds) else {
+            print("Invalid time format")
+            return
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+            completion(true)
+        }
+    }
+    
 }
+
+extension ChoiceQuizVideoViewController {
+    private func goToUrl(urlString: String) {
+        self.vm.openURL(from: urlString)
+    }
+}
+
+extension ChoiceQuizVideoViewController {
+    private func toggleButtonActivation(status: Bool) {
+        let bgColor: UIColor = status ? UPlusColor.mint03 : UPlusColor.gray02
+        let txtColor: UIColor = status ? UPlusColor.gray08 : .white
+        let interactive: Bool = status ? true : false
+        
+        self.checkAnswerButton.backgroundColor = bgColor
+        self.checkAnswerButton.setTitleColor(txtColor, for: .normal)
+        self.checkAnswerButton.isUserInteractionEnabled = interactive
+    }
+}
+
 
 extension ChoiceQuizVideoViewController: BaseMissionCompletedViewControllerDelegate {
     func redeemDidTap() {

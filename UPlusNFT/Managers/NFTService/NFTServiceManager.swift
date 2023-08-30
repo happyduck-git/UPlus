@@ -36,7 +36,8 @@ final actor NFTServiceManager {
     private init() {}
     
     //MARK: - URL Constant
-    private let baseUrl = "https://its-test.gall3ry.io/nft-infra"
+//    private let baseUrl = "https://its-test.gall3ry.io/nft-infra"
+    private let baseUrl = "https://its-test2.gall3ry.io/nft-infra"
     private let accessCode = "Bearer " + EnvironmentConfig.uplusAccessCode
     private let jsonKey = "application/json"
     private let headerFieldAuthorization = "Authorization"

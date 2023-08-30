@@ -59,43 +59,34 @@ extension EventCompletedViewController {
                 let mission = self.vm.mission
                 guard let subFormatType = MissionSubFormatType(rawValue: mission.missionSubFormatType) else { return }
                 
+                var selectedIndex: Int?
+                var recentComments: [String]?
+                var comment: String?
+                
                 switch subFormatType {
                     
                 case .choiceQuizOX,
                         .choiceQuizMore,
                         .contentReadOnly,
-                        .shareMediaOnSlack,
                         .choiceQuizVideo,
                         .photoAuthManagement,
                         .photoAuthNoManagement:
-
-                    Task {
-                        do {
-                            try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
-                                                                           recentComments: nil,
-                                                                           comment: nil)
-                        }
-                        catch {
-                            self.logger.error("Error saving event participation -- \(String(describing: error))")
-                        }
-                    }
                     
+                    selectedIndex = nil
+                    recentComments = nil
+                    comment = nil
                     
-                    break
-         
                 case .governanceElection:
                     guard let vm = self.vm as? GovernanceElectionMissionViewViewModel else { return }
                     
-                    Task {
-                        do {
-                            try await self.vm.saveEventParticipationStatus(selectedIndex: vm.selectedButton,
-                                                                           recentComments: nil,
-                                                                           comment: nil)
-                        }
-                        catch {
-                            self.logger.error("Error saving event participation -- \(String(describing: error))")
-                        }
-                    }
+                    selectedIndex = vm.selectedButton
+                    recentComments = nil
+                    comment = nil
+                    
+                case .shareMediaOnSlack:
+                    selectedIndex = nil
+                    recentComments = nil
+                    comment = comment
 
                 default:
                     print("No action defined for this event")
@@ -103,6 +94,12 @@ extension EventCompletedViewController {
                   
                 Task {
                     do {
+                        // Save event participant
+                        try await self.vm.saveEventParticipationStatus(selectedIndex: selectedIndex,
+                                                                       recentComments: recentComments,
+                                                                       comment: comment)
+                        
+                        
                         // Check level update.
                         try await self.vm.checkLevelUpdate()
 

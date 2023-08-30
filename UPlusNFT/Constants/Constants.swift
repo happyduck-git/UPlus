@@ -334,6 +334,13 @@ struct EditPasswordConstants {
     static let edit: String = "수정하기"
 }
 
+struct InfoBottomConstants {
+    static let contest: String = "콘테스트"
+    static let level: String = "레벨 제한 이벤트"
+    static let master: String = "스타트업 마스터 되기"
+    static let world: String = "월드클래스 기업 만들기"
+}
+
 // MARK: - Assets
 struct SFSymbol {
     static let camera: String = "camera.fill"
@@ -411,6 +418,7 @@ struct ImageAsset {
     
     /* HomeVC */
     static let dailyTrophy: String = "daily-trophy"
+    static let profileDefault: String = "profile-default"
     static let starButton: String = "star-button"
     static let infoGray: String = "info-gray"
     static let questionBox: String = "question-box"
@@ -512,6 +520,12 @@ struct ImageAsset {
     
     /* NewNFTVC */
     static let raffle: String = "raffle"
+    
+    /* DetailBottomVC */
+    static let detailsContest: String = "details-contest"
+    static let detailsLevel: String = "details-level"
+    static let detailsMaster: String = "details-master"
+    static let detailsWorld: String = "details-world"
     
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }
@@ -647,6 +661,9 @@ struct FirestoreConstants {
     static let missionContentTitle = "mission_content_title"
     static let missionRewardPoint = "mission_reward_point"
     static let missionsBeginEndTimeMap = "missions_begin_end_time_map"
+    static let videoQuizFrontTopText = "video_quiz__front_top_text"
+    static let videoQuizFrontBottomText = "video_quiz__front_bottom_text"
+    static let videoQuizRearTopText = "video_quiz__rear_top_text"
     
     /* Event */
     static let governanceElectionUserMap = "governance_election_user_map"

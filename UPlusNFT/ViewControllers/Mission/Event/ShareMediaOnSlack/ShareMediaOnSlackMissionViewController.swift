@@ -78,6 +78,8 @@ final class ShareMediaOnSlackMissionViewController: BaseMissionScrollViewControl
 extension ShareMediaOnSlackMissionViewController {
     
     private func configure() {
+        self.titleLabel.text = self.vm.mission.missionContentTitle
+        
         self.step1CardView.configure(cardType: .step1)
         self.step2CardView.configure(cardType: .step2)
         self.textfieldView.configure(with: self.vm)

@@ -1097,6 +1097,13 @@ extension FirestoreManager {
                 forDocument: userDocRef,
                 merge: true
             )
+            
+            let newComment = UserCommentSet(commentId: commentDocPath.documentID,
+                                            commentUser: userDocRef,
+                                            commentText: comment,
+                                            commentTime: Timestamp())
+            
+            try batch.setData(from: newComment, forDocument: commentDocPath, encoder: self.encoder)
  
         case .governanceElection:
             guard let selectedIndex = selectedIndex else {

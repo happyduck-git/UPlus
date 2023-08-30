@@ -124,7 +124,7 @@ extension BaseMissionViewController {
             self.weblinkButton.isHidden = false
             weblinkButton.setAttributedTitle(attributedString, for: .normal)
         }
-       
+
     }
 }
 
@@ -210,11 +210,11 @@ extension BaseMissionViewController {
             self.spinner.centerXAnchor.constraint(equalTo: self.quizImageView.centerXAnchor),
             self.spinner.centerYAnchor.constraint(equalTo: self.quizImageView.centerYAnchor),
             
-            self.weblinkButton.topAnchor.constraint(equalToSystemSpacingBelow: self.quizImageView.bottomAnchor, multiplier: 1),
+            self.weblinkButton.topAnchor.constraint(equalTo: self.quizImageView.bottomAnchor),
             self.weblinkButton.leadingAnchor.constraint(equalTo: self.quizImageView.leadingAnchor),
             self.weblinkButton.trailingAnchor.constraint(equalTo: self.quizImageView.trailingAnchor),
             
-            self.quizContainer.topAnchor.constraint(equalToSystemSpacingBelow: self.weblinkButton.bottomAnchor, multiplier: 1),
+            self.quizContainer.topAnchor.constraint(equalTo: self.weblinkButton.bottomAnchor),
             self.quizContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.quizContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             

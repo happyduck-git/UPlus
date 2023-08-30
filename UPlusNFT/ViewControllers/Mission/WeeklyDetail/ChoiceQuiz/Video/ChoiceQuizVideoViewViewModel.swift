@@ -10,40 +10,27 @@ import Combine
 
 final class ChoiceQuizVideoViewViewModel: MissionBaseModel {
     
+    // MARK: - Video
+    var isVideoScreen: Bool = true
     
+    var videoUrl: String = ""
+    var secondLeft: String = ""
     
-//    @Published var imageUrls: [URL] = []
+    var frontBottom: String = ""
+    var rearTop: String = ""
     
-    var videoId: String = ""
+    // MARK: - Submit Button
+    @Published var isActivated: Bool = false
+    @Published var nextDidTap: Bool = false
+    var isRightAnswerSubmitted = PassthroughSubject<Bool, Never>()
     
-    
+    // MARK: - Quiz Button
     var buttonStatus: [Bool] = []
     var selectedButton: Int?
     
-    //MARK: - Init
-    override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
-        super.init(type: type, mission: mission, numberOfWeek: numberOfWeek)
-        
-//        self.getImageUrls()
-    }
-    
 }
 
-// MARK: - Get Image Urls
+
 extension ChoiceQuizVideoViewViewModel {
-//    private func getImageUrls() {
-//        Task {
-//            do {
-//                let imagePaths = mission.missionContentImagePaths ?? []
-//                var imageUrls: [URL] = []
-//                for imagePath in imagePaths {
-//                    imageUrls.append(try await FirebaseStorageManager.shared.getDataUrl(reference: imagePath))
-//                }
-//                self.imageUrls = imageUrls
-//            }
-//            catch {
-//                print("Error downloading image url -- \(error)")
-//            }
-//        }
-//    }
+
 }

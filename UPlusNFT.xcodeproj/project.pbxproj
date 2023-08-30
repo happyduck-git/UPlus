@@ -195,7 +195,9 @@
 		93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 93A2EDC62A6FA74400C2287D /* FSCalendar */; };
 		93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */; };
 		93A2EDCB2A725B4E00C2287D /* RoutineMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDCA2A725B4E00C2287D /* RoutineMissionDetailViewController.swift */; };
-		93CBD6CE2A9E18F300870019 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */; };
+		93CBD6D02A9ED2F000870019 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */; };
+		93CBD6D22A9F275E00870019 /* DetailInftoBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */; };
+		93CBD6D42A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */; };
 		93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */; };
 		93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */; };
 		93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747D2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift */; };
@@ -453,6 +455,8 @@
 		93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryCalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMissionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDCA2A725B4E00C2287D /* RoutineMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionDetailViewController.swift; sourceTree = "<group>"; };
+		93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInftoBottomSheetViewController.swift; sourceTree = "<group>"; };
+		93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInftoBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
 		93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAnswerQuizMissionDetailViewController.swift; sourceTree = "<group>"; };
 		93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAnswerQuizMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93D1747D2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionDetailViewViewModel.swift; sourceTree = "<group>"; };
@@ -760,6 +764,8 @@
 				241116DE2A9A59A10010579C /* LogOutBottomSheetViewController.swift */,
 				937DDF712A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift */,
 				937DDF792A9D85590014AF15 /* LevelUpBottomSheetViewViewModel.swift */,
+				93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */,
+				93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -1518,7 +1524,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				930D96AE2A416AC40007801A /* LaunchScreen.storyboard in Resources */,
-				93CBD6CE2A9E18F300870019 /* GoogleService-Info.plist in Resources */,
+				93CBD6D02A9ED2F000870019 /* GoogleService-Info.plist in Resources */,
 				937DDFAB2A9E041F0014AF15 /* ID CARD_3.mp4 in Resources */,
 				937DDFAE2A9E041F0014AF15 /* ID CARD_4.mp4 in Resources */,
 				937DDFAF2A9E041F0014AF15 /* ID CARD_2.mp4 in Resources */,
@@ -1766,6 +1772,7 @@
 				937C76522A457F0A001024D0 /* Post.swift in Sources */,
 				937DDF6E2A9C3A800014AF15 /* HumpyBottomSheetViewController.swift in Sources */,
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
+				93CBD6D42A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift in Sources */,
 				939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */,
 				93DA585A2A8E1B9100525BEC /* EventBaseModel.swift in Sources */,
 				93DA583B2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift in Sources */,
@@ -1773,6 +1780,7 @@
 				24624B8B2A8E55E600C9A42E /* MyPageViewController+Extensions.swift in Sources */,
 				24984ABD2A5A6D43001F28CF /* FirebaseStorageCacheManager.swift in Sources */,
 				93D174962A779D6000F5B1B1 /* RoutineMissionSelectCollectionViewCell.swift in Sources */,
+				93CBD6D22A9F275E00870019 /* DetailInftoBottomSheetViewController.swift in Sources */,
 				240269422A83C37100850E65 /* CommentCountMissionViewController.swift in Sources */,
 				247FC60E2A678036001F3974 /* VipHolderBottomSheetViewController.swift in Sources */,
 				93D174902A7792F800F5B1B1 /* MissionAndEventCollectionViewHeader.swift in Sources */,

@@ -57,7 +57,7 @@ final class UserProfileView: PassThroughView {
     
     private let profileImage: GIFImageView = {
         let gifView = GIFImageView()
-        gifView.backgroundColor = UPlusColor.grayBackground
+        gifView.image = UIImage(named: ImageAsset.profileDefault)
         gifView.translatesAutoresizingMaskIntoConstraints = false
         return gifView
     }()

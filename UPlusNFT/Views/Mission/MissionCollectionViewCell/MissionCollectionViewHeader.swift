@@ -6,15 +6,21 @@
 //
 
 import UIKit
+import Combine
 
-class MissionCollectionViewHeader: UICollectionReusableView {
+protocol MissionCollectionViewHeaderDelegate: AnyObject {
+    func detailButtonDidTap(type: MissionHeaderType)
+}
+
+final class MissionCollectionViewHeader: UICollectionReusableView {
+
+    private var type: MissionHeaderType = .master
     
-    enum HeaderType {
-        case normal
-        case rightButton
-    }
+    // MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
     
-    private var type: HeaderType = .normal
+    // MARK: - Delegate
+    weak var delegate: MissionCollectionViewHeaderDelegate?
     
     // MARK: - UI Elements
     private let sectionTitle: UILabel = {
@@ -42,8 +48,9 @@ class MissionCollectionViewHeader: UICollectionReusableView {
         super.init(frame: frame)
         
         self.backgroundColor = .systemGray6
-        setUI()
-        setLayout()
+        self.setUI()
+        self.setLayout()
+        self.bind()
     }
     
     required init?(coder: NSCoder) {
@@ -52,10 +59,28 @@ class MissionCollectionViewHeader: UICollectionReusableView {
     
 }
 
+// MARK: - Bind
+extension MissionCollectionViewHeader {
+    
+    func bind() {
+        self.detailButton.tapPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let `self` = self else { return }
+                
+                self.delegate?.detailButtonDidTap(type: self.type)
+            }
+            .store(in: &bindings)
+        
+    }
+    
+}
+
 // MARK: - Configure with View Model
 extension MissionCollectionViewHeader {
     
-    func configure(headerText: String, buttonTitle: String) {
+    func configure(type: MissionHeaderType, headerText: String, buttonTitle: String) {
+        self.type = type
         self.sectionTitle.text = headerText
         self.detailButton.setTitle(buttonTitle, for: .normal)
     }
