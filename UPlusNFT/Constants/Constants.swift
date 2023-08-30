@@ -202,7 +202,7 @@ struct MissionConstants {
     static let weeklyPoints: String = "600P+NFT"
     static let weeklyMissionProgress: String = "%d/15회"
     static let episodeCerti: String = "에피소드 인증서"
-    static let weeklyTopTitle: String = "%d월 %d일까지 완주하고 에피소드 인증서를 받으세요!"
+    static let weeklyTopTitle: String = "%@월 %@일까지 완주하고 에피소드 인증서를 받으세요!"
     static let episode1Desc: String = "천리길도 한걸음부터! 같이 일할 사원을 뽑아보아요."
     static let episode2Desc: String = "이번 주도 열심히! 서비스를 런칭해서 기업을 성장시켜요."
     static let episode3Desc: String = "기업 제휴로 월드클래스 기업까지 한발짝! 더 나아가요."

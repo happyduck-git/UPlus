@@ -1173,12 +1173,14 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 self.show(vc, sender: self)
                 
             case 2:
-  
-                let (status, _) = self.weeklyMissionInfo(week: indexPath.item + 1)
                 
+                let (status, title) = self.weeklyMissionInfo(week: indexPath.item + 1)
+                let missionInfo = self.vm.mission.weeklyMissions[title] ?? []
+                let end = missionInfo[1].dateValue()
+
                 switch status {
                 case .open:
-                    let vm = WeeklyMissionOverViewViewModel(week: indexPath.item + 1)
+                    let vm = WeeklyMissionOverViewViewModel(week: indexPath.item + 1, endDate: end)
                     let vc = WeeklyMissionOverViewViewController(vm: vm)
 
                     self.show(vc, sender: self)

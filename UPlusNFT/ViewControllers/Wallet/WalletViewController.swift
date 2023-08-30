@@ -285,7 +285,7 @@ extension WalletViewController: WalletDetailMissionButtonCollectionViewCellDeleg
         let numberOfWeek = self.numberOfWeek(startDay: startDay) ?? 1
         #endif
         
-        let vm = WeeklyMissionOverViewViewModel(week: numberOfWeek)
+        let vm = WeeklyMissionOverViewViewModel(week: numberOfWeek, endDate: Date()) //TODO: end date 필요
         let vc = WeeklyMissionOverViewViewController(vm: vm)
         
         self.show(vc, sender: self)

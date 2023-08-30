@@ -117,6 +117,7 @@ extension LogOutBottomSheetViewController {
                     
                     self.userLogOut()
                     self.dismissView {}
+                    self.dismiss(animated: true)
                 }
                 .store(in: &bindings)
         }

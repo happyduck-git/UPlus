@@ -38,7 +38,7 @@ class HumpyBottomSheetViewController: BottomSheetViewController {
     let levelLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .regular)
+        label.font = UIFont(name: UPlusFont.mainFont, size: UPlusFont.h2)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

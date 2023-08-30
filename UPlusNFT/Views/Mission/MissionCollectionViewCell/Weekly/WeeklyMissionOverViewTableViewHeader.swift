@@ -132,6 +132,8 @@ extension WeeklyMissionOverViewTableViewHeader {
         var nftImage: UIImage?
         var episodeSubtitleLabel: String?
         
+        self.topLabel.text = vm.endDateDescription
+        
         switch vm.week {
         case 1:
             subTitle = UIImage(named: WeeklyEpisode.week1.episodeSubTitle)

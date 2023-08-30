@@ -28,7 +28,7 @@ class BaseMissionCompletedViewController: UIViewController {
     
     let resultLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: UPlusFont.missionTitle, weight: .bold)
+        label.font = UIFont(name: UPlusFont.mainFont, size: UPlusFont.missionTitle)
         label.text = MissionConstants.questCompleted
         label.textAlignment = .center
         label.textColor = .black

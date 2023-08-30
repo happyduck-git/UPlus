@@ -25,3 +25,7 @@ struct UPlusFont {
     static let caption1: CGFloat = 12
 
 }
+
+extension UPlusFont {
+    static let mainFont: String = "DungGeunMo"
+}

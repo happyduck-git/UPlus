@@ -29,7 +29,7 @@ final class UserProfileView: PassThroughView {
         label.text = " "
         label.numberOfLines = 2
         label.textColor = .white
-        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .regular)
+        label.font = UIFont(name: UPlusFont.mainFont, size: UPlusFont.h2)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
