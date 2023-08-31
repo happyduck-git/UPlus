@@ -29,6 +29,28 @@ struct UPlusUser: Codable {
 
 extension UPlusUser {
     
+    static func getTheHighestAvatarNft(of user: UPlusUser?) -> DocumentReference? {
+        guard let user = user,
+              let nfts = user.userNfts else {
+            return nil
+        }
+
+        let nftInfos = nfts.compactMap { ref -> NftInfo? in
+            guard let extractedString = ref.path.extractAfterSlash(),
+                  let tokenId = Int64(extractedString) else {
+                return nil
+            }
+            return NftInfo(ref: ref, tokenId: tokenId)
+        }
+
+        let filteredNftInfos = nftInfos.filter { NftLevel.level(tokenId: $0.tokenId) <= 5 }
+        return filteredNftInfos.max { a, b in a.tokenId < b.tokenId }?.ref
+
+    }
+}
+
+extension UPlusUser {
+    
     static func saveCurrentUser(email: String) async throws -> Self {
         let currentUser = try await FirestoreManager.shared.getCurrentUserInfo(email: email)
 

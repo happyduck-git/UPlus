@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import Nuke
 
 final class RankBottomFlatSheetView: PassThroughView {
 
@@ -101,15 +102,9 @@ final class RankBottomFlatSheetView: PassThroughView {
         super.layoutSubviews()
 
         self.setBottomBorder()
-        self.profileImageView.layer.cornerRadius = self.profileImageView.frame.height / 2
-    }
-    
-}
-
-//MARK: - Configure
-extension RankBottomFlatSheetView {
-    
-    private func configure() {
+        DispatchQueue.main.async {
+            self.profileImageView.layer.cornerRadius = self.profileImageView.frame.height / 2
+        }
         
     }
     
@@ -127,9 +122,32 @@ extension RankBottomFlatSheetView {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    self.rankLabel.text = "1"
-//                    self.userProfileImageView.image = UIImage(named: $0?.userNfts)
+                    self.rankLabel.text = String(describing: vm.userTodayRank)
                     self.pointLabel.text = String(describing: $0?.userPointHistory?.first?.userPointCount ?? 0)
+                    
+                    Task {
+                        do {
+                            let user = try UPlusUser.getCurrentUser()
+                            
+                            self.username.text = user.userNickname
+                            self.level.text = String(format: "Lv.%d",UserDefaults.standard.integer(forKey: UserDefaultsConstants.level))
+                            
+                            let highest = UPlusUser.getTheHighestAvatarNft(of: user)
+                            guard let document = highest else { return }
+                            
+                            let doc = try await document.getDocument()
+                            let imageUrl = doc[FirestoreConstants.nftContentImageUrl] as? String ?? ""
+                        
+                            guard let url = URL(string: imageUrl) else { return }
+                            self.profileImageView.image = try await ImagePipeline.shared.image(for: url)
+                        }
+                        catch {
+                            UPlusLogger.logger.error("Error getting imagurl from nft document -- \(String(describing: error))")
+                        }
+                    }
+                    
+                    
+                    
                 }
                 .store(in: &bindings)
         } else {
@@ -182,9 +200,9 @@ extension RankBottomFlatSheetView {
             self.level.leadingAnchor.constraint(equalTo: self.username.leadingAnchor),
             self.bottomSheetView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.level.bottomAnchor, multiplier: 1),
             
-            self.pointImage.topAnchor.constraint(equalTo: self.rankLabel.topAnchor),
+            self.pointImage.topAnchor.constraint(equalTo: self.pointLabel.topAnchor),
             self.pointImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.username.trailingAnchor, multiplier: 2),
-            self.pointImage.bottomAnchor.constraint(equalTo: self.rankLabel.bottomAnchor),
+            self.pointImage.bottomAnchor.constraint(equalTo: self.pointLabel.bottomAnchor),
             self.pointImage.widthAnchor.constraint(equalTo: self.pointImage.heightAnchor),
             
             self.pointLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.bottomSheetView.topAnchor, multiplier: 2),

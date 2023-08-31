@@ -211,6 +211,7 @@ struct MissionConstants {
     static let episode3Desc: String = "기업 제휴로 월드클래스 기업까지 한발짝! 더 나아가요."
     static let noResubmitDesc: String = "제출 이후엔 수정이 불가합니다"
     static let recommend: String = "추천하기"
+    static let registerComment: String = "등록하기"
     
     /* Routine Mission */
     static let startupMaster: String = "스타트업 마스터 되기"
@@ -275,6 +276,7 @@ struct MissionConstants {
     static let missionPointSuffix: String = "%dP"
     
     static let missionLevel: String = "난이도"
+    static let numOfParticipants: String = "%d명 참여"
 }
 
 struct RankingConstants {
@@ -583,6 +585,7 @@ struct FirestoreConstants {
     static let nftContentImageUrl = "nft_content_image_url"
     static let weeklyQuizMissionSetCollection = "weekly_quiz__%d__mission_set"
     
+    static let bottomDescription = "bottom_description"
     
     /* Configuration */
     static let accountableEmails = "accountable_emails"
@@ -669,6 +672,8 @@ struct FirestoreConstants {
     static let missionFormatType = "mission_format_type"
     static let missionSubFormatType = "mission_sub_format_type"
     static let missionContentTitle = "mission_content_title"
+    static let missionContentText = "mission_content_text"
+    static let middleDescription = "middle_description"
     static let missionRewardPoint = "mission_reward_point"
     static let missionsBeginEndTimeMap = "missions_begin_end_time_map"
     static let videoQuizFrontTopText = "video_quiz__front_top_text"

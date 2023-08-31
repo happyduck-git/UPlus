@@ -9,6 +9,11 @@ import Foundation
 import Combine
 import FirebaseFirestore
 
+struct NftInfo {
+    let ref: DocumentReference
+    let tokenId: Int64
+}
+
 final class RankingViewViewModel {
     
     private let firestoreManager = FirestoreManager.shared
@@ -29,6 +34,9 @@ final class RankingViewViewModel {
     
     //MARK: - Data
     private let currentUser: UPlusUser?
+    
+    @Published var userTodayRank: Int = 0
+    @Published var userTotalRank: Int = 0
     
     @Published var totalRankerFetched: Bool = false
     
@@ -72,31 +80,11 @@ final class RankingViewViewModel {
 
 extension RankingViewViewModel {
     
-    struct NftInfo {
-        let ref: DocumentReference
-        let tokenId: Int64
-    }
-    
     private func getTopNftOfUsers(users: [UPlusUser]) -> [Int64: DocumentReference?] {
         var refs: [Int64: DocumentReference?] = [:]
         
         for user in users {
-            guard let nfts = user.userNfts else {
-                refs[user.userIndex] = nil
-                continue
-            }
-         
-            let nftInfos = nfts.compactMap { ref -> NftInfo? in
-                guard let extractedString = ref.path.extractAfterSlash(),
-                      let tokenId = Int64(extractedString) else {
-                    return nil
-                }
-                return NftInfo(ref: ref, tokenId: tokenId)
-            }
-
-            let filteredNftInfos = nftInfos.filter { NftLevel.level(tokenId: $0.tokenId) <= 5 }
-            let maxNftInfo = filteredNftInfos.max { a, b in a.tokenId < b.tokenId }?.ref
-            refs[user.userIndex] = maxNftInfo
+            refs[user.userIndex] = UPlusUser.getTheHighestAvatarNft(of: user)
         }
         return refs
     }
@@ -180,6 +168,12 @@ extension RankingViewViewModel {
         }.first
         
         self.currentUserTodayRank = todayRank
+        
+        let userTodayRank = self.todayRankerList.firstIndex {
+            $0.userIndex == currentUser?.userIndex
+        } ?? (UPlusServiceInfoConstant.totalMembers - 1)
+        
+        self.userTodayRank = userTodayRank + 1
         
         /* 누적 점수 랭킹 */
         let totalRank = self.totalRankerList.filter {

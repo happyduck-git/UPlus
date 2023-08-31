@@ -224,7 +224,8 @@ extension MyPageViewController {
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-                    collection.reloadSections(IndexSet(integer: 0))
+//                    collection.reloadSections(IndexSet(integer: 0))
+                    collection.reloadData()
                 }
                 .store(in: &bindings)
             
@@ -234,7 +235,8 @@ extension MyPageViewController {
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-                    collection.reloadSections(IndexSet(integer: 2))
+//                    collection.reloadSections(IndexSet(integer: 2))
+                    collection.reloadData()
                 }
                 .store(in: &bindings)
                 
@@ -289,7 +291,8 @@ extension MyPageViewController {
                     guard let `self` = self,
                           let collection = self.collectionView
                     else { return }
-                    collection.reloadSections(IndexSet(integer: 5))
+//                    collection.reloadSections(IndexSet(integer: 5))
+                    collection.reloadData()
                 }
                 .store(in: &bindings)
             
@@ -311,7 +314,8 @@ extension MyPageViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] info in
                     guard let `self` = self else { return }
-                    self.collectionView?.reloadSections(IndexSet(integer: 5))
+//                    self.collectionView?.reloadSections(IndexSet(integer: 5))
+                    self.collectionView?.reloadData()
                 }
                 .store(in: &bindings)
             
@@ -319,7 +323,8 @@ extension MyPageViewController {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] status in
                     guard let `self` = self else { return }
-                    self.collectionView?.reloadSections(IndexSet(integer: 1))
+//                    self.collectionView?.reloadSections(IndexSet(integer: 1))
+                    self.collectionView?.reloadData()
                 }
                 .store(in: &bindings)
             

@@ -24,21 +24,91 @@ final class SignUpViewController: UIViewController {
     weak var delegate: SignUpViewControllerDelegate?
     
     // MARK: - UI Elements
+    let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.isScrollEnabled = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let canvasView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let genderTitleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let buttonStack: UIStackView = {
+       let stack = UIStackView()
+        stack.spacing = 10.0
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    private let maleButton: UIButton = {
+        let button = UIButton()
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
+        button.layer.borderColor = UPlusColor.gray04.cgColor
+        button.layer.borderWidth = 1.0
+        button.setTitle("남성", for: .normal)
+        return button
+    }()
+    
+    private let femaleButton: UIButton = {
+        let button = UIButton()
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
+        button.layer.borderColor = UPlusColor.gray04.cgColor
+        button.layer.borderWidth = 1.0
+        button.setTitle("여성", for: .normal)
+        return button
+    }()
+    
+    private let birthYear: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let birthYearTextField: UITextField = {
+        let txtField = UITextField()
+        txtField.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
+        txtField.textColor = .black
+        txtField.placeholder = "출생연도(4자리)"
+        txtField.borderStyle = .roundedRect
+        txtField.translatesAutoresizingMaskIntoConstraints = false
+        return txtField
+    }()
+    
+    private let birthYearValidationView: ValidationInfoView = {
+        let view = ValidationInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let emailTitleLabel: UILabel = {
         let label = UILabel()
-
-        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
-        let attributedString = NSMutableAttributedString(string: SignUpConstants.emailLabel, attributes: [
-            .foregroundColor: UIColor.black,
-            .font: font
-        ])
-        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
-            .foregroundColor: UPlusColor.mint04,
-            .font: font
-        ])
-        
-        attributedString.append(star)
-        label.attributedText = attributedString
+//
+//        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+//        let attributedString = NSMutableAttributedString(string: SignUpConstants.emailLabel, attributes: [
+//            .foregroundColor: UIColor.black,
+//            .font: font
+//        ])
+//        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
+//            .foregroundColor: UPlusColor.mint04,
+//            .font: font
+//        ])
+//
+//        attributedString.append(star)
+//        label.attributedText = attributedString
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -74,18 +144,18 @@ final class SignUpViewController: UIViewController {
 
     private let pwLabel: UILabel = {
         let label = UILabel()
-        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
-        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordLabel, attributes: [
-            .foregroundColor: UIColor.black,
-            .font: font
-        ])
-        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
-            .foregroundColor: UPlusColor.mint04,
-            .font: font
-        ])
-        
-        attributedString.append(star)
-        label.attributedText = attributedString
+//        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+//        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordLabel, attributes: [
+//            .foregroundColor: UIColor.black,
+//            .font: font
+//        ])
+//        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
+//            .foregroundColor: UPlusColor.mint04,
+//            .font: font
+//        ])
+//
+//        attributedString.append(star)
+//        label.attributedText = attributedString
 
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -130,18 +200,18 @@ final class SignUpViewController: UIViewController {
     
     private let pwCheckLabel: UILabel = {
         let label = UILabel()
-        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
-        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordCheckLabel, attributes: [
-            .foregroundColor: UIColor.black,
-            .font: font
-        ])
-        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
-            .foregroundColor: UPlusColor.mint04,
-            .font: font
-        ])
-        
-        attributedString.append(star)
-        label.attributedText = attributedString
+//        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+//        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordCheckLabel, attributes: [
+//            .foregroundColor: UIColor.black,
+//            .font: font
+//        ])
+//        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
+//            .foregroundColor: UPlusColor.mint04,
+//            .font: font
+//        ])
+//
+//        attributedString.append(star)
+//        label.attributedText = attributedString
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -245,6 +315,15 @@ final class SignUpViewController: UIViewController {
         self.setLayout()
         self.setNavigationItem()
         
+        self.setStarAttributeToLabels([self.birthYear,
+                                       self.emailTitleLabel,
+                                       self.pwLabel,
+                                       self.pwCheckLabel],
+                                      mainStrings: [
+                                        "출생연도",
+                                        SignUpConstants.emailLabel,
+                                        SignUpConstants.passwordLabel, SignUpConstants.passwordCheckLabel])
+        
         self.bind()
         
         hideKeyboardWhenTappedAround()
@@ -268,7 +347,17 @@ final class SignUpViewController: UIViewController {
     
     // MARK: - Private
     private func setUI() {
-        self.view.addSubviews(
+        self.view.addSubview(self.scrollView)
+        self.scrollView.addSubview(self.canvasView)
+        
+        self.canvasView.addSubviews(
+            
+            self.genderTitleLabel,
+            self.buttonStack,
+            self.birthYear,
+            self.birthYearTextField,
+            self.birthYearValidationView,
+            
             self.emailTitleLabel,
             self.emailTextField,
             self.emailValidationText,
@@ -285,6 +374,8 @@ final class SignUpViewController: UIViewController {
             self.showAllButton,
             self.registerButton
         )
+        self.buttonStack.addArrangedSubviews(self.maleButton,
+                                             self.femaleButton)
         
         self.personalInfoStack.addArrangedSubviews(self.checkButton,
                                                    self.acceptInfoLabel)
@@ -305,13 +396,46 @@ final class SignUpViewController: UIViewController {
      
     private func setLayout() {
         NSLayoutConstraint.activate([
-            emailTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
-            emailTitleLabel.leadingAnchor.constraint(lessThanOrEqualToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
+            self.scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+           
+            self.canvasView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
+            self.canvasView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
+            self.canvasView.topAnchor.constraint(equalTo: self.scrollView.topAnchor),
+            self.canvasView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
+            self.canvasView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
+            
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.genderTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: canvasView.topAnchor, multiplier: 3),
+            self.genderTitleLabel.leadingAnchor.constraint(equalTo: self.emailTitleLabel.leadingAnchor),
+            
+            self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.genderTitleLabel.bottomAnchor, multiplier: 2),
+            self.buttonStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
+            self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.buttonStack.trailingAnchor, multiplier: 2),
+            self.buttonStack.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
+            
+            self.birthYear.topAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 2),
+            self.birthYear.leadingAnchor.constraint(equalTo: self.genderTitleLabel.leadingAnchor),
+            self.birthYearTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.birthYear.bottomAnchor, multiplier: 1),
+            self.birthYearTextField.leadingAnchor.constraint(equalTo: self.genderTitleLabel.leadingAnchor),
+            self.birthYearTextField.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
+            self.birthYearTextField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
+            
+            self.birthYearValidationView.topAnchor.constraint(equalToSystemSpacingBelow: self.birthYearTextField.bottomAnchor, multiplier: 1),
+            self.birthYearValidationView.leadingAnchor.constraint(equalTo: self.birthYearTextField.leadingAnchor),
+            
+            self.emailTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: canvasView.topAnchor, multiplier: 3),
+            self.emailTitleLabel.leadingAnchor.constraint(lessThanOrEqualToSystemSpacingAfter: canvasView.leadingAnchor, multiplier: 3),
+            
             
             emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailTitleLabel.bottomAnchor, multiplier: 1),
             emailTextField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
             emailTextField.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
-            view.trailingAnchor.constraint(equalToSystemSpacingAfter: emailTextField.trailingAnchor, multiplier: 3),
+            canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: emailTextField.trailingAnchor, multiplier: 3),
             
             emailValidationText.topAnchor.constraint(equalToSystemSpacingBelow: emailTextField.bottomAnchor, multiplier: 1),
             emailValidationText.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
@@ -354,8 +478,8 @@ final class SignUpViewController: UIViewController {
             registerButton.topAnchor.constraint(equalToSystemSpacingBelow: personalInfoStack.bottomAnchor, multiplier: 5),
             registerButton.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
             registerButton.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
-            registerButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor)
-            
+            registerButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            canvasView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.registerButton.bottomAnchor, multiplier: 3)
         ])
     }
     
@@ -583,6 +707,30 @@ extension SignUpViewController {
     
     @objc private func cancelButtonDidTap() {
         self.navigationController?.popViewController(animated: true)
+    }
+}
+
+extension SignUpViewController {
+    
+    private func setStarAttributeToLabels(_ labels: [UILabel], mainStrings: [String]) {
+        for i in 0..<labels.count {
+            labels[i].attributedText = setTextAttributes(main: mainStrings[i], sub: SignUpConstants.star)
+        }
+    }
+    
+    private func setTextAttributes(main: String, sub: String) -> NSAttributedString {
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        let attributedString = NSMutableAttributedString(string: main, attributes: [
+            .foregroundColor: UIColor.black,
+            .font: font
+        ])
+        let star = NSAttributedString(string: sub, attributes: [
+            .foregroundColor: UPlusColor.mint04,
+            .font: font
+        ])
+        
+        attributedString.append(star)
+        return attributedString
     }
 }
 

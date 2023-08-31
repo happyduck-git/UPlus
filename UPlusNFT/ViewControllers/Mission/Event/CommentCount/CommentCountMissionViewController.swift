@@ -13,7 +13,7 @@ protocol CommentCountMissionViewControllerDelegate: AnyObject {
     func submitCommentDidTap()
 }
 
-final class CommentCountMissionViewController: UIViewController {
+final class CommentCountMissionViewController: BaseScrollViewController {
 
     //MARK: - Dependency
     private let vm: CommentCountMissionViewViewModel
@@ -50,44 +50,62 @@ final class CommentCountMissionViewController: UIViewController {
         return label
     }()
 
-    private let quizImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = .clear
-        imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let weblinkButton: UIButton = {
-        let button = UIButton()
-        button.isHidden = true
-        button.titleLabel?.lineBreakMode = .byTruncatingMiddle
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let quizLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.contentMode = .scaleAspectFit
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let textField: UITextField = {
         let txtField = UITextField()
-        txtField.placeholder = MissionConstants.inputAnswer
-        txtField.borderStyle = .roundedRect
+        txtField.borderStyle = .none
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
     
+    private let hintLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let checkAnswerButton: UIButton = {
         let button = UIButton()
-        button.setTitle(MissionConstants.recommend, for: .normal)
+        button.setTitle(MissionConstants.registerComment, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 8.0
         button.backgroundColor = UPlusColor.gray02
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    private let additionalInfoContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let additionalInfoLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.backgroundColor = UPlusColor.gray02
+        label.clipsToBounds = true
+        label.layer.cornerRadius = 8.0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
-    private let tableHeaderView: UILabel = {
+    private let totalNumberLabel: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.gray07
+        label.backgroundColor = .white
         label.font = .systemFont(ofSize: UPlusFont.h2, weight: .semibold)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -116,8 +134,8 @@ final class CommentCountMissionViewController: UIViewController {
         super.viewDidLoad()
 
         self.view.backgroundColor = .white
-        
-//        self.commentTable.tableHeaderView = tableHeaderView
+
+        self.hideKeyboardWhenTappedAround()
         
         self.setUI()
         self.setLayout()
@@ -125,8 +143,9 @@ final class CommentCountMissionViewController: UIViewController {
         
         self.bind()
         self.configure()
+        
     }
-
+   
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         // TODO: Like 저장
@@ -141,13 +160,20 @@ extension CommentCountMissionViewController {
         
         switch self.vm.type {
         case .event:
-            return
+            let map = self.vm.mission.missionContentExtraMap ?? [:]
+            
+            let content = self.vm.mission.missionContentText ?? ""
+            let hint = map[FirestoreConstants.middleDescription] ?? ""
+            let bottom = map[FirestoreConstants.bottomDescription] ?? ""
+
+            self.quizLabel.attributedText = self.vm.retrieveHtmlString(html: content)
+            self.hintLabel.attributedText = self.vm.retrieveHtmlString(html: hint)
+            self.additionalInfoLabel.attributedText = self.vm.retrieveHtmlString(html: bottom)
+            
+            self.totalNumberLabel.text = String(format: MissionConstants.numOfParticipants, self.vm.comments.count)
+            print("Comments: \(self.vm.comments.count)")
         case .weekly:
-            if let html = vm.mission.missionContentText,
-               let attributedString = vm.retrieveHtmlString(html: html) {
-                self.weblinkButton.isHidden = false
-                weblinkButton.setAttributedTitle(attributedString, for: .normal)
-            }
+            return
         }
 
     }
@@ -159,26 +185,6 @@ extension CommentCountMissionViewController {
     private func bind() {
         
         func bindViewToViewModel() {
-            
-            self.vm.$imageUrls
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] urls in
-                    guard let `self` = self,
-                          let url = urls.first else { return }
-                    self.spinner.startAnimating()
-                    
-                    Task {
-                        do {
-                            self.quizImageView.image = try await ImagePipeline.shared.image(for: url)
-                            self.spinner.stopAnimating()
-                        }
-                        catch {
-                            print("Error")
-                        }
-                    }
-    
-                }
-                .store(in: &bindings)
             
             self.vm.$comment
                 .receive(on: DispatchQueue.main)
@@ -225,16 +231,7 @@ extension CommentCountMissionViewController {
         }
         
         func bindViewModelToView() {
-            self.weblinkButton.tapPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] urls in
-                    guard let `self` = self else { return }
-                    if let html = vm.mission.missionContentText {
-                        vm.openURL(from: html)
-                    }
-                }
-                .store(in: &bindings)
-            
+
             self.textField.textPublisher
                 .removeDuplicates()
                 .receive(on: DispatchQueue.main)
@@ -266,60 +263,78 @@ extension CommentCountMissionViewController {
 //MARK: - Set UI & Layout
 extension CommentCountMissionViewController {
     private func setUI() {
-        self.view.addSubviews(
+        self.canvasView.addSubviews(
             self.backgroundImage,
             self.titleLabel,
             self.spinner,
-            self.quizImageView,
-            self.weblinkButton,
+            self.quizLabel,
             self.textField,
+            self.hintLabel,
             self.checkAnswerButton,
+            self.additionalInfoContainer,
+            self.additionalInfoLabel,
+            self.totalNumberLabel,
             self.commentTable
         )
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.backgroundImage.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.backgroundImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.backgroundImage.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.backgroundImage.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.backgroundImage.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
+            self.backgroundImage.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
+            self.backgroundImage.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            self.backgroundImage.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
             
-            self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.view.safeAreaLayoutGuide.topAnchor, multiplier: 2),
-            self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 2),
+            self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.canvasView.topAnchor, multiplier: 3),
+            self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
+            self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 2),
             
-            self.quizImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 1),
-            self.quizImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.safeAreaLayoutGuide.leadingAnchor, multiplier: 1),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizImageView.trailingAnchor, multiplier: 1),
-            self.quizImageView.heightAnchor.constraint(equalToConstant: 200),
+            self.quizLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 3),
+            self.quizLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: canvasView.leadingAnchor, multiplier: 1),
+            canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizLabel.trailingAnchor, multiplier: 1),
             
-            self.spinner.centerXAnchor.constraint(equalTo: self.quizImageView.centerXAnchor),
-            self.spinner.centerYAnchor.constraint(equalTo: self.quizImageView.centerYAnchor),
+            self.spinner.centerXAnchor.constraint(equalTo: self.quizLabel.centerXAnchor),
+            self.spinner.centerYAnchor.constraint(equalTo: self.quizLabel.centerYAnchor),
+
+            self.textField.topAnchor.constraint(equalToSystemSpacingBelow: self.quizLabel.bottomAnchor, multiplier: 4),
+            self.textField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
+            self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.textField.trailingAnchor, multiplier: 2),
             
-            self.weblinkButton.topAnchor.constraint(equalToSystemSpacingBelow: self.quizImageView.bottomAnchor, multiplier: 1),
-            self.weblinkButton.leadingAnchor.constraint(equalTo: self.quizImageView.leadingAnchor),
-            self.weblinkButton.trailingAnchor.constraint(equalTo: self.quizImageView.trailingAnchor),
+            self.hintLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.textField.bottomAnchor, multiplier: 1),
+            self.hintLabel.leadingAnchor.constraint(equalTo: self.textField.leadingAnchor),
             
-            self.textField.topAnchor.constraint(equalToSystemSpacingBelow: self.weblinkButton.bottomAnchor, multiplier: 3),
-            self.textField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.view.leadingAnchor, multiplier: 2),
-            self.view.trailingAnchor.constraint(equalToSystemSpacingAfter: self.textField.trailingAnchor, multiplier: 2),
-            
-            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.textField.bottomAnchor, multiplier: 3),
+            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.hintLabel.bottomAnchor, multiplier: 3),
             self.checkAnswerButton.leadingAnchor.constraint(equalTo: self.textField.leadingAnchor),
             self.checkAnswerButton.trailingAnchor.constraint(equalTo: self.textField.trailingAnchor),
             self.checkAnswerButton.heightAnchor.constraint(equalToConstant: 60),
             
-            self.commentTable.topAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 2),
-            self.commentTable.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.commentTable.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.commentTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            self.additionalInfoContainer.topAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 3),
+            self.additionalInfoContainer.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
+            self.additionalInfoContainer.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            
+            self.additionalInfoLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.additionalInfoContainer.topAnchor, multiplier: 2),
+            self.additionalInfoLabel.leadingAnchor.constraint(equalTo: self.checkAnswerButton.leadingAnchor),
+            self.additionalInfoLabel.trailingAnchor.constraint(equalTo: self.checkAnswerButton.trailingAnchor),
+            self.additionalInfoContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.additionalInfoLabel.bottomAnchor, multiplier: 2),
+            
+            self.totalNumberLabel.topAnchor.constraint(equalTo: self.additionalInfoContainer.bottomAnchor),
+            self.totalNumberLabel.heightAnchor.constraint(equalToConstant: 50),
+            self.totalNumberLabel.leadingAnchor.constraint(equalTo: self.commentTable.leadingAnchor),
+            self.totalNumberLabel.trailingAnchor.constraint(equalTo: self.commentTable.trailingAnchor),
+            
+            self.commentTable.topAnchor.constraint(equalTo: self.totalNumberLabel.bottomAnchor),
+            self.commentTable.heightAnchor.constraint(equalToConstant: 400),
+            self.commentTable.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
+            self.commentTable.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            self.commentTable.bottomAnchor.constraint(equalTo: self.canvasView.bottomAnchor)
         ])
     }
     
     private func setDelegate() {
         self.commentTable.delegate = self
         self.commentTable.dataSource = self
+        
+        self.textField.delegate = self
     }
 }
 
@@ -357,6 +372,8 @@ extension CommentCountMissionViewController {
     
     private func saveLikes() {
         self.vm.saveLikes()
+        
+        // TODO: 좋아요 1번은 점수 부여
     }
     
 }
@@ -391,4 +408,10 @@ extension CommentCountMissionViewController: UITableViewDelegate, UITableViewDat
         return 60
     }
     
+}
+
+extension CommentCountMissionViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.textField.setTextFieldUnderline(color: UPlusColor.mint04)
+    }
 }

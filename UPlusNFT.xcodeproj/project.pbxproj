@@ -66,6 +66,8 @@
 		245FBB202A9F9A720021E86F /* ZeroHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB1F2A9F9A720021E86F /* ZeroHeaderViewController.swift */; };
 		245FBB222A9FA17A0021E86F /* MissionBaseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */; };
 		245FBB262A9FAD540021E86F /* NewEventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */; };
+		245FBB282AA0C8ED0021E86F /* ValidationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB272AA0C8ED0021E86F /* ValidationInfoView.swift */; };
+		245FBB2A2AA0CE0A0021E86F /* BaseScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB292AA0CE0A0021E86F /* BaseScrollViewController.swift */; };
 		24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */; };
 		24624B8B2A8E55E600C9A42E /* MyPageViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */; };
 		24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8C2A8E812700C9A42E /* UIViewPreview.swift */; };
@@ -343,6 +345,8 @@
 		245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionBaseInfo.swift; sourceTree = "<group>"; };
 		245FBB232A9FAC7A0021E86F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEventCollectionViewCell.swift; sourceTree = "<group>"; };
+		245FBB272AA0C8ED0021E86F /* ValidationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationInfoView.swift; sourceTree = "<group>"; };
+		245FBB292AA0CE0A0021E86F /* BaseScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseScrollViewController.swift; sourceTree = "<group>"; };
 		24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMissionScrollViewController.swift; sourceTree = "<group>"; };
 		24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyPageViewController+Extensions.swift"; sourceTree = "<group>"; };
 		24624B8C2A8E812700C9A42E /* UIViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewPreview.swift; sourceTree = "<group>"; };
@@ -705,6 +709,7 @@
 			isa = PBXGroup;
 			children = (
 				2417A5A02A67C96900AEC530 /* InformationInputView.swift */,
+				245FBB272AA0C8ED0021E86F /* ValidationInfoView.swift */,
 			);
 			path = SignUpView;
 			sourceTree = "<group>";
@@ -958,6 +963,7 @@
 				930D96D62A43E5770007801A /* Post */,
 				930D96C72A41938B0007801A /* SignUp */,
 				930D96B82A417EDC0007801A /* Login */,
+				245FBB292AA0CE0A0021E86F /* BaseScrollViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1796,6 +1802,7 @@
 				245FBB262A9FAD540021E86F /* NewEventCollectionViewCell.swift in Sources */,
 				241116E32A9B8BF50010579C /* UIImage+Extension.swift in Sources */,
 				93A2ED812A6A54D900C2287D /* MyPageViewController.swift in Sources */,
+				245FBB282AA0C8ED0021E86F /* ValidationInfoView.swift in Sources */,
 				93DA58522A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift in Sources */,
 				24542D512A70AC0800F82CEA /* ChoiceQuizMission.swift in Sources */,
 				93DA58362A8A102600525BEC /* NFTDetailViewController.swift in Sources */,
@@ -1841,6 +1848,7 @@
 				93CD8B672AA066920010C477 /* CommentSharingMissionViewViewModel.swift in Sources */,
 				247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
+				245FBB2A2AA0CE0A0021E86F /* BaseScrollViewController.swift in Sources */,
 				939194EE2A89F1750035FEB1 /* UserLevelPoint.swift in Sources */,
 				932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */,
 				939194762A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift in Sources */,

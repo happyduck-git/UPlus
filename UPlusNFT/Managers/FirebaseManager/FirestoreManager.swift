@@ -347,7 +347,9 @@ extension FirestoreManager {
             .collection(FirestoreConstants.userSetCollection)
             .document(String(describing: userIndex))
         
-        batch.setData([FirestoreConstants.userRewards: FieldValue.arrayUnion([rewardPath])],
+        batch.setData([
+            FirestoreConstants.userRewards: FieldValue.arrayUnion([rewardPath])
+        ],
                       forDocument: userDoc,
                       merge: true)
         
