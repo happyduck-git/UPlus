@@ -154,7 +154,7 @@ extension WeeklyMissionOverViewViewController: UITableViewDelegate, UITableViewD
         guard let cell = tableView.dequeueReusableCell(withIdentifier: WeeklyOverViewTableViewCell.identifier, for: indexPath) as? WeeklyOverViewTableViewCell else {
             return UITableViewCell()
         }
-
+        cell.resetCell()
         cell.backgroundColor = .clear
         
         let mission = self.vm.weeklyMissions[indexPath.row]
@@ -271,10 +271,12 @@ extension WeeklyMissionOverViewViewController {
                 self.show(vc, sender: self)
                 
             } else if anyMission is CommentCountMission {
+                
                 let mission = anyMission as! CommentCountMission
                 
-                let vm = CommentCountMissionViewViewModel(type: .weekly, mission: mission)
-                let vc = CommentCountMissionViewController(vm: vm)
+                let vm = CommentSharingMissionViewViewModel(type: .weekly, mission: mission, numberOfWeek: self.vm.week)
+                let vc = CommentSharingMissionViewController(vm: vm)
+                vc.delegate = self
                 
                 self.show(vc, sender: self)
             }

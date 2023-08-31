@@ -14,10 +14,6 @@ enum MissionAnswerState: String {
     case failed
 }
 
-protocol WeeklyMissionCompleteViewControllerDelegate: AnyObject {
-    func redeemDidTap()
-}
-
 final class WeeklyMissionCompleteViewController: BaseMissionCompletedViewController {
     
     // MARK: - Dependency

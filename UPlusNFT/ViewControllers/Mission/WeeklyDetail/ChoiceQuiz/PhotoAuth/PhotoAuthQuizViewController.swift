@@ -8,8 +8,9 @@
 import UIKit
 import Combine
 import PhotosUI
+import Nuke
 
-final class PhotoAuthQuizViewController: BaseMissionViewController {
+final class PhotoAuthQuizViewController: BaseMissionScrollViewController {
 
     //MARK: - Dependency
     private let vm: PhotoAuthQuizViewViewModel
@@ -37,7 +38,7 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
         imageView.isHidden = true
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8.0
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -80,17 +81,14 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
         return button
     }()
     
-    private let goToQuizButton: UIButton = {
-        let button = UIButton()
-        button.clipsToBounds = true
-        button.setTitle(MissionConstants.goToQuiz, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UPlusColor.gray03
-        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let detailMissionInfoImageView: UIImageView = {
+        let imageView = UIImageView()
+//        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
+    // MARK: - Photos UI
     private let photoPicker: PHPickerViewController = {
         var configuration = PHPickerConfiguration()
         configuration.filter = .any(of: [.images, .livePhotos])
@@ -134,7 +132,7 @@ final class PhotoAuthQuizViewController: BaseMissionViewController {
         super.viewDidLayoutSubviews()
         
         self.editButton.layer.cornerRadius = self.editButton.frame.height / 2
-        self.goToQuizButton.layer.cornerRadius = self.goToQuizButton.frame.height / 2
+ 
     }
 }
 
@@ -146,77 +144,121 @@ extension PhotoAuthQuizViewController {
     }
     
     private func bind() {
-        self.uploadButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                guard let `self` = self else { return }
-                
-                self.present(
-                    photoPicker,
-                    animated: true,
-                    completion: nil
-                )
-            }
-            .store(in: &bindings)
-        
-        self.editButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                guard let `self` = self else { return }
-                
-                self.present(
-                    photoPicker,
-                    animated: true,
-                    completion: nil
-                )
-            }
-            .store(in: &bindings)
-        
-        self.checkAnswerButton.tapPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                guard let `self` = self else { return }
-                
-                var vc: BaseMissionCompletedViewController?
-                
-                switch self.vm.type {
-                case .event:
-                    vc = EventCompletedViewController(vm: self.vm)
-                    vc?.delegate = self
-                case .weekly:
-                    vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                    vc?.delegate = self
-                }
-                
-                guard let vc = vc else { return }
-                self.navigationController?.modalPresentationStyle = .fullScreen
-                self.show(vc, sender: self)
-            }
-            .store(in: &bindings)
-        
-        self.vm.$selectedImage
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] image in
-                guard let `self` = self else { return }
-               
-                if image != nil {
-                    self.uploadButton.isHidden = true
-                    self.uploadedPhotoView.isHidden = false
-                    self.infoStack.isHidden = false
-                    self.editButton.isHidden = false
+        func bindViewToViewModel() {
+            self.uploadButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
                     
-                    self.uploadedPhotoView.image = image
-                    
-                    self.checkAnswerButton.isUserInteractionEnabled = true
-                    self.checkAnswerButton.backgroundColor = .black
-                } else {
-                    print("No image")
+                    self.present(
+                        photoPicker,
+                        animated: true,
+                        completion: nil
+                    )
                 }
-            }
-            .store(in: &bindings)
+                .store(in: &bindings)
+            
+            self.editButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    self.present(
+                        photoPicker,
+                        animated: true,
+                        completion: nil
+                    )
+                }
+                .store(in: &bindings)
+            
+            self.checkAnswerButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    var vc: BaseMissionCompletedViewController?
+                    
+                    switch self.vm.type {
+                    case .event:
+                        vc = EventCompletedViewController(vm: self.vm)
+                        vc?.delegate = self
+                    case .weekly:
+                        vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                        vc?.delegate = self
+                    }
+                    
+                    guard let vc = vc else { return }
+                    self.navigationController?.modalPresentationStyle = .fullScreen
+                    self.show(vc, sender: self)
+                }
+                .store(in: &bindings)
+            
+        }
         
+        func bindViewModelToView() {
+            self.vm.$selectedImage
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] image in
+                    guard let `self` = self else { return }
+                   
+                    if image != nil {
+                        self.uploadButton.isHidden = true
+                        self.uploadedPhotoView.isHidden = false
+                        self.infoStack.isHidden = false
+                        self.editButton.isHidden = false
+                        
+                        self.uploadedPhotoView.image = image
+                        
+                        self.checkAnswerButton.isUserInteractionEnabled = true
+                        self.checkAnswerButton.backgroundColor = UPlusColor.mint03
+                    } else {
+                        self.checkAnswerButton.isUserInteractionEnabled = false
+                        self.checkAnswerButton.backgroundColor = UPlusColor.gray02
+                    }
+                }
+                .store(in: &bindings)
+            
+            self.vm.$photoAuthFirstImageUrl
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] url in
+                    guard let `self` = self,
+                          let url = url else { return }
+                    Task {
+                        do {
+                            self.quizImageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+                            self.quizImageView.image = try await ImagePipeline.shared.image(for: url)
+                        }
+                        catch {
+                            print("Error fetching image -- \(error)")
+                        }
+                    }
+                    
+                }
+                .store(in: &bindings)
+            
+            self.vm.$photoAuthSecondImageUrl
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] url in
+                    guard let `self` = self,
+                          let url = url else { return }
+                    Task {
+                        do {
+                            self.detailMissionInfoImageView.heightAnchor.constraint(equalToConstant: 700).isActive = true
+                            self.detailMissionInfoImageView.image = try await ImagePipeline.shared.image(for: url)
+                        }
+                        catch {
+                            print("Error fetching image -- \(error)")
+                        }
+                    }
+                    
+                }
+                .store(in: &bindings)
+        }
         
+        bindViewToViewModel()
+        bindViewModelToView()
     }
+
 }
 
 // MARK: - Set Delegate
@@ -234,7 +276,8 @@ extension PhotoAuthQuizViewController {
         self.quizContainer.addSubviews(self.uploadButton,
                                        self.uploadedPhotoView,
                                        self.infoStack,
-                                       self.editButton)
+                                       self.editButton,
+                                       self.detailMissionInfoImageView)
         
         self.infoStack.addArrangedSubviews(self.infoImage,
                                            self.infoText)
@@ -248,7 +291,7 @@ extension PhotoAuthQuizViewController {
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadButton.trailingAnchor, multiplier: 2),
             
             self.uploadedPhotoView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 3),
-            self.uploadedPhotoView.heightAnchor.constraint(equalToConstant: self.view.frame.height / 3),
+            self.uploadedPhotoView.heightAnchor.constraint(equalToConstant: 210),
             self.uploadedPhotoView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.uploadedPhotoView.trailingAnchor, multiplier: 2),
             
@@ -258,7 +301,12 @@ extension PhotoAuthQuizViewController {
             self.editButton.topAnchor.constraint(equalToSystemSpacingBelow: self.infoStack.bottomAnchor, multiplier: 1),
             self.editButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.uploadedPhotoView.leadingAnchor, multiplier: 4),
             self.uploadedPhotoView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.editButton.trailingAnchor, multiplier: 4),
-            self.editButton.heightAnchor.constraint(equalToConstant: 46)
+            self.editButton.heightAnchor.constraint(equalToConstant: 46),
+            
+            self.detailMissionInfoImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.editButton.bottomAnchor, multiplier: 1),
+            self.detailMissionInfoImageView.leadingAnchor.constraint(equalTo: self.quizContainer.leadingAnchor),
+            self.detailMissionInfoImageView.trailingAnchor.constraint(equalTo: self.quizContainer.trailingAnchor),
+            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.detailMissionInfoImageView.bottomAnchor, multiplier: 2)
         ])
     }
 }

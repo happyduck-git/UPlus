@@ -143,16 +143,19 @@ extension WeeklyOverViewTableViewCell {
         switch type {
         case .open:
             self.missionTitle.text = mission.missionContentTitle
-            self.pointLabel.text = String(describing: mission.missionRewardPoint) + "P"
-
+            self.levelStack.isHidden = false
+            self.completedLabel.isHidden = true
+            
         case .participated:
             self.missionTitle.text = mission.missionContentTitle
             self.completedLabel.text = MissionConstants.participated
             self.pointContainerView.backgroundColor = UPlusColor.gray02
+            self.pointLabel.textColor = UPlusColor.gray05
             self.levelStack.isHidden = true
             self.completedLabel.isHidden = false
         }
         
+        self.pointLabel.text = String(format: MissionConstants.missionPointSuffix, mission.missionRewardPoint)
         let missionLevel = MissionPointLevel(rawValue: mission.missionRewardPoint) ?? .easy
         levelDetail.text = missionLevel.description
         
@@ -172,14 +175,16 @@ extension WeeklyOverViewTableViewCell {
         self.missionTitle.text = nil
         self.completedLabel.text = nil
         self.pointLabel.text = nil
+        self.pointLabel.textColor = UPlusColor.blue03
+        self.pointContainerView.backgroundColor = UPlusColor.blue01
     }
     
     override func prepareForReuse() {
         self.levelStack.isHidden = false
         self.completedLabel.isHidden = true
-        self.star1.isHidden = true
-        self.star2.isHidden = true
-        self.star3.isHidden = true
+        self.star1.isHidden = false
+        self.star2.isHidden = false
+        self.star3.isHidden = false
     }
 }
 

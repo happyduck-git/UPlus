@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Nuke
+import Combine
 
 protocol BaseMissionScrollViewControllerDelegate: AnyObject {
     func redeemDidTap(vc: BaseMissionScrollViewController)
@@ -13,9 +15,23 @@ protocol BaseMissionScrollViewControllerDelegate: AnyObject {
 
 class BaseMissionScrollViewController: UIViewController {
     
+    // MARK: - Dependency
+    private var baseVM: MissionBaseModel?
+    
+    //MARK: - Combine
+    private var bindings = Set<AnyCancellable>()
+    
+    // MARK: - Delegate
     weak var delegate: BaseMissionScrollViewControllerDelegate?
     
     //MARK: - UI Elements
+    let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView()
+        spinner.style = .large
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        return spinner
+    }()
+    
     let scrollView: UIScrollView = {
         let view = UIScrollView()
         view.isScrollEnabled = true
@@ -46,18 +62,23 @@ class BaseMissionScrollViewController: UIViewController {
         return label
     }()
     
-    let subTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = RewardsConstants.empty
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.textColor = UPlusColor.gray09
-        label.font = .systemFont(ofSize: UPlusFont.h2, weight: .semibold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let quizImageView: UIImageView = {
+        let image = UIImageView()
+        image.contentMode = .scaleAspectFit
+        image.backgroundColor = .clear
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+
+    let weblinkButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.titleLabel?.lineBreakMode = .byTruncatingMiddle
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
-    let containerView: UIView = {
+    let quizContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -79,12 +100,97 @@ class BaseMissionScrollViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = .white
+        
         self.setUI()
         self.setLayout()
+
+        self.configure()
     }
     
 }
 
+extension BaseMissionScrollViewController {
+    func setBaseVM(vm: MissionBaseModel) {
+        self.baseVM = vm
+        self.bind()
+    }
+}
+
+//MARK: - Configure
+extension BaseMissionScrollViewController {
+    private func configure() {
+        guard let vm = self.baseVM else { return }
+        self.titleLabel.text = vm.mission.missionContentTitle
+        
+        if let html = vm.mission.missionContentText,
+           let attributedString = vm.retrieveHtmlString(html: html) {
+            self.weblinkButton.isHidden = false
+            weblinkButton.setAttributedTitle(attributedString, for: .normal)
+        }
+
+    }
+}
+
+//MARK: - Bind
+extension BaseMissionScrollViewController {
+    
+    private func bind() {
+        guard let vm = self.baseVM else { return }
+        
+        func bindViewToViewModel() {
+            func bindViewToViewModel() {
+                self.weblinkButton.tapPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink {
+                        if let html = vm.mission.missionContentText {
+                            vm.openURL(from: html)
+                        }
+                    }
+                    .store(in: &bindings)
+            }
+        }
+        
+        func bindViewModelToView() {
+            if !(vm.mission.missionSubFormatType == MissionSubFormatType.contentReadOnly.rawValue) {
+                vm.$imageUrls
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] urls in
+                        guard let `self` = self else { return }
+                        
+                        if urls.count > 1 {
+                            vm.photoAuthFirstImageUrl = urls.first
+                            vm.photoAuthSecondImageUrl = urls.last
+                            
+                        } else {
+                            guard let url = urls.first else { return }
+                            
+                            self.spinner.startAnimating()
+                            print("URls: \(urls)")
+                            Task {
+                                do {
+                                    self.quizImageView.image = try await ImagePipeline.shared.image(for: url)
+                                    self.spinner.stopAnimating()
+                                }
+                                catch {
+                                    print("Error")
+                                }
+                            }
+                        }
+                        
+                    }
+                    .store(in: &bindings)
+            }
+            
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+
+}
+
+// MARK: - Set UI & Layout
 extension BaseMissionScrollViewController {
     
     private func setUI() {
@@ -92,8 +198,10 @@ extension BaseMissionScrollViewController {
         self.scrollView.addSubview(self.canvasView)
         self.canvasView.addSubviews(self.backgroundImageView,
                                     self.titleLabel,
-                                    self.subTitleLabel,
-                                    self.containerView,
+                                    self.spinner,
+                                    self.quizImageView,
+                                    self.weblinkButton,
+                                    self.quizContainer,
                                     self.checkAnswerButton)
     }
     
@@ -121,23 +229,30 @@ extension BaseMissionScrollViewController {
             self.titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.canvasView.topAnchor, multiplier: 2),
             self.titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 1),
             self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.titleLabel.trailingAnchor, multiplier: 1),
+
+            self.quizImageView.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 2),
+            self.quizImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.quizImageView.trailingAnchor, multiplier: 2),
             
-            self.subTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.titleLabel.bottomAnchor, multiplier: 2),
-            self.subTitleLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
-            self.subTitleLabel.trailingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
+            self.spinner.centerXAnchor.constraint(equalTo: self.quizImageView.centerXAnchor),
+            self.spinner.centerYAnchor.constraint(equalTo: self.quizImageView.centerYAnchor),
             
-            self.containerView.topAnchor.constraint(equalToSystemSpacingBelow: self.subTitleLabel.bottomAnchor, multiplier: 2),
-            self.containerView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
-            self.containerView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            self.weblinkButton.topAnchor.constraint(equalTo: self.quizImageView.bottomAnchor),
+            self.weblinkButton.leadingAnchor.constraint(equalTo: self.quizImageView.leadingAnchor),
+            self.weblinkButton.trailingAnchor.constraint(equalTo: self.quizImageView.trailingAnchor),
             
-            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.bottomAnchor, multiplier: 3),
+            self.quizContainer.topAnchor.constraint(equalToSystemSpacingBelow: self.weblinkButton.bottomAnchor, multiplier: 2),
+            self.quizContainer.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
+            self.quizContainer.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            self.checkAnswerButton.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.bottomAnchor, multiplier: 3),
+        
+
             self.checkAnswerButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
             self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.checkAnswerButton.trailingAnchor, multiplier: 2),
             self.canvasView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.checkAnswerButton.bottomAnchor, multiplier: 3),
             self.checkAnswerButton.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight)
         ])
         self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.subTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
 //        self.checkAnswerButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }

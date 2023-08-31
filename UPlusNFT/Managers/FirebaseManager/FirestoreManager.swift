@@ -253,7 +253,7 @@ extension FirestoreManager {
             return try doc.data(as: UPlusNft.self, decoder: self.decoder)
         }
         catch {
-            print("Error fetching Nft info -- \(error)")
+            print("Error fetching Nft info -- \(error) -- token id: \(tokenId)")
             return nil
         }
     }
@@ -357,7 +357,7 @@ extension FirestoreManager {
             .collection(FirestoreConstants.userSetCollection)
             .document(String(describing: userIndex))
             
-        batch.setData([FirestoreConstants.rewardUser: userPath],
+        batch.setData([FirestoreConstants.userRewards: userPath],
                       forDocument: userPath,
                       merge: true)
         
@@ -567,7 +567,7 @@ extension FirestoreManager {
     /* Weekly Mission */
     func getWeeklyMission(week: Int) async throws -> [any Mission] {
         
-        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let weekCollection = String(format: FirestoreConstants.weeklyQuizMissionSetCollection, week)
         
         let documents = try await threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
@@ -746,10 +746,12 @@ extension FirestoreManager {
     ///   - point: Point the user gets from the mission.
     ///   - state: Mission completion state.
     func saveParticipatedWeeklyMission(
-        questionId: String,
+        missionId: String,
         week: Int,
         today: String,
         missionType: MissionType,
+        comment: String?,
+        image: Data?,
         point: Int64,
         state: MissionAnswerState
     ) async throws {
@@ -759,12 +761,12 @@ extension FirestoreManager {
         let batch = self.db.batch()
         
         // 1. Save to missions collection
-        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let weekCollection = String(format: FirestoreConstants.weeklyQuizMissionSetCollection, week)
         let missionDocPath = threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
             .collection(weekCollection)
-            .document(questionId)
-        
+            .document(missionId)
+
         // userDocRef
         let userDocRef = self.threadsSetCollectionPath2
             .document(FirestoreConstants.users)
@@ -772,14 +774,37 @@ extension FirestoreManager {
             .document(String(describing: user.userIndex))
         
         // userBaseDocRef
-        let userBaseDocRef =  self.threadsSetCollectionPath2
+        let userBaseDocRef = self.threadsSetCollectionPath2
             .document(FirestoreConstants.users)
         
         // dailyPointHistoryDocPath
-        let dailyPointHistoryDocPath = self.threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
+        let dailyPointHistoryDocPath = userBaseDocRef
             .collection(FirestoreConstants.dailyPointHistorySet)
             .document(today)
+
+        let userDocPath = userBaseDocRef
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: user.userIndex))
+        
+        // userPointHistoryPath
+        let pointHistoryDocPath = userDocPath.collection(FirestoreConstants.userPointHistory)
+            .document(today)
+        
+        // Comment mission doc path (ONLY APPLICABLE FOR COMMENT MISSIONS)
+        let commentDocPath = threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(missionType.storagePathFolderName)
+            .document(missionId)
+            .collection(FirestoreConstants.commentSet)
+            .document()
+        
+        // Photo Mission doc path (ONLY APPLICABLE FOR PHOTO MISSIONS)
+        let missionPhotoTaskSetDocRef = self.threadsSetCollectionPath2
+            .document(FirestoreConstants.missions)
+            .collection(missionType.storagePathFolderName)
+            .document(missionId)
+            .collection(FirestoreConstants.missionPhotoTaskSet)
+            .document(String(describing: user.userIndex))
         
         batch.setData(
             [
@@ -789,10 +814,7 @@ extension FirestoreManager {
             merge: true)
         
         // 2. Save to user_type_mission_array_map
-        let userDocPath = threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
-            .collection(FirestoreConstants.userSetCollection)
-            .document(String(describing: user.userIndex))
+        
         
         if state == .succeeded {
             batch.setData(
@@ -806,8 +828,7 @@ extension FirestoreManager {
                 merge: true)
         }
         
-        let pointHistoryDocPath = userDocPath.collection(FirestoreConstants.userPointHistory)
-            .document(today)
+        
         // 3. Save to user_point_history
         batch.setData(
             [
@@ -877,10 +898,53 @@ extension FirestoreManager {
             forDocument: dailyPointHistoryDocPath,
             merge: true)
         
-        
+        // comment
+        if let comment = comment {
+            
+            let newComment = UserCommentSet(commentId: commentDocPath.documentID,
+                                            commentUser: userDocRef,
+                                            commentText: comment,
+                                            commentTime: Timestamp())
+            
+            try batch.setData(from: newComment, forDocument: commentDocPath, encoder: self.encoder)
+           
+            batch.setData(
+                [
+                    FirestoreConstants.userTypeMissionArrayMap: [missionType.rawValue: FieldValue.arrayUnion([missionDocPath]) ]
+                ],
+                forDocument: userDocRef,
+                merge: true
+            )
+        }
         
         try await batch.commit()
         
+        
+        // Save photo to Storage
+        if let imageData = image {
+            let imageId = UUID().uuidString
+            let path = "dev_threads/missions/mission_set/\(missionType.storagePathFolderName)/\(user.userIndex)/\(imageId).jpg"
+            let uploadRef = Storage.storage().reference(withPath: path)
+            
+            let uploadMetadata = StorageMetadata()
+            uploadMetadata.contentType = "image/jpeg"
+            
+            let _ = try await uploadRef.putDataAsync(imageData, metadata: uploadMetadata)
+            
+            let ref = Storage.storage().reference(withPath: path)
+            
+            let photoTask = MissionPhotoTask(missionPhotoTaskUser: userDocRef,
+                                             missionPhotoTaskImagePath: String(describing: ref), //TODO: gs:// 로 변경.
+                                             missionPhotoTaskTime: Timestamp())
+            
+            
+            try batch.setData(from: photoTask,
+                              forDocument: missionPhotoTaskSetDocRef,
+                              merge: true,
+                              encoder: self.encoder)
+
+        }
+       
         // Update UserDefaults
         user.userTotalPoint = newPoint
 
@@ -1025,7 +1089,6 @@ extension FirestoreManager {
         missionType: MissionType,
         eventId: String,
         selectedIndex: Int?,
-        recentComments: [String],
         comment: String?,
         point: Int64
     ) async throws {
@@ -1272,7 +1335,7 @@ extension FirestoreManager {
     func checkWeeklyMissionSetCompletion(week: Int) async throws -> Bool {
         let user = try UPlusUser.getCurrentUser()
         
-        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let weekCollection = String(format: FirestoreConstants.weeklyQuizMissionSetCollection, week)
         let missionDocCounts = try await threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
             .collection(weekCollection)
@@ -1545,7 +1608,7 @@ extension FirestoreManager {
         let documents = try await threadsSetCollectionPath2
             .document(FirestoreConstants.rewards)
             .collection(FirestoreConstants.rewardSetCollection)
-            .whereField(FirestoreConstants.rewardUser, isEqualTo: ownerIndex)
+            .whereField(FirestoreConstants.userRewards, isEqualTo: ownerIndex)
             .getDocuments()
             .documents
         

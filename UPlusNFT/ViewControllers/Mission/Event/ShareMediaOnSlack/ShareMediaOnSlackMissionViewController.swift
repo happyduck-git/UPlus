@@ -140,16 +140,16 @@ extension ShareMediaOnSlackMissionViewController {
 extension ShareMediaOnSlackMissionViewController {
     private func setUI() {
         
-        self.containerView.addSubviews(self.step1CardView,
+        self.quizContainer.addSubviews(self.step1CardView,
                                        self.step2CardView,
                                        self.textfieldView)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.step1CardView.topAnchor.constraint(equalToSystemSpacingBelow: self.containerView.topAnchor, multiplier: 2),
-            self.step1CardView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 3),
-            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.step1CardView.trailingAnchor, multiplier: 3),
+            self.step1CardView.topAnchor.constraint(equalToSystemSpacingBelow: self.quizContainer.topAnchor, multiplier: 2),
+            self.step1CardView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.step1CardView.trailingAnchor, multiplier: 3),
             
             self.step2CardView.topAnchor.constraint(equalToSystemSpacingBelow: self.step1CardView.bottomAnchor, multiplier: 4),
             self.step2CardView.leadingAnchor.constraint(equalTo: self.step1CardView.leadingAnchor),
@@ -160,7 +160,7 @@ extension ShareMediaOnSlackMissionViewController {
             self.textfieldView.trailingAnchor.constraint(equalTo: self.step1CardView.trailingAnchor),
             self.textfieldView.heightAnchor.constraint(equalToConstant: 200),
             
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.textfieldView.bottomAnchor, multiplier: 2)
+            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.textfieldView.bottomAnchor, multiplier: 2)
         ])
         
     }

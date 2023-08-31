@@ -161,7 +161,7 @@ final class MyPageViewViewModel {
                 others.append(nil)
                 others.append(contentsOf: missionPerLevel[5] ?? [])
                 
-                self.levelEvents.append(contentsOf: others)
+                self.levelEvents = others
             }
         }
         
@@ -192,14 +192,12 @@ final class MyPageViewViewModel {
         self.mission.parent = self
         
         Task {
+         
+            await self.createMissionMainViewViewModel()
             async let _ = self.getSelectedRoutine()
-            
-            async let _ = self.createMissionMainViewViewModel()
-
             async let _ = self.getTodayRank()
-            
             async let _ = self.getAllMissionBaseData()
-           
+
         }
         
         self.getNumberOfParticipatedMissions()

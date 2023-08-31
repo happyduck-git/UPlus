@@ -252,34 +252,7 @@ extension CommentCountMissionViewController {
                           let comment = self.vm.comment
                     else { return }
                     
-                    do {
-                        let user = try UPlusUser.getCurrentUser()
-                        
-                        let newComment = MissionComment(userId: user.userNickname,
-                                                        commentText: comment,
-                                                        likes: 0,
-                                                        isLikedByCurrentUser: false)
-                        self.vm.comments.append(newComment)
-
-                        self.checkAnswerButton.isUserInteractionEnabled = false
-                        self.checkAnswerButton.backgroundColor = .systemGray
-                        
-                        Task {
-                            // TODO: Save comments
-                            try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
-                                                                           recentComments: nil,
-                                                                           comment: comment)
-                            // Check level update.
-                            try await self.vm.checkLevelUpdate()
-                            
-                        }
-                        
-                        self.delegate?.submitCommentDidTap()
-                    }
-                    catch {
-                        UPlusLogger.logger.error("Error saving event participation status  -- \(String(describing: error))")
-                    }
-                    
+                    self.saveComment(comment)
                 }
                 .store(in: &bindings)
         }
@@ -350,7 +323,37 @@ extension CommentCountMissionViewController {
     }
 }
 
+// MARK: - Private
 extension CommentCountMissionViewController {
+    
+    private func saveComment(_ comment: String) {
+        do {
+            let user = try UPlusUser.getCurrentUser()
+            
+            let newComment = MissionComment(userId: user.userNickname,
+                                            commentText: comment,
+                                            likes: 0,
+                                            isLikedByCurrentUser: false)
+            self.vm.comments.append(newComment)
+
+            self.checkAnswerButton.isUserInteractionEnabled = false
+            self.checkAnswerButton.backgroundColor = .systemGray
+            
+            Task {
+                try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
+                                                               recentComments: nil,
+                                                               comment: comment)
+                // Check level update.
+                try await self.vm.checkLevelUpdate()
+                
+            }
+            
+            self.delegate?.submitCommentDidTap()
+        }
+        catch {
+            UPlusLogger.logger.error("Error saving event participation status  -- \(String(describing: error))")
+        }
+    }
     
     private func saveLikes() {
         self.vm.saveLikes()

@@ -23,26 +23,7 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
     
     private let topLabel: UILabel = {
         let label = UILabel()
-        
-        let normalFont: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
-        let boldFont: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
-        
-        let attributedString = NSMutableAttributedString(string: MissionConstants.weeklyTopTitle,
-                                                         attributes: [
-                                                            .foregroundColor: UPlusColor.blue05,
-                                                            .font: normalFont
-                                                         ])
-        
-        if let range = attributedString.string.range(of: MissionConstants.episodeCerti) {
-            let nsRange = NSRange(range, in: attributedString.string)
-            
-            attributedString.addAttributes([
-                .foregroundColor: UPlusColor.blue05,
-                .font: boldFont
-            ], range: nsRange)
-        }
-        
-        label.attributedText = attributedString
+        label.numberOfLines = 0
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -99,6 +80,7 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
         
         self.setUI()
         self.setLayout()
+  
     }
     
     required init?(coder: NSCoder) {
@@ -132,7 +114,7 @@ extension WeeklyMissionOverViewTableViewHeader {
         var nftImage: UIImage?
         var episodeSubtitleLabel: String?
         
-        self.topLabel.text = vm.endDateDescription
+        self.topLabel.attributedText = self.setAttributedText(wholeText: vm.endDateDescription)
         
         switch vm.week {
         case 1:
@@ -208,5 +190,30 @@ extension WeeklyMissionOverViewTableViewHeader {
             self.trailingAnchor.constraint(equalToSystemSpacingAfter: self.nftImageView.trailingAnchor, multiplier: 2),
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.nftImageView.bottomAnchor, multiplier: 1)
         ])
+    }
+}
+
+extension WeeklyMissionOverViewTableViewHeader {
+    private func setAttributedText(wholeText: String) -> NSAttributedString {
+        
+        let normalFont: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        let boldFont: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
+        
+        let attributedString = NSMutableAttributedString(string: wholeText,
+                                                         attributes: [
+                                                            .foregroundColor: UPlusColor.blue05,
+                                                            .font: normalFont
+                                                         ])
+        
+        if let range = attributedString.string.range(of: MissionConstants.episodeCerti) {
+            let nsRange = NSRange(range, in: attributedString.string)
+            
+            attributedString.addAttributes([
+                .foregroundColor: UPlusColor.blue05,
+                .font: boldFont
+            ], range: nsRange)
+        }
+        
+        return attributedString
     }
 }

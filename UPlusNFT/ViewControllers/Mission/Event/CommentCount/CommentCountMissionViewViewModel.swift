@@ -15,8 +15,6 @@ final class CommentCountMissionViewViewModel: MissionBaseModel {
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - DataSource
-    @Published var comment: String?
-    
     @Published var comments: [MissionComment] = [] {
         didSet {
             self.numberOfComments = comments.count
@@ -36,7 +34,6 @@ final class CommentCountMissionViewViewModel: MissionBaseModel {
         super.init(type: type, mission: mission)
         
         self.comments = self.getMissionComments(mission: mission)
-        print("Commnets: \(self.comments)")
     }
 
 }

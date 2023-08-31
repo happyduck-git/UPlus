@@ -74,10 +74,8 @@ final class WeeklyMissionOverViewViewModel {
         self.getWeeklyMissionInfo(week: week)
         
         let monthAndDay = endDate.monthDayFormat
-        print("Month and day: \(monthAndDay)")
         let (month, day) = self.splitByDot(input: monthAndDay) ?? ("09", "09")
         self.endDateDescription = String(format: MissionConstants.weeklyTopTitle, month, day)
-        print("Enddate: \(self.endDateDescription)")
     }
     
 }

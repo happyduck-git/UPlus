@@ -272,6 +272,7 @@ struct MissionConstants {
     static let levelUpTitle: String = "LV.%d NFT"
     
     static let rewardPoint: String = "100P 보상"
+    static let missionPointSuffix: String = "%dP"
     
     static let missionLevel: String = "난이도"
 }
@@ -580,10 +581,7 @@ struct FirestoreConstants {
     static let eventResubTitle = "event_resub_title"
     static let eventSubTitle = "event_sub_title"
     static let nftContentImageUrl = "nft_content_image_url"
-//    static let extraDailyExpGoodWorker = "extra__daily_exp__good_worker"
-//    "extra__weekly_quiz__1"
-//    "extra__weekly_quiz__2"
-//    "extra__weekly_quiz__3"
+    static let weeklyQuizMissionSetCollection = "weekly_quiz__%d__mission_set"
     
     
     /* Configuration */
@@ -687,8 +685,6 @@ struct FirestoreConstants {
     static let pointHistoryUserCountMap = "point_history_user_count_map"
     static let usersPointUserCountMap = "users_point_user_count_map"
     
-    /* Reward */
-    static let rewardUser = "reward_user"
 }
 
 struct AlertConstants {

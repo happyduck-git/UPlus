@@ -10,6 +10,23 @@ import Foundation
 extension MyPageViewController: BaseMissionViewControllerDelegate {
     func redeemDidTap(vc: BaseMissionViewController) {
      
+        if vc is CommentSharingMissionViewController {
+            Task {
+                
+            }
+        }
+        
+        print("Completed Redeem did tap")
+        // get event mission info
+        Task {
+            await self.vm.getRegularEvents()
+            await self.vm.getLevelEvents()
+        }
+    }
+}
+
+extension MyPageViewController: BaseMissionScrollViewControllerDelegate {
+    func redeemDidTap(vc: BaseMissionScrollViewController) {
         print("Completed Redeem did tap")
         // get event mission info
         Task {

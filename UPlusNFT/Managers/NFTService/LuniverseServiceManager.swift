@@ -55,7 +55,7 @@ extension LuniverseServiceManager {
             return response.accessToken
         }
         catch {
-            print("Error -- \(error)")
+            print("Error Requesting Access Token -- \(error)")
             throw LuniverseServiceError.errorAuthetication
         }
         

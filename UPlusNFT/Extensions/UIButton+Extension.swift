@@ -47,6 +47,6 @@ extension UIButton {
             
             let total = imageSize.height + titleSize.height + padding
             imageEdgeInsets = UIEdgeInsets(top: -(total - imageSize.height), left: 0, bottom: 0, right: -titleSize.width)
-            titleEdgeInsets = UIEdgeInsets(top: 0, left: -imageSize.width, bottom: -(total - titleSize.height), right: 0)
+            titleEdgeInsets = UIEdgeInsets(top: 50, left: 0, bottom: -(total - titleSize.height), right: 0)
         }
 }

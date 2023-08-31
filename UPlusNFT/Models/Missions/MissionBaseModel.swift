@@ -33,6 +33,14 @@ class MissionBaseModel {
     
     // MARK: - ImageUrls
     @Published var imageUrls: [URL] = []
+    @Published var photoAuthFirstImageUrl: URL?
+    @Published var photoAuthSecondImageUrl: URL?
+    
+    // MARK: - Comment
+    @Published var comment: String?
+    
+    // MARK: - Image
+    @Published var selectedImage: UIImage?
     
     //MARK: - Init
     init(type: Type, mission: any Mission, numberOfWeek: Int = 0) {
@@ -133,10 +141,12 @@ extension MissionBaseModel {
         
         try await self.firestoreManager
             .saveParticipatedWeeklyMission(
-                questionId: self.mission.missionId,
+                missionId: self.mission.missionId,
                 week: self.numberOfWeek,
                 today: Date().yearMonthDateFormat,
                 missionType: missionType,
+                comment: self.comment,
+                image: self.selectedImage?.jpegData(compressionQuality: 0.75),
                 point: self.mission.missionRewardPoint,
                 state: .succeeded
             )
@@ -168,7 +178,6 @@ extension MissionBaseModel {
                 missionType: missionType,
                 eventId: self.mission.missionId,
                 selectedIndex: selectedIndex,
-                recentComments: recentComments ?? [],
                 comment: comment,
                 point: self.mission.missionRewardPoint
             )

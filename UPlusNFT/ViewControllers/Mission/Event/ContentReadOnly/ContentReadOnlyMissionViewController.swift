@@ -9,10 +9,6 @@ import UIKit
 import Combine
 import Nuke
 
-//protocol ContentReadOnlyMissionViewControllerDelegate: AnyObject {
-//    func redeemDidTap()
-//}
-
 final class ContentReadOnlyMissionViewController: BaseMissionScrollViewController {
 
     enum ReadOnlyMissionType {
@@ -24,9 +20,6 @@ final class ContentReadOnlyMissionViewController: BaseMissionScrollViewControlle
     
     //MARK: - Dependency
     private let vm: ContentReadOnlyMissionViewViewModel
-    
-    //MARK: - Delegate
-//    weak var delegate: ContentReadOnlyMissionViewControllerDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -65,6 +58,7 @@ final class ContentReadOnlyMissionViewController: BaseMissionScrollViewControlle
         
         self.configure()
         self.bind()
+        self.setBaseVM(vm: self.vm)
     }
 
 }
@@ -73,7 +67,6 @@ extension ContentReadOnlyMissionViewController {
     
     private func configure() {
         self.titleLabel.text = self.vm.mission.missionContentTitle
-        self.subTitleLabel.text = self.vm.mission.missionContentText
         self.checkAnswerButton.setTitle(MissionConstants.readCompleted, for: .normal)
     }
     
@@ -116,15 +109,17 @@ extension ContentReadOnlyMissionViewController {
 //MARK: - Set UI & Layout
 extension ContentReadOnlyMissionViewController {
     private func setUI() {
-        self.containerView.addSubview(self.stack)
+        self.quizContainer.addSubview(self.stack)
     }
     
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.stack.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.containerView.leadingAnchor, multiplier: 2),
-            self.containerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 2),
-            self.containerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 5)
+            self.stack.topAnchor.constraint(equalTo: self.quizContainer.topAnchor),
+            self.stack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 2),
+            self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.stack.trailingAnchor, multiplier: 2),
+            self.quizContainer.bottomAnchor.constraint(equalToSystemSpacingBelow: self.stack.bottomAnchor, multiplier: 5),
+            
+            self.stack.heightAnchor.constraint(equalToConstant: 700)
         ])
     }
     

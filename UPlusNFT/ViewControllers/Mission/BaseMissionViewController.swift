@@ -18,6 +18,7 @@ class BaseMissionViewController: UIViewController {
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
+    // MARK: - Dependency
     private var baseVM: MissionBaseModel?
     
     // MARK: - Delegate
@@ -136,8 +137,7 @@ extension BaseMissionViewController {
         func bindViewToViewModel() {
             self.weblinkButton.tapPublisher
                 .receive(on: DispatchQueue.main)
-                .sink {  [weak self] urls in
-                    guard let `self` = self else { return }
+                .sink {
                     if let html = vm.mission.missionContentText {
                         vm.openURL(from: html)
                     }

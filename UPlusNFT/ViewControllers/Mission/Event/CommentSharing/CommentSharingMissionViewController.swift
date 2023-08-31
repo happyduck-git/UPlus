@@ -1,24 +1,22 @@
 //
-//  AnswerQuizSingularViewController.swift
+//  CommentSharingMissionViewController.swift
 //  UPlusNFT
 //
-//  Created by HappyDuck on 2023/08/10.
+//  Created by Platfarm on 2023/08/31.
 //
 
 import UIKit
 import Combine
-import Nuke
 
-//ShortAnswerQuizMission
-final class AnswerQuizSingularViewController: BaseMissionViewController {
-
+final class CommentSharingMissionViewController: BaseMissionViewController {
+    
     //MARK: - Dependency
-    private let vm: AnswerQuizSingularViewViewModel
+    private let vm: CommentSharingMissionViewViewModel
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
     
-    //MARK: - UI Elements 
+    //MARK: - UI Elements
     private let answerTextField: UITextField = {
         let txtField = UITextField()
         txtField.borderStyle = .none
@@ -36,15 +34,15 @@ final class AnswerQuizSingularViewController: BaseMissionViewController {
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UPlusColor.gray04
-        label.font = .systemFont(ofSize: UPlusFont.body2)
-        label.text = MissionConstants.hintDescription
+        label.textColor = UPlusColor.mint04
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.text = MissionConstants.pasteUrl
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+ 
     //MARK: - Init
-    init(vm: AnswerQuizSingularViewViewModel) {
+    init(vm: CommentSharingMissionViewViewModel) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
         self.setBaseVM(vm: vm)
@@ -74,10 +72,14 @@ final class AnswerQuizSingularViewController: BaseMissionViewController {
         
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+    }
 }
 
 // MARK: - Set UI & Layout
-extension AnswerQuizSingularViewController {
+extension CommentSharingMissionViewController {
     private func setUI() {
         self.quizContainer.addSubviews(self.answerTextField,
                                        self.numberOfTextLabel,
@@ -85,7 +87,7 @@ extension AnswerQuizSingularViewController {
     }
     
     private func setLayout() {
-        NSLayoutConstraint.activate([            
+        NSLayoutConstraint.activate([
             self.answerTextField.topAnchor.constraint(equalTo: self.quizContainer.topAnchor),
             self.answerTextField.leadingAnchor.constraint(equalToSystemSpacingAfter: self.quizContainer.leadingAnchor, multiplier: 3),
             self.quizContainer.trailingAnchor.constraint(equalToSystemSpacingAfter: self.answerTextField.trailingAnchor, multiplier: 3),
@@ -95,7 +97,7 @@ extension AnswerQuizSingularViewController {
             self.numberOfTextLabel.leadingAnchor.constraint(equalTo: self.answerTextField.leadingAnchor),
             
             self.descriptionLabel.topAnchor.constraint(equalTo: self.numberOfTextLabel.topAnchor),
-            self.descriptionLabel.trailingAnchor.constraint(equalTo: self.answerTextField.trailingAnchor)
+            self.descriptionLabel.leadingAnchor.constraint(equalTo: self.answerTextField.leadingAnchor)
         ])
     }
     
@@ -105,42 +107,24 @@ extension AnswerQuizSingularViewController {
 }
 
 // MARK: - Configure & Bind
-extension AnswerQuizSingularViewController {
-    private func configure() {
-        guard let mission = self.vm.mission as? ShortAnswerQuizMission,
-              let hint = mission.missionAnswerQuizzes.first,
-              let answer = mission.missionAnswerQuizzes.last
-        else { return }
-        
-        self.answerTextField.placeholder = hint
-        self.numberOfTextLabel.text = String(format: MissionConstants.numberOfTexts, answer.count)
-        
-    }
+extension CommentSharingMissionViewController {
   
+    private func configure() {
+        self.checkAnswerButton.setTitle(MissionConstants.checkAnswer, for: .normal)
+    }
+    
     private func bind() {
-        guard let mission = self.vm.mission as? ShortAnswerQuizMission,
-              let answer = mission.missionAnswerQuizzes.last
+        guard let mission = self.vm.mission as? CommentCountMission
         else { return }
         
         func bindViewToViewModel() {
+            
             self.answerTextField.textPublisher
                 .removeDuplicates()
-                .debounce(for: 0.1, scheduler: RunLoop.main)
-                .sink { [weak self] in
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] text in
                     guard let `self` = self else { return }
-                    
-                    self.answerInfoLabel.isHidden = true
-                    
-                    let bgColor: UIColor = $0.isEmpty ? UPlusColor.buttonDeactivated : UPlusColor.buttonActivated
-                    let lineColor: UIColor = $0.isEmpty ? UPlusColor.gray05 : UPlusColor.mint04
-                    let txtColor: UIColor = $0.isEmpty ? .white : UPlusColor.gray08
-                    let isActivated: Bool = $0.isEmpty ? false : true
-                    
-                    self.checkAnswerButton.backgroundColor = bgColor
-                    self.checkAnswerButton.setTitleColor(txtColor, for: .normal)
-                    self.checkAnswerButton.isUserInteractionEnabled = isActivated
-                    self.setTextFieldUnderline(color: lineColor)
-
+                        self.vm.comment = text
                 }
                 .store(in: &bindings)
             
@@ -149,34 +133,33 @@ extension AnswerQuizSingularViewController {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    if (self.answerTextField.text ?? "") == answer {
-                        
-                        var vc: BaseMissionCompletedViewController?
-                        
-                        switch self.vm.type {
-                        case .event:
-                            vc = EventCompletedViewController(vm: self.vm)
-                            vc?.delegate = self
-                        case .weekly:
-                            vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                            vc?.delegate = self
-                        }
-                        
-                        guard let vc = vc else { return }
-                        self.navigationController?.modalPresentationStyle = .fullScreen
-                        self.show(vc, sender: self)
-                        
-                    } else {
-                        self.answerInfoLabel.isHidden = false
-                        self.checkAnswerButton.isUserInteractionEnabled = false
-                        self.checkAnswerButton.backgroundColor = UPlusColor.gray03
-                    }
+                    self.showMissionCompletionVC()
                 }
                 .store(in: &bindings)
         }
         
         func bindViewModelToView() {
 
+            self.vm.$comment
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self,
+                    let comment = $0
+                    else { return }
+                    
+                    let commentEmpty = comment.isEmpty
+                    let bgColor: UIColor = commentEmpty ? UPlusColor.buttonDeactivated : UPlusColor.buttonActivated
+                    let lineColor: UIColor = commentEmpty ? UPlusColor.gray05 : UPlusColor.mint04
+                    let txtColor: UIColor = commentEmpty ? .white : UPlusColor.gray08
+                    let isActivated: Bool = commentEmpty ? false : true
+                    
+                    self.checkAnswerButton.backgroundColor = bgColor
+                    self.checkAnswerButton.setTitleColor(txtColor, for: .normal)
+                    self.checkAnswerButton.isUserInteractionEnabled = isActivated
+                    self.setTextFieldUnderline(color: lineColor)
+                    
+                }
+                .store(in: &bindings)
         }
         
         bindViewToViewModel()
@@ -185,7 +168,48 @@ extension AnswerQuizSingularViewController {
 
 }
 
-extension AnswerQuizSingularViewController {
+extension CommentSharingMissionViewController {
+    private func saveComment(_ comment: String, completion: @escaping () -> ()) {
+        
+        self.checkAnswerButton.isUserInteractionEnabled = false
+        self.checkAnswerButton.backgroundColor = .systemGray
+        
+        Task {
+            // Update to Weekly Missioin Status
+            try await self.vm.saveWeeklyMissionParticipationStatus()
+            // Check level update.
+            try await self.vm.checkLevelUpdate()
+            completion()
+        }
+        
+        self.delegate?.redeemDidTap(vc: self)
+        
+    }
+}
+
+extension CommentSharingMissionViewController {
+    
+    private func showMissionCompletionVC() {
+        var vc: BaseMissionCompletedViewController?
+        
+        switch self.vm.type {
+        case .event:
+            vc = EventCompletedViewController(vm: self.vm)
+            vc?.delegate = self
+        case .weekly:
+            vc = WeeklyMissionCompleteViewController(vm: self.vm)
+            vc?.delegate = self
+        }
+        
+        guard let vc = vc else { return }
+        self.navigationController?.modalPresentationStyle = .fullScreen
+        self.show(vc, sender: self)
+    }
+    
+}
+
+// MARK: - Set TextField Underline
+extension CommentSharingMissionViewController {
     private func setTextFieldUnderline(color: UIColor) {
         let underline = CALayer()
         underline.frame = CGRect(x: 0, y: self.answerTextField.frame.size.height-1, width: self.answerTextField.frame.width, height: 2)
@@ -195,14 +219,14 @@ extension AnswerQuizSingularViewController {
 }
 
 // MARK: - BaseMissionCompletedViewControllerDelegate
-extension AnswerQuizSingularViewController: BaseMissionCompletedViewControllerDelegate {
+extension CommentSharingMissionViewController: BaseMissionCompletedViewControllerDelegate {
     func redeemDidTap() {
         self.delegate?.redeemDidTap(vc: self)
     }
 }
 
 // MARK: - UITextFieldDelegate
-extension AnswerQuizSingularViewController: UITextFieldDelegate {
+extension CommentSharingMissionViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.setTextFieldUnderline(color: UPlusColor.mint04)
     }
@@ -212,5 +236,4 @@ extension AnswerQuizSingularViewController: UITextFieldDelegate {
             self.setTextFieldUnderline(color: UPlusColor.gray05)
         }
     }
-
 }

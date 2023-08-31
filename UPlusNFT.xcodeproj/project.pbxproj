@@ -212,6 +212,8 @@
 		93CBD6D22A9F275E00870019 /* DetailInftoBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */; };
 		93CBD6D42A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */; };
 		93CBD6D72A9F6DC200870019 /* DungGeunMo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93CBD6D62A9F6DC200870019 /* DungGeunMo.ttf */; };
+		93CD8B652AA0641B0010C477 /* CommentSharingMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD8B642AA0641B0010C477 /* CommentSharingMissionViewController.swift */; };
+		93CD8B672AA066920010C477 /* CommentSharingMissionViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD8B662AA066920010C477 /* CommentSharingMissionViewViewModel.swift */; };
 		93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */; };
 		93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */; };
 		93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D1747D2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift */; };
@@ -240,10 +242,8 @@
 		93DA584E2A8CC46500525BEC /* LevelUpBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA584D2A8CC46500525BEC /* LevelUpBottomSheetViewController.swift */; };
 		93DA58502A8CC49800525BEC /* NewNFTNoticeBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA584F2A8CC49800525BEC /* NewNFTNoticeBottomSheetViewController.swift */; };
 		93DA58522A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58512A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift */; };
-		93DA58542A8DA8EB00525BEC /* WeeklyBaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58532A8DA8EB00525BEC /* WeeklyBaseModel.swift */; };
 		93DA58562A8E04C900525BEC /* EventCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58552A8E04C900525BEC /* EventCompletedViewController.swift */; };
 		93DA58582A8E059400525BEC /* BaseMissionCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58572A8E059400525BEC /* BaseMissionCompletedViewController.swift */; };
-		93DA585A2A8E1B9100525BEC /* EventBaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58592A8E1B9100525BEC /* EventBaseModel.swift */; };
 		93DA585D2A8EEED400525BEC /* GiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA585C2A8EEED400525BEC /* GiftViewController.swift */; };
 		93DA58602A8EEFEF00525BEC /* GiftDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA585F2A8EEFEF00525BEC /* GiftDetailView.swift */; };
 		93DA58622A8EF0CF00525BEC /* InsetLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA58612A8EF0CF00525BEC /* InsetLabelView.swift */; };
@@ -485,6 +485,8 @@
 		93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInftoBottomSheetViewController.swift; sourceTree = "<group>"; };
 		93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInftoBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
 		93CBD6D62A9F6DC200870019 /* DungGeunMo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DungGeunMo.ttf; sourceTree = "<group>"; };
+		93CD8B642AA0641B0010C477 /* CommentSharingMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentSharingMissionViewController.swift; sourceTree = "<group>"; };
+		93CD8B662AA066920010C477 /* CommentSharingMissionViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentSharingMissionViewViewModel.swift; sourceTree = "<group>"; };
 		93D174752A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAnswerQuizMissionDetailViewController.swift; sourceTree = "<group>"; };
 		93D1747B2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAnswerQuizMissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		93D1747D2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionDetailViewViewModel.swift; sourceTree = "<group>"; };
@@ -513,10 +515,8 @@
 		93DA584D2A8CC46500525BEC /* LevelUpBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelUpBottomSheetViewController.swift; sourceTree = "<group>"; };
 		93DA584F2A8CC49800525BEC /* NewNFTNoticeBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNFTNoticeBottomSheetViewController.swift; sourceTree = "<group>"; };
 		93DA58512A8CCCB200525BEC /* NewNFTNoticeBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNFTNoticeBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
-		93DA58532A8DA8EB00525BEC /* WeeklyBaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyBaseModel.swift; sourceTree = "<group>"; };
 		93DA58552A8E04C900525BEC /* EventCompletedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCompletedViewController.swift; sourceTree = "<group>"; };
 		93DA58572A8E059400525BEC /* BaseMissionCompletedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMissionCompletedViewController.swift; sourceTree = "<group>"; };
-		93DA58592A8E1B9100525BEC /* EventBaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBaseModel.swift; sourceTree = "<group>"; };
 		93DA585C2A8EEED400525BEC /* GiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftViewController.swift; sourceTree = "<group>"; };
 		93DA585F2A8EEFEF00525BEC /* GiftDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftDetailView.swift; sourceTree = "<group>"; };
 		93DA58612A8EF0CF00525BEC /* InsetLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabelView.swift; sourceTree = "<group>"; };
@@ -1271,6 +1271,7 @@
 		939194A12A82102C0035FEB1 /* Event */ = {
 			isa = PBXGroup;
 			children = (
+				93CD8B632AA063EC0010C477 /* CommentSharing */,
 				240269402A83C35400850E65 /* CommentCount */,
 				240269372A83BF3200850E65 /* GovernanceElection */,
 				240269362A83BF2600850E65 /* ShareMediaOnSlack */,
@@ -1333,6 +1334,15 @@
 				93CBD6D62A9F6DC200870019 /* DungGeunMo.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		93CD8B632AA063EC0010C477 /* CommentSharing */ = {
+			isa = PBXGroup;
+			children = (
+				93CD8B642AA0641B0010C477 /* CommentSharingMissionViewController.swift */,
+				93CD8B662AA066920010C477 /* CommentSharingMissionViewViewModel.swift */,
+			);
+			path = CommentSharing;
 			sourceTree = "<group>";
 		};
 		93D174772A733C5600F5B1B1 /* WeeklyDetail */ = {
@@ -1506,8 +1516,6 @@
 				9391949A2A81BB830035FEB1 /* Daily */,
 				939194992A81BB7D0035FEB1 /* Weekly */,
 				245E2DD12A87881600AAEFE6 /* Mission.swift */,
-				93DA58532A8DA8EB00525BEC /* WeeklyBaseModel.swift */,
-				93DA58592A8E1B9100525BEC /* EventBaseModel.swift */,
 				24624B952A94FCA800C9A42E /* MissionBaseModel.swift */,
 				245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */,
 			);
@@ -1760,7 +1768,6 @@
 				24624B942A9274B500C9A42E /* LevelDividerCollectionViewCell.swift in Sources */,
 				2402695C2A846C1300850E65 /* AnswerQuizSingularViewViewModel.swift in Sources */,
 				932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */,
-				93DA58542A8DA8EB00525BEC /* WeeklyBaseModel.swift in Sources */,
 				2417A5A12A67C96900AEC530 /* InformationInputView.swift in Sources */,
 				24542D552A70DE7D00F82CEA /* MyPageViewViewModel.swift in Sources */,
 				9391948F2A80A24E0035FEB1 /* WalletCollectionViewCell.swift in Sources */,
@@ -1831,12 +1838,14 @@
 				930D96DD2A4406BA0007801A /* ResetPasswordViewViewModel.swift in Sources */,
 				93E013B42A691F450005E342 /* WeeklyMissionCompleteViewController.swift in Sources */,
 				930D96D02A428D6E0007801A /* UITextField+Extension.swift in Sources */,
+				93CD8B672AA066920010C477 /* CommentSharingMissionViewViewModel.swift in Sources */,
 				247FC60C2A6776A2001F3974 /* BottomSheetViewController.swift in Sources */,
 				936F88282A4AC8860062E759 /* CommentTableViewCell.swift in Sources */,
 				939194EE2A89F1750035FEB1 /* UserLevelPoint.swift in Sources */,
 				932C34D62A53E2120032192A /* ShortQuizCollectionViewCell.swift in Sources */,
 				939194762A7B4C5B0035FEB1 /* WeeklyMissionOverViewViewModel.swift in Sources */,
 				244BBB0E2A54361D006C33D2 /* PostCommentCollectionViewCell.swift in Sources */,
+				93CD8B652AA0641B0010C477 /* CommentSharingMissionViewController.swift in Sources */,
 				93A2ED952A6E12A000C2287D /* UPlusUser.swift in Sources */,
 				240269342A83B51200850E65 /* ContentReadOnlyMissionViewViewModel.swift in Sources */,
 				937DDF782A9D6CA30014AF15 /* OnBoardingViewViewModel.swift in Sources */,
@@ -1854,7 +1863,6 @@
 				937C76662A497EBE001024D0 /* CampaignMetaData.swift in Sources */,
 				93CBD6D42A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift in Sources */,
 				939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */,
-				93DA585A2A8E1B9100525BEC /* EventBaseModel.swift in Sources */,
 				93DA583B2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift in Sources */,
 				936F882A2A4AC8B50062E759 /* CommentTableViewCellModel.swift in Sources */,
 				24624B8B2A8E55E600C9A42E /* MyPageViewController+Extensions.swift in Sources */,

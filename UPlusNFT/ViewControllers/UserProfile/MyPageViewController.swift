@@ -1177,6 +1177,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        // 퀘스트
         if self.screenToShow == 0 {
             switch indexPath.section {
             case 1:
@@ -1203,7 +1205,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 self.show(vc, sender: self)
                 
-            case 2:
+            case 3:
                 
                 let (status, title) = self.weeklyMissionInfo(week: indexPath.item + 1)
                 let missionInfo = self.vm.mission.weeklyMissions[title] ?? []
@@ -1223,6 +1225,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 break
             }
             
+        // 이벤트
         } else {
    
             var anyMission: (any Mission)?
@@ -1230,7 +1233,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             switch indexPath.section {
             case 1:
                 anyMission = self.vm.event.regularEvents[indexPath.item]
-            case 2:
+            case 3:
                 anyMission = self.vm.event.levelEvents[indexPath.item]
             default:
                 return
@@ -1238,6 +1241,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             
             guard let mission = anyMission else { return }
             let type = MissionSubFormatType(rawValue: mission.missionSubFormatType) ?? .userComment
+            let topicType = MissionTopicType(rawValue: mission.missionTopicType) ?? .eventMission
             
             switch type {
             case .photoAuthManagement, .photoAuthNoManagement:
@@ -1264,7 +1268,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 
                 self.show(vc, sender: self)
                 
-            case .userComment, .userCommentRich:
+            case .userCommentRich:
                 guard let mission = mission as? CommentCountMission else { return }
                 let vm = CommentCountMissionViewViewModel(type: .event, mission: mission)
                 let vc = CommentCountMissionViewController(vm: vm)
@@ -1273,13 +1277,12 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 self.show(vc, sender: self)
                 
             case .userCommentAuthSharing:
-                
-                guard let mission = mission as? CommentCountMission else { return }
-                let vm = ShareMediaOnSlackMissionViewViewModel(level: Int(self.vm.userProfileViewModel?.level ?? 0), type: .event, mission: mission)
-                let vc = ShareMediaOnSlackMissionViewController(vm: vm)
-//                vc.delegate = self
-                
-                self.show(vc, sender: self)
+                    guard let mission = mission as? CommentCountMission else { return }
+                    let vm = ShareMediaOnSlackMissionViewViewModel(level: Int(self.vm.userProfileViewModel?.level ?? 0), type: .event, mission: mission)
+                    let vc = ShareMediaOnSlackMissionViewController(vm: vm)
+    //                vc.delegate = self
+                    
+                    self.show(vc, sender: self)
                 
             case .choiceQuizOX:
                 guard let mission = mission as? ChoiceQuizMission else { return }
@@ -1315,7 +1318,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
 extension MyPageViewController {
     
     private func weeklyMissionInfo(week: Int) -> (status: WeeklyCellType, title: String) {
-        let weekCollection = String(format: "weekly_quiz__%d__mission_set", week)
+        let weekCollection = String(format: FirestoreConstants.weeklyQuizMissionSetCollection, week)
         let missionInfo = self.vm.mission.weeklyMissions[weekCollection] ?? []
         
         let begin = missionInfo[0].dateValue()
