@@ -16,12 +16,12 @@ enum WeeklyCellType {
 final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
     private let missionImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAssets.clock)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+            let imageView = UIImageView()
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = UIImage(named: ImageAssets.clock)
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            return imageView
+        }()
 
     private let missionTitle: UILabel = {
         let label = UILabel()

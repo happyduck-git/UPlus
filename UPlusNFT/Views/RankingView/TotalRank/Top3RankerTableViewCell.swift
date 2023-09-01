@@ -134,7 +134,6 @@ extension Top3RankerTableViewCell {
                 UPlusLogger.logger.error("Error getting imagurl from nft document -- \(String(describing: error))")
             }
         }
-        
     }
     
 }

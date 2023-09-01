@@ -39,7 +39,7 @@ final class OnBoardingViewController2: BaseScrollViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let infoBottomView: UIView = {
        let view = UIView()
         view.backgroundColor = UPlusColor.gray05

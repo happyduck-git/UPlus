@@ -16,12 +16,12 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
     
     private let missionImage: UIImageView = {
-       let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAssets.routineImage)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+          let imageView = UIImageView()
+           imageView.contentMode = .scaleAspectFit
+           imageView.image = UIImage(named: ImageAssets.routineImage)
+           imageView.translatesAutoresizingMaskIntoConstraints = false
+           return imageView
+       }()
 
     private let title: UILabel = {
         let label = UILabel()

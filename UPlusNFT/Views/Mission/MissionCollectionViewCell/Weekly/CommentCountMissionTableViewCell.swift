@@ -102,17 +102,17 @@ extension CommentCountMissionTableViewCell {
         
         func bindViewModelToView() {
             vm.$isLikedList
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] list in
-                    guard let `self` = self else { return }
-                    
-                    let like = list[row]
-                    let likeImage: UIImage? = like ? UIImage(named: ImageAssets.heartFill) : UIImage(named: ImageAssets.heartEmpty)
-                    
-                    self.likeButton.setImage(likeImage, for: .normal)
-                    
-                }
-                .store(in: &bindings)
+                         .receive(on: DispatchQueue.main)
+                         .sink { [weak self] list in
+                             guard let `self` = self else { return }
+                             
+                             let like = list[row]
+                             let likeImage: UIImage? = like ? UIImage(named: ImageAssets.heartFill) : UIImage(named: ImageAssets.heartEmpty)
+                             
+                             self.likeButton.setImage(likeImage, for: .normal)
+                             
+                         }
+                         .store(in: &bindings)
             
             vm.$likesCountList
                 .receive(on: DispatchQueue.main)
