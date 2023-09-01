@@ -21,7 +21,7 @@ final class ChoiceMultipleQuizButton: UIButton {
         let imageView = UIImageView()
         imageView.isHidden = true
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.checkBlack)
+        imageView.image = UIImage(named: ImageAssets.checkBlack)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

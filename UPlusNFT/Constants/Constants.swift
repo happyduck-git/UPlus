@@ -352,7 +352,7 @@ struct SFSymbol {
 
 }
 
-struct ImageAsset {
+struct ImageAssets {
     static let level1InitialAvatar: String = "level4-avatar-initial"
     static let vipInitialBenefit: String = "vip-initial-benefit"
     

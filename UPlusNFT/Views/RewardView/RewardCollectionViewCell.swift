@@ -15,7 +15,7 @@ final class RewardCollectionViewCell: UICollectionViewCell {
     
     private let frameImage: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.couponFrame)
+        imageView.image = UIImage(named: ImageAssets.couponFrame)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

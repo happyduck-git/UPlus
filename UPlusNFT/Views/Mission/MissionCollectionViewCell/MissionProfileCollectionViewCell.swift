@@ -26,7 +26,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     private let levelBadgeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.levelBadge)
+        imageView.image = UIImage(named: ImageAssets.levelBadge)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -41,7 +41,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
     
     private let pointImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.pointSticker)
+        imageView.image = UIImage(named: ImageAssets.pointSticker)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

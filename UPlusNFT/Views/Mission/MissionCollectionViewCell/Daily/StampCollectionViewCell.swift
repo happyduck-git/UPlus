@@ -66,7 +66,7 @@ extension StampCollectionViewCell {
         var image: UIImage?
         
         if (item + 1) % 5 == 0 {
-            image = UIImage(named: ImageAsset.stampGiftEmpty)
+            image = UIImage(named: ImageAssets.stampGiftEmpty)
             
         }
         
@@ -78,9 +78,9 @@ extension StampCollectionViewCell {
         var image: String = ""
         
         if (item + 1) % 5 == 0 {
-            image = ImageAsset.stampPointEmpty
+            image = ImageAssets.stampPointEmpty
         } else {
-            image = ImageAsset.stampGiftEmpty
+            image = ImageAssets.stampGiftEmpty
         }
         self.markImageView.image = UIImage(named: image)
     }

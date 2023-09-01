@@ -11,7 +11,7 @@ final class RewardInfoView: UIView {
 
     private let image: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: ImageAsset.bellGray)
+        image.image = UIImage(named: ImageAssets.bellGray)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()

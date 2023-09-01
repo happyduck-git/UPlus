@@ -35,7 +35,7 @@ final class LogOutBottomSheetViewController: BottomSheetViewController {
     private let logoutImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.logoutFace)
+        imageView.image = UIImage(named: ImageAssets.logoutFace)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

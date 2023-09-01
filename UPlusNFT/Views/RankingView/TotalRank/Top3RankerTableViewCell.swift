@@ -12,7 +12,7 @@ final class Top3RankerTableViewCell: UITableViewCell {
     private let titleImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.top3Title)
+        imageView.image = UIImage(named: ImageAssets.top3Title)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -96,9 +96,9 @@ extension Top3RankerTableViewCell {
                                      username: third?.userNickname ?? " ",
                                      point: third?.userTotalPoint ?? 0)
         
-        self.firstRankView.setMedalImage(name: ImageAsset.goldMedal)
-        self.secondRankView.setMedalImage(name: ImageAsset.silverMedal)
-        self.thirdRankView.setMedalImage(name: ImageAsset.bronzeMedal)
+        self.firstRankView.setMedalImage(name: ImageAssets.goldMedal)
+        self.secondRankView.setMedalImage(name: ImageAssets.silverMedal)
+        self.thirdRankView.setMedalImage(name: ImageAssets.bronzeMedal)
     }
     
 }

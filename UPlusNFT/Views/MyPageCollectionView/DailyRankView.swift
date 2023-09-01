@@ -29,7 +29,7 @@ final class DailyRankView: UIView {
     private let rankingImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.dailyTrophy)
+        imageView.image = UIImage(named: ImageAssets.dailyTrophy)
         return imageView
     }()
     

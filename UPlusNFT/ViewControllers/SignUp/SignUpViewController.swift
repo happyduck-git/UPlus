@@ -115,7 +115,7 @@ final class SignUpViewController: UIViewController {
     private let pwValidationImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     
@@ -171,7 +171,7 @@ final class SignUpViewController: UIViewController {
     private let pwCheckValidationImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     
@@ -360,7 +360,7 @@ final class SignUpViewController: UIViewController {
     private func setNavigationItem() {
         self.navigationItem.hidesBackButton = true
         
-        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAsset.xMarkBlack)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAssets.xMarkBlack)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
                                           style: .plain,
                                           target: self,
                                            action: #selector(cancelButtonDidTap))
@@ -474,7 +474,7 @@ final class SignUpViewController: UIViewController {
                         self.pwCheckValidationStack.isHidden = false
                         text = SignUpConstants.passwordMatch
                         textColor = UPlusColor.blue03
-                        image = UIImage(named: ImageAsset.infoBlue)
+                        image = UIImage(named: ImageAssets.infoBlue)
                         
                     } else if passwordText.isEmpty {
                         self.pwCheckValidationStack.isHidden = true
@@ -483,7 +483,7 @@ final class SignUpViewController: UIViewController {
                         self.pwCheckValidationStack.isHidden = false
                         text = SignUpConstants.passwordNotMatch
                         textColor = UPlusColor.orange01
-                        image = UIImage(named: ImageAsset.infoRed)
+                        image = UIImage(named: ImageAssets.infoRed)
                     }
                     
                     self.pwCheckValidationText.text = text
@@ -550,9 +550,9 @@ final class SignUpViewController: UIViewController {
                     
                     var image: UIImage?
                     if isChecked {
-                        image = UIImage(named: ImageAsset.checkBoxTicked)
+                        image = UIImage(named: ImageAssets.checkBoxTicked)
                     } else {
-                        image = UIImage(named: ImageAsset.checkBoxEmpty)
+                        image = UIImage(named: ImageAssets.checkBoxEmpty)
                     }
                     
                     self.checkButton.setImage(image, for: .normal)

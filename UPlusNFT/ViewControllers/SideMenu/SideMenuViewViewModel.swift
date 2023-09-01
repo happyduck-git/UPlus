@@ -19,12 +19,12 @@ final class SideMenuViewViewModel {
     }
     
     private let menuList: [MenuType: String] = [
-        .home: ImageAsset.home,
-        .wallet: ImageAsset.walletMint,
-        .popGame: ImageAsset.ranking,
-        .rankBoard: ImageAsset.ranking,
-        .notice: ImageAsset.notice,
-        .faq: ImageAsset.questionMint
+        .home: ImageAssets.home,
+        .wallet: ImageAssets.walletMint,
+        .popGame: ImageAssets.ranking,
+        .rankBoard: ImageAssets.ranking,
+        .notice: ImageAssets.notice,
+        .faq: ImageAssets.questionMint
     ]
     
     func numberOfMenu() -> Int {

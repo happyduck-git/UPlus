@@ -13,7 +13,7 @@ final class MissionHistoryDetailCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.routineImage)
+        imageView.image = UIImage(named: ImageAssets.routineImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

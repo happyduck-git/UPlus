@@ -26,7 +26,7 @@ final class CommentCountMissionViewController: UIViewController {
     //MARK: - UI Elements
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.eventBackground)
+        imageView.image = UIImage(named: ImageAssets.eventBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

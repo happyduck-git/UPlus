@@ -30,7 +30,7 @@ class HumpyBottomSheetViewController: BottomSheetViewController {
     
     private let titleBgImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.titleBackground)
+        imageView.image = UIImage(named: ImageAssets.titleBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

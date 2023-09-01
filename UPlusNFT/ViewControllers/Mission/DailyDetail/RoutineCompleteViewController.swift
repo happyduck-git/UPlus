@@ -175,7 +175,7 @@ extension RoutineCompleteViewController {
     private func setNavigationBar() {
         self.navigationItem.hidesBackButton = true
         
-        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAsset.xMarkBlack), style: .done, target: self, action: #selector(cancelDidTap))
+        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAssets.xMarkBlack), style: .done, target: self, action: #selector(cancelDidTap))
         self.navigationItem.setRightBarButtonItems([cancelButton], animated: true)
     }
     

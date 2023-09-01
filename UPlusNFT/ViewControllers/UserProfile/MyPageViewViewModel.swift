@@ -523,4 +523,3 @@ extension MyPageViewViewModel {
         return 0
     }
 }
-

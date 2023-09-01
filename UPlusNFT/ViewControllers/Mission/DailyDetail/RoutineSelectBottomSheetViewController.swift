@@ -28,7 +28,7 @@ final class RoutineSelectBottomSheetViewController: BottomSheetViewController {
     private let cancelButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .white
-        button.setImage(UIImage(named: ImageAsset.xMarkBlack), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.xMarkBlack), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

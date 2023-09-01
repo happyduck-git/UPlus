@@ -49,7 +49,7 @@ final class WeeklyMissionCompleteBottomSheetViewController: BottomSheetViewContr
     
     private let nftImage: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: ImageAsset.coloredNft)
+        image.image = UIImage(named: ImageAssets.coloredNft)
         return image
     }()
     

@@ -21,7 +21,7 @@ class BaseMissionCompletedViewController: UIViewController {
     
     let backgroundConfetti: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.confettiBackground)
+        imageView.image = UIImage(named: ImageAssets.confettiBackground)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -38,7 +38,7 @@ class BaseMissionCompletedViewController: UIViewController {
     
     let missionCompleteIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.pointBig)
+        imageView.image = UIImage(named: ImageAssets.pointBig)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -46,7 +46,7 @@ class BaseMissionCompletedViewController: UIViewController {
     
     let shadowIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.pointShadow)
+        imageView.image = UIImage(named: ImageAssets.pointShadow)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

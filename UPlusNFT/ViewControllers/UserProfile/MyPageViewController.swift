@@ -428,17 +428,17 @@ extension MyPageViewController {
     
     private func setNavigationItem() {
         
-        let menuItem = UIBarButtonItem(image: UIImage(named: ImageAsset.hamburgerMenu)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+        let menuItem = UIBarButtonItem(image: UIImage(named: ImageAssets.hamburgerMenu)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                        style: .plain,
                                        target: self,
                                        action: #selector(openSideMenu))
         
-        let walletItem = UIBarButtonItem(image: UIImage(named: ImageAsset.wallet)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+        let walletItem = UIBarButtonItem(image: UIImage(named: ImageAssets.wallet)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                          style: .plain,
                                          target: self,
                                          action: #selector(speakerDidTap))
         
-        let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+        let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAssets.speaker)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                           style: .plain,
                                           target: self,
                                           action: #selector(speakerDidTap))
@@ -457,6 +457,8 @@ extension MyPageViewController {
         guard let collectionView = collectionView else { return }
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        userProfileView.delegate = self
         
     }
     
@@ -1301,7 +1303,7 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
         switch selectedRow {
         case 0:
-            let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+            let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAssets.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
                                               style: .plain,
                                               target: self,
                                               action: nil)
@@ -1504,3 +1506,111 @@ extension MyPageViewController {
     
 }
 
+
+
+extension MyPageViewController: UserProfileViewDelegate {
+    func lottieButtonDidTap() {
+        let templateVC: LottieViewController = LottieViewController(reactor: makeMockMoonoReactorByGall3ry3())
+        navigationController?.pushViewController(templateVC, animated: true)
+    }
+}
+
+// MARK: Extension for Lottie player of Gall3ry3
+extension MyPageViewController {
+ 
+//    private func makeReactorByGall3ry3(nft: MoonoNft) -> LottieViewReactor {
+    
+//        let appDependency = AppDependency.resolve()
+//        return appDependency.homeViewReactor.dependency
+//            .lottieViewReactorFactory.create(
+//                payload: .init(nft: makeOpenSeaNftByGall3ry3(moonoNft: nft), format: .video)
+//            )
+        
+//        return reactor.dependency.lottieViewReactorFactory.create(payload: .init(nft: makeOpenSeaNftByGall3ry3(moonoNft: nft), format: .video))
+//
+//    }
+    
+    private func makeMockMoonoReactorByGall3ry3() -> LottieViewReactor {
+        let appDependency = AppDependency.resolve()
+        return appDependency.homeViewReactor.dependency
+            .lottieViewReactorFactory.create(
+                payload: .init(nft: makeMockOpenSeaMoonoNftByGall3ry3(), format: .video)
+            )
+        
+//        return reactor.dependency.lottieViewReactorFactory.create(payload: .init(nft: makeMockOpenSeaMoonoNftByGall3ry3(), format: .video))
+    }
+    
+//    private func makeOpenSeaNftByGall3ry3(moonoNft: MoonoNft) -> OpenSeaNFT {
+//        let collectionTitle = "Moono Week"
+//        let collectionProfileImageUrl = "https://i.seadn.io/gae/cB8JeJwP76w_GGSvQe-WpwfzA31aQZF2fVLA0FmvcsrISfe9e7HDQ_DE9QhilMaCW88vFo_EfBA6ItrNrUOxmbWlbq6suY0v8Sln?auto=format&w=256"
+//        let nftOwnerAddress = "0x3961eA20e28A30bCB25E130bec3378d0C248030C"
+//
+//        let openSeaPaymentToken = OpenSeaPaymentToken(
+//            eth_price: "1.000000000000000"
+//        )
+//        let openSeaNftLastSale = OpenSeaNFTLastSale(
+//            total_price: "31000000000000000",
+//            payment_token: openSeaPaymentToken
+//        )
+//        let openSeaNftCollection = OpenSearNFTCollection(
+//            name: collectionTitle,
+//            image_url: collectionProfileImageUrl,
+//            slug: "MOONO"
+//        )
+//        let openSeaCreator = OpenSeaCreator(
+//            user: OpenseaUser(username: collectionTitle)
+//        )
+//        let openSeaNftOwner = OpenSeaNFTOwner(
+//            user: OpenSeaNFTOwner.OpenSeaNFTUser(username: nftOwnerAddress),
+//            profile_img_url: "https://storage.googleapis.com/opensea-static/opensea-profile/11.png",
+//            address: nftOwnerAddress
+//        )
+//
+//        return OpenSeaNFT(
+//            id: Int(moonoNft.tokenId) ?? -1,
+//            owner: openSeaNftOwner,
+//            name: moonoNft.name,
+//            permalink: "https://opensea.io/assets/klaytn/0x29421a3c92075348fcbcb04de965e802ed187302/\(moonoNft.tokenIdInteger)",
+//            sell_orders: nil,
+//            last_sale: openSeaNftLastSale,
+//            collection: openSeaNftCollection,
+//            creator: openSeaCreator,
+//            price: nil,
+//            tokenID: moonoNft.tokenId,
+//            description: moonoNft.description,
+//            imageURLString: "https://firebasestorage.googleapis.com/v0/b/moono-aftermint-storage.appspot.com/o/Moono%23\(moonoNft.tokenIdInteger).jpeg?alt=media"
+//        )
+//    }
+    
+    private func makeMockOpenSeaMoonoNftByGall3ry3() -> OpenSeaNFT {
+        let openSeaPaymentToken = OpenSeaPaymentToken(
+            eth_price: "1.000000000000000"
+        )
+        let openSeaNftLastSale = OpenSeaNFTLastSale(
+            total_price: "31000000000000000",
+            payment_token: openSeaPaymentToken
+        )
+        let openSeaNftCollection = OpenSearNFTCollection(
+            name: "NFT-MEMBERSHIP",
+            image_url: "https://i.seadn.io/gcs/files/db0035ff3f269796fddfe44b54e00da1.gif?auto=format&dpr=1&w=1000",
+            slug: "MOONO"
+        )
+        let openSeaCreator = OpenSeaCreator(
+            user: OpenseaUser(username: "2B14DA")
+        )
+        return OpenSeaNFT(
+            id: 994262845,
+            owner: nil,
+            name: "1인 스타트업 #1",
+            permalink: "https://testnets.opensea.io/assets/mumbai/0xcb2bb05166b9c70035b464d5818f33ffe0796e5c/1",
+            sell_orders: nil,
+            last_sale: openSeaNftLastSale,
+            collection: openSeaNftCollection,
+            creator: openSeaCreator,
+            price: nil,
+            tokenID: "1",
+            description: "Meet the unique generative NFT art of Moono and join the exclusive membership!",
+            imageURLString: "https://i.seadn.io/gcs/files/db0035ff3f269796fddfe44b54e00da1.gif?auto=format&dpr=1&w=1000"
+        )
+    }
+}

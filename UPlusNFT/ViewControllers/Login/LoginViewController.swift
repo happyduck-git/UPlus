@@ -105,7 +105,7 @@ class LoginViewController: UIViewController {
     private let infoImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     
@@ -329,10 +329,10 @@ extension LoginViewController {
                     var image: UIImage?
                     
                     if isHidden {
-                        image = UIImage(named: ImageAsset.eyeClosed)
+                        image = UIImage(named: ImageAssets.eyeClosed)
                         passwordTextField.isSecureTextEntry = true
                     } else {
-                        image = UIImage(named: ImageAsset.eyeOpened)
+                        image = UIImage(named: ImageAssets.eyeOpened)
                         passwordTextField.isSecureTextEntry = false
                     }
                     self.eyeButton.setImage(image, for: .normal)

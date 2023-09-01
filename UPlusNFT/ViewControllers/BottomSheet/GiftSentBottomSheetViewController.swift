@@ -24,7 +24,7 @@ final class GiftSentBottomSheetViewController: BottomSheetViewController {
     private let giftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.giftMultiColored)
+        imageView.image = UIImage(named: ImageAssets.giftMultiColored)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

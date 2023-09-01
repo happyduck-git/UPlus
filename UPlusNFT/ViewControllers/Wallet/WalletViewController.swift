@@ -64,7 +64,7 @@ final class WalletViewController: UIViewController {
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = UPlusColor.gray07
-        button.setImage(UIImage(named: ImageAsset.walletWhite), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.walletWhite), for: .normal)
         button.setTitle(WalletConstants.walletAddress, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false

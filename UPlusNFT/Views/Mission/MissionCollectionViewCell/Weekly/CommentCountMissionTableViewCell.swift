@@ -100,7 +100,7 @@ extension CommentCountMissionTableViewCell {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    let likeImage: UIImage? = $0 ? UIImage(named: ImageAsset.heartFill) : UIImage(named: ImageAsset.heartEmpty)
+                    let likeImage: UIImage? = $0 ? UIImage(named: ImageAssets.heartFill) : UIImage(named: ImageAssets.heartEmpty)
                     
                     self.likeButton.setImage(likeImage, for: .normal)
                     

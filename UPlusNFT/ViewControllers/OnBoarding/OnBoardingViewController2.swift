@@ -31,7 +31,7 @@ final class OnBoardingViewController2: UIViewController {
     
     private let onBoardImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.onBoarding)
+        imageView.image = UIImage(named: ImageAssets.onBoarding)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

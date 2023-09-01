@@ -10,7 +10,12 @@ import Nuke
 import Combine
 import Gifu
 
+protocol UserProfileViewDelegate: AnyObject {
+    func lottieButtonDidTap()
+}
+
 final class UserProfileView: PassThroughView {
+    weak var delegate: UserProfileViewDelegate?
     
     //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
@@ -19,7 +24,7 @@ final class UserProfileView: PassThroughView {
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.backgroundStar)
+        imageView.image = UIImage(named: ImageAssets.backgroundStar)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -64,7 +69,8 @@ final class UserProfileView: PassThroughView {
     
     private let lottieButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.starButton), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.starButton), for: .normal)
+        button.addTarget(self, action: #selector(lottieBtnDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -147,7 +153,7 @@ extension UserProfileView {
             .store(in: &bindings)
  
     }
-
+    
 }
 
 extension UserProfileView {
@@ -216,6 +222,12 @@ extension UserProfileView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
         return hitView == self ? nil : hitView
+    }
+}
+
+extension UserProfileView {
+    @objc func lottieBtnDidTap() {
+        self.delegate?.lottieButtonDidTap()
     }
 }
 

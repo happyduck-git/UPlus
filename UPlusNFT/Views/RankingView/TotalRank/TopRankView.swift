@@ -41,7 +41,7 @@ final class TopRankView: UIView {
     private let pointImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.point)
+        imageView.image = UIImage(named: ImageAssets.point)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

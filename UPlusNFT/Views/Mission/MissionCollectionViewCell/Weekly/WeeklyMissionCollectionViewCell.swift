@@ -17,7 +17,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
     private let missionImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.computer)
+        imageView.image = UIImage(named: ImageAssets.computer)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -33,7 +33,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
     private let clockImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.clock)
+        imageView.image = UIImage(named: ImageAssets.clock)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

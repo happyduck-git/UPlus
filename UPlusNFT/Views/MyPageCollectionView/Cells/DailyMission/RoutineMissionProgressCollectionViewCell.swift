@@ -17,7 +17,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     
     private let missionImage: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.routineImage)
+        imageView.image = UIImage(named: ImageAssets.routineImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

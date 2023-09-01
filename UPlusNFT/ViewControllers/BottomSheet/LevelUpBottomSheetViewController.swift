@@ -82,7 +82,7 @@ final class LevelUpBottomSheetViewController: HumpyBottomSheetViewController {
     private let raffleView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.raffle)
+        imageView.image = UIImage(named: ImageAssets.raffle)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

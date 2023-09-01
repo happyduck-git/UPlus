@@ -161,7 +161,7 @@ final class NFTDetailViewController: UIViewController {
         button.clipsToBounds = true
         button.backgroundColor = .black
         button.setTitleColor(.white, for: .normal)
-        button.setImage(UIImage(named: ImageAsset.sparkle), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.sparkle), for: .normal)
         button.setTitle(WalletConstants.videoGenerateTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

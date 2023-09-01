@@ -65,7 +65,7 @@ extension MissionHistoryButtonCollectionViewCell {
                     print("Self")
                     return }
                 let text = $0 ? "이전 미션 참여기록 보기" : "이전 미션 참여기록 접기"
-                let image = $0 ? ImageAsset.arrowHeadDown : ImageAsset.arrowHeadUp
+                let image = $0 ? ImageAssets.arrowHeadDown : ImageAssets.arrowHeadUp
                 
                 self.label.text = text
                 self.button.setImage(UIImage(named: image), for: .normal)

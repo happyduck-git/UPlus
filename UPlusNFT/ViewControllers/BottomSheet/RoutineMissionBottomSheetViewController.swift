@@ -28,7 +28,7 @@ final class RoutineMissionBottomSheetViewController: BottomSheetViewController {
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.vipPoint)
+        imageView.image = UIImage(named: ImageAssets.vipPoint)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
