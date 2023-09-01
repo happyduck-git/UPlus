@@ -18,7 +18,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     private let missionImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.clock)
+        imageView.image = UIImage(named: ImageAssets.clock)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -35,7 +35,7 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     private let clockImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.clock)
+        imageView.image = UIImage(named: ImageAssets.clock)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -69,6 +69,9 @@ final class WeeklyMissionCollectionViewCell: UICollectionViewCell {
     
     private let progressBar: UIProgressView = {
         let progressView = UIProgressView()
+        progressView.progress = 0.0
+        progressView.trackTintColor = UPlusColor.grayBackground
+        progressView.progressTintColor = UPlusColor.blue03
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
@@ -122,16 +125,19 @@ extension WeeklyMissionCollectionViewCell {
         
         switch item {
         case 0:
-            image = ImageAsset.hand
+            image = ImageAssets.hand
         case 1:
-            image = ImageAsset.computer
+            image = ImageAssets.computer
         default:
-            image = ImageAsset.company
+            image = ImageAssets.company
         }
         
         self.missionImage.image = UIImage(named: image)
         self.missionTitle.text = title
         self.timeLeftLabel.text = period
+        
+        let float = Float(numberOfParticipation) / MissionConstants.weeklyMissionMax
+        self.progressBar.setProgress(float, animated: false)
         self.numberOfParticipation.text = String(format: MissionConstants.weeklyMissionProgress, numberOfParticipation)        
     }
     

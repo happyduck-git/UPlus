@@ -28,8 +28,10 @@ final class NewNFTNoticeBottomSheetViewViewModel {
 extension NewNFTNoticeBottomSheetViewViewModel {
     
     private func getNft() {
+        UPlusLogger.logger.debug("Get NFT info called...")
         Task {
             nft.send(await firestoreManager.getNft(tokenId: tokenId))
+            UPlusLogger.logger.debug("Get NFT for \(String(describing: self.tokenId)) is finished.")
         }
     }
     

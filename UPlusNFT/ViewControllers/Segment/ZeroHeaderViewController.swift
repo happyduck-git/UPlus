@@ -11,7 +11,7 @@ class ZeroHeaderViewController: UIViewController {
 
     private let image: UIImageView = {
        let image = UIImageView()
-        image.image = UIImage(named: ImageAsset.company)
+        image.image = UIImage(named: ImageAssets.company)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()

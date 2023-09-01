@@ -60,6 +60,13 @@ struct SignUpConstants {
     static let passwordLabel: String = "비밀번호"
     static let passwordCheckLabel: String = "비밀번호 확인"
     static let star: String = "*"
+    static let gender: String = "성별"
+    static let male: String = "남성"
+    static let female: String = "여성"
+    static let birthYear: String = "출생 연도"
+    static let inputBirthYear: String = "출생 연도를 4자로 입력해주세요."
+    static let birthYearLetterCount: String = "연도(4자)"
+    static let birthYearCount: Int = 4
     
     static let nicknameLabel: String = "닉네임"
     static let register: String = "가입하기"
@@ -201,9 +208,10 @@ struct MissionConstants {
     static let vote: String = "투표하기"
     
     /* Weekly Mission */
+    static let weeklyMissionMax: Float = 6
     static let timeLeft: String = "%d일 %d시간 후 종료"
     static let weeklyPoints: String = "600P+NFT"
-    static let weeklyMissionProgress: String = "%d/15회"
+    static let weeklyMissionProgress: String = "%d/6회"
     static let episodeCerti: String = "에피소드 인증서"
     static let weeklyTopTitle: String = "%@월 %@일까지 완주하고 에피소드 인증서를 받으세요!"
     static let episode1Desc: String = "천리길도 한걸음부터! 같이 일할 사원을 뽑아보아요."
@@ -377,7 +385,7 @@ struct SFSymbol {
 
 }
 
-struct ImageAsset {
+struct ImageAssets {
     static let level1InitialAvatar: String = "level4-avatar-initial"
     static let vipInitialBenefit: String = "vip-initial-benefit"
     
@@ -390,6 +398,7 @@ struct ImageAsset {
     static let arrowHeadDown: String = "arrow-head-down"
     static let arrowHeadUp: String = "arrow-head-up"
     static let arrowHeadRight: String = "arrow-head-right"
+    static let arrowHeadLeft: String = "arrow-head-left"
     
     /* OnBoardingVC */
     static let onBoarding: String = "on-boarding"
@@ -564,7 +573,10 @@ struct FirestoreConstants {
     static let userTotalPoint = "user_total_point"
     static let userNfts = "user_nfts"
     static let userRewards = "user_rewards"
+    static let rewardUser = "reward_user"
     static let accountCreationTime = "user_account_creation_time"
+    static let userIsMale = "user_is_male"
+    static let userBirthYear = "user_birthyear"
     
     static let devThreads2 = "dev_threads2"
     static let configuration = "configuration"

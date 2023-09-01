@@ -90,6 +90,9 @@ extension NewNFTNoticeBottomSheetViewController {
                         self.logger.warning("Error converting to url.")
                         return
                     }
+                    print("New nft urlString: \(nft.nftContentImageUrl)")
+                    print("New URL: \(url)")
+                    
                     Task {
                         do {
                             self.topImageView.image = try await ImagePipeline.shared.image(for: url)
@@ -99,7 +102,6 @@ extension NewNFTNoticeBottomSheetViewController {
                             self.logger.error("Error fetching image -- \(error).")
                         }
                     }
-                    
                 }
                 .store(in: &bindings)
         }

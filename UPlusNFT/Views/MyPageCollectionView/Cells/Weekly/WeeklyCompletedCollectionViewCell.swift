@@ -12,7 +12,7 @@ final class WeeklyCompletedCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
     private let iconImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.hand)
+        imageView.image = UIImage(named: ImageAssets.hand)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

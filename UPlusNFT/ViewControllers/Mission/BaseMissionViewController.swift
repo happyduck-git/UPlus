@@ -34,7 +34,7 @@ class BaseMissionViewController: UIViewController {
     
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.eventBackground)
+        imageView.image = UIImage(named: ImageAssets.eventBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

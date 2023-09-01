@@ -18,7 +18,7 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     private let missionImage: UIImageView = {
        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.routineImage)
+        imageView.image = UIImage(named: ImageAssets.routineImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -59,6 +59,8 @@ final class RoutineMissionProgressCollectionViewCell: UICollectionViewCell {
     
     private let progressBar: UIProgressView = {
         let progressView = UIProgressView()
+        progressView.trackTintColor = UPlusColor.grayBackground
+        progressView.progressTintColor = UPlusColor.blue03
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
@@ -126,7 +128,7 @@ extension RoutineMissionProgressCollectionViewCell {
 //MARK: - Private
 extension RoutineMissionProgressCollectionViewCell {
     private func setProgress(_ progress: Int) {
-        self.progressBar.setProgress(Float(progress / MyPageConstants.routinMissionLimit), animated: true)
+        self.progressBar.setProgress(Float(progress) / Float(MyPageConstants.routinMissionLimit), animated: true)
     }
 }
 

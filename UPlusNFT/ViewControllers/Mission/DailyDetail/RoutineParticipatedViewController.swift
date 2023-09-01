@@ -20,7 +20,7 @@ final class RoutineParticipatedViewController: UIViewController {
     
     private let backgroundConfetti: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.confettiBackground)
+        imageView.image = UIImage(named: ImageAssets.confettiBackground)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -46,7 +46,7 @@ final class RoutineParticipatedViewController: UIViewController {
     
     private let pointIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.pointBig)
+        imageView.image = UIImage(named: ImageAssets.pointBig)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -54,7 +54,7 @@ final class RoutineParticipatedViewController: UIViewController {
     
     private let shadowIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.pointShadow)
+        imageView.image = UIImage(named: ImageAssets.pointShadow)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

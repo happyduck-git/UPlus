@@ -15,44 +15,44 @@ enum WeeklyEpisode {
     var background: String {
         switch self {
         case .week1:
-            return ImageAsset.episode1Wall
+            return ImageAssets.episode1Wall
         case .week2:
-            return ImageAsset.episode2Wall
+            return ImageAssets.episode2Wall
         case .week3:
-            return ImageAsset.episode3Wall
+            return ImageAssets.episode3Wall
         }
     }
     
     var footerImage: String {
         switch self {
         case .week1:
-            return ImageAsset.episode1Footer
+            return ImageAssets.episode1Footer
         case .week2:
-            return ImageAsset.episode2Footer
+            return ImageAssets.episode2Footer
         case .week3:
-            return ImageAsset.episode3Footer
+            return ImageAssets.episode3Footer
         }
     }
     
     var episodeSubTitle: String {
         switch self {
         case .week1:
-            return ImageAsset.episode1Sub
+            return ImageAssets.episode1Sub
         case .week2:
-            return ImageAsset.episode2Sub
+            return ImageAssets.episode2Sub
         case .week3:
-            return ImageAsset.episode3Sub
+            return ImageAssets.episode3Sub
         }
     }
     
     var episodeTitle: String {
         switch self {
         case .week1:
-            return ImageAsset.episode1Title
+            return ImageAssets.episode1Title
         case .week2:
-            return ImageAsset.episode2Title
+            return ImageAssets.episode2Title
         case .week3:
-            return ImageAsset.episode3Title
+            return ImageAssets.episode3Title
         }
     }
     
@@ -70,11 +70,11 @@ enum WeeklyEpisode {
     var episodeEmptyPiece: String {
         switch self {
         case .week1:
-            return ImageAsset.episode1Empty
+            return ImageAssets.episode1Empty
         case .week2:
-            return ImageAsset.episode2Empty
+            return ImageAssets.episode2Empty
         case .week3:
-            return ImageAsset.episode3Empty
+            return ImageAssets.episode3Empty
         }
     }
     

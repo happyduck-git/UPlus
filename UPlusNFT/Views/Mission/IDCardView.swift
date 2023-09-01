@@ -48,9 +48,9 @@ final class IDCardView: UIView {
         var buttonImage: UIImage? {
             switch self {
             case .step1:
-                return UIImage(named: ImageAsset.downloadBlack)
+                return UIImage(named: ImageAssets.downloadBlack)
             case .step2:
-                return UIImage(named: ImageAsset.slackBlack)
+                return UIImage(named: ImageAssets.slackBlack)
             }
         }
     }
@@ -81,7 +81,7 @@ final class IDCardView: UIView {
     private let playerView: UIImageView = {
        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.idCardExample)
+        imageView.image = UIImage(named: ImageAssets.idCardExample)
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8.0
         imageView.translatesAutoresizingMaskIntoConstraints = false

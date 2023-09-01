@@ -54,11 +54,11 @@ extension WalletViewViewModel {
                             }
                             
                             let nftType = UPlusNftDetailType(rawValue: detailType) ?? .avatar
-                            
-                            if nftType != .avatar {
+
+                            if nftType == .athlete || nftType == .goodWorker || nftType == .environmentalist || nftType == .journey {
                                 self.isOnlyAvatar.toggle()
                             }
- 
+                           
                             switch nftType {
                             case .avatar:
                                 let currentHighest = highestAvatar?.nftTokenId ?? 0

@@ -83,7 +83,7 @@ final class LevelUpBottomSheetViewController: HumpyBottomSheetViewController {
     private let raffleView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.raffle)
+        imageView.image = UIImage(named: ImageAssets.raffle)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -140,21 +140,26 @@ extension LevelUpBottomSheetViewController {
 
                     self.levelLabel.text = String(format: MyPageConstants.levelUp, self.vm.level.rawValue)
                     self.couponLabel.text = self.vm.level.coupon
-                    
             //        let raffle = self.vm.level.raffle // <- Raffle도 레벨에 따라 구분해야 하는 경우에 사용
                     
-                    guard let url = URL(string: nft.nftContentImageUrl) else {
-                        UPlusLogger.logger.warning("Error converting to url.")
-                        return
-                    }
-                    Task {
-                        do {
-                            self.topImageView.image = try await ImagePipeline.shared.image(for: url)
-                        }
-                        catch {
-                            UPlusLogger.logger.error("Error fetching image -- \(error).")
-                        }
-                    }
+                    var imageName: String = "\(self.vm.level.rawValue)"
+                    
+                    
+                     guard let url = URL(string: nft.nftContentImageUrl) else {
+                     UPlusLogger.logger.warning("Error converting to url.")
+                         return
+                     }
+                    print("Level up nft image urlString: \(nft.nftContentImageUrl)")
+                    print("Level up nft image URL: \(url)")
+                    
+                     Task {
+                         do {
+                             self.topImageView.image = try await ImagePipeline.shared.image(for: url)
+                         }
+                         catch {
+                             UPlusLogger.logger.error("Error fetching image -- \(error).")
+                         }
+                     }     
                     
                 }
                 .store(in: &bindings)

@@ -97,7 +97,7 @@ final class ResetPasswordViewController: UIViewController {
     private let emailValidationImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     
@@ -144,7 +144,7 @@ final class ResetPasswordViewController: UIViewController {
     
     private let emailImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.emailBig)
+        imageView.image = UIImage(named: ImageAssets.emailBig)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

@@ -120,11 +120,11 @@ extension TodayRankTableViewCell {
         
         switch row {
         case 0:
-            rankImage = ImageAsset.goldTrophy
+            rankImage = ImageAssets.goldTrophy
         case 1:
-            rankImage = ImageAsset.silverTrophy
+            rankImage = ImageAssets.silverTrophy
         default:
-            rankImage = ImageAsset.bronzeTrophy
+            rankImage = ImageAssets.bronzeTrophy
         }
         
         self.rankImageView.image = UIImage(named: rankImage)

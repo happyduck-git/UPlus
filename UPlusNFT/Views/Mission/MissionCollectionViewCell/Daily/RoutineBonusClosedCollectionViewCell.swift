@@ -34,7 +34,7 @@ final class RoutineBonusClosedCollectionViewCell: UICollectionViewCell {
     private let lockImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.padlock)?.withTintColor(UPlusColor.mint05, renderingMode: .alwaysOriginal)
+        imageView.image = UIImage(named: ImageAssets.padlock)?.withTintColor(UPlusColor.mint05, renderingMode: .alwaysOriginal)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

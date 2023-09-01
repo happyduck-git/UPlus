@@ -28,7 +28,7 @@ final class SignUpCompleteViewController: UIViewController {
     //MARK: - UI Elements
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.backgroundStar)
+        imageView.image = UIImage(named: ImageAssets.backgroundStar)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -46,7 +46,7 @@ final class SignUpCompleteViewController: UIViewController {
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.initialNft)
+        imageView.image = UIImage(named: ImageAssets.initialNft)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -54,7 +54,7 @@ final class SignUpCompleteViewController: UIViewController {
     private let nftRefelctionImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.reflectionNft)
+        imageView.image = UIImage(named: ImageAssets.reflectionNft)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -195,7 +195,7 @@ extension SignUpCompleteViewController {
     
     private func setLayer() {
         let gradient = UIImage.gradientImage(bounds: CGRect(x: 0, y: 0, width: self.greetingsLabel.frame.width, height: self.greetingsLabel.frame.height), colors: [.white, UPlusColor.mint03])
-        print("Width: \(self.greetingsLabel.frame.width)")
+        
         greetingsLabel.textColor = UIColor(patternImage: gradient)
     }
     

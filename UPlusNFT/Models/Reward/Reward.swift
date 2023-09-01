@@ -9,11 +9,11 @@ import Foundation
 import FirebaseFirestore
 
 struct Reward: Codable, Hashable {
-     let rewardIndex: Int64 // 다큐먼트의 ID와 동일
+     let rewardIndex: Int64
      let rewardType: String
      let rewardName: String?
      let rewardImagePath: String?
-     let rewardUser: [DocumentReference]?
+     let rewardUser: DocumentReference?
 }
 
 // MARK: - Reward Type

@@ -38,6 +38,7 @@ final class ChoiceQuizMoreViewController: BaseMissionViewController {
         self.setLayout()
         
         self.bind()
+        print("Viedidload")
     }
     
     //MARK: - Init
@@ -89,44 +90,43 @@ extension ChoiceQuizMoreViewController {
                         }
                     }
                     .store(in: &bindings)
-                
-                self.checkAnswerButton.tapPublisher
-                    .receive(on: DispatchQueue.main)
-                    .sink { [weak self] _ in
-                        guard let `self` = self else { return }
-                        print("Tapped")
-                        if let selected = self.vm.selectedButton {
-                            print("Selected")
-                            if mission.missionChoiceQuizRightOrder == selected {
-                                print("Right")
-                                var vc: BaseMissionCompletedViewController?
-
-                                switch self.vm.type {
-                                case .event:
-                                    vc = EventCompletedViewController(vm: self.vm)
-                                    vc?.delegate = self
-                                case .weekly:
-                                    vc = WeeklyMissionCompleteViewController(vm: self.vm)
-                                    vc?.delegate = self
-                                }
-
-                                guard let vc = vc else { return }
-                                self.navigationController?.modalPresentationStyle = .fullScreen
-                                self.show(vc, sender: self)
-
-                            } else {
-
-                                let button = self.vm.selectedButton ?? 0
-                                self.choiceButtons[button].layer.borderColor = UPlusColor.orange01.cgColor
-                                self.answerInfoLabel.isHidden = false
-                            }
-                        }
-                        self.checkAnswerButton.isUserInteractionEnabled = false
-                        self.checkAnswerButton.backgroundColor = UPlusColor.gray03
-
-                    }.store(in: &bindings)
-                
             }
+            
+            self.checkAnswerButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let `self` = self else { return }
+           
+                    if let selected = self.vm.selectedButton {
+               
+                        if mission.missionChoiceQuizRightOrder == selected {
+                      
+                            var vc: BaseMissionCompletedViewController?
+
+                            switch self.vm.type {
+                            case .event:
+                                vc = EventCompletedViewController(vm: self.vm)
+                                vc?.delegate = self
+                            case .weekly:
+                                vc = WeeklyMissionCompleteViewController(vm: self.vm)
+                                vc?.delegate = self
+                            }
+
+                            guard let vc = vc else { return }
+                            self.navigationController?.modalPresentationStyle = .fullScreen
+                            self.show(vc, sender: self)
+
+                        } else {
+
+                            let button = self.vm.selectedButton ?? 0
+                            self.choiceButtons[button].layer.borderColor = UPlusColor.orange01.cgColor
+                            self.answerInfoLabel.isHidden = false
+                        }
+                    }
+                    self.checkAnswerButton.isUserInteractionEnabled = false
+                    self.checkAnswerButton.backgroundColor = UPlusColor.gray03
+
+                }.store(in: &bindings)
         }
         
         func bindViewModelToView() {

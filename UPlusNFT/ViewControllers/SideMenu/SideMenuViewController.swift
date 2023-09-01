@@ -196,8 +196,3 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension SideMenuViewController: LogOutBottomSheetViewControllerDelegate {
-    func signOutDidTap() {
-//        self.delegate?.signOutDidTap()
-    }
-}

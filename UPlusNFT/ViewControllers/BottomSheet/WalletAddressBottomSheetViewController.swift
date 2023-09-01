@@ -25,7 +25,7 @@ final class WalletAddressBottomSheetViewController: BottomSheetViewController {
     
     private let cancelButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.xMarkBlack), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.xMarkBlack), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

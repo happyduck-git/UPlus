@@ -65,21 +65,21 @@ final class WeeklyOverViewTableViewCell: UITableViewCell {
     
     private var star1: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: ImageAsset.stageStar)
+        image.image = UIImage(named: ImageAssets.stageStar)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
     
     private var star2: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: ImageAsset.stageStar)
+        image.image = UIImage(named: ImageAssets.stageStar)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
     
     private var star3: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: ImageAsset.stageStar)
+        image.image = UIImage(named: ImageAssets.stageStar)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()

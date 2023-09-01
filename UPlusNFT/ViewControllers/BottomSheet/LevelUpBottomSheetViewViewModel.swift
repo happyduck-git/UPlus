@@ -21,12 +21,13 @@ final class LevelUpBottomSheetViewViewModel {
     }
     private let tokenId: String
     
-    var level: UserLevel = .level1
+    var level: UserLevel = .level2
     var nft = PassthroughSubject<UPlusNft?, Never>()
     
     // MARK: - Init
     init(newLevel: Int, tokenId: String) {
         self.newLevel = newLevel
+        print("Newlevel of the user: \(self.newLevel)")
         self.tokenId = tokenId
         self.getNft()
     }
@@ -38,6 +39,7 @@ extension LevelUpBottomSheetViewViewModel {
     private func getNft() {
         Task {
             nft.send(await firestoreManager.getNft(tokenId: tokenId))
+            UPlusLogger.logger.info("Get NFT for \(String(describing: self.tokenId)) is finished.")
         }
     }
     

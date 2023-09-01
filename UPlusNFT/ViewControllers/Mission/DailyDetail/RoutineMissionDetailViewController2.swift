@@ -61,7 +61,7 @@ final class RoutineMissionDetailViewController2: UIViewController {
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.routineBackground)
+        imageView.image = UIImage(named: ImageAssets.routineBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -103,7 +103,7 @@ final class RoutineMissionDetailViewController2: UIViewController {
     private let titleImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.routineTitle)
+        imageView.image = UIImage(named: ImageAssets.routineTitle)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -213,7 +213,7 @@ final class RoutineMissionDetailViewController2: UIViewController {
     private let submitImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoMint)
+        imageView.image = UIImage(named: ImageAssets.infoMint)
         return imageView
     }()
     
@@ -267,7 +267,7 @@ final class RoutineMissionDetailViewController2: UIViewController {
     
     private let infoImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.infoGray)?.withTintColor(UPlusColor.mint03, renderingMode: .alwaysOriginal)
+        imageView.image = UIImage(named: ImageAssets.infoGray)?.withTintColor(UPlusColor.mint03, renderingMode: .alwaysOriginal)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -283,7 +283,7 @@ final class RoutineMissionDetailViewController2: UIViewController {
     
     private let infoView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.routineInfo)
+        imageView.image = UIImage(named: ImageAssets.routineInfo)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

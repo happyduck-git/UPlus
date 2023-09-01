@@ -14,7 +14,7 @@ final class Top3RankerTableViewCell: UITableViewCell {
     private let titleImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.top3Title)
+        imageView.image = UIImage(named: ImageAssets.top3Title)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -86,9 +86,9 @@ extension Top3RankerTableViewCell {
         let second = top3Users.indices.contains(1) ? top3Users[1] : nil
         let third = top3Users.indices.contains(2) ? top3Users[2] : nil
         
-        self.firstRankView.setMedalImage(name: ImageAsset.goldMedal)
-        self.secondRankView.setMedalImage(name: ImageAsset.silverMedal)
-        self.thirdRankView.setMedalImage(name: ImageAsset.bronzeMedal)
+        self.firstRankView.setMedalImage(name: ImageAssets.goldMedal)
+        self.secondRankView.setMedalImage(name: ImageAssets.silverMedal)
+        self.thirdRankView.setMedalImage(name: ImageAssets.bronzeMedal)
         
         /* NFT Image */
         let firstUserIndex = first?.userIndex ?? 0

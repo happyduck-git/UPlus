@@ -17,7 +17,7 @@ final class NewEventCollectionViewCell: UICollectionViewCell {
     private let imageView: UIImageView = {
        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.newEventBanner)
+        imageView.image = UIImage(named: ImageAssets.newEventBanner)
         return imageView
     }()
     

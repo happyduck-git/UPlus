@@ -29,13 +29,13 @@ enum MissionHeaderType {
     var image: UIImage? {
         switch self {
         case .contest:
-            return UIImage(named: ImageAsset.detailsContest)
+            return UIImage(named: ImageAssets.detailsContest)
         case .level:
-            return UIImage(named: ImageAsset.detailsLevel)
+            return UIImage(named: ImageAssets.detailsLevel)
         case .master:
-            return UIImage(named: ImageAsset.detailsMaster)
+            return UIImage(named: ImageAssets.detailsMaster)
         case .world:
-            return UIImage(named: ImageAsset.detailsWorld)
+            return UIImage(named: ImageAssets.detailsWorld)
         }
     }
     

@@ -13,7 +13,7 @@ final class StampCollectionViewCell: UICollectionViewCell {
 
     private let markImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.stampPointEmpty)
+        imageView.image = UIImage(named: ImageAssets.stampPointEmpty)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -59,10 +59,10 @@ extension StampCollectionViewCell {
         var image: UIImage?
         
         if (item + 1) % 5 == 0 {
-            image = UIImage(named: ImageAsset.stampGiftEmpty)
+            image = UIImage(named: ImageAssets.stampGiftEmpty)
             
         } else {
-            image = UIImage(named: ImageAsset.stampPointEmpty)
+            image = UIImage(named: ImageAssets.stampPointEmpty)
         }
         
         self.markImageView.image = image
@@ -72,9 +72,9 @@ extension StampCollectionViewCell {
         var image: UIImage?
         
         if (item + 1) % 5 == 0 {
-            image = UIImage(named: ImageAsset.stampGiftFill)
+            image = UIImage(named: ImageAssets.stampGiftFill)
         } else {
-            image = UIImage(named: ImageAsset.stampPointFill)
+            image = UIImage(named: ImageAssets.stampPointFill)
         }
         self.markImageView.image = image
     }

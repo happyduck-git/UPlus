@@ -25,7 +25,7 @@ final class PhotoAuthQuizViewController: BaseMissionScrollViewController {
         button.setTitleColor(UPlusColor.gray06, for: .normal)
         button.backgroundColor = .white
         button.titleLabel?.font = .systemFont(ofSize: UPlusFont.h2, weight: .bold)
-        button.setImage(UIImage(named: ImageAsset.uploadGray), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.uploadGray), for: .normal)
         button.alignVerticalCenter()
         button.clipsToBounds = true
         button.layer.cornerRadius = 8.0
@@ -56,7 +56,7 @@ final class PhotoAuthQuizViewController: BaseMissionScrollViewController {
     private let infoImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     

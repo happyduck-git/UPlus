@@ -27,10 +27,10 @@ class InformationInputView: UIView {
         return stack
     }()
     
-    private let titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
         return label
     }()
     
@@ -38,7 +38,7 @@ class InformationInputView: UIView {
         let txtField = UITextField()
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
-        txtField.backgroundColor = .systemGray6
+        txtField.backgroundColor = .white
         return txtField
     }()
     
@@ -87,6 +87,9 @@ extension InformationInputView {
             self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
 
+        NSLayoutConstraint.activate([
+            self.textField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight)
+        ])
     }
 }
 

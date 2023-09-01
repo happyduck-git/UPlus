@@ -64,7 +64,7 @@ final class WalletViewController: UIViewController {
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = UPlusColor.gray07
-        button.setImage(UIImage(named: ImageAsset.walletWhite), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.walletWhite), for: .normal)
         button.setTitle(WalletConstants.walletAddress, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -250,6 +250,7 @@ extension WalletViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WalletMissionButtonCollectionViewCell.identifier, for: indexPath) as? WalletMissionButtonCollectionViewCell else {
                     return UICollectionViewCell()
                 }
+                cell.addDashedBorder(color: UPlusColor.mint03)
                 cell.deleate = self
                 return cell
                 

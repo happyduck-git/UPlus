@@ -34,7 +34,7 @@ final class CommentCountMissionViewController: BaseScrollViewController {
     
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.eventBackground)
+        imageView.image = UIImage(named: ImageAssets.eventBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -93,7 +93,7 @@ final class CommentCountMissionViewController: BaseScrollViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.backgroundColor = UPlusColor.gray02
+        label.backgroundColor = UPlusColor.gray01
         label.clipsToBounds = true
         label.layer.cornerRadius = 8.0
         label.translatesAutoresizingMaskIntoConstraints = false

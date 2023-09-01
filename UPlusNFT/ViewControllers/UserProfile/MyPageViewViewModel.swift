@@ -403,7 +403,7 @@ extension MyPageViewViewModel {
     }
     
     func updateUserOwnedNft() async -> [String] {
-        
+        logger.info("Checking for Update User Owned NFTs...")
         do {
             // 1. Fetch NFTs from Luniverse.
             let token = try await LuniverseServiceManager.shared.requestAccessToken()

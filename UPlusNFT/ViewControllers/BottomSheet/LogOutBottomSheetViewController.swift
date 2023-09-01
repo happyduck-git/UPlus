@@ -10,7 +10,7 @@ import Combine
 import FirebaseAuth
 
 protocol LogOutBottomSheetViewControllerDelegate: AnyObject {
-    func signOutDidTap()
+    func signOutConfirmDidTap()
 }
 
 final class LogOutBottomSheetViewController: BottomSheetViewController {
@@ -35,7 +35,7 @@ final class LogOutBottomSheetViewController: BottomSheetViewController {
     private let logoutImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.logoutFace)
+        imageView.image = UIImage(named: ImageAssets.logoutFace)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -117,7 +117,7 @@ extension LogOutBottomSheetViewController {
                     
                     self.userLogOut()
                     self.dismissView {}
-                    self.dismiss(animated: true)
+                   
                 }
                 .store(in: &bindings)
         }
@@ -135,7 +135,7 @@ extension LogOutBottomSheetViewController {
     private func userLogOut() {
         do {
             try Auth.auth().signOut()
-            self.delegate?.signOutDidTap()
+            self.delegate?.signOutConfirmDidTap()
         }
         catch {
             let alert = UIAlertController(

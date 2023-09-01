@@ -23,14 +23,21 @@ final class SignUpViewViewModel {
     private let nftServiceManager = NFTServiceManager.shared
     
     // MARK: - DataSource
+    var gender = PassthroughSubject<Int, Never>()
+    @Published var isMale: Bool = false
+    @Published var isGenderSelected: Bool = false
+    
+    @Published var birthYear: String = ""
+    @Published var isBirthYearChecked: Bool = false
+    
     var fullEmail = ""
     @Published var email = "" {
         didSet {
             fullEmail = self.email + SignUpConstants.emailSuffix
         }
     }
-    @Published var password = ""
-    @Published var passwordCheck = ""
+    @Published var password: String = ""
+    @Published var passwordCheck: String = ""
     @Published var isPersonalInfoChecked: Bool = false
     
     var isUserCreated = PassthroughSubject<Bool, Never>()
@@ -53,9 +60,9 @@ final class SignUpViewViewModel {
             return $0 == $1 && !$0.isEmpty && !$1.isEmpty
         }.eraseToAnyPublisher()
     
-    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest3(isPasswordValid, isPasswordSame, $isPersonalInfoChecked)
+    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest4(isPasswordValid, isPasswordSame, $isPersonalInfoChecked, $isBirthYearChecked)
         .map {
-            return $0 && $1 && $2
+            return $0 && $1 && $2 && $3
         }.eraseToAnyPublisher()
     
 }
@@ -67,6 +74,9 @@ extension SignUpViewViewModel {
     func createNewUser() async {
         
         do {
+  
+            let birthYear = Int(birthYear) ?? 0
+       
             // 1. Find out if it is accountable.
             let (isAccountable, isVip) = try await firestoreManager.isAccountable(email: self.fullEmail)
             
@@ -76,18 +86,22 @@ extension SignUpViewViewModel {
                 self.isValidUser = isAccountable
                 let createdAccount = try await firebaseAuthManager.createAccount(email: self.fullEmail,
                                                                                  password: self.password)
-                
+              
                 // 3. Save userUId and creationTime to Firestore
                 let uid = createdAccount.user.uid
                 let creationDate = createdAccount.user.metadata.creationDate ?? Date()
-                try await firestoreManager.saveUserInfo(email: self.fullEmail, uid: uid, creationTime: Timestamp(date: creationDate))
+                try await firestoreManager.saveUserInfo(isMale: self.isMale,
+                                                        birthYear: birthYear,
+                                                        email: self.fullEmail,
+                                                        uid: uid,
+                                                        creationTime: Timestamp(date: creationDate))
                 
                 if isVip {
                     self.isVip = isVip
                 }
                 
                 // 4. Save user info to UserDefaults
-                try await UPlusUser.saveCurrentUser(email: self.fullEmail)
+                let _ = try await UPlusUser.saveCurrentUser(email: self.fullEmail)
                 
                 self.logger.info("User created.")
                 isUserCreated.send(true)
@@ -96,6 +110,7 @@ extension SignUpViewViewModel {
                 self.errorDescription = "등록이 불가능한 이메일입니다."
                 isUserCreated.send(false)
             }
+              
         }
         catch (let error) {
             if error is AuthErrorCode {

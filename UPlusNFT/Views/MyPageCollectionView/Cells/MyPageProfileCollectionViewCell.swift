@@ -86,7 +86,7 @@ extension MyPageProfileCollectionViewCell {
         Task {
             do {
                 let imageString = vm.user.userNfts?.first?.documentID
-                ?? ImageAsset.dummyNftImageUrl
+                ?? ImageAssets.dummyNftImageUrl
                 let url = URL(string: imageString)! // TODO: Optional 처리.
                 self.profileImage.image = try await ImagePipeline.shared.image(for: url)
                 self.usernameLabel.text = vm.user.userNickname

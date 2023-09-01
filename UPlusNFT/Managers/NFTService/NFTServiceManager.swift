@@ -59,7 +59,7 @@ extension NFTServiceManager {
                           nftType: UPlusNftDetailType,
                           level: Int = 0) async throws -> NFTResponse {
         
-        UPlusLogger.logger.debug("Request single nft called!")
+        UPlusLogger.logger.debug("Request single nft: \(nftType.rawValue) -- function called!")
         
         var type = nftType.rawValue
         
@@ -75,11 +75,11 @@ extension NFTServiceManager {
                 "type": type
             ]
         )
-        UPlusLogger.logger.debug("Request single nft -- buildUrlRequest called")
+        UPlusLogger.logger.debug("Request single nft: \(nftType.rawValue) -- buildUrlRequest called")
         
         let result = try await NetworkServiceManager.execute(expecting: NFTResponse.self,
                                                              request: urlRequest)
-        UPlusLogger.logger.debug("Request single nft -- execute called")
+        UPlusLogger.logger.debug("Request single nft: \(nftType.rawValue) -- execute called")
         
         return result
     }

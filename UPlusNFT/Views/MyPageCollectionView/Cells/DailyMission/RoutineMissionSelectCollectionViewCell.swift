@@ -11,7 +11,7 @@ final class RoutineMissionSelectCollectionViewCell: UICollectionViewCell {
     
     private let decoImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.questionBox)
+        imageView.image = UIImage(named: ImageAssets.questionBox)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -43,7 +43,7 @@ final class RoutineMissionSelectCollectionViewCell: UICollectionViewCell {
     
     private let arrowButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.arrowHeadRight)?.withTintColor(UPlusColor.mint, renderingMode: .alwaysOriginal), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.arrowHeadRight)?.withTintColor(UPlusColor.mint, renderingMode: .alwaysOriginal), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

@@ -11,7 +11,7 @@ final class RightArrowButton: UIButton {
     
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.buttonPattern)
+        imageView.image = UIImage(named: ImageAssets.buttonPattern)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -35,7 +35,7 @@ final class RightArrowButton: UIButton {
     
     private let buttonImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.arrowRight)
+        imageView.image = UIImage(named: ImageAssets.arrowRight)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

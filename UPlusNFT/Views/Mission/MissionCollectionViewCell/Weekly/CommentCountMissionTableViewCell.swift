@@ -107,7 +107,7 @@ extension CommentCountMissionTableViewCell {
                     guard let `self` = self else { return }
                     
                     let like = list[row]
-                    let likeImage: UIImage? = like ? UIImage(named: ImageAsset.heartFill) : UIImage(named: ImageAsset.heartEmpty)
+                    let likeImage: UIImage? = like ? UIImage(named: ImageAssets.heartFill) : UIImage(named: ImageAssets.heartEmpty)
                     
                     self.likeButton.setImage(likeImage, for: .normal)
                     
@@ -141,7 +141,7 @@ extension CommentCountMissionTableViewCell {
         self.commentLabel.text = comment
         self.likeCount.text = String(describing: likes)
     
-        let image = isLiked ? UIImage(named: ImageAsset.heartFill) : UIImage(named: ImageAsset.heartEmpty)
+        let image = isLiked ? UIImage(named: ImageAssets.heartFill) : UIImage(named: ImageAssets.heartEmpty)
         self.likeButton.setImage(image, for: .normal)
         
         // TODO: profile image?

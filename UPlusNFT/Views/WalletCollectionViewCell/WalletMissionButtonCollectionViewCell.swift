@@ -24,7 +24,7 @@ final class WalletMissionButtonCollectionViewCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.walletBuilding)
+        imageView.image = UIImage(named: ImageAssets.walletBuilding)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

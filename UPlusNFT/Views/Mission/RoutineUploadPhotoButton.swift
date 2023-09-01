@@ -14,7 +14,7 @@ final class RoutineUploadPhotoButton: UIButton {
     private let uploadImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.uploadGray)
+        imageView.image = UIImage(named: ImageAssets.uploadGray)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

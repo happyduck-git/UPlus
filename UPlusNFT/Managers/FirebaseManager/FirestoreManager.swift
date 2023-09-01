@@ -64,7 +64,7 @@ extension FirestoreManager {
         
         let accountableEmails = data?[FirestoreConstants.accountableEmails] as? [String] ?? []
         let vipEmails = data?[FirestoreConstants.vipNftHolderEmails] as? [String] ?? []
-        print("Accountable emails; \(accountableEmails)")
+        
         // 1. Check is accountable
         let isAccountable = accountableEmails.contains {
             $0 == email
@@ -139,12 +139,19 @@ extension FirestoreManager {
     ///   - email: User email.
     ///   - uid: Auth user account.
     ///   - creationTime: Account created time.
-    func saveUserInfo(email: String, uid: String, creationTime: Timestamp) async throws {
+    func saveUserInfo(isMale: Bool,
+                      birthYear: Int,
+                      email: String,
+                      uid: String,
+                      creationTime: Timestamp) async throws {
+        
         let currentUserDoc = try await self.getCurrentUserDocumentPath(email: email)
         
         try await currentUserDoc.reference.setData([
             FirestoreConstants.userUid: uid,
-            FirestoreConstants.accountCreationTime: creationTime
+            FirestoreConstants.accountCreationTime: creationTime,
+            FirestoreConstants.userIsMale: isMale,
+            FirestoreConstants.userBirthYear: birthYear
         ], merge: true)
     }
     
@@ -347,9 +354,8 @@ extension FirestoreManager {
             .collection(FirestoreConstants.userSetCollection)
             .document(String(describing: userIndex))
         
-        batch.setData([
-            FirestoreConstants.userRewards: FieldValue.arrayUnion([rewardPath])
-        ],
+
+        batch.setData([FirestoreConstants.userRewards: FieldValue.arrayUnion([rewardPath])],
                       forDocument: userDoc,
                       merge: true)
         
@@ -359,8 +365,8 @@ extension FirestoreManager {
             .collection(FirestoreConstants.userSetCollection)
             .document(String(describing: userIndex))
             
-        batch.setData([FirestoreConstants.userRewards: userPath],
-                      forDocument: userPath,
+        batch.setData([FirestoreConstants.rewardUser: userPath],
+                      forDocument: rewardPath,
                       merge: true)
         
         try await batch.commit()
@@ -869,12 +875,14 @@ extension FirestoreManager {
         
         let previousPoint = user.userTotalPoint ?? 0
         let newPoint = previousPoint + point
-        batch.setData(
-            [
-                FirestoreConstants.usersPointUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
-            ],
-            forDocument: userBaseDocRef,
-            merge: true)
+        if previousPoint != 0 {
+            batch.setData(
+                [
+                    FirestoreConstants.usersPointUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
+                ],
+                forDocument: userBaseDocRef,
+                merge: true)
+        }
         
         batch.setData(
             [
@@ -919,9 +927,6 @@ extension FirestoreManager {
             )
         }
         
-        try await batch.commit()
-        
-        
         // Save photo to Storage
         if let imageData = image {
             let imageId = UUID().uuidString
@@ -946,6 +951,8 @@ extension FirestoreManager {
                               encoder: self.encoder)
 
         }
+        
+        try await batch.commit()
        
         // Update UserDefaults
         user.userTotalPoint = newPoint

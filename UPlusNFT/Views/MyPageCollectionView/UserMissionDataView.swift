@@ -15,7 +15,7 @@ final class UserMissionDataView: PassThroughView {
     //MARK: - UI Elements
     private let infoButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.infoGray), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.infoGray), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -23,7 +23,7 @@ final class UserMissionDataView: PassThroughView {
     private let levelImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.level1Title)
+        imageView.image = UIImage(named: ImageAssets.level1Title)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -91,17 +91,17 @@ extension UserMissionDataView {
         var levelImage: String = " "
         switch level {
         case 1:
-            levelImage = ImageAsset.level1Title
+            levelImage = ImageAssets.level1Title
         case 2:
-            levelImage = ImageAsset.level2Title
+            levelImage = ImageAssets.level2Title
         case 3:
-            levelImage = ImageAsset.level3Title
+            levelImage = ImageAssets.level3Title
         case 4:
-            levelImage = ImageAsset.level4Title
+            levelImage = ImageAssets.level4Title
         case 5:
-            levelImage = ImageAsset.level5Title
+            levelImage = ImageAssets.level5Title
         default:
-            levelImage = ImageAsset.level1Title
+            levelImage = ImageAssets.level1Title
         }
         
         self.levelImage.image = UIImage(named: levelImage)

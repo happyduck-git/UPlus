@@ -10,7 +10,7 @@ import Combine
 import FirebaseAuth
 import OSLog
 
-final class OnBoardingViewController2: UIViewController {
+final class OnBoardingViewController2: BaseScrollViewController {
     
     // MARK: - Dependency
     private let vm: OnBoardingViewViewModel
@@ -21,24 +21,23 @@ final class OnBoardingViewController2: UIViewController {
     //MARK: - UI Elements
     private let loadingVC = LoadingViewController()
     
-    private let scrollView: UIScrollView = {
-        let view = UIScrollView()
-        view.isScrollEnabled = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private let onBoardMainImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: ImageAssets.onBoarding)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
-    private let canvasView: UIView = {
+    private let onBoardInfoView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let onBoardImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.onBoarding)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let infoBottomView: UIView = {
@@ -101,7 +100,7 @@ final class OnBoardingViewController2: UIViewController {
         let statusBarHeight = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         let navHeight = self.navigationController?.navigationBar.frame.height ?? 0
 
-        self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor, constant: -navHeight - statusBarHeight).isActive = true
+        self.onBoardMainImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor, constant: -navHeight - statusBarHeight).isActive = true
     }
     
 }
@@ -179,38 +178,21 @@ extension OnBoardingViewController2 {
 extension OnBoardingViewController2 {
     
     private func setUI() {
-        self.view.addSubviews(self.scrollView,
-                              self.bottomContainer,
+        self.view.addSubviews(self.bottomContainer,
                               self.infoLabel,
                               self.startButton)
-        
-        self.scrollView.addSubview(self.canvasView)
-        self.canvasView.addSubviews(self.onBoardImageView,
+        self.canvasView.addSubviews(self.onBoardMainImageView,
                                     self.infoBottomView)
         
     }
     
     private func setLayout() {
-        NSLayoutConstraint.activate([
-            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            
-            self.canvasView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
-            self.canvasView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
-            self.canvasView.topAnchor.constraint(equalTo: self.scrollView.topAnchor),
-            self.canvasView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
-            self.canvasView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
-            
-        ])
         
         NSLayoutConstraint.activate([
-//            self.onBoardImageView.topAnchor.constraint(equalTo: self.canvasView.topAnchor),
-            self.onBoardImageView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
-            self.onBoardImageView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
+            self.onBoardMainImageView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
+            self.onBoardMainImageView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
             
-            self.infoBottomView.topAnchor.constraint(equalTo: self.onBoardImageView.bottomAnchor),
+            self.infoBottomView.topAnchor.constraint(equalTo: self.onBoardMainImageView.bottomAnchor),
             self.infoBottomView.heightAnchor.constraint(equalToConstant: 300),
             self.infoBottomView.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
             self.infoBottomView.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),

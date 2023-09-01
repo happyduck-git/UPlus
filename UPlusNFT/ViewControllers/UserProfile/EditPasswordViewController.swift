@@ -99,8 +99,8 @@ class EditPasswordViewController: UIViewController {
         button.addTarget(self, action: #selector(editConfirmDidTap), for: .touchUpInside)
         button.setTitle(EditPasswordConstants.edit, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .black
-        button.setTitleColor(.white, for: .normal)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8.0
         return button
     }()
     
@@ -121,11 +121,16 @@ class EditPasswordViewController: UIViewController {
         self.view.backgroundColor = .white
         self.title = EditPasswordConstants.editVCTitle
         
+        self.hideKeyboardWhenTappedAround()
+        
         self.setUI()
         self.setLayout()
+        
         self.configure()
         self.bind()
-        hideKeyboardWhenTappedAround()
+        
+        self.setStarAttributeToLabels([currentPasswordView.titleLabel, newPasswordView.titleLabel, newPasswordCheckView.titleLabel],
+                                      mainStrings: ["현재 비밀번호", "새 비밀번호", "새 비밀번호 확인"])
     }
 
 }
@@ -187,8 +192,8 @@ extension EditPasswordViewController {
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    let textColor: UIColor = $0 ? .white : UPlusColor.gray08
-                    let bgColor: UIColor = $0 ? UPlusColor.mint03 : UPlusColor.gray02
+                    let textColor: UIColor = $0 ? UPlusColor.gray08 : .white
+                    let bgColor: UIColor = $0 ? UPlusColor.mint03 : UPlusColor.gray03
                     let interactive: Bool = $0 ? true : false
                         
                     self.confirmButton.setTitleColor(textColor, for: .normal)
@@ -247,6 +252,7 @@ extension EditPasswordViewController {
         }
         catch {
             // TODO: 유저정보 에러 Alert.
+            UPlusLogger.logger.error("Error getting current user info from UserDefaults -- \(String(describing: error))")
         }
         
     }
@@ -319,3 +325,37 @@ extension EditPasswordViewController {
     }
 }
 
+extension EditPasswordViewController {
+    
+    private func setStarAttributeToLabels(_ labels: [UILabel], mainStrings: [String]) {
+        for i in 0..<labels.count {
+            labels[i].attributedText = setTextAttributes(main: mainStrings[i], sub: SignUpConstants.star)
+        }
+    }
+    
+    private func setTextAttributes(main: String, sub: String) -> NSAttributedString {
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        let attributedString = NSMutableAttributedString(string: main, attributes: [
+            .foregroundColor: UIColor.black,
+            .font: font
+        ])
+        let star = NSAttributedString(string: sub, attributes: [
+            .foregroundColor: UPlusColor.mint04,
+            .font: font
+        ])
+        
+        attributedString.append(star)
+        return attributedString
+    }
+}
+
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct EditPasswordViewController_Preview: PreviewProvider {
+    static var previews: some View {
+        let vm = EditPasswordViewViewModel()
+        EditPasswordViewController(vm: vm).toPreview()
+    }
+}
+#endif

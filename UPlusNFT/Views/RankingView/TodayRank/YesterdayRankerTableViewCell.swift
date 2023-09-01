@@ -14,7 +14,7 @@ final class YesterdayRankerTableViewCell: UITableViewCell {
     private let titleImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.yesterdayTitle)
+        imageView.image = UIImage(named: ImageAssets.yesterdayTitle)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -22,7 +22,7 @@ final class YesterdayRankerTableViewCell: UITableViewCell {
     private let medalImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.goldMedal)
+        imageView.image = UIImage(named: ImageAssets.goldMedal)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -48,7 +48,7 @@ final class YesterdayRankerTableViewCell: UITableViewCell {
     private let pointImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.point)
+        imageView.image = UIImage(named: ImageAssets.point)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

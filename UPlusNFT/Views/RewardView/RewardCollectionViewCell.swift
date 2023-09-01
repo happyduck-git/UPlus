@@ -15,7 +15,7 @@ final class RewardCollectionViewCell: UICollectionViewCell {
     
     private let frameImage: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.couponFrame)
+        imageView.image = UIImage(named: ImageAssets.couponFrame)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -87,12 +87,12 @@ extension RewardCollectionViewCell {
                 if let url = URL(string: data.rewardImagePath ?? "no-image"){
                     image = try await ImagePipeline.shared.image(for: url)
                 } else {
-                    image = UIImage(named: ImageAsset.starbucks)
+                    image = UIImage(named: ImageAssets.starbucks)
                 }
             }
             catch {
                 logger.error("Error showing image -- \(error)")
-                image = UIImage(named: ImageAsset.starbucks)
+                image = UIImage(named: ImageAssets.starbucks)
             }
             self.rewardImage.image = image
         }

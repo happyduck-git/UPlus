@@ -20,7 +20,7 @@ final class WeeklyMissionOverViewViewController: UIViewController {
 
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.episode1Wall)
+        imageView.image = UIImage(named: ImageAssets.episode1Wall)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

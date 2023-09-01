@@ -99,8 +99,11 @@ extension UserLevelPoint {
            
                 let giftResult = try await nftServiceManager.requestSingleNft(userIndex: user.userIndex,
                                                                               nftType: raffleType ?? .gift)
-                print("gift result: \(giftResult.data)")
-              
+                
+                UPlusLogger.logger.info("Gift result: \(String(describing: giftResult.data))")
+                UPlusLogger.logger.info("CoffeeType: \(String(describing: coffeeType?.rawValue))")
+                UPlusLogger.logger.info("RaffleType: \(String(describing: raffleType?.rawValue))")
+                
                 try await firestoreManager.saveReward(userIndex: user.userIndex, reward: coffeeType ?? .coffeeCoupon1)
                
                 UPlusLogger.logger.info("There is level update from \(String(describing: level)) to \(String(describing: result.newLevel)).")

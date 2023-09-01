@@ -425,17 +425,17 @@ extension MyPageViewController {
     
     private func setNavigationItem() {
         
-        let menuItem = UIBarButtonItem(image: UIImage(named: ImageAsset.hamburgerMenu)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+        let menuItem = UIBarButtonItem(image: UIImage(named: ImageAssets.hamburgerMenu)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                        style: .plain,
                                        target: self,
                                        action: #selector(openSideMenu))
         
-        let walletItem = UIBarButtonItem(image: UIImage(named: ImageAsset.wallet)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+        let walletItem = UIBarButtonItem(image: UIImage(named: ImageAssets.wallet)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                          style: .plain,
                                          target: self,
                                          action: #selector(speakerDidTap))
         
-        let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
+        let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAssets.speaker)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                           style: .plain,
                                           target: self,
                                           action: #selector(speakerDidTap))
@@ -480,7 +480,7 @@ extension MyPageViewController {
         }
         
         if !self.vm.isRefreshing && scrollView.contentOffset.y < self.initialTopOffset - 200 {
-            logger.debug("Refreshing")
+            logger.debug("🔂Refreshing")
             self.vm.isRefreshing.toggle()
             
             self.refreshControl.beginRefreshing()
@@ -1352,7 +1352,8 @@ extension MyPageViewController: RoutineMissionDetailViewController2Delegate {
 extension MyPageViewController: SideMenuViewControllerDelegate {
     func menuTableViewController(controller: SideMenuViewController, didSelectRow selectedRow: Int) {
         
-        self.navigationItem.setRightBarButton(nil, animated: true)
+        self.navigationItem.title = nil
+        self.navigationItem.setRightBarButtonItems(nil, animated: true)
         
         for child in self.children {
             child.removeViewController()
@@ -1360,13 +1361,7 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
         switch selectedRow {
         case 0:
-            let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAsset.speaker)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
-                                              style: .plain,
-                                              target: self,
-                                              action: nil)
-            
-            self.navigationItem.setRightBarButton(speakerItem, animated: true)
-            self.navigationItem.title = SideMenuConstants.home
+            self.setNavigationItem()
             
             // Check nft update
             Task {
@@ -1395,12 +1390,10 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         case 4:
             self.openURL(from: EnvironmentConfig.uplusNoticeLink)
             
-            break
             // FAQ
         case 5:
-            print("\(EnvironmentConfig.uplusFaqLink)")
             self.openURL(from: EnvironmentConfig.uplusFaqLink)
-            break
+   
         default:
             
             break
@@ -1437,8 +1430,8 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         self.sideMenuVC?.dismiss(animated: false)
         
         let vc = LogOutBottomSheetViewController()
+        vc.delegate = self
         vc.modalPresentationStyle = .overCurrentContext
-//        vc.delegate = self
         
         self.present(vc, animated: false)
 
@@ -1512,7 +1505,7 @@ extension MyPageViewController: NftBottomSheetDelegate {
         let vc = NewNFTNoticeBottomSheetViewController(vm: vm)
         vc.modalPresentationStyle = .overCurrentContext
         vc.delegate = self
-        logger.info("Showing...")
+        logger.info("Showing New NFT Bottom Sheet...")
         self.present(vc, animated: false)
     }
     
@@ -1521,7 +1514,7 @@ extension MyPageViewController: NftBottomSheetDelegate {
         let vc = LevelUpBottomSheetViewController(vm: vm)
         vc.modalPresentationStyle = .overCurrentContext
         vc.delegate = self
-        logger.info("Showing...")
+        logger.info("Showing Level Up Bottom Sheet...")
         self.present(vc, animated: false)
     }
 }
@@ -1546,5 +1539,11 @@ extension MyPageViewController: MissionCollectionViewHeaderDelegate {
         vc.modalPresentationStyle = .overCurrentContext
 
         self.present(vc, animated: false)
+    }
+}
+
+extension MyPageViewController: LogOutBottomSheetViewControllerDelegate {
+    func signOutConfirmDidTap() {
+        self.dismiss(animated: true)
     }
 }

@@ -19,7 +19,7 @@ final class UserProfileView: PassThroughView {
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.backgroundStar)
+        imageView.image = UIImage(named: ImageAssets.backgroundStar)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -57,14 +57,14 @@ final class UserProfileView: PassThroughView {
     
     private let profileImage: GIFImageView = {
         let gifView = GIFImageView()
-        gifView.image = UIImage(named: ImageAsset.profileDefault)
+        gifView.image = UIImage(named: ImageAssets.profileDefault)
         gifView.translatesAutoresizingMaskIntoConstraints = false
         return gifView
     }()
     
     private let lottieButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ImageAsset.starButton), for: .normal)
+        button.setImage(UIImage(named: ImageAssets.starButton), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

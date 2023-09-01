@@ -4,7 +4,7 @@
 //
 //  Created by Platfarm on 2023/06/20.
 //
-
+ 
 import UIKit
 import FirebaseCore
 
@@ -13,16 +13,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    private let barButtonAppearance = UIBarButtonItem.appearance()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         UNUserNotificationCenter.current().delegate = self
         
-        if let option = launchOptions {
-            let info = option[UIApplication.LaunchOptionsKey.remoteNotification]
-            if (info != nil) {
-                print("Entered from notification!!!!")
-            }
-        }
+        let backButtonImage = UIImage(named: ImageAssets.arrowHeadLeft)?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 10)
+        barButtonAppearance.setBackButtonBackgroundImage(backButtonImage, for: .normal, barMetrics: .default)
         
         FirebaseApp.configure()
         return true

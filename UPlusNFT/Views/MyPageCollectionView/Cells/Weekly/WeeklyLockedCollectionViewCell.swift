@@ -13,7 +13,7 @@ final class WeeklyLockedCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
     private let iconImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: ImageAsset.lock)
+        imageView.image = UIImage(named: ImageAssets.lock)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

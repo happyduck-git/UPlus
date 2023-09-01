@@ -12,7 +12,7 @@ protocol SignUpViewControllerDelegate: AnyObject {
     func signupDidComplete()
 }
 
-final class SignUpViewController: UIViewController {
+final class SignUpViewController: BaseScrollViewController {
     
     //MARK: - Dependency
     private var signupVM: SignUpViewViewModel
@@ -24,21 +24,11 @@ final class SignUpViewController: UIViewController {
     weak var delegate: SignUpViewControllerDelegate?
     
     // MARK: - UI Elements
-    let scrollView: UIScrollView = {
-        let view = UIScrollView()
-        view.isScrollEnabled = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let canvasView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let loadingVC = LoadingViewController()
     
     private let genderTitleLabel: UILabel = {
         let label = UILabel()
+        label.text = SignUpConstants.gender
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -58,7 +48,8 @@ final class SignUpViewController: UIViewController {
         button.layer.cornerRadius = 8.0
         button.layer.borderColor = UPlusColor.gray04.cgColor
         button.layer.borderWidth = 1.0
-        button.setTitle("남성", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.setTitle(SignUpConstants.male, for: .normal)
         return button
     }()
     
@@ -67,12 +58,13 @@ final class SignUpViewController: UIViewController {
         button.clipsToBounds = true
         button.layer.cornerRadius = 8.0
         button.layer.borderColor = UPlusColor.gray04.cgColor
+        button.setTitleColor(.black, for: .normal)
         button.layer.borderWidth = 1.0
-        button.setTitle("여성", for: .normal)
+        button.setTitle(SignUpConstants.female, for: .normal)
         return button
     }()
     
-    private let birthYear: UILabel = {
+    private let birthYearLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -80,9 +72,10 @@ final class SignUpViewController: UIViewController {
     
     private let birthYearTextField: UITextField = {
         let txtField = UITextField()
+        txtField.keyboardType = .numberPad
         txtField.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
         txtField.textColor = .black
-        txtField.placeholder = "출생연도(4자리)"
+        txtField.placeholder = SignUpConstants.birthYearLetterCount
         txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -90,25 +83,13 @@ final class SignUpViewController: UIViewController {
     
     private let birthYearValidationView: ValidationInfoView = {
         let view = ValidationInfoView()
+        view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let emailTitleLabel: UILabel = {
         let label = UILabel()
-//
-//        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
-//        let attributedString = NSMutableAttributedString(string: SignUpConstants.emailLabel, attributes: [
-//            .foregroundColor: UIColor.black,
-//            .font: font
-//        ])
-//        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
-//            .foregroundColor: UPlusColor.mint04,
-//            .font: font
-//        ])
-//
-//        attributedString.append(star)
-//        label.attributedText = attributedString
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -144,19 +125,6 @@ final class SignUpViewController: UIViewController {
 
     private let pwLabel: UILabel = {
         let label = UILabel()
-//        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
-//        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordLabel, attributes: [
-//            .foregroundColor: UIColor.black,
-//            .font: font
-//        ])
-//        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
-//            .foregroundColor: UPlusColor.mint04,
-//            .font: font
-//        ])
-//
-//        attributedString.append(star)
-//        label.attributedText = attributedString
-
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -185,7 +153,7 @@ final class SignUpViewController: UIViewController {
     private let pwValidationImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     
@@ -200,18 +168,6 @@ final class SignUpViewController: UIViewController {
     
     private let pwCheckLabel: UILabel = {
         let label = UILabel()
-//        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
-//        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordCheckLabel, attributes: [
-//            .foregroundColor: UIColor.black,
-//            .font: font
-//        ])
-//        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
-//            .foregroundColor: UPlusColor.mint04,
-//            .font: font
-//        ])
-//
-//        attributedString.append(star)
-//        label.attributedText = attributedString
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -223,7 +179,7 @@ final class SignUpViewController: UIViewController {
         txtField.textContentType = .newPassword
         txtField.isSecureTextEntry = true
         txtField.isUserInteractionEnabled = false
-        txtField.backgroundColor = .systemGray3
+        txtField.backgroundColor = UPlusColor.gray02
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
@@ -241,7 +197,7 @@ final class SignUpViewController: UIViewController {
     private let pwCheckValidationImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     
@@ -315,14 +271,17 @@ final class SignUpViewController: UIViewController {
         self.setLayout()
         self.setNavigationItem()
         
-        self.setStarAttributeToLabels([self.birthYear,
+        self.setStarAttributeToLabels([self.genderTitleLabel,
+                                       self.birthYearLabel,
                                        self.emailTitleLabel,
                                        self.pwLabel,
                                        self.pwCheckLabel],
                                       mainStrings: [
-                                        "출생연도",
+                                        SignUpConstants.gender,
+                                        SignUpConstants.birthYear,
                                         SignUpConstants.emailLabel,
                                         SignUpConstants.passwordLabel, SignUpConstants.passwordCheckLabel])
+        self.birthYearValidationView.setTitleText(SignUpConstants.inputBirthYear)
         
         self.bind()
         
@@ -345,16 +304,287 @@ final class SignUpViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Private
-    private func setUI() {
-        self.view.addSubview(self.scrollView)
-        self.scrollView.addSubview(self.canvasView)
+}
+
+extension SignUpViewController {
+    private func bind() {
+        func bindViewToViewModel() {
+            self.maleButton.tapPublisher
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.signupVM.gender.send(0)
+                    self.signupVM.isMale = true
+                    self.signupVM.isGenderSelected = true
+                }
+                .store(in: &bindings)
+            
+            self.femaleButton.tapPublisher
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    self.signupVM.gender.send(1)
+                    self.signupVM.isMale = false
+                    self.signupVM.isGenderSelected = true
+                }
+                .store(in: &bindings)
+            
+            self.birthYearTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
+                .assign(to: \.birthYear, on: self.signupVM)
+                .store(in: &bindings)
+            
+            self.emailTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
+                .assign(to: \.email, on: self.signupVM)
+                .store(in: &bindings)
+            
+            self.pwTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
+                .assign(to: \.password, on: self.signupVM)
+                .store(in: &bindings)
+            
+            self.pwCheckTextField.textPublisher
+                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
+                .removeDuplicates()
+                .assign(to: \.passwordCheck, on: self.signupVM)
+                .store(in: &bindings)
+
+            self.checkButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    self.signupVM.isPersonalInfoChecked.toggle()
+                }
+                .store(in: &bindings)
+            
+            self.showAllButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    // TODO: 전문보기 탭 시 action 설정 필요
+                    
+                }
+                .store(in: &bindings)
+            
+            self.registerButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    if signupVM.isGenderSelected {
+                        self.registerButtonDidTap()
+                    } else {
+                        // TODO: 성별 선택 알림 필요
+                        print("성별을 선택해 주세요.")
+                    }
+                    
+                }
+                .store(in: &bindings)
+        }
         
+        func bindViewModelToView() {
+            
+            self.signupVM.gender
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    var selectedBtn: UIButton?
+                    var deSelectedBtn: UIButton?
+                    
+                    switch $0 {
+                    case 0:
+                        selectedBtn = self.maleButton
+                        deSelectedBtn = self.femaleButton
+                        
+                    default:
+                        selectedBtn = self.femaleButton
+                        deSelectedBtn = self.maleButton
+                    }
+                    
+                    self.setButtonAttributes(of: selectedBtn, bgColor: UPlusColor.mint03, borderColor: .clear)
+                    
+                    self.setButtonAttributes(of: deSelectedBtn, bgColor: .white, borderColor: UPlusColor.gray04)
+                    
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.$birthYear
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    if $0.count == SignUpConstants.birthYearCount {
+                        self.birthYearValidationView.isHidden = true
+                        self.signupVM.isBirthYearChecked = true
+                    } else if $0.isEmpty {
+                        self.birthYearValidationView.isHidden = true
+                        self.signupVM.isBirthYearChecked = false
+                    } else {
+                        self.birthYearValidationView.isHidden = false
+                        self.signupVM.isBirthYearChecked = false
+                    }
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.$email
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    if $0.isEmpty {
+                        self.emailValidationText.text = ""
+                    }
+                }
+                .store(in: &bindings)
+
+            self.signupVM.isPasswordValid
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] valid in
+                    guard let `self` = self else { return }
+                    let passwordText = self.pwTextField.text ?? ""
+                    
+                    var isHidden = false
+                    var isInteractive = false
+                    var bgColor: UIColor?
+                    
+                    if valid {
+                        isHidden = true
+                        isInteractive = true
+                        bgColor = .white
+                    } else if passwordText.isEmpty {
+                        isHidden = true
+                        isInteractive = false
+                        bgColor = UPlusColor.grayBackground
+                    } else {
+                        isHidden = false
+                        isInteractive = false
+                        bgColor = UPlusColor.grayBackground
+                    }
+                    
+                    self.pwValidationStack.isHidden = isHidden
+                    self.pwCheckTextField.isUserInteractionEnabled = isInteractive
+                    self.pwCheckTextField.backgroundColor = bgColor
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.isPasswordSame
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] valid in
+                    guard let `self` = self else { return }
+                    let passwordText = self.pwCheckTextField.text ?? ""
+                    
+                    var text = ""
+                    var textColor: UIColor?
+                    var image: UIImage?
+                    
+                    if valid {
+                        self.pwCheckValidationStack.isHidden = false
+                        text = SignUpConstants.passwordMatch
+                        textColor = UPlusColor.blue03
+                        image = UIImage(named: ImageAssets.infoBlue)
+                        
+                    } else if passwordText.isEmpty {
+                        self.pwCheckValidationStack.isHidden = true
+                        
+                    } else {
+                        self.pwCheckValidationStack.isHidden = false
+                        text = SignUpConstants.passwordNotMatch
+                        textColor = UPlusColor.orange01
+                        image = UIImage(named: ImageAssets.infoRed)
+                    }
+                    
+                    self.pwCheckValidationText.text = text
+                    self.pwCheckValidationText.textColor = textColor
+                    self.pwCheckValidationImage.image = image
+                    
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.isAllInfoChecked
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] valid in
+                    guard let `self` = self else { return }
+                    
+                    var interaction: Bool = false
+                    var bgColor: UIColor?
+                    var textColor: UIColor?
+                   
+                    if valid {
+                        interaction = true
+                        bgColor = UPlusColor.mint03
+                        textColor = .black
+                        
+                    } else {
+                        interaction = false
+                        bgColor = UPlusColor.gray03
+                        textColor = .white
+                        
+                    }
+                    
+                    self.registerButton.isUserInteractionEnabled = interaction
+                    self.registerButton.backgroundColor = bgColor
+                    self.registerButton.setTitleColor(textColor, for: .normal)
+                    
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.isUserCreated
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] valid in
+                    guard let `self` = self else { return }
+                    if valid {
+                       print("User created called.")
+                        // Request a single NFT to NFT Service.
+                        self.signupVM.requestToCreateNewUserNft()
+                        
+                        let vm = SignUpCompleteViewViewModel()
+                        let vc = SignUpCompleteViewController(vm: vm)
+                        
+                        vc.delegate = self
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    
+                    } else {
+                        self.emailValidationText.textColor = .systemRed
+                        self.emailValidationText.text = self.signupVM.errorDescription
+                    }
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.$isPersonalInfoChecked
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isChecked in
+                    guard let `self` = self else { return }
+                    
+                    var image: UIImage?
+                    if isChecked {
+                        image = UIImage(named: ImageAssets.checkBoxTicked)
+                    } else {
+                        image = UIImage(named: ImageAssets.checkBoxEmpty)
+                    }
+                    
+                    self.checkButton.setImage(image, for: .normal)
+                    
+                }
+                .store(in: &bindings)
+        }
+        
+        bindViewToViewModel()
+        bindViewModelToView()
+    }
+}
+
+// MARK: - Set UI & Layout
+extension SignUpViewController {
+    
+    private func setUI() {
         self.canvasView.addSubviews(
             
             self.genderTitleLabel,
             self.buttonStack,
-            self.birthYear,
+            self.birthYearLabel,
             self.birthYearTextField,
             self.birthYearValidationView,
             
@@ -396,31 +626,17 @@ final class SignUpViewController: UIViewController {
      
     private func setLayout() {
         NSLayoutConstraint.activate([
-            self.scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-           
-            self.canvasView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
-            self.canvasView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
-            self.canvasView.topAnchor.constraint(equalTo: self.scrollView.topAnchor),
-            self.canvasView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
-            self.canvasView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
-            
-        ])
-        
-        NSLayoutConstraint.activate([
             self.genderTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: canvasView.topAnchor, multiplier: 3),
             self.genderTitleLabel.leadingAnchor.constraint(equalTo: self.emailTitleLabel.leadingAnchor),
             
             self.buttonStack.topAnchor.constraint(equalToSystemSpacingBelow: self.genderTitleLabel.bottomAnchor, multiplier: 2),
-            self.buttonStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.canvasView.leadingAnchor, multiplier: 2),
-            self.canvasView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.buttonStack.trailingAnchor, multiplier: 2),
+            self.buttonStack.leadingAnchor.constraint(equalTo: self.emailTitleLabel.leadingAnchor),
+            self.buttonStack.trailingAnchor.constraint(equalTo: self.birthYearTextField.trailingAnchor),
             self.buttonStack.heightAnchor.constraint(equalToConstant: LoginConstants.buttonHeight),
             
-            self.birthYear.topAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 2),
-            self.birthYear.leadingAnchor.constraint(equalTo: self.genderTitleLabel.leadingAnchor),
-            self.birthYearTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.birthYear.bottomAnchor, multiplier: 1),
+            self.birthYearLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.buttonStack.bottomAnchor, multiplier: 2),
+            self.birthYearLabel.leadingAnchor.constraint(equalTo: self.genderTitleLabel.leadingAnchor),
+            self.birthYearTextField.topAnchor.constraint(equalToSystemSpacingBelow: self.birthYearLabel.bottomAnchor, multiplier: 1),
             self.birthYearTextField.leadingAnchor.constraint(equalTo: self.genderTitleLabel.leadingAnchor),
             self.birthYearTextField.trailingAnchor.constraint(equalTo: self.emailTextField.trailingAnchor),
             self.birthYearTextField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
@@ -428,7 +644,7 @@ final class SignUpViewController: UIViewController {
             self.birthYearValidationView.topAnchor.constraint(equalToSystemSpacingBelow: self.birthYearTextField.bottomAnchor, multiplier: 1),
             self.birthYearValidationView.leadingAnchor.constraint(equalTo: self.birthYearTextField.leadingAnchor),
             
-            self.emailTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: canvasView.topAnchor, multiplier: 3),
+            self.emailTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: birthYearValidationView.bottomAnchor, multiplier: 3),
             self.emailTitleLabel.leadingAnchor.constraint(lessThanOrEqualToSystemSpacingAfter: canvasView.leadingAnchor, multiplier: 3),
             
             
@@ -486,211 +702,13 @@ final class SignUpViewController: UIViewController {
     private func setNavigationItem() {
         self.navigationItem.hidesBackButton = true
         
-        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAsset.xMarkBlack)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAssets.xMarkBlack)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
                                           style: .plain,
                                           target: self,
                                            action: #selector(cancelButtonDidTap))
         
         navigationItem.setRightBarButton(cancelButton, animated: true)
     }
-
-    
-    private func bind() {
-        func bindViewToViewModel() {
-            self.emailTextField.textPublisher
-                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
-                .removeDuplicates()
-                .assign(to: \.email, on: self.signupVM)
-                .store(in: &bindings)
-            
-            self.pwTextField.textPublisher
-                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
-                .removeDuplicates()
-                .assign(to: \.password, on: self.signupVM)
-                .store(in: &bindings)
-            
-            self.pwCheckTextField.textPublisher
-                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
-                .removeDuplicates()
-                .assign(to: \.passwordCheck, on: self.signupVM)
-                .store(in: &bindings)
-
-            self.checkButton.tapPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
-                    guard let `self` = self else { return }
-                    
-                    self.signupVM.isPersonalInfoChecked.toggle()
-                }
-                .store(in: &bindings)
-            
-            self.showAllButton.tapPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
-                    guard let `self` = self else { return }
-                    
-                    // TODO: 전문보기 탭 시 action 설정 필요
-                    
-                }
-                .store(in: &bindings)
-            
-            self.registerButton.tapPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
-                    guard let `self` = self else { return }
-                    
-                    self.registerButtonDidTap()
-                }
-                .store(in: &bindings)
-        }
-        
-        func bindViewModelToView() {
-            
-            self.signupVM.$email
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
-                    guard let `self` = self else { return }
-                    if $0.isEmpty {
-                        self.emailValidationText.text = ""
-                    }
-                }
-                .store(in: &bindings)
-
-            self.signupVM.isPasswordValid
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] valid in
-                    guard let `self` = self else { return }
-                    let passwordText = self.pwTextField.text ?? ""
-                    
-                    var isHidden = false
-                    var isInteractive = false
-                    var bgColor: UIColor?
-                    
-                    if valid {
-                        isHidden = true
-                        isInteractive = true
-                        bgColor = .white
-                    } else if passwordText.isEmpty {
-                        isHidden = true
-                        isInteractive = false
-                        bgColor = .systemGray3
-                    } else {
-                        isHidden = false
-                        isInteractive = false
-                        bgColor = .systemGray3
-                    }
-                    
-                    self.pwValidationStack.isHidden = isHidden
-                    self.pwCheckTextField.isUserInteractionEnabled = isInteractive
-                    self.pwCheckTextField.backgroundColor = bgColor
-                }
-                .store(in: &bindings)
-            
-            self.signupVM.isPasswordSame
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] valid in
-                    guard let `self` = self else { return }
-                    let passwordText = self.pwCheckTextField.text ?? ""
-                    
-                    var text = ""
-                    var textColor: UIColor?
-                    var image: UIImage?
-                    
-                    if valid {
-                        self.pwCheckValidationStack.isHidden = false
-                        text = SignUpConstants.passwordMatch
-                        textColor = UPlusColor.blue03
-                        image = UIImage(named: ImageAsset.infoBlue)
-                        
-                    } else if passwordText.isEmpty {
-                        self.pwCheckValidationStack.isHidden = true
-                        
-                    } else {
-                        self.pwCheckValidationStack.isHidden = false
-                        text = SignUpConstants.passwordNotMatch
-                        textColor = UPlusColor.orange01
-                        image = UIImage(named: ImageAsset.infoRed)
-                    }
-                    
-                    self.pwCheckValidationText.text = text
-                    self.pwCheckValidationText.textColor = textColor
-                    self.pwCheckValidationImage.image = image
-                    
-                }
-                .store(in: &bindings)
-            
-            self.signupVM.isAllInfoChecked
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] valid in
-                    guard let `self` = self else { return }
-                    
-                    var interaction: Bool = false
-                    var bgColor: UIColor?
-                    var textColor: UIColor?
-                    
-                    if valid {
-                        interaction = true
-                        bgColor = UPlusColor.mint03
-                        textColor = .black
-                        
-                    } else {
-                        interaction = false
-                        bgColor = UPlusColor.gray03
-                        textColor = .white
-                        
-                    }
-                    
-                    self.registerButton.isUserInteractionEnabled = interaction
-                    self.registerButton.backgroundColor = bgColor
-                    self.registerButton.setTitleColor(textColor, for: .normal)
-                    
-                }
-                .store(in: &bindings)
-            
-            self.signupVM.isUserCreated
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] valid in
-                    guard let `self` = self else { return }
-                    if valid {
-                       print("User created called.")
-                        // Request a single NFT to NFT Service.
-                        self.signupVM.requestToCreateNewUserNft()
-                        
-                        let vm = SignUpCompleteViewViewModel()
-                        let vc = SignUpCompleteViewController(vm: vm)
-                        
-                        vc.delegate = self
-                        self.navigationController?.pushViewController(vc, animated: true)
-                    
-                    } else {
-                        self.emailValidationText.textColor = .systemRed
-                        self.emailValidationText.text = self.signupVM.errorDescription
-                    }
-                }
-                .store(in: &bindings)
-            
-            self.signupVM.$isPersonalInfoChecked
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] isChecked in
-                    guard let `self` = self else { return }
-                    
-                    var image: UIImage?
-                    if isChecked {
-                        image = UIImage(named: ImageAsset.checkBoxTicked)
-                    } else {
-                        image = UIImage(named: ImageAsset.checkBoxEmpty)
-                    }
-                    
-                    self.checkButton.setImage(image, for: .normal)
-                    
-                }
-                .store(in: &bindings)
-        }
-        
-        bindViewToViewModel()
-        bindViewModelToView()
-    }
-    
 }
 
 //MARK: - Private
@@ -698,7 +716,10 @@ extension SignUpViewController {
 
     @objc private func registerButtonDidTap() {
         Task {
+            self.addChildViewController(self.loadingVC)
             await self.signupVM.createNewUser()
+            self.loadingVC.removeViewController()
+            
             if !self.signupVM.isValidUser {
                 self.emailValidationText.text = self.signupVM.errorDescription
             }
@@ -707,6 +728,13 @@ extension SignUpViewController {
     
     @objc private func cancelButtonDidTap() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    private func setButtonAttributes(of button: UIButton?, bgColor: UIColor, borderColor: UIColor) {
+        guard let btn = button else { return }
+        btn.backgroundColor = bgColor
+        btn.layer.borderColor = borderColor.cgColor
+        btn.layer.borderWidth = 1.0
     }
 }
 
@@ -739,3 +767,14 @@ extension SignUpViewController: SignUpCompleteViewControllerDelegate {
         self.delegate?.signupDidComplete()
     }
 }
+
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct SignUpViewController_Preview: PreviewProvider {
+    static var previews: some View {
+        let vm = SignUpViewViewModel()
+        SignUpViewController(vm: vm).toPreview()
+    }
+}
+#endif

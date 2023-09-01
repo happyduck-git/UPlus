@@ -11,9 +11,8 @@ final class ValidationInfoView: UIView {
 
     private let stack: UIStackView = {
         let stack = UIStackView()
-        stack.isHidden = true
         stack.axis = .horizontal
-        stack.spacing = 5.0
+        stack.spacing = 2.0
         stack.distribution = .fillProportionally
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -22,7 +21,7 @@ final class ValidationInfoView: UIView {
     private let image: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: ImageAsset.infoRed)
+        imageView.image = UIImage(named: ImageAssets.infoRed)
         return imageView
     }()
     
@@ -71,3 +70,16 @@ extension ValidationInfoView {
         ])
     }
 }
+
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct ValidationInfoView_Preview: PreviewProvider{
+    static var previews: some View {
+        UIViewPreview {
+            let view = ValidationInfoView(frame: .zero)
+            return view
+        }.previewLayout(.sizeThatFits)
+    }
+}
+#endif
