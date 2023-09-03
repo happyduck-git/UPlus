@@ -68,6 +68,7 @@
 		245FBB262A9FAD540021E86F /* NewEventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */; };
 		245FBB282AA0C8ED0021E86F /* ValidationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB272AA0C8ED0021E86F /* ValidationInfoView.swift */; };
 		245FBB2A2AA0CE0A0021E86F /* BaseScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB292AA0CE0A0021E86F /* BaseScrollViewController.swift */; };
+		245FBB2C2AA471B70021E86F /* NoRankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB2B2AA471B70021E86F /* NoRankTableViewCell.swift */; };
 		24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */; };
 		24624B8B2A8E55E600C9A42E /* MyPageViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */; };
 		24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24624B8C2A8E812700C9A42E /* UIViewPreview.swift */; };
@@ -534,7 +535,6 @@
 		93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */; };
 		93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 93A2EDC62A6FA74400C2287D /* FSCalendar */; };
 		93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */; };
-		93A2EDCB2A725B4E00C2287D /* RoutineMissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDCA2A725B4E00C2287D /* RoutineMissionDetailViewController.swift */; };
 		93CBD6D02A9ED2F000870019 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */; };
 		93CBD6D22A9F275E00870019 /* DetailInftoBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */; };
 		93CBD6D42A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */; };
@@ -672,6 +672,7 @@
 		245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEventCollectionViewCell.swift; sourceTree = "<group>"; };
 		245FBB272AA0C8ED0021E86F /* ValidationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationInfoView.swift; sourceTree = "<group>"; };
 		245FBB292AA0CE0A0021E86F /* BaseScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseScrollViewController.swift; sourceTree = "<group>"; };
+		245FBB2B2AA471B70021E86F /* NoRankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoRankTableViewCell.swift; sourceTree = "<group>"; };
 		24624B882A8D1E1200C9A42E /* BaseMissionScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMissionScrollViewController.swift; sourceTree = "<group>"; };
 		24624B8A2A8E55E600C9A42E /* MyPageViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyPageViewController+Extensions.swift"; sourceTree = "<group>"; };
 		24624B8C2A8E812700C9A42E /* UIViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewPreview.swift; sourceTree = "<group>"; };
@@ -1122,7 +1123,6 @@
 		93A2EDC12A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryCalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMissionsCollectionViewCell.swift; sourceTree = "<group>"; };
-		93A2EDCA2A725B4E00C2287D /* RoutineMissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineMissionDetailViewController.swift; sourceTree = "<group>"; };
 		93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInftoBottomSheetViewController.swift; sourceTree = "<group>"; };
 		93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInftoBottomSheetViewViewModel.swift; sourceTree = "<group>"; };
 		93CBD6D62A9F6DC200870019 /* DungGeunMo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DungGeunMo.ttf; sourceTree = "<group>"; };
@@ -3116,6 +3116,7 @@
 				93DA58812A960B2200525BEC /* TodayRank */,
 				93A2ED992A6E1C9D00C2287D /* RankingMenuBar.swift */,
 				93A2ED9B2A6E3BDD00C2287D /* RankBottomFlatSheetView.swift */,
+				245FBB2B2AA471B70021E86F /* NoRankTableViewCell.swift */,
 			);
 			path = RankingView;
 			sourceTree = "<group>";
@@ -3153,7 +3154,6 @@
 			children = (
 				9391946A2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift */,
 				9391946C2A78E64C0035FEB1 /* RoutineSelectBottomSheetViewModel.swift */,
-				93A2EDCA2A725B4E00C2287D /* RoutineMissionDetailViewController.swift */,
 				93D1747D2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift */,
 				93D1748D2A777C8A00F5B1B1 /* RoutineCompleteViewController.swift */,
 				93DA58472A8CA1C500525BEC /* RoutineParticipationViewViewModel.swift */,
@@ -3438,7 +3438,6 @@
 				36F748782AA1783500BFDC0A /* basic.json in Resources */,
 				36F7492A2AA1783600BFDC0A /* milestone.png in Resources */,
 				36F748742AA1783500BFDC0A /* just_bought.json in Resources */,
-				937DDF242A972A730014AF15 /* GoogleService-Info.plist in Resources */,
 				36F748752AA1783500BFDC0A /* just_bought.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3492,7 +3491,6 @@
 				93DA584C2A8CA82100525BEC /* WeeklyMissionCompleteBottomSheetViewController.swift in Sources */,
 				930D96CE2A4198020007801A /* UIView+Extension.swift in Sources */,
 				36F748EE2AA1783600BFDC0A /* ShapeRenderLayer.swift in Sources */,
-				93A2EDCB2A725B4E00C2287D /* RoutineMissionDetailViewController.swift in Sources */,
 				930D96A62A416AC30007801A /* LoginViewController.swift in Sources */,
 				36F748922AA1783600BFDC0A /* Interpolatable.swift in Sources */,
 				36F7484D2AA1783500BFDC0A /* MarketPlaceKind.swift in Sources */,
@@ -3518,7 +3516,7 @@
 				36F748A12AA1783600BFDC0A /* GradientRenderLayer.swift in Sources */,
 				36F748692AA1783500BFDC0A /* SafariViewController.swift in Sources */,
 				36F748522AA1783500BFDC0A /* ArchiveWallet.swift in Sources */,
-				24624B8F2A8E843900C9A42E /* RoutineUploadPhotoView.swift in Sources */,
+				24624B8F2A8E843900C9A42E /* RoutineUploadPhotoButton.swift in Sources */,
 				36F748BF2AA1783600BFDC0A /* LayerProperty.swift in Sources */,
 				36F748D22AA1783600BFDC0A /* GroupNode.swift in Sources */,
 				9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */,
@@ -3590,6 +3588,7 @@
 				36F748552AA1783500BFDC0A /* Error.swift in Sources */,
 				240269612A84CE8B00850E65 /* LuniverseServiceManager.swift in Sources */,
 				937C76592A492C9D001024D0 /* UITableViewCell+Extension.swift in Sources */,
+				245FBB2C2AA471B70021E86F /* NoRankTableViewCell.swift in Sources */,
 				2402693B2A83C01100850E65 /* ShareMediaOnSlackMissionViewViewModel.swift in Sources */,
 				93E013A12A6679E90005E342 /* DailyMissionCollectionViewCell.swift in Sources */,
 				36F748CA2AA1783600BFDC0A /* LayerFontProvider.swift in Sources */,
@@ -3731,7 +3730,6 @@
 				36F748DB2AA1783600BFDC0A /* PolygonNode.swift in Sources */,
 				2402695C2A846C1300850E65 /* AnswerQuizSingularViewViewModel.swift in Sources */,
 				932C34E02A57A06A0032192A /* URL+Extension.swift in Sources */,
-				93DA58542A8DA8EB00525BEC /* WeeklyBaseModel.swift in Sources */,
 				36F748932AA1783600BFDC0A /* Keyframe.swift in Sources */,
 				2417A5A12A67C96900AEC530 /* InformationInputView.swift in Sources */,
 				36F749792AA18A8500BFDC0A /* LLog.swift in Sources */,
@@ -3950,7 +3948,6 @@
 				939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */,
 				36F748802AA1783500BFDC0A /* LottieConfiguration.swift in Sources */,
 				939194842A7CDF870035FEB1 /* WalletViewViewModel.swift in Sources */,
-				93DA585A2A8E1B9100525BEC /* EventBaseModel.swift in Sources */,
 				36F749252AA1783600BFDC0A /* CurveVertex.swift in Sources */,
 				93DA583B2A8A239300525BEC /* WalletAddressBottomSheetViewController.swift in Sources */,
 				36F7489D2AA1783600BFDC0A /* GradientValueProvider.swift in Sources */,

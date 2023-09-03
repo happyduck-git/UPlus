@@ -34,53 +34,40 @@ final class LevelUpBottomSheetViewController: HumpyBottomSheetViewController {
         return view
     }()
     
-    private let benefitLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.text = MyPageConstants.benefit
-        label.textColor = UPlusColor.blue03
-        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let benefitTitleImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "special-bonus")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
 
-    private let couponStack: UIStackView = {
+    private let benefitStack: UIStackView = {
         let stack = UIStackView()
-        stack.axis = .vertical
+        stack.axis = .horizontal
+        stack.spacing = 10.0
         stack.distribution = .fillEqually
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
     
-    private let couponLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.text = MyPageConstants.coffee
-        label.textColor = UPlusColor.mint05
-        label.font = .systemFont(ofSize: UPlusFont.caption1, weight: .bold)
-        return label
+    private let couponImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "starbucks-americano")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    private let eventImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "event-open")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
-    private let couponSubLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.text = MyPageConstants.coffee
-        label.textColor = UPlusColor.gray08
-        label.font = .systemFont(ofSize: UPlusFont.h5, weight: .bold)
-        return label
-    }()
-    
-    private let eventView: UILabel = {
-        let label = UILabel()
-        label.text = MyPageConstants.eventOpened
-        label.textColor = UPlusColor.gray05
-        label.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let raffleView: UIImageView = {
+    private let raffleImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: ImageAssets.raffle)
@@ -113,7 +100,12 @@ final class LevelUpBottomSheetViewController: HumpyBottomSheetViewController {
 
 extension LevelUpBottomSheetViewController {
     private func configure() {
-              
+        UPlusLogger.logger.debug("LEVEL INFO TO BE SHOWING: \(String(describing: self.vm.level))")
+        
+        self.topImageView.image = UIImage(named: self.vm.level.avatarImage)
+        self.levelLabel.text = String(format: MyPageConstants.levelUp, self.vm.level.rawValue)
+        self.couponImage.image = UIImage(named: self.vm.level.couponImage)
+        self.raffleImage.image = UIImage(named: self.vm.level.raffleImage)
     }
     
     private func bind() {
@@ -131,38 +123,7 @@ extension LevelUpBottomSheetViewController {
                 .store(in: &bindings)
         }
         func bindViewModelToView() {
-            self.vm.nft
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
-                    guard let `self` = self,
-                          let nft = $0
-                    else { return }
-
-                    self.levelLabel.text = String(format: MyPageConstants.levelUp, self.vm.level.rawValue)
-                    self.couponLabel.text = self.vm.level.coupon
-            //        let raffle = self.vm.level.raffle // <- Raffle도 레벨에 따라 구분해야 하는 경우에 사용
-                    
-                    var imageName: String = "\(self.vm.level.rawValue)"
-                    
-                    
-                     guard let url = URL(string: nft.nftContentImageUrl) else {
-                     UPlusLogger.logger.warning("Error converting to url.")
-                         return
-                     }
-                    print("Level up nft image urlString: \(nft.nftContentImageUrl)")
-                    print("Level up nft image URL: \(url)")
-                    
-                     Task {
-                         do {
-                             self.topImageView.image = try await ImagePipeline.shared.image(for: url)
-                         }
-                         catch {
-                             UPlusLogger.logger.error("Error fetching image -- \(error).")
-                         }
-                     }     
-                    
-                }
-                .store(in: &bindings)
+            
         }
         
         bindViewToViewModel()
@@ -176,13 +137,12 @@ extension LevelUpBottomSheetViewController {
         
         self.middleContainer.addSubviews(self.benefitContainerView)
         
-        self.benefitContainerView.addSubviews(self.couponStack,
-                                              self.benefitLabel,
-                                              self.raffleView,
-                                              self.eventView)
+        self.benefitContainerView.addSubviews(self.benefitTitleImage,
+                                              self.benefitStack)
         
-        self.couponStack.addArrangedSubviews(self.couponLabel,
-                                             self.couponSubLabel)
+        self.benefitStack.addArrangedSubviews(self.couponImage,
+                                              self.raffleImage,
+                                              self.eventImage)
         
         self.confirmButton.setTitle(MyPageConstants.redeemLevelUpBenefits, for: .normal)
     }
@@ -197,25 +157,17 @@ extension LevelUpBottomSheetViewController {
         ])
         
         NSLayoutConstraint.activate([
-            self.benefitLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.topAnchor, multiplier: 2),
-            self.benefitLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 3),
-            self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitLabel.trailingAnchor, multiplier: 3),
+            self.benefitTitleImage.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitContainerView.topAnchor, multiplier: 3),
+            self.benefitTitleImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 5),
+            self.benefitTitleImage.heightAnchor.constraint(equalToConstant: 30),
+            self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitTitleImage.trailingAnchor, multiplier: 5),
 
-            self.couponStack.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitLabel.bottomAnchor, multiplier: 1),
-            self.couponStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 2),
-            self.benefitContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.couponStack.bottomAnchor, multiplier: 2),
-//            self.couponStack.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3.5),
-            
-            self.eventView.topAnchor.constraint(equalTo: self.couponStack.topAnchor),
-            self.eventView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.couponStack.trailingAnchor, multiplier: 1),
-            self.eventView.bottomAnchor.constraint(equalTo: self.couponStack.bottomAnchor),
-
-            self.raffleView.topAnchor.constraint(equalTo: self.couponStack.topAnchor),
-            self.raffleView.bottomAnchor.constraint(equalTo: self.couponStack.bottomAnchor),
-            self.raffleView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.eventView.trailingAnchor, multiplier: 1),
-            self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.raffleView.trailingAnchor, multiplier: 2)
+            self.benefitStack.topAnchor.constraint(equalToSystemSpacingBelow: self.benefitTitleImage.bottomAnchor, multiplier: 7),
+            self.benefitStack.leadingAnchor.constraint(equalToSystemSpacingAfter: self.benefitContainerView.leadingAnchor, multiplier: 2),
+            self.benefitContainerView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.benefitStack.bottomAnchor, multiplier: 2),
+            self.benefitContainerView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.benefitStack.trailingAnchor, multiplier: 3)
         ])
-
+        
     }
 }
 

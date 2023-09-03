@@ -54,4 +54,56 @@ extension NftLevel {
             return 100
         }
     }
+    
+    static func name(tokenId: Int64) -> String {
+        switch tokenId {
+        case avatar1:
+            return "Level.1"
+        case avatar2:
+            return "Level.2"
+        case avatar3:
+            return "Level.3"
+        case avatar4:
+            return "Level.4"
+        case avatar5:
+            return "Level.5"
+            
+        case weekly1, weekly2, weekly3:
+            return "여정 인증서"
+      
+        case goodWorker:
+            return "경험 인증서"
+        // gift and raffles
+        default:
+            return "선물권"
+        }
+    }
+    
+    static func image(tokenId: Int64) -> String {
+        switch tokenId {
+        case avatar1:
+            return "avatar-level1"
+        case avatar2:
+            return "avatar-level2"
+        case avatar3:
+            return "avatar-level3"
+        case avatar4:
+            return "avatar-level4"
+        case avatar5:
+            return "avatar-level5"
+            
+        case weekly1:
+            return "nft-week1"
+        case weekly2:
+            return "nft-week2"
+        case weekly3:
+            return "nft-week3"
+        case goodWorker:
+            return "nft-routine"
+            
+        // gift and raffles
+        default:
+            return "gift-icon"
+        }
+    }
 }

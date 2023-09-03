@@ -52,12 +52,24 @@ final class NewNFTNoticeBottomSheetViewController: HumpyBottomSheetViewControlle
         
         self.setUI()
         self.setLayout()
+        
+        self.configure()
         self.bind()
     }
     
 }
 
 extension NewNFTNoticeBottomSheetViewController {
+    
+    private func configure() {
+        let tokenId: Int64 = Int64(self.vm.tokenId) ?? 0
+        var nftName: String = NftLevel.name(tokenId: tokenId)
+        self.levelLabel.text = nftName
+        self.missionCompleteLabel.text = MyPageConstants.missionCompleteMsg
+        self.topImageView.image = UIImage(named: NftLevel.image(tokenId: tokenId))
+        
+    }
+    
     private func bind() {
         
         func bindViewToViewModel() {
@@ -77,33 +89,7 @@ extension NewNFTNoticeBottomSheetViewController {
         }
         
         func bindViewModelToView() {
-            self.vm.nft
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in
-                    guard let `self` = self,
-                          let nft = $0
-                    else { return }
-
-                    self.levelLabel.text = nft.nftType
-                    self.missionCompleteLabel.text = MyPageConstants.missionCompleteMsg
-                    guard let url = URL(string: nft.nftContentImageUrl) else {
-                        self.logger.warning("Error converting to url.")
-                        return
-                    }
-                    print("New nft urlString: \(nft.nftContentImageUrl)")
-                    print("New URL: \(url)")
-                    
-                    Task {
-                        do {
-                            self.topImageView.image = try await ImagePipeline.shared.image(for: url)
-                        }
-                        catch {
-                            
-                            self.logger.error("Error fetching image -- \(error).")
-                        }
-                    }
-                }
-                .store(in: &bindings)
+            
         }
         
         bindViewToViewModel()

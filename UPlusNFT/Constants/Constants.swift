@@ -135,6 +135,8 @@ struct SideMenuConstants {
 }
 
 struct MyPageConstants {
+    static let quest: String = "퀘스트"
+    static let contest: String = "콘테스트"
     static let usernameSuffix: String = "%@ 마스터님,\n오늘도 월드클래스를 향해 아자~!"
     static let dailyQuestDesc: String = "오늘 할 일을 기록하고 월드클래스 기업으로 성장시키세요!"
     static let weeklyQuestDesc: String = "미션에 참여해 월드클래스 기업으로 성장시키세요!"
@@ -466,6 +468,7 @@ struct ImageAssets {
     static let bronzeTrophy: String = "bronze-trophy"
     static let top3Title: String = "top3-title"
     static let yesterdayTitle: String = "yesterday-title"
+    static let rankBackground: String = "rank-wall"
     
     /* MissionVC */
     static let skeletonNft: String = "uplus-nft-skeleton"

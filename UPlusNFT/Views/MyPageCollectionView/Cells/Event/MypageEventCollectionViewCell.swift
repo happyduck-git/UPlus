@@ -7,12 +7,13 @@
 
 import UIKit
 
+enum EventStatus {
+    case open
+    case close
+    case participated
+}
+
 final class MypageEventCollectionViewCell: UICollectionViewCell {
-    enum EventStatus {
-        case open
-        case close
-        case participated
-    }
     
     private let titleStack: UIStackView = {
         let stack = UIStackView()

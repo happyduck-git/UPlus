@@ -15,6 +15,9 @@ final class CommentCountMissionViewViewModel: MissionBaseModel {
     private let firestoreManager = FirestoreManager.shared
     
     // MARK: - DataSource
+    @Published var participationStatus: EventStatus
+    var didUserLikeAnyComment: Bool = false
+    
     @Published var comments: [MissionComment] = [] {
         didSet {
             self.numberOfComments = comments.count
@@ -30,7 +33,12 @@ final class CommentCountMissionViewViewModel: MissionBaseModel {
     @Published var likesCountList: [Int] = []
     
     //MARK: - Init
-    override init(type: Type, mission: Mission, numberOfWeek: Int = 0) {
+    init(status: EventStatus,
+         type: Type,
+         mission: Mission,
+         numberOfWeek: Int = 0) {
+        
+        self.participationStatus = status
         super.init(type: type, mission: mission)
         
         self.comments = self.getMissionComments(mission: mission)
@@ -41,26 +49,28 @@ final class CommentCountMissionViewViewModel: MissionBaseModel {
 extension CommentCountMissionViewViewModel {
     
     func saveLikes() {
-        do {
-            let currentUser = try UPlusUser.getCurrentUser()
-            
-            var commentIds: [String] = []
-            
-            for i in 0..<isLikedList.count {
-                if self.isLikedList[i] {
-                    commentIds.append(self.commentList[i].commentId)
+        Task {
+            do {
+                let currentUser = try UPlusUser.getCurrentUser()
+                
+                var commentIds: [String] = []
+                
+                for i in 0..<isLikedList.count {
+                    if self.isLikedList[i] {
+                        commentIds.append(self.commentList[i].commentId)
+                    }
+                    continue
                 }
-                continue
+                
+                try await self.firestoreManager
+                    .saveCommentLikes(missionType: MissionType(rawValue: self.mission.missionSubTopicType) ?? .weeklyQuiz1,
+                                      missionDoc: self.mission.missionId,
+                                      didLikeAnyComment: self.didUserLikeAnyComment,
+                                      commentIds: commentIds)
             }
-            
-            self.firestoreManager
-                .saveCommentLikes(missionType: MissionType(rawValue: self.mission.missionSubTopicType) ?? .weeklyQuiz1,
-                                  missionDoc: self.mission.missionId,
-                                  userIndex: currentUser.userIndex,
-                                  commentIds: commentIds)
-        }
-        catch {
-            UPlusLogger.logger.error("Error saving likes -- \(String(describing: error))")
+            catch {
+                UPlusLogger.logger.error("Error saving likes -- \(String(describing: error))")
+            }
         }
     }
     
@@ -74,11 +84,13 @@ extension CommentCountMissionViewViewModel {
         let userCommentSet = mission.userCommnetSet ?? []
         self.commentList = userCommentSet
         
+        
         var comments: [MissionComment] = []
         for comment in userCommentSet {
             let isLiked: Bool = self.isLikedByCurrentUser(userRefs: comment.commentLikeUsers ?? [])
             let likes: Int = comment.commentLikeUsers?.count ?? 0
             
+            self.didUserLikeAnyComment = isLiked ? true : false
             self.isLikedList.append(isLiked)
             self.likesCountList.append(likes)
             

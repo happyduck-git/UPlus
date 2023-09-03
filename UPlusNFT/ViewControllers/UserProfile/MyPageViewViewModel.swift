@@ -55,6 +55,7 @@ final class MyPageViewViewModel {
     }
     
     var updatedNftsCopy: [String] = []
+    var topLevelNft: UPlusNft?
     
     var isRefreshing: Bool = false
     
@@ -72,21 +73,26 @@ final class MyPageViewViewModel {
                 self.missionTitles.append(missionBaseInfo?.extraWeeklyQuiz1.episodeTitle ?? "no-title")
                 self.missionTitles.append(missionBaseInfo?.extraWeeklyQuiz2.episodeTitle ?? "no-title")
                 self.missionTitles.append(missionBaseInfo?.extraWeeklyQuiz3.episodeTitle ?? "no-title")
+ 
+                // Close SubTitle
+                self.missionCloseSubtitles.append(missionBaseInfo?.extraWeeklyQuiz1.episodeDescriptionPast ?? "no-desc")
+                self.missionCloseSubtitles.append(missionBaseInfo?.extraWeeklyQuiz2.episodeDescriptionPast ?? "no-desc")
+                self.missionCloseSubtitles.append(missionBaseInfo?.extraWeeklyQuiz3.episodeDescriptionPast ?? "no-desc")
             }
         }
         
         @Published var weeklyMissions: [String: [Timestamp]] = [:]
         var dailyMissions: [String: [Timestamp]] = [:]
         var missionTitles: [String] = []
+        var missionCloseSubtitles: [String] = []
         
         @Published var numberOfFinishedMissions: [Int] = []
         
         @Published var isHistorySectionOpened: Bool = false
         
         @Published var routineParticipationStatus: MissionUserState?
-        
         @Published var routineParticipationCount: Int = 0
-        @Published var routinePoint: Int64 = 0
+        @Published var routinePoint: Int64 = 0 // 21회 포인트 합
         
         /* Calendar Cell */
         // Total missions
@@ -139,14 +145,7 @@ final class MyPageViewViewModel {
         
         @Published var missionPerLevel: [Int64: [any Mission]] = [:] {
             didSet {
-                
-                /*
-                if mission.level != nil {
-                    // 레벨 셀 보여주기
-                } else {
-                    // 레벨 아닌 셀 보여주기
-                }
-                */
+
                 var others: [(any Mission)?] = []
                
                 others.append(nil)
@@ -257,7 +256,6 @@ extension MyPageViewViewModel {
                 
                 self.mission.routineParticipationCount = currentUser.count
 
-                // 4. 전체 포인트 계산 (5, 10, 15회는 500P)
                 let totalPoint = missions.reduce(0, {
                     $0 + $1.missionRewardPoint
                 })
@@ -304,7 +302,9 @@ extension MyPageViewViewModel {
     func createMissionMainViewViewModel() async {
 
         let token = await self.getTopLevelNftToken() ?? "no-token"
-        let nftUrl = await self.firestoreManager.getNft(tokenId: token)?.nftContentImageUrl ?? "no-url"
+        let nftInfo = await self.firestoreManager.getNft(tokenId: token)
+        self.topLevelNft = nftInfo
+        let nftUrl = nftInfo?.nftContentImageUrl ?? "no-url"
         let level = self.getUserLevel()
         
         print("Userlevel: \(level)")
@@ -445,21 +445,6 @@ extension MyPageViewViewModel {
         }
     }
     
-}
-
-//MARK: - Save Data to FireStore
-extension MyPageViewViewModel {
-    func saveSelectedMission(_ type: MissionType) async {
-        do {
-            let user = try UPlusUser.getCurrentUser()
-            try await firestoreManager.saveSelectedRoutineMission(type: type,
-                                                                  userIndex: user.userIndex)
-            print("Saving mission type successed.")
-        }
-        catch {
-            print("Error saving selected mission type -- \(error)")
-        }
-    }
 }
 
 extension MyPageViewViewModel {

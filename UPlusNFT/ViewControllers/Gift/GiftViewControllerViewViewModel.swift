@@ -52,16 +52,8 @@ extension GiftViewControllerViewViewModel {
             let response = try await self.nftServiceManager.requestNftTransfer(from: user.userIndex,
                                                                                to: self.receiverUserIndex ?? 0,
                                                                                tokenId: self.nft.nftTokenId)
-            let status = NFTServiceStatus(rawValue: response.data.status) ?? .fail
-            
-            switch status {
-            case .pending:
-                logger.info("Send nft success -- \(String(describing: response.data))")
-                return true
-            case .fail:
-                logger.info("Send nft fail -- \(String(describing: response.data))")
-                return false
-            }
+            logger.info("Send nft success -- \(String(describing: response.data))")
+            return true
         }
         catch {
             if error is NFTServiceError {
@@ -70,6 +62,8 @@ extension GiftViewControllerViewViewModel {
                 case .senderError:
                     // TODO: Sender Error인 경우 UI에 alert 표시
                     break
+                case .transferFailed:
+                    logger.error("Gift Transfer failed.")
                 default:
                     break
                 }

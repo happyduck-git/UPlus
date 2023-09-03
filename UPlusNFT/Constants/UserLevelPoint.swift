@@ -171,4 +171,43 @@ enum UserLevel: Int {
             return 2600...9999
         }
     }
+    
+    var avatarImage: String {
+        switch self {
+        case .level1:
+            return "avatar-level1"
+        case .level2:
+            return "avatar-level2"
+        case .level3:
+            return "avatar-level3"
+        case .level4:
+            return "avatar-level4"
+        case .level5:
+            return "avatar-level5"
+        }
+    }
+    
+    var couponImage: String {
+        switch self {
+        case .level1, .level2, .level3:
+            return "starbucks-americano"
+        case .level4:
+            return "starbucks-10k"
+        case .level5:
+            return "starbucks-20k"
+        }
+    }
+    
+    var raffleImage: String {
+        switch self {
+        case .level1, .level2:
+            return "gift-icon"
+        case .level3:
+            return "incen-bronze"
+        case .level4:
+            return "incen-silver"
+        case .level5:
+            return "incen-gold"
+        }
+    }
 }

@@ -56,7 +56,7 @@ extension WalletViewViewModel {
                             let nftType = UPlusNftDetailType(rawValue: detailType) ?? .avatar
 
                             if nftType == .athlete || nftType == .goodWorker || nftType == .environmentalist || nftType == .journey {
-                                self.isOnlyAvatar.toggle()
+                                self.isOnlyAvatar = false
                             }
                            
                             switch nftType {

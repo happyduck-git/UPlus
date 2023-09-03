@@ -60,7 +60,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
          if let id = userInfo["targetView"] as? String {
              // TODO: Specify a certain vc
              let vm = RoutineMissionDetailViewViewModel(missionType: .dailyExpGoodWorker)
-             let vc = RoutineMissionDetailViewController(vm: vm)
+             let vc = RoutineMissionDetailViewController2(vm: vm)
              let navVC = UINavigationController(rootViewController: vc)
              
              self.window = UIWindow(frame: UIScreen.main.bounds)

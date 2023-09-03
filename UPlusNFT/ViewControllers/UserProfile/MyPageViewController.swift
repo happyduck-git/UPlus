@@ -89,7 +89,7 @@ final class MyPageViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonDidTap(_:)), for: .touchUpInside)
         button.backgroundColor = .white
         button.setTitleColor(UPlusColor.mint04, for: .normal)
-        button.setTitle("미션", for: .normal)
+        button.setTitle(MyPageConstants.quest, for: .normal)
         return button
     }()
     
@@ -99,7 +99,7 @@ final class MyPageViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonDidTap(_:)), for: .touchUpInside)
         button.backgroundColor = .white
         button.setTitleColor(UPlusColor.gray03, for: .normal)
-        button.setTitle("이벤트", for: .normal)
+        button.setTitle(MyPageConstants.contest, for: .normal)
         return button
     }()
     
@@ -433,7 +433,7 @@ extension MyPageViewController {
         let walletItem = UIBarButtonItem(image: UIImage(named: ImageAssets.wallet)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                          style: .plain,
                                          target: self,
-                                         action: #selector(speakerDidTap))
+                                         action: #selector(walletDidTap))
         
         let speakerItem = UIBarButtonItem(image: UIImage(named: ImageAssets.speaker)?.withTintColor(UPlusColor.gray04, renderingMode: .alwaysOriginal),
                                           style: .plain,
@@ -442,6 +442,15 @@ extension MyPageViewController {
         
         self.navigationItem.setLeftBarButton(menuItem, animated: true)
         self.navigationItem.setRightBarButtonItems([speakerItem, walletItem], animated: true)
+    }
+    
+    @objc func walletDidTap() {
+        
+        let vc = WalletAddressBottomSheetViewController()
+        vc.defaultHeight = 300
+        vc.modalPresentationStyle = .overCurrentContext
+        
+        self.present(vc, animated: false)
     }
     
     @objc func speakerDidTap() {
@@ -490,8 +499,8 @@ extension MyPageViewController {
             
             Task {
                 await self.vm.createMissionMainViewViewModel()
-                self.vm.isRefreshing.toggle()
                 self.refreshControl.endRefreshing()
+                self.vm.isRefreshing.toggle()
             }
         }
         
@@ -951,6 +960,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     let (status, collectionId) = self.weeklyMissionInfo(week: indexPath.item + 1)
                     let title = self.vm.mission.missionTitles[indexPath.item]
                     
+                    
                     let missionInfo = self.vm.mission.weeklyMissions[collectionId] ?? []
                     
                     let begin = missionInfo[0].dateValue()
@@ -987,8 +997,10 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyCompletedCollectionViewCell.identifier, for: indexPath) as? WeeklyCompletedCollectionViewCell else {
                             fatalError()
                         }
-                        
-                        cell.configure(title: title)
+                        let closeSubTitle = self.vm.mission.missionCloseSubtitles[indexPath.item]
+                        cell.configure(item: indexPath.item,
+                                       title: title,
+                                       subtitle: closeSubTitle)
 
                         return cell
                     }
@@ -1232,7 +1244,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 break
             }
             
-        // 이벤트
+        // 콘테스트
         } else {
    
             var anyMission: (any Mission)?
@@ -1248,74 +1260,86 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             
             guard let mission = anyMission else { return }
             let type = MissionSubFormatType(rawValue: mission.missionSubFormatType) ?? .userComment
-            let topicType = MissionTopicType(rawValue: mission.missionTopicType) ?? .eventMission
             
-            switch type {
-            case .photoAuthManagement, .photoAuthNoManagement:
-                guard let mission = mission as? PhotoAuthMission else { return }
-                let vm = PhotoAuthQuizViewViewModel(type: .event, mission: mission)
-                let vc = PhotoAuthQuizViewController(vm: vm)
-                vc.delegate = self
-                
-                self.show(vc, sender: self)
-                
-            case .contentReadOnly:
-                guard let mission = mission as? ContentReadOnlyMission else { return }
-                let vm = ContentReadOnlyMissionViewViewModel(type: .event, mission: mission, numberOfWeek: 0)
-                let vc = ContentReadOnlyMissionViewController(vm: vm, type: .event)
-//                vc.delegate = self
-                
-                self.show(vc, sender: self)
+            let participatedUsers = mission.missionUserStateMap ?? [:]
+            var isParticipated: EventStatus = .open
+            
+            if participatedUsers.contains(where: { (key, _) in
+                key == String(describing: self.vm.user.userIndex)
+            }) { // 참여한 경우
+                isParticipated = .participated
 
-            case .governanceElection:
-                guard let mission = mission as? GovernanceMission else { return }
-                let vm = GovernanceElectionMissionViewViewModel(type: .event, mission: mission)
-                let vc = GovernanceElectionMissionViewController(vm: vm)
-                vc.delegate = self
-                
-                self.show(vc, sender: self)
-                
-            case .userCommentRich:
-                guard let mission = mission as? CommentCountMission else { return }
-                let vm = CommentCountMissionViewViewModel(type: .event, mission: mission)
-                let vc = CommentCountMissionViewController(vm: vm)
-                vc.delegate = self
-                
-                self.show(vc, sender: self)
-                
-            case .userCommentAuthSharing:
-                    guard let mission = mission as? CommentCountMission else { return }
-                    let vm = ShareMediaOnSlackMissionViewViewModel(level: Int(self.vm.userProfileViewModel?.level ?? 0), type: .event, mission: mission)
-                    let vc = ShareMediaOnSlackMissionViewController(vm: vm)
-    //                vc.delegate = self
+            } else { // 참여하지 않은 경우
+                isParticipated = .open
+            }
+                switch type {
+                case .photoAuthManagement, .photoAuthNoManagement:
+                    guard let mission = mission as? PhotoAuthMission else { return }
+                    let vm = PhotoAuthQuizViewViewModel(type: .event, mission: mission)
+                    let vc = PhotoAuthQuizViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                case .contentReadOnly:
+                    guard let mission = mission as? ContentReadOnlyMission else { return }
+                    let vm = ContentReadOnlyMissionViewViewModel(type: .event, mission: mission, numberOfWeek: 0)
+                    let vc = ContentReadOnlyMissionViewController(vm: vm, type: .event)
+                    //                vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+               // TODO: 참여 여부에 따라 다르게 조치
+                case .governanceElection:
+                    guard let mission = mission as? GovernanceMission else { return }
+                    let vm = GovernanceElectionMissionViewViewModel(type: .event, mission: mission)
+                    let vc = GovernanceElectionMissionViewController(vm: vm)
+                    vc.delegate = self
                     
                     self.show(vc, sender: self)
                 
-            case .choiceQuizOX:
-                guard let mission = mission as? ChoiceQuizMission else { return }
-                let vm = ChoiceQuizzOXViewViewModel(type: .event, mission: mission)
-                let vc = ChoiceQuizOXViewController(vm: vm)
-                
-                self.show(vc, sender: self)
-                
-            case .choiceQuizMore:
-                guard let mission = mission as? ChoiceQuizMission else { return }
-                let vm = ChoiceQuizMoreViewViewModel(type: .event, mission: mission)
-                let vc = ChoiceQuizMoreViewController(vm: vm)
-                
-                self.show(vc, sender: self)
-                
-            case .choiceQuizVideo:
-                guard let mission = mission as? ChoiceQuizMission else { return }
-                let vm = ChoiceQuizVideoViewViewModel(type: .event, mission: mission)
-                let vc = ChoiceQuizVideoViewController(vm: vm)
-                
-                self.show(vc, sender: self)
-                
-            default:
-                break
-            }
-
+                // TODO: 참여 여부에 따라 다르게 조치
+                case .userCommentRich:
+                    guard let mission = mission as? CommentCountMission else { return }
+                    let vm = CommentCountMissionViewViewModel(status: isParticipated, type: .event, mission: mission)
+                    let vc = CommentCountMissionViewController(vm: vm)
+                    vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                case .userCommentAuthSharing:
+                    guard let mission = mission as? CommentCountMission else { return }
+                    let vm = ShareMediaOnSlackMissionViewViewModel(level: Int(self.vm.userProfileViewModel?.level ?? 0), type: .event, mission: mission)
+                    let vc = ShareMediaOnSlackMissionViewController(vm: vm)
+                    //                vc.delegate = self
+                    
+                    self.show(vc, sender: self)
+                    
+                case .choiceQuizOX:
+                    guard let mission = mission as? ChoiceQuizMission else { return }
+                    let vm = ChoiceQuizzOXViewViewModel(type: .event, mission: mission)
+                    let vc = ChoiceQuizOXViewController(vm: vm)
+                    
+                    self.show(vc, sender: self)
+                    
+                case .choiceQuizMore:
+                    guard let mission = mission as? ChoiceQuizMission else { return }
+                    let vm = ChoiceQuizMoreViewViewModel(type: .event, mission: mission)
+                    let vc = ChoiceQuizMoreViewController(vm: vm)
+                    
+                    self.show(vc, sender: self)
+                    
+                case .choiceQuizVideo:
+                    guard let mission = mission as? ChoiceQuizMission else { return }
+                    let vm = ChoiceQuizVideoViewViewModel(type: .event, mission: mission)
+                    let vc = ChoiceQuizVideoViewController(vm: vm)
+                    
+                    self.show(vc, sender: self)
+                    
+                default:
+                    break
+                }
+            
         }
     }
     
@@ -1337,7 +1361,7 @@ extension MyPageViewController {
         } else if end > today {
             return (.open, weekCollection)
         } else {
-            return (.before, weekCollection)
+            return (.close, weekCollection)
         }
     }
     

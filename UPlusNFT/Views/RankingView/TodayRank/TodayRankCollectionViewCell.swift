@@ -31,11 +31,17 @@ final class TodayRankCollectionViewCell: UICollectionViewCell {
         table.showsHorizontalScrollIndicator = false
 
         // TODO: Register Custom Cell
-        table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        table.register(UITableViewCell.self,
+                       forCellReuseIdentifier: UITableViewCell.identifier)
         
-        table.register(YesterdayRankerTableViewCell.self, forCellReuseIdentifier: YesterdayRankerTableViewCell.identifier)
+        table.register(NoRankTableViewCell.self,
+                       forCellReuseIdentifier: NoRankTableViewCell.identifier)
         
-        table.register(TodayRankTableViewCell.self, forCellReuseIdentifier: TodayRankTableViewCell.identifier)
+        table.register(YesterdayRankerTableViewCell.self,
+                       forCellReuseIdentifier: YesterdayRankerTableViewCell.identifier)
+        
+        table.register(TodayRankTableViewCell.self,
+                       forCellReuseIdentifier: TodayRankTableViewCell.identifier)
         
         return table
     }()
@@ -136,62 +142,88 @@ extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
     func numberOfSections(in tableView: UITableView) -> Int {
         guard let vm = self.vm else { return 0 }
         
-        return vm.todayRankSections.count
+        if vm.todayRankerList.isEmpty {
+            return 1
+        } else {
+            return vm.todayRankSections.count
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
+        guard let vm = self.vm else { return 0 }
+        
+        if vm.todayRankerList.isEmpty {
             return 1
-            
-        default:
-            guard let vm = self.vm else { return 0 }
-            return vm.todayRankerList.count
+        } else {
+            switch section {
+            case 0:
+                return 1
+                
+            default:
+                return vm.todayRankerList.count
+            }
         }
+
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let vm = self.vm else { return UITableViewCell() }
         
-        switch indexPath.section {
-        case 0:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: YesterdayRankerTableViewCell.identifier, for: indexPath) as? YesterdayRankerTableViewCell else {
+        if vm.todayRankerList.isEmpty {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: NoRankTableViewCell.identifier, for: indexPath) as? NoRankTableViewCell else {
                 return UITableViewCell()
             }
-            cell.selectionStyle = .none
             
-            let ranker = vm.yesterdayRankerList.first
-            let userIndex = ranker?.userIndex ?? 0
-            let topNft = vm.topNfts[userIndex]
-            
-            cell.configure(ranker: ranker, doc: topNft)
             return cell
             
-        default:
-            let cellVM = vm.todayRankerList[indexPath.row]
-            let topNft = vm.topNfts[cellVM.userIndex]
-            
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: TodayRankTableViewCell.identifier, for: indexPath) as? TodayRankTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.resetCell()
-            
-            switch indexPath.item {
-            case 0, 1, 2:
-                cell.configureTop3(with: cellVM, doc: topNft, at: indexPath.row)
+        } else {
+            switch indexPath.section {
+            case 0:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: YesterdayRankerTableViewCell.identifier, for: indexPath) as? YesterdayRankerTableViewCell else {
+                    return UITableViewCell()
+                }
+                cell.selectionStyle = .none
+                
+                let ranker = vm.yesterdayRankerList.first
+                let userIndex = ranker?.userIndex ?? 0
+                let topNft = vm.topNfts[userIndex]
+                
+                cell.configure(ranker: ranker, doc: topNft)
+                return cell
+                
             default:
-                cell.configureOthers(with: cellVM, doc: topNft, at: indexPath.row)
+                let cellVM = vm.todayRankerList[indexPath.row]
+                let topNft = vm.topNfts[cellVM.userIndex]
+                
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: TodayRankTableViewCell.identifier, for: indexPath) as? TodayRankTableViewCell else {
+                    return UITableViewCell()
+                }
+                cell.resetCell()
+                
+                switch indexPath.item {
+                case 0, 1, 2:
+                    cell.configureTop3(with: cellVM, doc: topNft, at: indexPath.row)
+                default:
+                    cell.configureOthers(with: cellVM, doc: topNft, at: indexPath.row)
+                }
+                
+                return cell
             }
-            
-            return cell
         }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 152
+        guard let vm = self.vm else { return 0.0 }
+        
+        if vm.todayRankerList.isEmpty {
+            return self.contentView.frame.height
         } else {
-            return 60
+            if indexPath.section == 0 {
+                return 152
+            } else {
+                return 60
+            }
         }
     }
     
@@ -200,20 +232,34 @@ extension TodayRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
 //MARK: - Footer
 extension TodayRankCollectionViewCell {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 1 {
-            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 50.0))
-            footer.backgroundColor = .white
-            return footer
-        } else {
+        guard let vm = self.vm else { return nil }
+        
+        if vm.todayRankerList.isEmpty {
             return nil
+        } else {
+            if section == 1 {
+                let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 50.0))
+                footer.backgroundColor = .white
+                return footer
+            } else {
+                return nil
+            }
         }
+
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 1 {
-            return 100
-        } else {
+        guard let vm = self.vm else { return 0 }
+        
+        if vm.todayRankerList.isEmpty {
             return 0
+        } else {
+            if section == 1 {
+                return 100
+            } else {
+                return 0
+            }
         }
+
     }
 }

@@ -15,6 +15,7 @@ enum NFTServiceStatus: String {
 enum NFTServiceError: Error, LocalizedError {
     case issueFailed
     case senderError
+    case transferFailed
     
     public var errorDescription: String? {
         switch self {
@@ -22,6 +23,8 @@ enum NFTServiceError: Error, LocalizedError {
             return NSLocalizedString("Error issueing nft.", comment: "Single NFT Request Error")
         case .senderError:
             return NSLocalizedString("Sender cannot be same with Receiver.", comment: "NFT Transfer Error")
+        case .transferFailed:
+            return NSLocalizedString("Transfer failed.", comment: "NFT Transfer Error")
         }
     }
 }
@@ -79,9 +82,15 @@ extension NFTServiceManager {
         
         let result = try await NetworkServiceManager.execute(expecting: NFTResponse.self,
                                                              request: urlRequest)
-        UPlusLogger.logger.debug("Request single nft: \(nftType.rawValue) -- execute called")
+        UPlusLogger.logger.debug("🫡Request single nft: \(nftType.rawValue) -- execute called")
         
-        return result
+        let status = NFTServiceStatus(rawValue: result.data.status) ?? .fail
+        switch status {
+        case .pending:
+            return result
+        case .fail:
+            throw NFTServiceError.issueFailed
+        }
     }
     
     /// Request to transfer one nft to other user.
@@ -93,6 +102,7 @@ extension NFTServiceManager {
     func requestNftTransfer(from senderIndex: Int64,
                             to receiverIndex: Int64,
                             tokenId: Int64) async throws -> NFTResponse {
+        UPlusLogger.logger.debug("Request nft transfer: \(tokenId) -- function called")
         
         if senderIndex == receiverIndex {
             throw NFTServiceError.senderError
@@ -107,9 +117,18 @@ extension NFTServiceManager {
                 "tokenId": tokenId
             ]
         )
+        UPlusLogger.logger.debug("🫡Request nft transfer: \(tokenId) -- execute called")
         
-        return try await NetworkServiceManager.execute(expecting: NFTResponse.self,
+        let result = try await NetworkServiceManager.execute(expecting: NFTResponse.self,
                             request: urlRequest)
+        
+        let status = NFTServiceStatus(rawValue: result.data.status) ?? .fail
+        switch status {
+        case .pending:
+            return result
+        case .fail:
+            throw NFTServiceError.transferFailed
+        }
     }
     
 }

@@ -34,6 +34,9 @@ final class TotalRankCollectionViewCell: UICollectionViewCell {
         table.register(Top3RankerTableViewCell.self,
                        forCellReuseIdentifier: Top3RankerTableViewCell.identifier)
         
+        table.register(NoRankTableViewCell.self,
+                       forCellReuseIdentifier: NoRankTableViewCell.identifier)
+        
         table.register(UITableViewCell.self,
                        forCellReuseIdentifier: UITableViewCell.identifier)
         
@@ -131,53 +134,81 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
     func numberOfSections(in tableView: UITableView) -> Int {
         guard let vm = self.vm else { return 0 }
         
-        return vm.totalRankSections.count
+        guard let vm = self.vm else { return 0 }
+        
+        if vm.totalRankerList.isEmpty {
+            return 1
+        } else {
+            return vm.totalRankSections.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
+        guard let vm = self.vm else { return 0 }
+        
+        if vm.totalRankerList.isEmpty {
             return 1
-        default:
-            guard let vm = self.vm else { return 0 }
-            return vm.exceptTop3RankerList.count
+        } else {
+            switch section {
+            case 0:
+                return 1
+            default:
+                guard let vm = self.vm else { return 0 }
+                return vm.exceptTop3RankerList.count
+            }
         }
+
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let vm = self.vm else { return UITableViewCell() }
-        
-        switch indexPath.section {
-        case 0:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: Top3RankerTableViewCell.identifier) as? Top3RankerTableViewCell,
-                  let top3Users = self.vm?.top3RankUserList,
-                  let top3UserNfts = self.vm?.top3UserNfts
-            else {
+        if vm.totalRankerList.isEmpty {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: NoRankTableViewCell.identifier, for: indexPath) as? NoRankTableViewCell else {
                 return UITableViewCell()
             }
             
-            cell.configure(top3Users: top3Users, doc: top3UserNfts)
             return cell
             
-        default:
-            let cellVM = vm.exceptTop3RankerList[indexPath.row]
-            let topNft = vm.topNfts[cellVM.userIndex]
-            
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalRankTableViewCell.identifier, for: indexPath) as? TotalRankTableViewCell else {
-                return UITableViewCell()
+        } else {
+            switch indexPath.section {
+            case 0:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: Top3RankerTableViewCell.identifier) as? Top3RankerTableViewCell,
+                      let top3Users = self.vm?.top3RankUserList,
+                      let top3UserNfts = self.vm?.top3UserNfts
+                else {
+                    return UITableViewCell()
+                }
+                
+                cell.configure(top3Users: top3Users, doc: top3UserNfts)
+                return cell
+                
+            default:
+                let cellVM = vm.exceptTop3RankerList[indexPath.row]
+                let topNft = vm.topNfts[cellVM.userIndex]
+                
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalRankTableViewCell.identifier, for: indexPath) as? TotalRankTableViewCell else {
+                    return UITableViewCell()
+                }
+                cell.resetCell()
+                cell.configure(with: cellVM, doc: topNft, at: indexPath.row + 3)
+                return cell
             }
-            cell.resetCell()
-            cell.configure(with: cellVM, doc: topNft, at: indexPath.row + 3)
-            return cell
         }
         
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 356
+        guard let vm = self.vm else { return 0.0 }
+        
+        if vm.totalRankerList.isEmpty {
+            return self.contentView.frame.height
         } else {
-            return 60
+            if indexPath.section == 0 {
+                return 356
+            } else {
+                return 60
+            }
         }
     }
     
@@ -187,20 +218,33 @@ extension TotalRankCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
 extension TotalRankCollectionViewCell {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 1 {
-            let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 50.0))
-            footer.backgroundColor = .white
-            return footer
-        } else {
+        guard let vm = self.vm else { return nil }
+        
+        if vm.totalRankerList.isEmpty {
             return nil
+        } else {
+            if section == 1 {
+                let footer = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.rankTableView.frame.width, height: 50.0))
+                footer.backgroundColor = .white
+                return footer
+            } else {
+                return nil
+            }
         }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 1 {
-            return 100
-        } else {
+        guard let vm = self.vm else { return 0 }
+        
+        if vm.totalRankerList.isEmpty {
             return 0
+        } else {
+            if section == 1 {
+                return 100
+            } else {
+                return 0
+            }
         }
         
     }

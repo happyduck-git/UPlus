@@ -61,7 +61,7 @@ final class CommentCountMissionViewController: BaseScrollViewController {
     
     private let textField: UITextField = {
         let txtField = UITextField()
-        txtField.borderStyle = .none
+        txtField.borderStyle = .roundedRect
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
@@ -171,7 +171,7 @@ extension CommentCountMissionViewController {
             self.additionalInfoLabel.attributedText = self.vm.retrieveHtmlString(html: bottom)
             
             self.totalNumberLabel.text = String(format: MissionConstants.numOfParticipants, self.vm.comments.count)
-            print("Comments: \(self.vm.comments.count)")
+            
         case .weekly:
             return
         }
@@ -193,24 +193,26 @@ extension CommentCountMissionViewController {
                     let comment = $0
                     else { return }
                     
-                    let commentEmpty = comment.isEmpty
-                    let interactive: Bool = commentEmpty ? false : true
-                    let bgColor: UIColor = commentEmpty ? UPlusColor.gray02 : UPlusColor.mint03
-                    let textColor: UIColor = commentEmpty ? .white : UPlusColor.gray08
-                    
-                    self.checkAnswerButton.isUserInteractionEnabled = interactive
-                    self.checkAnswerButton.backgroundColor = bgColor
-                    self.checkAnswerButton.setTitleColor(textColor, for: .normal)
+                    if self.vm.participationStatus != .participated {
+                        let commentEmpty = comment.isEmpty
+                        let interactive: Bool = commentEmpty ? false : true
+                        let bgColor: UIColor = commentEmpty ? UPlusColor.gray02 : UPlusColor.mint03
+                        let textColor: UIColor = commentEmpty ? .white : UPlusColor.gray08
+                        
+                        self.checkAnswerButton.isUserInteractionEnabled = interactive
+                        self.checkAnswerButton.backgroundColor = bgColor
+                        self.checkAnswerButton.setTitleColor(textColor, for: .normal)
+                    }
                     
                 }
                 .store(in: &bindings)
             
-            self.vm.$participated
+            self.vm.$participationStatus
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     guard let `self` = self else { return }
                     
-                    if $0 {
+                    if $0 == .participated {
                         self.checkAnswerButton.isEnabled = false
                         self.checkAnswerButton.backgroundColor = UPlusColor.gray02
                         self.checkAnswerButton.setTitleColor(.white, for: .normal)
@@ -323,7 +325,7 @@ extension CommentCountMissionViewController {
             self.totalNumberLabel.trailingAnchor.constraint(equalTo: self.commentTable.trailingAnchor),
             
             self.commentTable.topAnchor.constraint(equalTo: self.totalNumberLabel.bottomAnchor),
-            self.commentTable.heightAnchor.constraint(equalToConstant: 400),
+            self.commentTable.heightAnchor.constraint(equalToConstant: 800),
             self.commentTable.leadingAnchor.constraint(equalTo: self.canvasView.leadingAnchor),
             self.commentTable.trailingAnchor.constraint(equalTo: self.canvasView.trailingAnchor),
             self.commentTable.bottomAnchor.constraint(equalTo: self.canvasView.bottomAnchor)
@@ -350,9 +352,7 @@ extension CommentCountMissionViewController {
                                             likes: 0,
                                             isLikedByCurrentUser: false)
             self.vm.comments.append(newComment)
-
-            self.checkAnswerButton.isUserInteractionEnabled = false
-            self.checkAnswerButton.backgroundColor = .systemGray
+            self.vm.participated = true
             
             Task {
                 try await self.vm.saveEventParticipationStatus(selectedIndex: nil,
@@ -372,8 +372,6 @@ extension CommentCountMissionViewController {
     
     private func saveLikes() {
         self.vm.saveLikes()
-        
-        // TODO: 좋아요 1번은 점수 부여
     }
     
 }

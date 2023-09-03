@@ -12,6 +12,7 @@ final class WeeklyCompletedCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
     private let iconImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: ImageAssets.hand)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -29,7 +30,7 @@ final class WeeklyCompletedCollectionViewCell: UICollectionViewCell {
     private let missionDescription: UILabel = {
         let label = UILabel()
         label.textColor = UPlusColor.blue04
-        label.text = "미션 완료 시 description..."
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -77,8 +78,22 @@ final class WeeklyCompletedCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Configure
 extension WeeklyCompletedCollectionViewCell {
-    func configure(title: String) {
+    func configure(item: Int, title: String, subtitle: String) {
+        var image: String = ""
+        
+        switch item {
+        case 0:
+            image = ImageAssets.hand
+        case 1:
+            image = ImageAssets.computer
+        default:
+            image = ImageAssets.company
+        }
+        
+        self.iconImage.image = UIImage(named: image)
+        
         self.missionTitle.text = title
+        self.missionDescription.text = subtitle
     }
     
     func resetCell() {
@@ -102,11 +117,11 @@ extension WeeklyCompletedCollectionViewCell {
     private func setLayout() {
         NSLayoutConstraint.activate([
             self.iconImage.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 2),
+            self.iconImage.widthAnchor.constraint(equalToConstant: 30),
             self.iconImage.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             
             self.missionTitle.topAnchor.constraint(equalToSystemSpacingBelow: self.contentView.topAnchor, multiplier: 2),
             self.missionTitle.leadingAnchor.constraint(equalToSystemSpacingAfter: self.iconImage.trailingAnchor, multiplier: 2),
-            self.pointContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionTitle.trailingAnchor, multiplier: 1),
             
             self.missionDescription.topAnchor.constraint(equalToSystemSpacingBelow: self.missionTitle.bottomAnchor, multiplier: 1),
             self.missionDescription.leadingAnchor.constraint(equalTo: self.missionTitle.leadingAnchor),
@@ -114,7 +129,8 @@ extension WeeklyCompletedCollectionViewCell {
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.missionDescription.trailingAnchor, multiplier: 2),
             
             self.pointContainerView.topAnchor.constraint(equalTo: self.missionTitle.topAnchor),
-            self.pointContainerView.widthAnchor.constraint(equalToConstant: 52),
+            self.pointContainerView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.missionTitle.trailingAnchor, multiplier: 1),
+//            self.pointContainerView.widthAnchor.constraint(equalToConstant: 52),
             self.pointContainerView.bottomAnchor.constraint(equalTo: self.missionTitle.bottomAnchor),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.pointContainerView.trailingAnchor, multiplier: 1)
         ])

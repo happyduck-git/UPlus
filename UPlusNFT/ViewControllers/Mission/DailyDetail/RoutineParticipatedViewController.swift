@@ -103,7 +103,7 @@ extension RoutineParticipatedViewController {
     
     private func configure() {
         
-        self.pointLabel.text = String(format: MissionConstants.missionSubmissionNotice, self.vm.mission.missionRewardPoint)
+        self.pointLabel.text = String(format: MissionConstants.missionSubmissionNotice, self.vm.pointToGive)
         
     }
     
@@ -113,13 +113,27 @@ extension RoutineParticipatedViewController {
             .sink { [weak self] _ in
                 guard let `self` = self else { return }
                 
-                guard let vcs = self.navigationController?.viewControllers else { return }
-                for vc in vcs where vc is MyPageViewController {
-                    DispatchQueue.main.async {
-                        self.navigationController?.popToViewController(vc, animated: true)
+                if self.vm.count == 15 {
+                    Task {
+                        await self.vm.requestRoutineNft()
+                        DispatchQueue.main.async {
+                            guard let vcs = self.navigationController?.viewControllers else { return }
+                            for vc in vcs where vc is MyPageViewController {
+                                DispatchQueue.main.async {
+                                    self.navigationController?.popToViewController(vc, animated: true)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    guard let vcs = self.navigationController?.viewControllers else { return }
+                    for vc in vcs where vc is MyPageViewController {
+                        DispatchQueue.main.async {
+                            self.navigationController?.popToViewController(vc, animated: true)
+                        }
                     }
                 }
-              
+ 
             }
             .store(in: &bindings)
     }

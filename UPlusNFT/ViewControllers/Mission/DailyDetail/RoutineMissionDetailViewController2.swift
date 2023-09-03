@@ -294,7 +294,7 @@ final class RoutineMissionDetailViewController2: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         self.vm.delegate = self
-        self.vm.getAtheleteMissions()
+        self.vm.getGoodWorkerMissions()
     }
     
     required init?(coder: NSCoder) {
@@ -643,16 +643,23 @@ extension RoutineMissionDetailViewController2 {
         
         Task {
             do {
-                // 1. Save participation info to Storage
-                try await self.vm.saveRoutineParticipationStatus()
-        
-                // 2. Check level update
                 let mission = try await self.vm.getTodayMissionInfo()
                 
+                // 1. Save participation info to Storage
+                var point = mission.missionRewardPoint
+                
+                if self.vm.successedMissionsCount == 5 || self.vm.successedMissionsCount == 10 || self.vm.successedMissionsCount == 21 {
+                    point += 100
+                }
+                
+                try await self.vm.saveRoutineParticipationStatus(point: point)
+        
+                // 2. Check level update
                 try await self.vm.checkLevelUpdate(mission: mission)
                 
                 // 3. Point 수여 complete vc
-                let vm = RoutineParticipationViewViewModel(mission: mission)
+                let vm = RoutineParticipationViewViewModel(mission: mission,
+                                                           count: self.vm.successedMissionsCount)
                 let vc = RoutineParticipatedViewController(vm: vm)
                 
                 DispatchQueue.main.async { [weak self] in

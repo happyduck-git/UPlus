@@ -13,26 +13,26 @@ final class NewNFTNoticeBottomSheetViewViewModel {
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
     
-    private let tokenId: String
+    let tokenId: String
     
-    var nft = PassthroughSubject<UPlusNft?, Never>()
+//    var nft = PassthroughSubject<UPlusNft?, Never>()
     
     // MARK: - Init
     init(tokenId: String) {
         self.tokenId = tokenId
-        self.getNft()
+//        self.getNft()
     }
     
 }
 
 extension NewNFTNoticeBottomSheetViewViewModel {
     
-    private func getNft() {
-        UPlusLogger.logger.debug("Get NFT info called...")
-        Task {
-            nft.send(await firestoreManager.getNft(tokenId: tokenId))
-            UPlusLogger.logger.debug("Get NFT for \(String(describing: self.tokenId)) is finished.")
-        }
-    }
+//    private func getNft() {
+//        UPlusLogger.logger.debug("Get NFT info called...")
+//        Task {
+//            nft.send(await firestoreManager.getNft(tokenId: tokenId))
+//            UPlusLogger.logger.debug("Get NFT for \(String(describing: self.tokenId)) is finished.")
+//        }
+//    }
     
 }

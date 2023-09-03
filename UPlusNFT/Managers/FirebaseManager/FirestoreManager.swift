@@ -776,27 +776,10 @@ extension FirestoreManager {
             .document(missionId)
 
         // userDocRef
-        let userDocRef = self.threadsSetCollectionPath2
+        let userDocRef =  self.threadsSetCollectionPath2
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
             .document(String(describing: user.userIndex))
-        
-        // userBaseDocRef
-        let userBaseDocRef = self.threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
-        
-        // dailyPointHistoryDocPath
-        let dailyPointHistoryDocPath = userBaseDocRef
-            .collection(FirestoreConstants.dailyPointHistorySet)
-            .document(today)
-
-        let userDocPath = userBaseDocRef
-            .collection(FirestoreConstants.userSetCollection)
-            .document(String(describing: user.userIndex))
-        
-        // userPointHistoryPath
-        let pointHistoryDocPath = userDocPath.collection(FirestoreConstants.userPointHistory)
-            .document(today)
         
         // Comment mission doc path (ONLY APPLICABLE FOR COMMENT MISSIONS)
         let commentDocPath = threadsSetCollectionPath2
@@ -832,81 +815,16 @@ extension FirestoreManager {
                         missionType.rawValue: FieldValue.arrayUnion([missionDocPath]) 
                     ]
                 ],
-                forDocument: userDocPath,
-                merge: true)
-        }
-        
-        
-        // 3. Save to user_point_history
-        batch.setData(
-            [
-                FirestoreConstants.userPointCount: FieldValue.increment(point),
-                FirestoreConstants.userPointMissions: FieldValue.arrayUnion([missionDocPath]),
-                FirestoreConstants.userPointTime: today
-            ],
-            forDocument: pointHistoryDocPath,
-            merge: true)
-        
-        // 4. daily
-        let (todayPrevPoint, todayNewPoint) = self.fetchCurrentUserPoint(
-            userPointHistory: user.userPointHistory,
-            earningPoint: point,
-            today: today
-        )
-        
-        if todayPrevPoint != 0 {
-            batch.setData(
-                [
-                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayPrevPoint): FieldValue.increment(Int64(-1))]
-                ],
                 forDocument: userDocRef,
-                merge: true
-            )
-        }
-        
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayNewPoint): FieldValue.increment(Int64(1))],
-                
-            ],
-            forDocument: userDocRef,
-            merge: true
-        )
-        
-        let previousPoint = user.userTotalPoint ?? 0
-        let newPoint = previousPoint + point
-        if previousPoint != 0 {
-            batch.setData(
-                [
-                    FirestoreConstants.usersPointUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
-                ],
-                forDocument: userBaseDocRef,
                 merge: true)
         }
         
-        batch.setData(
-            [
-                FirestoreConstants.usersPointUserCountMap: [String(describing: newPoint): FieldValue.increment(Int64(1))]
-            ],
-            forDocument: userBaseDocRef,
-            merge: true)
-        
-        // dailyPointHistory
-        if previousPoint != 0 {
-            batch.setData(
-                [
-                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
-                ],
-                forDocument: dailyPointHistoryDocPath,
-                merge: true)
-        }
-        
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: newPoint): FieldValue.increment(Int64(1))]
-            ],
-            forDocument: dailyPointHistoryDocPath,
-            merge: true)
+        // Save User points
+        try self.saveUserMissionPoint(batch: batch,
+                                      today: today,
+                                      user: user,
+                                      point: point,
+                                      missionDocPath: missionDocPath)
         
         // comment
         if let comment = comment {
@@ -953,25 +871,12 @@ extension FirestoreManager {
         }
         
         try await batch.commit()
-       
-        // Update UserDefaults
-        user.userTotalPoint = newPoint
 
-        let dailyPointHistory = self.updateCurrentUserPoint(
-            userIndex: user.userIndex,
-            userPointHistory: user.userPointHistory,
-            today: today,
-            todayNewPoint: todayNewPoint,
-            missionDocPath: missionDocPath
-        )
-
-        user.userPointHistory = dailyPointHistory
-        try UPlusUser.updateUser(user)
-    
     }
     
     func saveParticipatedDailyMission(
         missionType: MissionType,
+        point: Int64,
         image: Data
     ) async throws {
         
@@ -989,19 +894,20 @@ extension FirestoreManager {
         
         // 2. Save user state and mission_photo_task to missions.
         let batch = self.db.batch()
-        let participationDate = Date()
-
+        let today = Date()
+        let todayString = today.yearMonthDateFormat
+        
         // missionDocRef
         let missionDocRef = self.threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
             .collection(missionType.storagePathFolderName)
-            .document(participationDate.yearMonthDateFormat)
+            .document(todayString)
         
         // missionPhotoTaskSetDocRef
         let missionPhotoTaskSetDocRef = self.threadsSetCollectionPath2
             .document(FirestoreConstants.missions)
             .collection(missionType.storagePathFolderName)
-            .document(participationDate.yearMonthDateFormat)
+            .document(todayString)
             .collection(FirestoreConstants.missionPhotoTaskSet)
             .document(String(describing: user.userIndex))
         
@@ -1014,7 +920,7 @@ extension FirestoreManager {
         // userPointHistoryDocRef
         let userPointHistoryDocRef = userDocRef
             .collection(FirestoreConstants.userPointHistory)
-            .document(participationDate.yearMonthDateFormat)
+            .document(todayString)
 
         batch.setData(
             [
@@ -1035,7 +941,7 @@ extension FirestoreManager {
         
         let photoTask = MissionPhotoTask(missionPhotoTaskUser: userDocRef,
                                          missionPhotoTaskImagePath: String(describing: ref), //TODO: gs:// 로 변경.
-                                         missionPhotoTaskTime: Timestamp(date: participationDate))
+                                         missionPhotoTaskTime: Timestamp(date: today))
         
         
         try batch.setData(from: photoTask,
@@ -1043,48 +949,17 @@ extension FirestoreManager {
                           merge: true,
                           encoder: self.encoder)
 
-        batch.setData(
-            [
-                FirestoreConstants.userPointTime: participationDate.yearMonthDateFormat,
-                FirestoreConstants.userPointCount: FieldValue.increment(Int64(0)),
-                FirestoreConstants.userPointMissions: FieldValue.arrayUnion([missionDocRef])
-            ],
-            forDocument: userPointHistoryDocRef,
-            merge: true
-        )
+        try self.saveUserMissionPoint(batch: batch,
+                                      today: todayString,
+                                      user: user,
+                                      point: point,
+                                      missionDocPath: missionDocRef)
 
         // Update batch
         try await batch.commit()
         
-        // Update UserDefaults
-        let (_, todayNewPoint) = self.fetchCurrentUserPoint(
-            userPointHistory: user.userPointHistory,
-            earningPoint: 0,
-            today: participationDate.yearMonthDateFormat
-        )
-        
-        let dailyPointHistory = self.updateCurrentUserPoint(
-            userIndex: user.userIndex,
-            userPointHistory: user.userPointHistory,
-            today: participationDate.yearMonthDateFormat,
-            todayNewPoint: todayNewPoint,
-            missionDocPath: missionDocRef
-        )
+    }
 
-        user.userPointHistory = dailyPointHistory
-        try UPlusUser.updateUser(user)
-    }
-    
-    func saveSelectedRoutineMission(type: MissionType, userIndex: Int64) async throws {
-        try await self.threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
-            .collection(FirestoreConstants.userSetCollection)
-            .document(String(describing: userIndex))
-            .setData([FirestoreConstants.selectedMissionTopic: type.rawValue],
-                     merge: true)
-    }
-    
-    
     /// Save and update related values of missions.
     /// - Parameters:
     ///   - type: MissionFormatType.
@@ -1107,25 +982,12 @@ extension FirestoreManager {
         let today = Date().yearMonthDateFormat
         
         let batch = self.db.batch()
+        
         // userDocRef
         let userDocRef = self.threadsSetCollectionPath2
             .document(FirestoreConstants.users)
             .collection(FirestoreConstants.userSetCollection)
             .document(String(describing: user.userIndex))
-        
-        // userBaseDocRef
-        let userBaseDocRef =  self.threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
-        
-        // userPoint doc path
-        let userPointDocPath = userDocRef
-            .collection(FirestoreConstants.userPointHistory)
-            .document(today)
-            
-        let dailyPointHistoryDocPath = self.threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
-            .collection(FirestoreConstants.dailyPointHistorySet)
-            .document(today)
         
         // Event doc path
         let eventDocPath = threadsSetCollectionPath2
@@ -1246,101 +1108,56 @@ extension FirestoreManager {
             merge: true
         )
         
-        batch.setData(
-            [
-                FirestoreConstants.userTotalPoint: FieldValue.increment(Int64(point))
-            ],
-            forDocument: userDocRef,
-            merge: true
-        )
-        
-        batch.setData(
-            [
-                FirestoreConstants.userPointTime: today,
-                FirestoreConstants.userPointCount: FieldValue.increment(Int64(point)),
-                FirestoreConstants.userPointMissions: FieldValue.arrayUnion([eventDocPath])
-            ],
-            forDocument: userPointDocPath,
-            merge: true
-        )
-
-        let (todayPrevPoint, todayNewPoint) = self.fetchCurrentUserPoint(
-            userPointHistory: user.userPointHistory,
-            earningPoint: point,
-            today: today
-        )
-        
-        if todayPrevPoint != 0 {
-            batch.setData(
-                [
-                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayPrevPoint): FieldValue.increment(Int64(-1))]
-                ],
-                forDocument: userDocRef,
-                merge: true
-            )
-        }
-        
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayNewPoint): FieldValue.increment(Int64(1))],
-                
-            ],
-            forDocument: userDocRef,
-            merge: true
-        )
-        
-        //usersPointUserCountMap
-        let previousPoint = user.userTotalPoint ?? 0
-        let newPoint = previousPoint + point
-        batch.setData(
-            [
-                FirestoreConstants.usersPointUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
-            ],
-            forDocument: userBaseDocRef,
-            merge: true)
-        
-        batch.setData(
-            [
-                FirestoreConstants.usersPointUserCountMap: [String(describing: newPoint): FieldValue.increment(Int64(1))]
-            ],
-            forDocument: userBaseDocRef,
-            merge: true)
-        
-        // pointHistoryUserCountMap
-        if previousPoint != 0 {
-            batch.setData(
-                [
-                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
-                ],
-                forDocument: dailyPointHistoryDocPath,
-                merge: true)
-        }
-
-        batch.setData(
-            [
-                FirestoreConstants.pointHistoryUserCountMap: [String(describing: newPoint): FieldValue.increment(Int64(1))]
-            ],
-            forDocument: dailyPointHistoryDocPath,
-            merge: true)
+        // Save User Points
+        try self.saveUserMissionPoint(batch: batch,
+                                  today: today,
+                                  user: user,
+                                  point: point,
+                                  missionDocPath: eventDocPath)
         
         // Update batch
         try await batch.commit()
         
-        // Update UserDefaults
-        user.userTotalPoint = newPoint
-
-        let dailyPointHistory = self.updateCurrentUserPoint(
-            userIndex: user.userIndex,
-            userPointHistory: user.userPointHistory,
-            today: today,
-            todayNewPoint: todayNewPoint,
-            missionDocPath: eventDocPath
-        )
-
-        user.userPointHistory = dailyPointHistory
-        try UPlusUser.updateUser(user)
     }
-   
+    
+    func saveCommentLikes(missionType: MissionType,
+                          missionDoc: String,
+                          didLikeAnyComment: Bool,
+                          commentIds: [String]) async throws {
+        var user = try UPlusUser.getCurrentUser()
+        let today = Date().yearMonthDateFormat
+        let likePoint: Int64 = 50
+        
+        let userDocRef = self.threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: user.userIndex))
+        
+        for id in commentIds {
+            try await threadsSetCollectionPath2
+                .document(FirestoreConstants.missions)
+                .collection(missionType.storagePathFolderName)
+                .document(missionDoc)
+                .collection(FirestoreConstants.commentSet)
+                .document(id)
+                .setData([FirestoreConstants.commentLikeUsers: FieldValue.arrayUnion([userDocRef])],
+                         merge: true)
+        }
+        
+        
+        if !didLikeAnyComment {
+            let batch = self.db.batch()
+            try self.saveUserMissionPoint(batch: batch,
+                                          today: today,
+                                          user: user,
+                                          point: likePoint,
+                                          missionDocPath: nil)
+            
+            try await batch.commit()
+        }
+
+    }
+    
     func checkWeeklyMissionSetCompletion(week: Int) async throws -> Bool {
         let user = try UPlusUser.getCurrentUser()
         
@@ -1355,29 +1172,6 @@ extension FirestoreManager {
         let userSuccessedMissionCounts = user.userTypeMissionArrayMap?[weekMissionKey]?.count ?? 0
         
         return missionDocCounts == userSuccessedMissionCounts ? true : false
-    }
-    
-    func saveCommentLikes(missionType: MissionType,
-                          missionDoc: String,
-                          userIndex: Int64,
-                          commentIds: [String]) {
-        
-        let userDocRef = self.threadsSetCollectionPath2
-            .document(FirestoreConstants.users)
-            .collection(FirestoreConstants.userSetCollection)
-            .document(String(describing: userIndex))
-        
-        for id in commentIds {
-            threadsSetCollectionPath2
-                .document(FirestoreConstants.missions)
-                .collection(missionType.storagePathFolderName)
-                .document(missionDoc)
-                .collection(FirestoreConstants.commentSet)
-                .document(id)
-                .setData([FirestoreConstants.commentLikeUsers: FieldValue.arrayUnion([userDocRef])],
-                         merge: true)
-        }
-        
     }
 
 }
@@ -1406,26 +1200,43 @@ extension FirestoreManager {
         userPointHistory: [PointHistory]?,
         today: String,
         todayNewPoint: Int64,
-        missionDocPath: DocumentReference
+        missionDocPath: DocumentReference?
     )
     -> [PointHistory] {
         var dailyPointHistory = userPointHistory ?? []
         
+        // Point History가 이미 존재하는 경우.
         if let index = dailyPointHistory.firstIndex(where: {
             $0.userPointTime == today
         }) {
             dailyPointHistory[index].userPointCount = todayNewPoint
-            dailyPointHistory[index].userPointMissions?.append(missionDocPath)
             
-        } else {
+            if let missionDocPath = missionDocPath {
+                if var pointMissions = dailyPointHistory[index].userPointMissions {
+                    pointMissions.append(missionDocPath)
+                } else {
+                    dailyPointHistory[index].userPointMissions = [missionDocPath]
+                }
+            }
+            
+        } else { // Point History가 존재하지 않는 경우.
+            var docPaths: [DocumentReference]?
+            
+            if let missionDocPath = missionDocPath {
+                docPaths = [missionDocPath]
+            } else {
+                docPaths = nil
+            }
+            
             dailyPointHistory.append(
                 PointHistory(
                     userIndex: String(describing: userIndex),
                     userPointTime: today,
                     userPointCount: todayNewPoint,
-                    userPointMissions: [missionDocPath]
+                    userPointMissions: docPaths
                 )
             )
+            
         }
         return dailyPointHistory
     }
@@ -2324,6 +2135,16 @@ extension FirestoreManager {
 /// Currently NOT IN USE.
 extension FirestoreManager {
     
+    func saveSelectedRoutineMission(type: MissionType, userIndex: Int64) async throws {
+        try await self.threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: userIndex))
+            .setData([FirestoreConstants.selectedMissionTopic: type.rawValue],
+                     merge: true)
+    }
+    
+    
     /// Fetch all the posts
     func getAllPosts() async throws -> [Post] {
         let snapshots = try await db.collectionGroup(FirestoreConstants.threadSetCollection)
@@ -2422,4 +2243,135 @@ extension FirestoreManager {
         return (posts: contents, lastDoc: results.lastDoc)
     }
     
+}
+
+extension FirestoreManager {
+    func saveUserMissionPoint(batch: WriteBatch,
+                              today: String,
+                              user: UPlusUser,
+                              point: Int64,
+                              missionDocPath: DocumentReference?) throws {
+        var user: UPlusUser = user
+        
+        // userBaseDocRef
+        let userBaseDocRef =  self.threadsSetCollectionPath2
+            .document(FirestoreConstants.users)
+        
+        // userDocRef
+        let userDocRef = userBaseDocRef
+            .collection(FirestoreConstants.userSetCollection)
+            .document(String(describing: user.userIndex))
+        
+        // userPoint doc path
+        let pointHistoryDocPath = userDocRef
+            .collection(FirestoreConstants.userPointHistory)
+            .document(today)
+        
+        // daily Point Hisoty doc path
+        let dailyPointHistoryDocPath = userBaseDocRef
+            .collection(FirestoreConstants.dailyPointHistorySet)
+            .document(today)
+        
+        batch.setData(
+            [
+                FirestoreConstants.userTotalPoint: FieldValue.increment(Int64(point))
+            ],
+            forDocument: userDocRef,
+            merge: true
+        )
+        
+        batch.setData(
+            [
+                FirestoreConstants.userPointTime: today,
+                FirestoreConstants.userPointCount: FieldValue.increment(point),
+            ],
+            forDocument: pointHistoryDocPath,
+            merge: true
+        )
+        
+        if let missionDocPath = missionDocPath {
+            batch.setData(
+                [
+                    FirestoreConstants.userPointMissions: FieldValue.arrayUnion([missionDocPath])
+                ],
+                forDocument: pointHistoryDocPath,
+                merge: true
+            )
+        }
+        
+
+        let (todayPrevPoint, todayNewPoint) = self.fetchCurrentUserPoint(
+            userPointHistory: user.userPointHistory,
+            earningPoint: point,
+            today: today
+        )
+        
+        if todayPrevPoint != 0 {
+            batch.setData(
+                [
+                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayPrevPoint): FieldValue.increment(Int64(-1))]
+                ],
+                forDocument: userDocRef,
+                merge: true
+            )
+        }
+        
+        batch.setData(
+            [
+                FirestoreConstants.pointHistoryUserCountMap: [String(describing: todayNewPoint): FieldValue.increment(Int64(1))],
+                
+            ],
+            forDocument: userDocRef,
+            merge: true
+        )
+        
+        //usersPointUserCountMap
+        let previousPoint = user.userTotalPoint ?? 0
+        let newPoint = previousPoint + point
+        batch.setData(
+            [
+                FirestoreConstants.usersPointUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
+            ],
+            forDocument: userBaseDocRef,
+            merge: true)
+        
+        batch.setData(
+            [
+                FirestoreConstants.usersPointUserCountMap: [String(describing: newPoint): FieldValue.increment(Int64(1))]
+            ],
+            forDocument: userBaseDocRef,
+            merge: true)
+        
+        // pointHistoryUserCountMap
+        if previousPoint != 0 {
+            batch.setData(
+                [
+                    FirestoreConstants.pointHistoryUserCountMap: [String(describing: previousPoint): FieldValue.increment(Int64(-1))]
+                ],
+                forDocument: dailyPointHistoryDocPath,
+                merge: true)
+        }
+
+        batch.setData(
+            [
+                FirestoreConstants.pointHistoryUserCountMap: [String(describing: newPoint): FieldValue.increment(Int64(1))]
+            ],
+            forDocument: dailyPointHistoryDocPath,
+            merge: true)
+        
+         // Update UserDefaults
+         user.userTotalPoint = newPoint
+
+         let dailyPointHistory = self.updateCurrentUserPoint(
+             userIndex: user.userIndex,
+             userPointHistory: user.userPointHistory,
+             today: today,
+             todayNewPoint: todayNewPoint,
+             missionDocPath: missionDocPath
+         )
+
+         user.userPointHistory = dailyPointHistory
+         try UPlusUser.updateUser(user)
+     
+    }
 }

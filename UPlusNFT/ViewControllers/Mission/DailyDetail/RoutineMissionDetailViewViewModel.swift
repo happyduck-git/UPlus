@@ -18,10 +18,7 @@ final class RoutineMissionDetailViewViewModel {
     // MARK: - Dependency
     private let firestoreManager = FirestoreManager.shared
     private let nftServiceManager = NFTServiceManager.shared
-    
-    // MARK: - Logger
-    private let logger = Logger()
-    
+ 
     //MARK: - Delegate
     weak var delegate: RoutineMissionDetailViewViewModelDelegate?
     
@@ -57,7 +54,7 @@ extension RoutineMissionDetailViewViewModel {
                                                      nftServiceManager: self.nftServiceManager)
         }
         catch {
-            self.logger.error("Error updating user level -- \(String(describing: error))")
+            UPlusLogger.logger.error("Error updating user level -- \(String(describing: error))")
         }
        
     }
@@ -67,7 +64,7 @@ extension RoutineMissionDetailViewViewModel {
 // MARK: - Firestore
 extension RoutineMissionDetailViewViewModel {
     
-    func getAtheleteMissions() {
+    func getGoodWorkerMissions() {
         Task {
             do {
                 let user = try UPlusUser.getCurrentUser()
@@ -87,7 +84,7 @@ extension RoutineMissionDetailViewViewModel {
                 self.delegate?.didRecieveMission()
             }
             catch {
-                self.logger.error("Error fetching athelete missions -- \(String(describing: error))")
+                UPlusLogger.logger.error("Error fetching athelete missions -- \(String(describing: error))")
             }
         }
     }
@@ -96,12 +93,13 @@ extension RoutineMissionDetailViewViewModel {
             return try await self.firestoreManager.getTodayMission(missionType: self.missionType)
     }
     
-    func saveRoutineParticipationStatus() async throws {
+    func saveRoutineParticipationStatus(point: Int64) async throws {
         guard let imageData = self.selectedImage?.jpegData(compressionQuality: 0.75) else {
             return
         }
         try await self.firestoreManager.saveParticipatedDailyMission(
             missionType: self.missionType,
+            point: point,
             image: imageData
         )
     }
