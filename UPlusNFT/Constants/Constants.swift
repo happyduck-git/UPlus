@@ -548,6 +548,9 @@ struct ImageAssets {
     static let detailsMaster: String = "details-master"
     static let detailsWorld: String = "details-world"
     
+    /* GameVC */
+    static let avatarLevel5: String = "avatar-level5"
+    
     static let dummyNftImageUrl: String = "https://i.seadn.io/gae/lW22aEwUE0IqGaYm5HRiMS8DwkDwsdjPpprEqYnBqo2s7gSR-JqcYOjU9LM6p32ujG_YAEd72aDyox-pdCVK10G-u1qZ3zAsn2r9?auto=format&dpr=1&w=200"
 }
 
@@ -576,6 +579,9 @@ struct FirestoreConstants {
     static let userTotalPoint = "user_total_point"
     static let userNfts = "user_nfts"
     static let userRewards = "user_rewards"
+    static let userWalletAddress = "user_wallet_address"
+    static let userIndex = "user_index"
+    
     static let rewardUser = "reward_user"
     static let accountCreationTime = "user_account_creation_time"
     static let userIsMale = "user_is_male"

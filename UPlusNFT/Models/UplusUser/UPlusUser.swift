@@ -23,7 +23,7 @@ struct UPlusUser: Codable {
     var userNfts: [DocumentReference]? //사용자가 획득한 NFT 다큐먼트를 배열로 갖는다.
     let userTypeMissionArrayMap: [String: [DocumentReference]]? //사용자가 참여한 미션 다큐먼트를 map으로 갖는다.
     var userPointHistory: [PointHistory]?
-    let userIsAdmin: Bool
+    let userIsAdmin: Bool?
     
 }
 
@@ -80,7 +80,7 @@ extension UPlusUser {
                 userNfts: currentUser.userNfts?.map { $0.path },
                 userTypeMissionArrayMap: path,
                 userPointHistory: codablePointHistory,
-                userIsAdmin: currentUser.userIsAdmin
+                userIsAdmin: currentUser.userIsAdmin ?? false
             )
         let encodedUserData = try JSONEncoder().encode(codableUser)
         UserDefaults.standard.setValue(encodedUserData, forKey: UserDefaultsConstants.currentUser)
@@ -142,7 +142,7 @@ extension UPlusUser {
             userNfts: self.userNfts?.map { $0.path },
             userTypeMissionArrayMap: path,
             userPointHistory: codablePointHistory,
-            userIsAdmin: self.userIsAdmin
+            userIsAdmin: self.userIsAdmin ?? false
         )
     }
     

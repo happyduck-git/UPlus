@@ -39,9 +39,14 @@ final class FirestoreManager {
     private let db = Firestore.firestore()
     
     /* uplus_missions_v2 */
-    private let dummyCollection = Firestore.firestore().collection("gene_threads")
+    private let threadsSetCollectionPath2 = Firestore.firestore()
+        .collection(FirestoreConstants.devThreads2)
     
-    private let threadsSetCollectionPath2 = Firestore.firestore().collection(FirestoreConstants.devThreads2)
+    private let popgameDocumentPath = Firestore.firestore()
+        .collection(PopGameConstants.topLevelCollection)
+        .document(PopGameConstants.topLevelDoc)
+        .collection(PopGameConstants.secondLevelCollection)
+        .document(CollectionType.uplus.firestoreDocName)
     
     /* uplus_posts_and_missions_v1 */
     private let threadsSetCollectionPath = Firestore.firestore().collection("\(FirestoreConstants.devThreads)/\(FirestoreConstants.threads)/\(FirestoreConstants.threadSetCollection)")
@@ -443,17 +448,6 @@ extension FirestoreManager {
         }
 
         return points
-    }
-    
-    private func getSingleUser(_ userIndex: String) async throws -> UPlusUser {
-        
-        let document = try await self.dummyCollection
-            .document(FirestoreConstants.users)
-            .collection(FirestoreConstants.userSetCollection)
-            .document(userIndex)
-            .getDocument()
-        
-        return try document.data(as: UPlusUser.self, decoder: self.decoder)
     }
         
     func getAllUserTotalPoint() async throws -> [UPlusUser] {
@@ -1447,16 +1441,198 @@ extension FirestoreManager {
             .getDocuments()
             .documents
         
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
         let users = try documents.map { doc in
-            try doc.data(as: UPlusUser.self, decoder: decoder)
+            return try doc.data(as: UPlusUser.self, decoder: self.decoder)
         }
-
+        
         return users
     }
     
+}
+
+// MARK: - PopGame
+extension FirestoreManager {
+    func getCurrentNftCollection(
+        gameType: GameType
+    ) async throws -> NftCollection {
+        
+        // collection info
+        
+        async let nftCollectionDocData = popgameDocumentPath  //start-up
+            .getDocument()
+            .data()
+        
+        // total action count
+        async let totalActionCountData = popgameDocumentPath
+            .collection(PopGameConstants.cachedTotalActionCountSet)
+            .document(gameType.rawValue)
+            .getDocument()
+        
+        // total pop count
+        async let totalNftScoreData = popgameDocumentPath
+            .collection(PopGameConstants.cachedTotalNftScoreSet)
+            .document(gameType.rawValue)
+            .getDocument()
+        
+        let imageUrl = try await nftCollectionDocData?[K.FStore.profileImageField] as? String ?? "N/A"
+//        let collectionName = try await nftCollectionDocData?[K.FStore.profileNameField] as? String ?? "N/A"
+        let collectionName = "UPLUS"
+        let collectionAddress = try await nftCollectionDocData?[K.FStore.contractAddressField] as? String ?? "N/A"
+        let totalCount = try await totalActionCountData[K.FStore.totalCountField] as? Int64 ?? 0
+        let nftTotalScore = try await totalNftScoreData[K.FStore.totalScoreField] as? Int64 ?? 0
+        
+        let nftCollection = NftCollection(
+            name: collectionName,
+            address: collectionAddress,
+            imageUrl: imageUrl,
+            totalPopCount: nftTotalScore,
+            totalActionCount: totalCount,
+            totalNfts: 0, // TODO: API call로 받아오기
+            totalHolders: 0 // TODO: API call로 받아오기
+        )
+        
+        return nftCollection
+    }
+    
+    func saveScoreCache(
+        of gameType: GameType,
+        popScore: Int64,
+        actionCount: Int64,
+        ownerAddress: String
+    ) async throws {
+    
+        await withThrowingTaskGroup(of: Void.self, body: { [weak self] group in
+            guard let `self` = self else { return }
+            // Save to cached_total_action_count_set
+            group.addTask {
+                self.popgameDocumentPath
+                    .collection(K.FStore.cachedTotalActionCountSetField)
+                    .document(gameType.rawValue)
+                    .setData(
+                        [
+                            K.FStore.totalCountField: FieldValue.increment(actionCount)
+                        ],
+                        merge: true
+                    )
+            }
+            
+            // Save to cached_total_nft_score_set
+            group.addTask {
+                self.popgameDocumentPath
+                    .collection(PopGameConstants.cachedTotalNftScoreSet)
+                    .document(gameType.rawValue)
+                    .setData(
+                        [
+                            PopGameConstants.totalScore: FieldValue.increment(popScore)
+                        ],
+                        merge: true
+                    )
+            }
+
+            // Save to wallet_account_set
+            group.addTask {
+                self.popgameDocumentPath
+                    .collection(PopGameConstants.walletAccountSet)
+                    .document(ownerAddress)
+                    .collection(PopGameConstants.cachedTotalNftScoreSet)
+                    .document(gameType.rawValue)
+                    .setData(
+                        [
+                            PopGameConstants.count: FieldValue.increment(popScore)
+                        ],
+                        merge: true
+                    )
+            }
+            
+            group.addTask {
+                async let _ = self.popgameDocumentPath
+                    .collection(PopGameConstants.walletAccountSet)
+                    .document(ownerAddress)
+                    .collection(PopGameConstants.actionCountSet)
+                    .document(gameType.rawValue)
+                    .setData(
+                        [
+                            K.FStore.countField: FieldValue.increment(actionCount)
+                        ],
+                        merge: true
+                    )
+            }
+            
+        })
+    }
+    
+    func saveNFTScores(
+        of gameType: GameType,
+        actionCount: Int64,
+        nftTokenId: [String],
+        ownerAddress: String
+    ) async throws {
+        //TODO: Token ID argument check!
+        print("TokenIds; \(nftTokenId)")
+        await withThrowingTaskGroup(
+            of: Void.self,
+            body: { group in
+                // Save to nft_set collection
+                for tokenId in nftTokenId {
+                    let nftDocRef = popgameDocumentPath
+                        .collection(FirestoreConstants.nftSet)
+                        .document(String(describing: tokenId))
+                        .collection(PopGameConstants.nftScoreSet)
+                        .document(gameType.rawValue)
+             
+                    group.addTask {
+                        // Save nft score
+                        nftDocRef
+                            .setData(
+                                [
+                                    PopGameConstants.score: FieldValue.increment(actionCount)
+                                ],
+                                merge: true
+                            )
+                    }
+                }
+            }
+        )
+        
+    }
+    
+    typealias PopGameData = (address: String, actionCount: Int64, popScore: Int64)
+    func getAllUserGameScore() async throws -> [PopGameData] {
+        // 1. action acount
+        // 2. nft score
+        let docs = try await threadsSetCollectionPath2
+            .document(PopGameConstants.topLevelDoc)
+            .collection(PopGameConstants.secondLevelCollection)
+            .document(CollectionType.uplus.firestoreDocName)
+            .collection(PopGameConstants.walletAccountSet)
+            .getDocuments()
+            .documents
+        
+        let actionCountSet = try await db.collectionGroup(PopGameConstants.actionCountSet)
+            .getDocuments()
+            .documents
+        
+        let popScoreSet = try await db.collectionGroup(PopGameConstants.cachedTotalNftScoreSet)
+            .getDocuments()
+            .documents
+        
+        var gameDataList: [PopGameData] = []
+        for actionDoc in actionCountSet {
+            for popDoc in popScoreSet {
+                if actionDoc.reference.parent.parent?.documentID == popDoc.reference.parent.parent?.documentID {
+                    
+                    let address = actionDoc.reference.parent.parent?.documentID ?? "no-address"
+                    let actionCount = actionDoc.data()[PopGameConstants.count] as? Int64 ?? 0
+                    let popScore = popDoc.data()[PopGameConstants.count] as? Int64 ?? 0
+                    
+                    gameDataList.append((address, actionCount, popScore))
+                }
+                
+            }
+        }
+        
+        return gameDataList
+    }
 }
 
 // MARK: - Utilities
