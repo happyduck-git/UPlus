@@ -26,14 +26,21 @@ final class GameViewViewModel: GameViewViewModelProtocol {
     @Published var ownedNftTokenIds: [String] = []
 //    public private(set) var ownedNftTokenIds: Box<[String]> = Box([])
     
+    init() {
+        self.getOwnedNfts()
+    }
+
+}
+
+// MARK: - Private
+extension GameViewViewModel {
     func getOwnedNfts() {
         do {
             let user = try UPlusUser.getCurrentUser()
-            user.userNfts?.compactMap({ docRef in
-                // TODO: suffix slicing
-                
-                
+            let tokenIds = user.userNfts?.compactMap({ docRef in
+                return self.getTokenId(from: docRef.path)
             })
+            self.ownedNftTokenIds = tokenIds ?? []
         }
         catch {
             
@@ -52,13 +59,11 @@ final class GameViewViewModel: GameViewViewModelProtocol {
         }
          */
     }
-
     
-}
-
-// MARK: - Save Game Scores to Firestore
-extension GameViewViewModel {
-    
+    private func getTokenId(from path: String) -> String? {
+        let components = path.components(separatedBy: "/")
+        return components.last
+    }
 }
 
 // MARK: - Save Game Scores to Firestore

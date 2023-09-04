@@ -1574,7 +1574,8 @@ extension FirestoreManager {
             body: { group in
                 // Save to nft_set collection
                 for tokenId in nftTokenId {
-                    let nftDocRef = popgameDocumentPath
+                    let nftDocRef = threadsSetCollectionPath2
+                        .document(FirestoreConstants.nfts)
                         .collection(FirestoreConstants.nftSet)
                         .document(String(describing: tokenId))
                         .collection(PopGameConstants.nftScoreSet)
@@ -1598,8 +1599,7 @@ extension FirestoreManager {
     
     typealias PopGameData = (address: String, actionCount: Int64, popScore: Int64)
     func getAllUserGameScore() async throws -> [PopGameData] {
-        // 1. action acount
-        // 2. nft score
+
         let docs = try await threadsSetCollectionPath2
             .document(PopGameConstants.topLevelDoc)
             .collection(PopGameConstants.secondLevelCollection)

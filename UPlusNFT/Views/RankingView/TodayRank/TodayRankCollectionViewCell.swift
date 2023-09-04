@@ -30,7 +30,6 @@ final class TodayRankCollectionViewCell: UICollectionViewCell {
         table.showsVerticalScrollIndicator = false
         table.showsHorizontalScrollIndicator = false
 
-        // TODO: Register Custom Cell
         table.register(UITableViewCell.self,
                        forCellReuseIdentifier: UITableViewCell.identifier)
         

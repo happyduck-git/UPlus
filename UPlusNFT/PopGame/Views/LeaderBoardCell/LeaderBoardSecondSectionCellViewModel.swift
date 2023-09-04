@@ -215,7 +215,7 @@ final class LeaderBoardSecondSectionCellViewModel {
     var rankImage: UIImage
     var rank: Int
     let userProfileImage: String
-    let topLabelText: String
+    let username: String
     let numberOfNfts: String
     let actionCount: Int64
     let popScore: Int64
@@ -234,7 +234,7 @@ final class LeaderBoardSecondSectionCellViewModel {
         self.rankImage = rankImage
         self.rank = rank
         self.userProfileImage = userProfileImage
-        self.topLabelText = topLabelText // TODO: username 으로 변경
+        self.username = topLabelText // TODO: username 으로 변경
         self.numberOfNfts = bottomLabelText
         self.actionCount = actionCount
         self.popScore = popScore

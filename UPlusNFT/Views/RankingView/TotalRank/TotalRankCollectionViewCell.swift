@@ -30,7 +30,6 @@ final class TotalRankCollectionViewCell: UICollectionViewCell {
         table.showsVerticalScrollIndicator = false
         table.showsHorizontalScrollIndicator = false
         
-        // TODO: Register Custom Cell
         table.register(Top3RankerTableViewCell.self,
                        forCellReuseIdentifier: Top3RankerTableViewCell.identifier)
         

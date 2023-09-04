@@ -293,9 +293,9 @@ final class GameViewController: UIViewController {
     
     private func bind() {
         self.gameVM.$ownedNftTokenIds
-            .sink { _ in
+            .sink { 
                 // TODO: tokenIds는 Fire store에 저장할 때 사용될 예정
-                
+                print("OwnedNftTokenIds: \($0)")
             }
             .store(in: &bindings)
         
