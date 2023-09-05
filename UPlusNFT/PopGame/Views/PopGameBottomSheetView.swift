@@ -69,9 +69,8 @@ final class PopGameBottomSheetView: PassThroughView {
     
     let leaderBoardTableView: UITableView = {
         let table = UITableView()
-//        table.backgroundColor = AftermintColor.backgroundNavy
-        table.backgroundColor = UIColor(red: 243/255, green: 148/255, blue: 202/255, alpha: 0.5
-        )
+        table.backgroundColor = AftermintColor.backgroundNavy
+        
         table.alpha = 0.0
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         table.register(LeaderBoardFirstSectionCell.self, forCellReuseIdentifier: LeaderBoardFirstSectionCell.identifier)
@@ -287,73 +286,7 @@ final class PopGameBottomSheetView: PassThroughView {
                 
             }
             .store(in: &bindings)
-        /*
-        self.bottomSheetVM.changeset.bind { [weak self] vm in
-            guard let vms = vm,
-                  let `self` = self
-            else { return }
-
-            var hasChanges: Bool = false
-
-            var changes: Set<IndexPath> = []
-
-            var arrSections: [ArraySection<SectionID, AnyDifferentiable>] = []
-            for vm in vms {
-
-//                print("updated vm: \(vm.elementUpdated)")
-//                print("inserted vm: \(vm.elementInserted)")
-//                print("deleted vm: \(vm.elementDeleted)")
-//                print("Moved vm: \(vm.elementMoved)")
-
-                for data in vm.data {
-                    arrSections.append(ArraySection(model: data.model, elements: data.elements))
-                }
-                let elementsMoved = vm.elementMoved
-
-                for ele in elementsMoved {
-                    let sourceEle = ele.source.element
-                    let sourceSec = ele.source.section
-
-                    let targetEle = ele.target.element
-                    let targetSec = ele.target.section
-
-                    changes.insert(IndexPath(row: sourceEle, section: sourceSec))
-                    changes.insert(IndexPath(row: targetEle, section: targetSec))
-                }
-//                print("Orginals: \(original)")
-//                print("News: \(new)")
-
-                if vm.hasElementChanges {
-                    hasChanges = true
-                }
-                
-            }
-
-            if hasChanges {
-                DispatchQueue.main.async {
-                    self.leaderBoardTableView.alpha = 1.0
-
-                    self.leaderBoardTableView.reload(
-                        using: vms,
-                        deleteSectionsAnimation: .none,
-                        insertSectionsAnimation: .none,
-                        reloadSectionsAnimation: .none,
-                        deleteRowsAnimation: .fade,
-                        insertRowsAnimation: .bottom,
-                        reloadRowsAnimation: .middle,
-                        setData: { coll in
-                            self.bottomSheetVM.source = coll
-                        }
-                    )
-                    
-                    self.leaderBoardTableView.reloadRows(at: Array(changes), with: .middle)
-                     
-                }
-                hasChanges = false
-            }
-
-        }
-         */
+ 
     }
     
 }

@@ -55,7 +55,6 @@ final class UserProfileView: PassThroughView {
         view.clipsToBounds = true
         view.layer.cornerRadius = 20.0
         view.layer.borderWidth = 6.0
-        view.layer.borderColor = UPlusColor.mint03.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -67,7 +66,7 @@ final class UserProfileView: PassThroughView {
         return gifView
     }()
     
-    private let lottieButton: UIButton = {
+    private lazy var lottieButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: ImageAssets.starButton), for: .normal)
         button.addTarget(self, action: #selector(lottieBtnDidTap), for: .touchUpInside)
@@ -111,11 +110,13 @@ final class UserProfileView: PassThroughView {
         
         DispatchQueue.main.async {
             self.dailyRankView.layer.cornerRadius = self.dailyRankView.frame.height / 2
+            self.setGradientBorder(view: self.profileContainer)
         }
     }
     
 }
 
+// MARK: - Configure & Bind with View Model
 extension UserProfileView {
  
     func configure(with vm: MyPageViewViewModel) {
@@ -139,7 +140,6 @@ extension UserProfileView {
                 self.profileImage.prepareForAnimation(withGIFURL: url)
                 
                 self.usernameLabel.text = String(format: MyPageConstants.usernameSuffix, vm.user.userNickname)
-                print("Nickname: \(vm.user.userNickname)")
                 self.userMissionDataView.configure(vm: vm)
             }
             .store(in: &bindings)
@@ -156,6 +156,22 @@ extension UserProfileView {
     
 }
 
+// MARK: - Private
+extension UserProfileView {
+    private func setGradientBorder(view: UIView) {
+        let gradient = UIImage.gradientImage(bounds: view.bounds,
+                                             colors: [UPlusColor.gradient09middle2,
+                                                      UPlusColor.gradient09middle1,
+                                                      .white,
+                                                      UPlusColor.gradient09deep],
+                                             startPoint: CGPoint(x: 1.0, y: 0.0),
+                                             endPoint: CGPoint(x: 0.0, y: 1.0))
+        let graidentColor = UIColor(patternImage: gradient)
+        view.layer.borderColor = graidentColor.cgColor
+    }
+}
+
+// MARK: - Set UI & Layout
 extension UserProfileView {
 
     private func setUI() {

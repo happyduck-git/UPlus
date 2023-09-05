@@ -45,8 +45,8 @@ final class LeaderBoardSecondSectionCellListViewModel {
             let gameData = try await fireStoreManager.getAllUserGameScore()
             
             var gameUsers: [GameUser] = []
-            for user in users {
-                for gameDatum in gameData {
+            for gameDatum in gameData {
+                for user in users {
                     let address = user.userWalletAddress ?? "no-address"
                     if address == gameDatum.address {
                         gameUsers.append(
@@ -102,8 +102,8 @@ final class LeaderBoardSecondSectionCellListViewModel {
         let gameData = try await fireStoreManager.getAllUserGameScore()
         
         var gameUsers: [GameUser] = []
-        for user in users {
-            for gameDatum in gameData {
+        for gameDatum in gameData {
+            for user in users {
                 let address = user.userWalletAddress ?? "no-address"
                 if address == gameDatum.address {
                     gameUsers.append(
@@ -234,7 +234,7 @@ final class LeaderBoardSecondSectionCellViewModel {
         self.rankImage = rankImage
         self.rank = rank
         self.userProfileImage = userProfileImage
-        self.username = topLabelText // TODO: username 으로 변경
+        self.username = topLabelText 
         self.numberOfNfts = bottomLabelText
         self.actionCount = actionCount
         self.popScore = popScore

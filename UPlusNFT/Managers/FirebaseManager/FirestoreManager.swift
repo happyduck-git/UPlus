@@ -1475,7 +1475,6 @@ extension FirestoreManager {
             .getDocument()
         
         let imageUrl = try await nftCollectionDocData?[K.FStore.profileImageField] as? String ?? "N/A"
-//        let collectionName = try await nftCollectionDocData?[K.FStore.profileNameField] as? String ?? "N/A"
         let collectionName = "UPLUS"
         let collectionAddress = try await nftCollectionDocData?[K.FStore.contractAddressField] as? String ?? "N/A"
         let totalCount = try await totalActionCountData[K.FStore.totalCountField] as? Int64 ?? 0
@@ -1567,8 +1566,7 @@ extension FirestoreManager {
         nftTokenId: [String],
         ownerAddress: String
     ) async throws {
-        //TODO: Token ID argument check!
-        print("TokenIds; \(nftTokenId)")
+
         await withThrowingTaskGroup(
             of: Void.self,
             body: { group in
@@ -1613,18 +1611,19 @@ extension FirestoreManager {
             .documents
         
         let popScoreSet = try await db.collectionGroup(PopGameConstants.cachedTotalNftScoreSet)
+            .order(by: PopGameConstants.count, descending: true)
             .getDocuments()
             .documents
         
         var gameDataList: [PopGameData] = []
-        for actionDoc in actionCountSet {
-            for popDoc in popScoreSet {
+        
+        for popDoc in popScoreSet {
+            for actionDoc in actionCountSet {
                 if actionDoc.reference.parent.parent?.documentID == popDoc.reference.parent.parent?.documentID {
                     
                     let address = actionDoc.reference.parent.parent?.documentID ?? "no-address"
                     let actionCount = actionDoc.data()[PopGameConstants.count] as? Int64 ?? 0
                     let popScore = popDoc.data()[PopGameConstants.count] as? Int64 ?? 0
-                    
                     gameDataList.append((address, actionCount, popScore))
                 }
                 

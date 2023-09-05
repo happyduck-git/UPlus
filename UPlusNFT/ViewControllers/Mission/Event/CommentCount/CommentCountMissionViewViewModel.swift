@@ -51,8 +51,6 @@ extension CommentCountMissionViewViewModel {
     func saveLikes() {
         Task {
             do {
-                let currentUser = try UPlusUser.getCurrentUser()
-                
                 var commentIds: [String] = []
                 
                 for i in 0..<isLikedList.count {
@@ -115,9 +113,11 @@ extension CommentCountMissionViewViewModel {
             for ref in userRefs {
                 let username = self.getUsernameFromReference(refString: ref.path) ?? ""
                 if username == currentUser.userNickname {
+                    print("Has participated: True")
                     return true
                 }
             }
+            print("Has participated: False")
             return false
         }
         catch {

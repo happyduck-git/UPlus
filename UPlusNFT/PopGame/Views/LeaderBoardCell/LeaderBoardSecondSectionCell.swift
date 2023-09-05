@@ -136,6 +136,7 @@ final class LeaderBoardSecondSectionCell: UITableViewCell {
         nftInfoStackView.bottomLabelText = "NFTs \(vm.numberOfNfts)"
         popScoreLabel.text = String(describing: vm.popScore)
 
+        // TODO: profile image 설정 필요
         self.imageStringToImage(with: vm.userProfileImage) { result in
             switch result {
             case .success(let image):
