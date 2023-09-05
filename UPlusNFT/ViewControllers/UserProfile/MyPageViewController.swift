@@ -1577,7 +1577,16 @@ extension MyPageViewController: MissionCollectionViewHeaderDelegate {
 
 extension MyPageViewController: LogOutBottomSheetViewControllerDelegate {
     func signOutConfirmDidTap() {
-        self.dismiss(animated: true)
+
+        let loginVM = LoginViewViewModel()
+        let loginVC = LoginViewController(vm: loginVM)
+        
+        var vcs = self.navigationController?.viewControllers ?? []
+        vcs = []
+        vcs.append(loginVC)
+
+        self.navigationController?.setViewControllers(vcs, animated: true)
+
     }
 }
 

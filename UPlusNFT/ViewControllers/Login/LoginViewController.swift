@@ -170,6 +170,17 @@ class LoginViewController: UIViewController {
     init(vm: LoginViewViewModel) {
         self.viewModel = vm
         super.init(nibName: nil, bundle: nil)
+        
+        /// Connect FIRAuth instance and a listener.
+        /// This listener is called whenever the user login state is changed.
+        authStateHandler = Auth.auth().addStateDidChangeListener { auth, user in
+            guard let user = user else {
+                print("User found to be nil.")
+                return
+            }
+            print("Logged in user: " + user.uid + " " + (user.email ?? "no email found."))
+
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -193,16 +204,7 @@ class LoginViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        /// Connect FIRAuth instance and a listener.
-        /// This listener is called whenever the user login state is changed.
-        authStateHandler = Auth.auth().addStateDidChangeListener { auth, user in
-            guard let user = user else {
-                print("User found to be nil.")
-                return
-            }
-            print("Logged in user: " + user.uid + " " + (user.email ?? "no email found."))
-
-        }
+    
 
     }
 

@@ -152,15 +152,12 @@ extension OnBoardingViewController2 {
                 await self.setBasicUserInfo(email: user.email ?? FirestoreConstants.noUserEmail)
                 let userInfo = try UPlusUser.getCurrentUser()
                 
-                let loginVM = LoginViewViewModel()
-                let loginVC = LoginViewController(vm: loginVM)
-                
                 let vm = MyPageViewViewModel(user: userInfo,
                                              memberShip: (false, userInfo.userHasVipNft))
                 let myPageVC = MyPageViewController(vm: vm)
                 
                 self.loadingVC.removeViewController()
-                self.navigationController?.pushViewController(loginVC, animated: false)
+//                self.navigationController?.pushViewController(loginVC, animated: false)
                 self.navigationController?.pushViewController(myPageVC, animated: true)
             }
             

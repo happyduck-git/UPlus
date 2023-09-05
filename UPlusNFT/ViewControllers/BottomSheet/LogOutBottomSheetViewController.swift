@@ -136,6 +136,7 @@ extension LogOutBottomSheetViewController {
         do {
             try Auth.auth().signOut()
             self.delegate?.signOutConfirmDidTap()
+            
         }
         catch {
             let alert = UIAlertController(
