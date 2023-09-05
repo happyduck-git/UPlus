@@ -55,8 +55,9 @@ final class ShareMediaOnSlackMissionViewController: BaseMissionScrollViewControl
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.hideKeyboardWhenTappedAround()
+        self.setKeyboardNotification()
         
         self.view.backgroundColor = .white
         self.setUI()
@@ -85,7 +86,6 @@ extension ShareMediaOnSlackMissionViewController {
         self.textfieldView.configure(with: self.vm)
         
         self.step2CardView.delegate = self
-        self.textfieldView.delegate = self
     }
     
 }
@@ -134,6 +134,15 @@ extension ShareMediaOnSlackMissionViewController {
             .store(in: &bindings)
     }
     
+}
+
+//MARK: - Private
+extension ShareMediaOnSlackMissionViewController {
+    private func setKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidAppear(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidDisappear(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
 }
 
 //MARK: - Set UI & Layout
@@ -185,8 +194,28 @@ extension ShareMediaOnSlackMissionViewController: IDCardViewDelegate {
     }
 }
 
-extension ShareMediaOnSlackMissionViewController: SlackShareTextFieldViewDelegate {
-    func keyboardShown() {
-        self.scrollView.contentOffset.y
+extension ShareMediaOnSlackMissionViewController {
+
+    @objc func keyboardDidAppear(notification: NSNotification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+
+            self.view.frame.origin.y -= keyboardHeight
+        }
+        else {
+            self.view.frame.origin.y -= 250
+        }
+    }
+    
+    @objc func keyboardDidDisappear(notification: NSNotification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+
+            self.view.frame.origin.y += keyboardHeight
+        }
+        else {
+            self.view.frame.origin.y += 250
+        }
     }
 }
+

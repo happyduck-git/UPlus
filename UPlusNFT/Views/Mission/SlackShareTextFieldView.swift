@@ -8,10 +8,6 @@
 import UIKit
 import Combine
 
-protocol SlackShareTextFieldViewDelegate: AnyObject {
-    func keyboardShown()
-}
-
 final class SlackShareTextFieldView: UIView {
 
     // MARK: - Dependency
@@ -19,9 +15,6 @@ final class SlackShareTextFieldView: UIView {
     
     // MARK: - Combine
     private var bindings = Set<AnyCancellable>()
-    
-    //MARK: - Delegate
-    weak var delegate: SlackShareTextFieldViewDelegate?
     
     // MARK: - UI Elements
     private let title: UILabel = {
@@ -137,11 +130,5 @@ extension SlackShareTextFieldView {
             self.infoLabel.leadingAnchor.constraint(equalTo: self.answerTextField.leadingAnchor),
             self.bottomAnchor.constraint(equalToSystemSpacingBelow: self.infoLabel.bottomAnchor, multiplier: 2)
         ])
-    }
-}
-
-extension SlackShareTextFieldView: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.delegate?.keyboardShown()
     }
 }
