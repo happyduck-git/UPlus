@@ -17,11 +17,6 @@ final class PopGameBottomSheetViewModel {
     @Published var changeset: StagedChangeset<[ArraySection<SectionID, AnyDifferentiable>]> = []
     @Published var isLoaded: Bool = false
     
-    /*
-    var changeset: Box<StagedChangeset<[ArraySection<SectionID, AnyDifferentiable>]>> = Box(StagedChangeset([]))
-    var isLoaded: Box<Bool> = Box(false)
-    */
-    
     init(
         firstListVM: LeaderBoardFirstSectionCellListViewModel,
         secondListVM: LeaderBoardSecondSectionCellListViewModel
@@ -30,7 +25,7 @@ final class PopGameBottomSheetViewModel {
         self.secondListVM = secondListVM
     }
     
-    var source: [ArraySection<SectionID, AnyDifferentiable>] = []
+    @Published var source: [ArraySection<SectionID, AnyDifferentiable>] = []
     
     func getInitialItems(of collectionType: CollectionType, gameType: GameType) {
         

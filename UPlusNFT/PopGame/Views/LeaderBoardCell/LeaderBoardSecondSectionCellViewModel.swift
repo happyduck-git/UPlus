@@ -8,6 +8,7 @@
 import UIKit.UIImage
 import Combine
 import DifferenceKit
+import FirebaseFirestore
 
 protocol LeaderBoardSecondSectionCellListViewModelDelegate: AnyObject {
     func currentUserDataFetched(_ vm: LeaderBoardSecondSectionCellViewModel)
@@ -47,13 +48,15 @@ final class LeaderBoardSecondSectionCellListViewModel {
             var gameUsers: [GameUser] = []
             for gameDatum in gameData {
                 for user in users {
+                    let imageUrl = try await self.getTopNftImageUrl(of: user)
+                    
                     let address = user.userWalletAddress ?? "no-address"
                     if address == gameDatum.address {
                         gameUsers.append(
                             GameUser(ownerAddress: gameDatum.address,
                                      actionCount: gameDatum.actionCount,
                                      popScore: gameDatum.popScore,
-                                     profileImageUrl: "profile-image",
+                                     profileImageUrl: imageUrl, // TODO: profile image 수정
                                      userIndex: String(describing: user.userIndex),
                                      ownedNFTs: user.userNfts)
                         )
@@ -75,6 +78,8 @@ final class LeaderBoardSecondSectionCellListViewModel {
                     actionCount: address.actionCount,
                     popScore: address.popScore
                 )
+                
+                print("Profile image: \(address.profileImageUrl) of \(address.ownerAddress)")
                 
                 if address.ownerAddress == user.userWalletAddress ?? "no-address" {
                     self.delegate?.currentUserDataFetched(viewModel)
@@ -132,7 +137,7 @@ final class LeaderBoardSecondSectionCellListViewModel {
                 actionCount: address.actionCount,
                 popScore: address.popScore
             )
-            print("Bottom Label Text: \(String(describing: address.ownedNFTs?.count ?? 0))")
+            
             if address.ownerAddress == user.userWalletAddress ?? "no-address" {
                 self.delegate?.currentUserDataFetched(viewModel)
             }
@@ -207,6 +212,29 @@ final class LeaderBoardSecondSectionCellListViewModel {
         return
     }
     */
+}
+
+extension LeaderBoardSecondSectionCellListViewModel {
+    
+    private func getTopNftImageUrl(of user: UPlusUser) async throws -> String {
+        let ref = self.getTopNftOfOneUser(user: user)
+        let doc = try await ref?.getDocument().data()
+        
+        return doc?[FirestoreConstants.nftContentImageUrl] as? String ?? "no-profile"
+    }
+    
+    private func getTopNftOfOneUser(user: UPlusUser) -> DocumentReference? {
+        return UPlusUser.getTheHighestAvatarNft(of: user)
+    }
+    
+    private func getTopNftOfUsers(users: [UPlusUser]) -> [Int64: DocumentReference?] {
+        var refs: [Int64: DocumentReference?] = [:]
+        
+        for user in users {
+            refs[user.userIndex] = UPlusUser.getTheHighestAvatarNft(of: user)
+        }
+        return refs
+    }
 }
 
 //MARK: - LeaderBoardTableViewCellViewModel

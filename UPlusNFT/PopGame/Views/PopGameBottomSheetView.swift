@@ -220,6 +220,14 @@ final class PopGameBottomSheetView: PassThroughView {
     
     private func bind() {
 
+        self.bottomSheetVM.$source
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] vms in
+                guard let `self` = self else { return }
+                print("VMs: \(vms)")
+            }
+            .store(in: &bindings)
+        
         self.bottomSheetVM.$changeset
             .receive(on: DispatchQueue.main)
             .sink { [weak self] vms in
