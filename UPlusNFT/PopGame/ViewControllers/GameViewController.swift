@@ -382,7 +382,7 @@ final class GameViewController: UIViewController {
                         self.touchCount = 0
                         
                         // Retrive game score from db
-                        try await self.bottomSheetVM.getCachedItems(of: .uplus, gameType: .popgame)
+//                        try await self.bottomSheetVM.getCachedItems(of: .uplus, gameType: .popgame)
                     }
                     
                 })

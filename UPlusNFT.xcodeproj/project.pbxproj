@@ -53,17 +53,6 @@
 		24542D5A2A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */; };
 		24542D602A7113BD00F82CEA /* TotalRankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */; };
 		245E2DD22A87881600AAEFE6 /* Mission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245E2DD12A87881600AAEFE6 /* Mission.swift */; };
-		245FBB112A9F97B80021E86F /* SJSegmentedScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0A2A9F97B70021E86F /* SJSegmentedScrollView.swift */; };
-		245FBB122A9F97B80021E86F /* SJSegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0B2A9F97B70021E86F /* SJSegmentedViewController.swift */; };
-		245FBB132A9F97B80021E86F /* SJSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0C2A9F97B70021E86F /* SJSegmentView.swift */; };
-		245FBB142A9F97B80021E86F /* SJShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0D2A9F97B70021E86F /* SJShadow.swift */; };
-		245FBB152A9F97B80021E86F /* SJUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0E2A9F97B70021E86F /* SJUtil.swift */; };
-		245FBB162A9F97B80021E86F /* SJContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB0F2A9F97B70021E86F /* SJContentView.swift */; };
-		245FBB172A9F97B80021E86F /* SJSegmentTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB102A9F97B80021E86F /* SJSegmentTab.swift */; };
-		245FBB192A9F989D0021E86F /* MyPageSegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB182A9F989D0021E86F /* MyPageSegmentedViewController.swift */; };
-		245FBB1C2A9F99520021E86F /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB1B2A9F99520021E86F /* FirstViewController.swift */; };
-		245FBB1E2A9F99600021E86F /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB1D2A9F99600021E86F /* SecondViewController.swift */; };
-		245FBB202A9F9A720021E86F /* ZeroHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB1F2A9F9A720021E86F /* ZeroHeaderViewController.swift */; };
 		245FBB222A9FA17A0021E86F /* MissionBaseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */; };
 		245FBB262A9FAD540021E86F /* NewEventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */; };
 		245FBB282AA0C8ED0021E86F /* ValidationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FBB272AA0C8ED0021E86F /* ValidationInfoView.swift */; };
@@ -552,7 +541,6 @@
 		93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC32A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift */; };
 		93A2EDC72A6FA74400C2287D /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 93A2EDC62A6FA74400C2287D /* FSCalendar */; };
 		93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A2EDC82A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift */; };
-		93CBD6D02A9ED2F000870019 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */; };
 		93CBD6D22A9F275E00870019 /* DetailInftoBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D12A9F275E00870019 /* DetailInftoBottomSheetViewController.swift */; };
 		93CBD6D42A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CBD6D32A9F282300870019 /* DetailInftoBottomSheetViewViewModel.swift */; };
 		93CBD6D72A9F6DC200870019 /* DungGeunMo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93CBD6D62A9F6DC200870019 /* DungGeunMo.ttf */; };
@@ -673,17 +661,6 @@
 		24542D592A70F42D00F82CEA /* MyNftsCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNftsCollectionViewHeader.swift; sourceTree = "<group>"; };
 		24542D5F2A7113BD00F82CEA /* TotalRankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalRankCollectionViewCell.swift; sourceTree = "<group>"; };
 		245E2DD12A87881600AAEFE6 /* Mission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mission.swift; sourceTree = "<group>"; };
-		245FBB0A2A9F97B70021E86F /* SJSegmentedScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentedScrollView.swift; sourceTree = "<group>"; };
-		245FBB0B2A9F97B70021E86F /* SJSegmentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentedViewController.swift; sourceTree = "<group>"; };
-		245FBB0C2A9F97B70021E86F /* SJSegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentView.swift; sourceTree = "<group>"; };
-		245FBB0D2A9F97B70021E86F /* SJShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJShadow.swift; sourceTree = "<group>"; };
-		245FBB0E2A9F97B70021E86F /* SJUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJUtil.swift; sourceTree = "<group>"; };
-		245FBB0F2A9F97B70021E86F /* SJContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJContentView.swift; sourceTree = "<group>"; };
-		245FBB102A9F97B80021E86F /* SJSegmentTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SJSegmentTab.swift; sourceTree = "<group>"; };
-		245FBB182A9F989D0021E86F /* MyPageSegmentedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSegmentedViewController.swift; sourceTree = "<group>"; };
-		245FBB1B2A9F99520021E86F /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		245FBB1D2A9F99600021E86F /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
-		245FBB1F2A9F9A720021E86F /* ZeroHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroHeaderViewController.swift; sourceTree = "<group>"; };
 		245FBB212A9FA17A0021E86F /* MissionBaseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionBaseInfo.swift; sourceTree = "<group>"; };
 		245FBB232A9FAC7A0021E86F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		245FBB252A9FAD540021E86F /* NewEventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEventCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1433,31 +1410,6 @@
 				93A2ED8F2A6E0BD000C2287D /* RewardsViewViewModel.swift */,
 			);
 			path = Reward;
-			sourceTree = "<group>";
-		};
-		245FBB092A9F979B0021E86F /* SegmentedViewController */ = {
-			isa = PBXGroup;
-			children = (
-				245FBB0F2A9F97B70021E86F /* SJContentView.swift */,
-				245FBB0A2A9F97B70021E86F /* SJSegmentedScrollView.swift */,
-				245FBB0B2A9F97B70021E86F /* SJSegmentedViewController.swift */,
-				245FBB102A9F97B80021E86F /* SJSegmentTab.swift */,
-				245FBB0C2A9F97B70021E86F /* SJSegmentView.swift */,
-				245FBB0D2A9F97B70021E86F /* SJShadow.swift */,
-				245FBB0E2A9F97B70021E86F /* SJUtil.swift */,
-			);
-			path = SegmentedViewController;
-			sourceTree = "<group>";
-		};
-		245FBB1A2A9F993D0021E86F /* Segment */ = {
-			isa = PBXGroup;
-			children = (
-				245FBB182A9F989D0021E86F /* MyPageSegmentedViewController.swift */,
-				245FBB1B2A9F99520021E86F /* FirstViewController.swift */,
-				245FBB1D2A9F99600021E86F /* SecondViewController.swift */,
-				245FBB1F2A9F9A720021E86F /* ZeroHeaderViewController.swift */,
-			);
-			path = Segment;
 			sourceTree = "<group>";
 		};
 		24624B922A92749B00C9A42E /* Event */ = {
@@ -2733,7 +2685,6 @@
 			isa = PBXGroup;
 			children = (
 				932F6A2B2AA5636D0012052D /* PopGame */,
-				245FBB092A9F979B0021E86F /* SegmentedViewController */,
 				93CBD6D52A9F6DA800870019 /* Fonts */,
 				937DDFA52A9E040A0014AF15 /* Contents */,
 				930D96B52A416AE10007801A /* Supporting Files */,
@@ -2766,7 +2717,6 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				245FBB1A2A9F993D0021E86F /* Segment */,
 				93DA585B2A8EEEA900525BEC /* Gift */,
 				245E2DD32A87C7F200AAEFE6 /* Reward */,
 				939194802A7CDDBD0035FEB1 /* Wallet */,
@@ -3525,7 +3475,6 @@
 				36F749352AA1783600BFDC0A /* Roboto-Regular.ttf in Resources */,
 				36F749322AA1783600BFDC0A /* background.png in Resources */,
 				930D96AE2A416AC40007801A /* LaunchScreen.storyboard in Resources */,
-				93CBD6D02A9ED2F000870019 /* GoogleService-Info.plist in Resources */,
 				937DDFAB2A9E041F0014AF15 /* ID CARD_3.mp4 in Resources */,
 				937DDFAE2A9E041F0014AF15 /* ID CARD_4.mp4 in Resources */,
 				937DDFAF2A9E041F0014AF15 /* ID CARD_2.mp4 in Resources */,
@@ -3587,11 +3536,9 @@
 				36F7490C2AA1783600BFDC0A /* KeyedDecodingContainerExtensions.swift in Sources */,
 				932C34CB2A5254A70032192A /* Date+Extention.swift in Sources */,
 				930D96C92A4193A40007801A /* SignUpViewController.swift in Sources */,
-				245FBB122A9F97B80021E86F /* SJSegmentedViewController.swift in Sources */,
 				36F748FB2AA1783600BFDC0A /* Repeater.swift in Sources */,
 				937C76602A492EED001024D0 /* PostTableViewCellModel.swift in Sources */,
 				9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */,
-				245FBB162A9F97B80021E86F /* SJContentView.swift in Sources */,
 				93DA58562A8E04C900525BEC /* EventCompletedViewController.swift in Sources */,
 				93D174882A7734E000F5B1B1 /* RoutineStampCollectionViewCellHeader.swift in Sources */,
 				240269512A8468C900850E65 /* ChoiceQuizMoreViewViewModel.swift in Sources */,
@@ -3621,7 +3568,6 @@
 				930D96C62A41835B0007801A /* Constants.swift in Sources */,
 				24624B8F2A8E843900C9A42E /* RoutineUploadPhotoButton.swift in Sources */,
 				9391947A2A7C92BC0035FEB1 /* FirebaseAuthManager.swift in Sources */,
-				245FBB1C2A9F99520021E86F /* FirstViewController.swift in Sources */,
 				36F748E72AA1783600BFDC0A /* NodePropertyMap.swift in Sources */,
 				36F749242AA1783600BFDC0A /* PathElement.swift in Sources */,
 				36F748A12AA1783600BFDC0A /* GradientRenderLayer.swift in Sources */,
@@ -3638,7 +3584,6 @@
 				24624B892A8D1E1200C9A42E /* BaseMissionScrollViewController.swift in Sources */,
 				93D1747E2A73806300F5B1B1 /* RoutineMissionDetailViewViewModel.swift in Sources */,
 				937DDFB22A9E0FD80014AF15 /* SlackShareTextFieldView.swift in Sources */,
-				245FBB1E2A9F99600021E86F /* SecondViewController.swift in Sources */,
 				36F749232AA1783600BFDC0A /* ColorExtension.swift in Sources */,
 				36F748452AA1783500BFDC0A /* AccessTokenResponse.swift in Sources */,
 				93A2EDC42A6FA2F200C2287D /* MissionHistoryCalendarCollectionViewCell.swift in Sources */,
@@ -3657,7 +3602,6 @@
 				93D174762A733C4F00F5B1B1 /* WeeklyAnswerQuizMissionDetailViewController.swift in Sources */,
 				93D1747C2A734B1300F5B1B1 /* WeeklyAnswerQuizMissionCollectionViewCell.swift in Sources */,
 				93A2EDC22A6F9CF100C2287D /* MissionHistoryButtonCollectionViewCell.swift in Sources */,
-				245FBB202A9F9A720021E86F /* ZeroHeaderViewController.swift in Sources */,
 				36F748C62AA1783600BFDC0A /* ImageCompositionLayer.swift in Sources */,
 				36F749222AA1783600BFDC0A /* CompoundBezierPath.swift in Sources */,
 				36F749132AA1783600BFDC0A /* Font.swift in Sources */,
@@ -3707,7 +3651,6 @@
 				36F748CA2AA1783600BFDC0A /* LayerFontProvider.swift in Sources */,
 				93E013952A66260A0005E342 /* UserProfileViewViewModel.swift in Sources */,
 				93E013A62A68C0460005E342 /* WeeklyQuizMission.swift in Sources */,
-				245FBB192A9F989D0021E86F /* MyPageSegmentedViewController.swift in Sources */,
 				930D96D32A42D8280007801A /* NSNotificationName+Extension.swift in Sources */,
 				36F7491C2AA1783600BFDC0A /* CGColor+RGB.swift in Sources */,
 				36F748C22AA1783600BFDC0A /* NullCompositionLayer.swift in Sources */,
@@ -3730,7 +3673,6 @@
 				36F7484F2AA1783500BFDC0A /* OpenSeaNFT.swift in Sources */,
 				93A2ED9E2A6E411900C2287D /* TodayRankCollectionViewCell.swift in Sources */,
 				93E013892A6518370005E342 /* SideMenuViewController.swift in Sources */,
-				245FBB142A9F97B80021E86F /* SJShadow.swift in Sources */,
 				24542D532A70AC7A00F82CEA /* ShortAnswerQuizMission.swift in Sources */,
 				36F7491A2AA1783600BFDC0A /* AnimatorNodeDebugging.swift in Sources */,
 				36F749442AA1783600BFDC0A /* VideoRenderer.swift in Sources */,
@@ -3749,7 +3691,6 @@
 				93DA58842A96118700525BEC /* TotalRankTableViewCell.swift in Sources */,
 				36F748292AA1783500BFDC0A /* ImageArt.swift in Sources */,
 				93A2EDC92A6FB46D00C2287D /* MyMissionsCollectionViewCell.swift in Sources */,
-				245FBB132A9F97B80021E86F /* SJSegmentView.swift in Sources */,
 				36F748852AA1783500BFDC0A /* CompatibleAnimationKeypath.swift in Sources */,
 				937DDF722A9C7AE10014AF15 /* RoutineMissionBottomSheetViewController.swift in Sources */,
 				36F7481B2AA1783500BFDC0A /* CAGradientLayer+Extensions.swift in Sources */,
@@ -3922,7 +3863,6 @@
 				93DA58362A8A102600525BEC /* NFTDetailViewController.swift in Sources */,
 				36F7486E2AA1783500BFDC0A /* FirebaseRemoteConfigService.swift in Sources */,
 				24A254752A854D5A0034534A /* EnvironmentConfig.swift in Sources */,
-				245FBB112A9F97B80021E86F /* SJSegmentedScrollView.swift in Sources */,
 				2402695A2A846BF700850E65 /* AnswerQuizPluralViewViewModel.swift in Sources */,
 				93DA587C2A95EF2800525BEC /* OnBoardingViewController2.swift in Sources */,
 				937C76642A496106001024D0 /* PostDetailViewController.swift in Sources */,
@@ -3936,7 +3876,6 @@
 				93DA58442A8C4F5E00525BEC /* RoutineCompleteCollectionViewCell.swift in Sources */,
 				36F7487D2AA1783500BFDC0A /* AnimationViewBase.macOS.swift in Sources */,
 				249F59FA2A530B59008CF6BE /* CampaignView.swift in Sources */,
-				245FBB172A9F97B80021E86F /* SJSegmentTab.swift in Sources */,
 				36F748DA2AA1783600BFDC0A /* EllipseNode.swift in Sources */,
 				9391948C2A8089E10035FEB1 /* CommentCountMission.swift in Sources */,
 				932C34DA2A53F7960032192A /* CommentCampaignCollectionViewCell.swift in Sources */,
@@ -3977,7 +3916,6 @@
 				36F748A52AA1783600BFDC0A /* SolidLayer.swift in Sources */,
 				36F749382AA1783600BFDC0A /* HomeViewReactor.swift in Sources */,
 				9391946B2A78E3270035FEB1 /* RoutineSelectBottomSheetViewController.swift in Sources */,
-				245FBB152A9F97B80021E86F /* SJUtil.swift in Sources */,
 				24624B8D2A8E812700C9A42E /* UIViewPreview.swift in Sources */,
 				241116DF2A9A59A20010579C /* LogOutBottomSheetViewController.swift in Sources */,
 				93A2ED892A6A6C4100C2287D /* MyNftsCollectionViewCell.swift in Sources */,
@@ -4340,6 +4278,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.platfarm.UPlusNFT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

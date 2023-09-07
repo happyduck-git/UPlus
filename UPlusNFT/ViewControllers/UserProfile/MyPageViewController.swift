@@ -1409,6 +1409,7 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         
             // pop game
         case 3:
+            /*
             let gameVM = GameViewViewModel()
             let firstSectionVC = LeaderBoardFirstSectionCellListViewModel()
             let secondSectionVC = LeaderBoardSecondSectionCellListViewModel()
@@ -1418,7 +1419,8 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
             let vc = GameViewController(gameVM: gameVM, bottomSheetVM: bottomSheetVM)
             self.addChildViewController(vc)
             self.navigationItem.title = PopGameConstants.popgame
-            
+            */
+            break
             // notice
         case 4:
             self.openURL(from: EnvironmentConfig.uplusNoticeLink)

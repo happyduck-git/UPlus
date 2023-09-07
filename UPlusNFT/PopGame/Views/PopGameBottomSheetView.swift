@@ -240,10 +240,10 @@ final class PopGameBottomSheetView: PassThroughView {
                 var arrSections: [ArraySection<SectionID, AnyDifferentiable>] = []
                 for vm in vms {
 
-    //                print("updated vm: \(vm.elementUpdated)")
-    //                print("inserted vm: \(vm.elementInserted)")
-    //                print("deleted vm: \(vm.elementDeleted)")
-    //                print("Moved vm: \(vm.elementMoved)")
+                    print("updated vm: \(vm.elementUpdated)")
+                    print("inserted vm: \(vm.elementInserted)")
+                    print("deleted vm: \(vm.elementDeleted)")
+                    print("Moved vm: \(vm.elementMoved)")
 
                     for data in vm.data {
                         arrSections.append(ArraySection(model: data.model, elements: data.elements))
@@ -260,8 +260,6 @@ final class PopGameBottomSheetView: PassThroughView {
                         changes.insert(IndexPath(row: sourceEle, section: sourceSec))
                         changes.insert(IndexPath(row: targetEle, section: targetSec))
                     }
-    //                print("Orginals: \(original)")
-    //                print("News: \(new)")
 
                     if vm.hasElementChanges {
                         hasChanges = true
@@ -309,6 +307,7 @@ extension PopGameBottomSheetView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             guard let numberOfRows = self.bottomSheetVM.source.first?.elements.count else { return 0 }
+            print("Number of rows in section#\(section) -- \(numberOfRows)")
             return numberOfRows
         } else {
             guard let numberOfRows = self.bottomSheetVM.source.last?.elements.count else { return 0 }

@@ -75,7 +75,7 @@ final class PopGameBottomSheetViewModel {
             let typedErasedSecondSectionNewVal = secondSectionNewVal.map {
                 return AnyDifferentiable($0)
             }
-            
+            print("Second Section New Val: \(typedErasedSecondSectionNewVal)")
             let target: [ArraySection<SectionID, AnyDifferentiable>] = [
                 ArraySection(model: .first, elements: typedErasedFirstSectionNewVal),
                 ArraySection(model: .second, elements: typedErasedSecondSectionNewVal)
