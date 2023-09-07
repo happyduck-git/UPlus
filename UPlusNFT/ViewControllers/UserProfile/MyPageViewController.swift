@@ -971,7 +971,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     let weekTotalPoint: Int64 = 600 // TODO: Query from DB
                     
                     switch status {
-                    case .before:
+                    case .close:
                         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyLockedCollectionViewCell.identifier, for: indexPath) as? WeeklyLockedCollectionViewCell else {
                             fatalError()
                         }
@@ -993,7 +993,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
                         return cell
                         
-                    case .close:
+                    case .before:
                         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyCompletedCollectionViewCell.identifier, for: indexPath) as? WeeklyCompletedCollectionViewCell else {
                             fatalError()
                         }
