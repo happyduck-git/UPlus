@@ -24,7 +24,6 @@ final class GameViewViewModel: GameViewViewModelProtocol {
     private let firestoreRepository = FirestoreManager.shared
     
     @Published var ownedNftTokenIds: [String] = []
-//    public private(set) var ownedNftTokenIds: Box<[String]> = Box([])
     
     init() {
         self.getOwnedNfts()
@@ -34,36 +33,21 @@ final class GameViewViewModel: GameViewViewModelProtocol {
 
 // MARK: - Private
 extension GameViewViewModel {
+    
+    /// Get NFT List of the Current User
     func getOwnedNfts() {
         do {
             let user = try UPlusUser.getCurrentUser()
             let tokenIds = user.userNfts?.compactMap({ docRef in
-                return self.getTokenId(from: docRef.path)
+                return docRef.path.extractAfterSlash()
             })
             self.ownedNftTokenIds = tokenIds ?? []
         }
         catch {
-            
+            UPlusLogger.logger.error("Error getting owned nfts of the current user. -- \(String(describing: error))")
         }
-        /*
-        _ = KlaytnNftRequester
-            .requestToGetMoonoNfts(walletAddress: mockUser.address)
-        { [weak self] nfts in
-            guard let `self` = self else { return }
-            self.ownedNftTokenIds = nfts.compactMap { nft in
-                let tokenId = nft.tokenId
-                let convertedId = String(tokenId.convertToDecimal() ?? 0)
-           
-                return convertedId
-            }
-        }
-         */
     }
-    
-    private func getTokenId(from path: String) -> String? {
-        let components = path.components(separatedBy: "/")
-        return components.last
-    }
+
 }
 
 // MARK: - Save Game Scores to Firestore

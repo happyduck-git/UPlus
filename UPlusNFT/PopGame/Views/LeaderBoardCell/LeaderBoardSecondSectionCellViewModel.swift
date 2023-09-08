@@ -38,8 +38,7 @@ final class LeaderBoardSecondSectionCellListViewModel {
     }
     
     /// Get initial address section view model.
-    func getInitialAddressSectionVM(of collectionType: CollectionType, gameType: GameType) async throws -> [LeaderBoardSecondSectionCellViewModel]? {
-        do {
+    func getSecondSectionVM(of collectionType: CollectionType, gameType: GameType) async throws -> [LeaderBoardSecondSectionCellViewModel]? {
             let user = try UPlusUser.getCurrentUser()
             
             let users = try await fireStoreManager.getUsers()
@@ -48,7 +47,7 @@ final class LeaderBoardSecondSectionCellListViewModel {
             var gameUsers: [GameUser] = []
             for gameDatum in gameData {
                 for user in users {
-                    let imageUrl = try await self.getTopNftImageUrl(of: user)
+                    let imageName = self.getTopNftLocalImageName(of: user)
                     
                     let address = user.userWalletAddress ?? "no-address"
                     if address == gameDatum.address {
@@ -56,7 +55,7 @@ final class LeaderBoardSecondSectionCellListViewModel {
                             GameUser(ownerAddress: gameDatum.address,
                                      actionCount: gameDatum.actionCount,
                                      popScore: gameDatum.popScore,
-                                     profileImageUrl: imageUrl, // TODO: profile image 수정
+                                     profileImageUrl: imageName,
                                      userIndex: String(describing: user.userIndex),
                                      ownedNFTs: user.userNfts)
                         )
@@ -78,9 +77,9 @@ final class LeaderBoardSecondSectionCellListViewModel {
                     actionCount: address.actionCount,
                     popScore: address.popScore
                 )
-                
+                /*
                 print("Profile image: \(address.profileImageUrl) of \(address.ownerAddress)")
-                
+                */
                 if address.ownerAddress == user.userWalletAddress ?? "no-address" {
                     self.delegate?.currentUserDataFetched(viewModel)
                 }
@@ -91,12 +90,6 @@ final class LeaderBoardSecondSectionCellListViewModel {
             self.leaderBoardVMList = viewModels
             
             return viewModels
-             
-        }
-        catch {
-            UPlusLogger.logger.error("Error getting initial address section vm of -- \(String(describing: error))")
-            return nil
-        }
         
     }
     
@@ -215,6 +208,13 @@ final class LeaderBoardSecondSectionCellListViewModel {
 }
 
 extension LeaderBoardSecondSectionCellListViewModel {
+    
+    private func getTopNftLocalImageName(of user: UPlusUser) -> String {
+        let ref = self.getTopNftOfOneUser(user: user)?.path ?? "no-path"
+        let tokenID = ref.extractAfterSlash() ?? "no-image"
+        let imageName = NftLevel.image(tokenId: Int64(tokenID) ?? 0)
+        return imageName
+    }
     
     private func getTopNftImageUrl(of user: UPlusUser) async throws -> String {
         let ref = self.getTopNftOfOneUser(user: user)
