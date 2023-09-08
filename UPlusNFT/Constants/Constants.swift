@@ -129,6 +129,7 @@ struct SideMenuConstants {
     static let popGame: String = "팝 게임"
     static let notice: String = "공지사항"
     static let faq: String = "FAQ 및 문의"
+    static let tempGeoFence: String = "사진 퀘스트"
     static let resetPassword: String = "비밀번호 수정"
     static let logout: String = "로그아웃"
     static let agreement: String = "개인정보수집동의"

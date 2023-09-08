@@ -16,6 +16,7 @@ final class SideMenuViewViewModel {
         case popGame
         case notice
         case faq
+        case tempGeoFence
     }
     
     private let menuList: [MenuType: String] = [
@@ -24,7 +25,8 @@ final class SideMenuViewViewModel {
         .popGame: ImageAssets.ranking,
         .rankBoard: ImageAssets.ranking,
         .notice: ImageAssets.notice,
-        .faq: ImageAssets.questionMint
+        .faq: ImageAssets.questionMint,
+        .tempGeoFence: ImageAssets.stageStar
     ]
     
     func numberOfMenu() -> Int {
@@ -46,6 +48,8 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.notice
         case .faq:
             key = SideMenuConstants.faq
+        case .tempGeoFence:
+            key = SideMenuConstants.tempGeoFence
         }
         return [key: self.menuList[type] ?? "n/a"]
     }
@@ -72,8 +76,10 @@ final class SideMenuViewViewModel {
             key = SideMenuConstants.popGame
         case .notice:
             key = SideMenuConstants.notice
-        default:
+        case .faq:
             key = SideMenuConstants.faq
+        default:
+            key = SideMenuConstants.tempGeoFence
         }
         
         return (key, self.menuList[sectionType] ?? "n/a")
