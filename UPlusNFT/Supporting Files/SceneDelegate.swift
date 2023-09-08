@@ -10,8 +10,11 @@ import FirebaseAuth
 import FirebaseFirestore
 import OSLog
 import UserNotifications
+import CoreLocation
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
+    private let locationManager = CLLocationManager()
     
     // MARK: - Window Cycle
     var window: UIWindow?
@@ -25,6 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         #else
         UPlusLogger.logger.info("🎉Current in Release mode.")
         #endif
+        
+        // Set location manager delegate
+        self.locationManager.delegate = self
+        self.locationManager.requestAlwaysAuthorization()
         
         window = UIWindow(windowScene: windowScene)
         window?.overrideUserInterfaceStyle = .light
@@ -79,3 +86,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
 }
 
+extension SceneDelegate: CLLocationManagerDelegate {
+    
+    
+    
+}

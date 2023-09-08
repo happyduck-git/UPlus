@@ -468,6 +468,7 @@
 		932F6A332AA5651A0012052D /* PopGameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F6A322AA5651A0012052D /* PopGameConstants.swift */; };
 		932F6A352AA592A60012052D /* GameUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F6A342AA592A60012052D /* GameUser.swift */; };
 		932F6A392AA981E40012052D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 937DDF7B2A9D89350014AF15 /* GoogleService-Info.plist */; };
+		932F6A6E2AAAFACC0012052D /* MapMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F6A6D2AAAFACC0012052D /* MapMissionViewController.swift */; };
 		9347F9682A4D635A00A86FD5 /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */; };
 		936F88232A4AB6ED0062E759 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 936F88222A4AB6ED0062E759 /* Nuke */; };
 		936F88252A4ABD210062E759 /* PostDetailViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */; };
@@ -1063,6 +1064,7 @@
 		932F6A2F2AA563F80012052D /* NftCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCollection.swift; sourceTree = "<group>"; };
 		932F6A322AA5651A0012052D /* PopGameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopGameConstants.swift; sourceTree = "<group>"; };
 		932F6A342AA592A60012052D /* GameUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameUser.swift; sourceTree = "<group>"; };
+		932F6A6D2AAAFACC0012052D /* MapMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMissionViewController.swift; sourceTree = "<group>"; };
 		9347F9672A4D635A00A86FD5 /* UITextView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
 		936F88242A4ABD210062E759 /* PostDetailViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewViewModel.swift; sourceTree = "<group>"; };
 		936F88272A4AC8860062E759 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
@@ -2718,6 +2720,7 @@
 		930D96B72A416E7C0007801A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				932F6A6C2AAAFAB70012052D /* GeoFence */,
 				93DA585B2A8EEEA900525BEC /* Gift */,
 				245E2DD32A87C7F200AAEFE6 /* Reward */,
 				939194802A7CDDBD0035FEB1 /* Wallet */,
@@ -2929,6 +2932,14 @@
 				932F6A322AA5651A0012052D /* PopGameConstants.swift */,
 			);
 			path = Utility;
+			sourceTree = "<group>";
+		};
+		932F6A6C2AAAFAB70012052D /* GeoFence */ = {
+			isa = PBXGroup;
+			children = (
+				932F6A6D2AAAFACC0012052D /* MapMissionViewController.swift */,
+			);
+			path = GeoFence;
 			sourceTree = "<group>";
 		};
 		936F88262A4AC8700062E759 /* CommentTableView */ = {
@@ -3924,6 +3935,7 @@
 				36F748262AA1783500BFDC0A /* MarketPlaceServiceProtocol.swift in Sources */,
 				36F748A32AA1783600BFDC0A /* MaskCompositionLayer.swift in Sources */,
 				36F7483E2AA1783500BFDC0A /* MediaUploadFinalizeResponse.swift in Sources */,
+				932F6A6E2AAAFACC0012052D /* MapMissionViewController.swift in Sources */,
 				36F748D42AA1783600BFDC0A /* GradientStrokeRenderer.swift in Sources */,
 				93A2ED7F2A6A435900C2287D /* SideMenuViewViewModel.swift in Sources */,
 				2417A5A32A67D84600AEC530 /* UIViewController+Preview.swift in Sources */,

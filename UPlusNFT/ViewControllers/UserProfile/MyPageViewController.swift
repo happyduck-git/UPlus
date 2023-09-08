@@ -1428,8 +1428,12 @@ extension MyPageViewController: SideMenuViewControllerDelegate {
         case 5:
             self.openURL(from: EnvironmentConfig.uplusFaqLink)
    
-        default:
+        case 6:
+            let vc = MapMissionViewController()
             
+            self.addChildViewController(vc)
+            
+        default:
             break
         }
         self.sideMenuVC?.dismiss(animated: true)
