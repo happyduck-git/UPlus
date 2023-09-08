@@ -181,6 +181,9 @@ final class GameViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = PopGameConstants.popgame
+        
         setUI()
         setLayout()
         setGameScene()
@@ -218,14 +221,12 @@ final class GameViewController: UIViewController {
     }
     
     private func navigationBarSetup() {
-        self.tabBarController?.navigationItem.setHidesBackButton(true, animated: false)
-        self.tabBarController?.navigationItem.title = ""
-        
+     
 //        let logo = UIImage(named: GameAsset.gameVCLogo.rawValue)
 //        let myImageView = UIImageView(image: logo)
 //        let leftBar: UIBarButtonItem = UIBarButtonItem(customView: myImageView)
 //        self.tabBarController?.navigationItem.leftBarButtonItem = leftBar
-        self.tabBarController?.navigationItem.rightBarButtonItems = nil
+//        self.tabBarController?.navigationItem.rightBarButtonItems = nil
     }
     
     // MARK: - Set UI & Layout
@@ -305,28 +306,11 @@ final class GameViewController: UIViewController {
                 guard let `self` = self else { return }
                 
                 if isLoaded {
+                    print("Is loaded!")
                     self.spinner.stopAnimating()
                 }
             }
             .store(in: &bindings)
-        
-        /*
-        gameVM.ownedNftTokenIds.bind { tokenIds in
-            guard let tokenIds = tokenIds else { return }
-            // TODO: tokenIds는 Fire store에 저장할 때 사용될 예정
-        }
-        
-        bottomSheetVM.isLoaded.bind { [weak self] isLoaded in
-            guard let `self` = self,
-                  isLoaded != nil,
-                  isLoaded == true else {
-                return
-            }
-            DispatchQueue.main.async {
-                self.spinner.stopAnimating()
-            }
-        }
-         */
     }
     
     private func saveGameTotalScore() {
@@ -357,7 +341,7 @@ final class GameViewController: UIViewController {
             }
         }
         catch {
-            
+            UPlusLogger.logger.error("Error saving game total score -- \(String(describing: error))")
         }
         
     }

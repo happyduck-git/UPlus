@@ -38,7 +38,7 @@ final class LeaderBoardSecondSectionCellListViewModel {
     }
     
     /// Get initial address section view model.
-    func getInitialAddressSectionVM(of collectionType: CollectionType, gameType: GameType) async throws -> [LeaderBoardSecondSectionCellViewModel]? {
+    func getSecondSectionVM(of collectionType: CollectionType, gameType: GameType) async throws -> [LeaderBoardSecondSectionCellViewModel]? {
         do {
             let user = try UPlusUser.getCurrentUser()
             
@@ -78,9 +78,9 @@ final class LeaderBoardSecondSectionCellListViewModel {
                     actionCount: address.actionCount,
                     popScore: address.popScore
                 )
-                
+                /*
                 print("Profile image: \(address.profileImageUrl) of \(address.ownerAddress)")
-                
+                */
                 if address.ownerAddress == user.userWalletAddress ?? "no-address" {
                     self.delegate?.currentUserDataFetched(viewModel)
                 }

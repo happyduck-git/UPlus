@@ -49,8 +49,12 @@ final class PopGameBottomSheetViewModel {
             var firstSectionNewVal: [LeaderBoardFirstSectionCellViewModel] = []
             async let firstSectionVM = self.firstListVM.getFirstSectionVM(of: collectionType, gameType: gameType)
             
+            
             var secondSectionNewVal: [LeaderBoardSecondSectionCellViewModel] = []
-            async let secondSectionVM = self.secondListVM.getInitialAddressSectionVM(of: collectionType, gameType: gameType)
+            async let secondSectionVM = self.secondListVM.getSecondSectionVM(of: collectionType, gameType: gameType)
+            
+            print("First Section New Value: \(try await firstSectionVM)")
+            print("Second Section New Value: \(try await secondSectionVM)")
             
             guard let firstVM = try await firstSectionVM else {
                 print("First Section VM Returned")
@@ -75,7 +79,7 @@ final class PopGameBottomSheetViewModel {
             let typedErasedSecondSectionNewVal = secondSectionNewVal.map {
                 return AnyDifferentiable($0)
             }
-            print("Second Section New Val: \(typedErasedSecondSectionNewVal)")
+//            print("Second Section New Val: \(typedErasedSecondSectionNewVal)")
             let target: [ArraySection<SectionID, AnyDifferentiable>] = [
                 ArraySection(model: .first, elements: typedErasedFirstSectionNewVal),
                 ArraySection(model: .second, elements: typedErasedSecondSectionNewVal)
