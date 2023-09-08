@@ -8,6 +8,9 @@
 import Foundation
 
 extension String {
+    
+    /// Slice a String by the last "/" mark.
+    /// - Returns: String after "/" mark.
     func extractAfterSlash() -> String? {
         let components = self.split(separator: "/")
         return components.last.map { String($0) }

@@ -53,9 +53,6 @@ final class PopGameBottomSheetViewModel {
             var secondSectionNewVal: [LeaderBoardSecondSectionCellViewModel] = []
             async let secondSectionVM = self.secondListVM.getSecondSectionVM(of: collectionType, gameType: gameType)
             
-            print("First Section New Value: \(try await firstSectionVM)")
-            print("Second Section New Value: \(try await secondSectionVM)")
-            
             guard let firstVM = try await firstSectionVM else {
                 print("First Section VM Returned")
                 return

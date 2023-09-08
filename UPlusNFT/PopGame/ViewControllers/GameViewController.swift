@@ -293,12 +293,14 @@ final class GameViewController: UIViewController {
     //MARK: - Private
     
     private func bind() {
+        
+        #if DEBUG
         self.gameVM.$ownedNftTokenIds
-            .sink { 
-                // TODO: tokenIds는 Fire store에 저장할 때 사용될 예정
+            .sink {
                 print("OwnedNftTokenIds: \($0)")
             }
             .store(in: &bindings)
+        #endif
         
         self.bottomSheetVM.$isLoaded
             .receive(on: DispatchQueue.main)
@@ -372,7 +374,7 @@ final class GameViewController: UIViewController {
                 })
         }
         catch {
-            
+            UPlusLogger.logger.error("Error save and retrieve game cached data from firestore -- \(String(describing: error))")
         }
         
     }

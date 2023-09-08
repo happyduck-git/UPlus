@@ -135,8 +135,10 @@ final class LeaderBoardSecondSectionCell: UITableViewCell {
         nftInfoStackView.topLabelText = vm.ownerAddress.cutOfRange(length: 15)
         nftInfoStackView.bottomLabelText = "NFTs \(vm.numberOfNfts)"
         popScoreLabel.text = String(describing: vm.popScore)
-
-        // TODO: profile image 설정 필요
+        self.userProfileImageView.image = UIImage(named: vm.userProfileImage)
+        
+        // vm.userProfileImage이 URL인 경우 아래 코드 사용. 현재는 Assets에 저장된 파일 사용 중.
+/*
         self.imageStringToImage(with: vm.userProfileImage) { result in
             switch result {
             case .success(let image):
@@ -145,6 +147,7 @@ final class LeaderBoardSecondSectionCell: UITableViewCell {
                 print("Error \(error)")
             }
         }
+ */
     }
     
     public func setAsCollectionInfoCell() {

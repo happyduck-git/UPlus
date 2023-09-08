@@ -39,7 +39,7 @@ extension GameViewViewModel {
         do {
             let user = try UPlusUser.getCurrentUser()
             let tokenIds = user.userNfts?.compactMap({ docRef in
-                return self.getTokenId(from: docRef.path)
+                return docRef.path.extractAfterSlash()
             })
             self.ownedNftTokenIds = tokenIds ?? []
         }
@@ -47,14 +47,7 @@ extension GameViewViewModel {
             UPlusLogger.logger.error("Error getting owned nfts of the current user. -- \(String(describing: error))")
         }
     }
-    
-    /// Slice DocumentReference Path to Get Token Id.
-    /// - Parameter path: DocumentReference Path.
-    /// - Returns: Token ID String.
-    private func getTokenId(from path: String) -> String? {
-        let components = path.components(separatedBy: "/")
-        return components.last
-    }
+
 }
 
 // MARK: - Save Game Scores to Firestore
