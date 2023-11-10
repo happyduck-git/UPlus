@@ -60,18 +60,12 @@ final class WalletDetailCollectionViewCell: UICollectionViewCell {
 extension WalletDetailCollectionViewCell {
     func configure(with data: UPlusNft) {
         Task {
-            do {
-                if let url = URL(string: data.nftContentImageUrl) {
-                    
-                    self.nftImageView.animate(withGIFURL: url)
-                    self.nftImageView.prepareForAnimation(withGIFURL: url)
-                    
-                }
+            if let url = URL(string: data.nftContentImageUrl) {
+                
+                self.nftImageView.animate(withGIFURL: url)
+                self.nftImageView.prepareForAnimation(withGIFURL: url)
+                
             }
-            catch {
-                print("Error fetching nft image -- \(error)")
-            }
-            print("Type: \(data.nftDetailType)")
             self.nftType.text = data.nftType
             self.nftTitle.text = data.nftName ?? data.nftType
         }

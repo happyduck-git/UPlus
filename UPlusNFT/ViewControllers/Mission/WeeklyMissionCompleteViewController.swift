@@ -41,10 +41,75 @@ final class WeeklyMissionCompleteViewController: BaseMissionCompletedViewControl
         self.bind()
     }
     
+    deinit {
+        print("WeeklyMissionCompleteVC deinit")
+    }
 }
 
 extension WeeklyMissionCompleteViewController {
     private func bind() {
+        
+        self.confirmButton.tapPublisher
+            .handleEvents(receiveSubscription: { (subscription) in
+                print("Receive Subscription") // 2
+            }, receiveOutput: { output in
+                print("Receive Output : \(output)") // 3
+            }, receiveCompletion: { (completion) in
+                print("Receive Completion")
+                switch completion {
+                case .finished:
+                    print("finished")
+                case .failure(let error):
+                    print(error)
+                }
+            }, receiveCancel: {
+                print("Receive Cancel")
+            }, receiveRequest: { demand in
+                print("Receive Request: \(demand)") // 1
+            })
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let `self` = self else { return }
+                
+                self.addChildViewController(self.loadingVC)
+                
+                do {
+                    
+                    Task.detached {
+                        do {
+                            // Save weekly mission participation.
+                            try await self.vm.saveWeeklyMissionParticipationStatus()
+                            
+                            // Check level update.
+                            try await self.vm.checkLevelUpdate()
+                            print("Level update checked!")
+                            
+                            // Weekly mission 완료 상태 확인
+                            try await self.vm.checkMissionCompletion()
+                            
+                            print("Mission completion checked!")
+                        }
+                        catch {
+                            print("Error saving mission and user data -- \(error)")
+                        }
+                    }
+                    
+                    print("Mission Task is cancelled: \(Task.isCancelled).")
+                    
+                    self.delegate?.redeemDidTap()
+                    self.loadingVC.removeViewController()
+                    
+                    guard let vcs = self.navigationController?.viewControllers else { return }
+                    for vc in vcs where vc is WeeklyMissionOverViewViewController {
+                        self.navigationController?.popToViewController(vc, animated: true)
+                        
+                    }
+                    
+                }
+            }
+            .store(in: &bindings)
+        
+/*
         self.confirmButton.tapPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -80,7 +145,7 @@ extension WeeklyMissionCompleteViewController {
                 }
             }
             .store(in: &bindings)
-
+*/
     }
 }
 

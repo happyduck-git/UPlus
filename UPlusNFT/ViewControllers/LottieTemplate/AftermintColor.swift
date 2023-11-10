@@ -5,6 +5,7 @@
 //  Created by HappyDuck on 2023/01/20.
 //
 
+/*
 import UIKit
 
 struct AftermintColor {
@@ -52,3 +53,4 @@ struct AftermintColor {
     static let gradientPink: UIColor = UIColor(hex: 0xFF5F98)
 }
 
+*/

@@ -61,7 +61,7 @@ final class PopGameBottomSheetView: PassThroughView {
     
     private let leaderBoardLabel: UILabel = {
         let label = UILabel()
-        label.font = BellyGomFont.header03
+        label.font = .systemFont(ofSize: UPlusFont.h2)
         label.textColor = .white
         label.text = LeaderBoardAsset.title.rawValue
         return label
@@ -69,7 +69,7 @@ final class PopGameBottomSheetView: PassThroughView {
     
     let leaderBoardTableView: UITableView = {
         let table = UITableView()
-        table.backgroundColor = AftermintColor.backgroundNavy
+        table.backgroundColor = UPlusColor.deepBlue
         
         table.alpha = 0.0
         table.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
@@ -151,7 +151,7 @@ final class PopGameBottomSheetView: PassThroughView {
         self.leaderBoardStackView.addArrangedSubview(leaderBoardLogoImageView)
         self.leaderBoardStackView.addArrangedSubview(leaderBoardLabel)
         
-        leaderBoardTableView.separatorColor = AftermintColor.separatorNavy
+        leaderBoardTableView.separatorColor = UPlusColor.gray07
     }
     
     private func setLayout() {
@@ -220,14 +220,6 @@ final class PopGameBottomSheetView: PassThroughView {
     
     private func bind() {
 
-        self.bottomSheetVM.$source
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] vms in
-                guard let `self` = self else { return }
-                print("VMs: \(vms)")
-            }
-            .store(in: &bindings)
-        
         self.bottomSheetVM.$changeset
             .receive(on: DispatchQueue.main)
             .sink { [weak self] vms in

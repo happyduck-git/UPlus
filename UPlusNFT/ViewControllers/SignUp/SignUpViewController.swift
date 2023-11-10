@@ -14,6 +14,8 @@ protocol SignUpViewControllerDelegate: AnyObject {
 
 final class SignUpViewController: BaseScrollViewController {
     
+    private var isKeyboardShowing: Bool = false
+    
     //MARK: - Dependency
     private var signupVM: SignUpViewViewModel
     
@@ -135,6 +137,7 @@ final class SignUpViewController: BaseScrollViewController {
         txtField.borderStyle = .roundedRect
         txtField.isSecureTextEntry = true
         txtField.textContentType = .newPassword
+        txtField.tag = 0
 //        txtField.text = "Pass1234" // DEBUG
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
@@ -180,6 +183,7 @@ final class SignUpViewController: BaseScrollViewController {
         txtField.isSecureTextEntry = true
         txtField.isUserInteractionEnabled = false
         txtField.backgroundColor = UPlusColor.gray02
+        txtField.tag = 1
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
@@ -285,7 +289,8 @@ final class SignUpViewController: BaseScrollViewController {
         
         self.bind()
         
-        hideKeyboardWhenTappedAround()
+        self.hideKeyboardWhenTappedAround()
+        self.setKeyboardNotification()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -298,6 +303,9 @@ final class SignUpViewController: BaseScrollViewController {
     init(vm: SignUpViewViewModel) {
         self.signupVM = vm
         super.init(nibName: nil, bundle: nil)
+        
+        pwTextField.delegate = self
+        pwCheckTextField.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -736,6 +744,31 @@ extension SignUpViewController {
         btn.layer.borderColor = borderColor.cgColor
         btn.layer.borderWidth = 1.0
     }
+    
+    private func setKeyboardNotification() {
+        /*
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidAppear(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidDisappear(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+         */
+    }
+    
+}
+
+extension SignUpViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField.tag == 0 || textField.tag == 1 {
+            let noti = NSNotification(name: UIResponder.keyboardWillShowNotification, object: nil)
+            self.keyboardDidAppear(notification: noti)
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.tag == 0 || textField.tag == 1  {
+            let noti = NSNotification(name: UIResponder.keyboardWillHideNotification, object: nil)
+            self.keyboardDidDisappear(notification: noti)
+        }
+    }
 }
 
 extension SignUpViewController {
@@ -759,6 +792,47 @@ extension SignUpViewController {
         
         attributedString.append(star)
         return attributedString
+    }
+}
+
+extension SignUpViewController {
+
+    @objc func keyboardDidAppear(notification: NSNotification) {
+     
+        if self.isKeyboardShowing {
+            self.dismissKeyboard()
+            self.isKeyboardShowing.toggle()
+        }
+        
+        self.isKeyboardShowing.toggle()
+        
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            
+            self.view.frame.origin.y -= keyboardHeight
+        }
+        else {
+            self.view.frame.origin.y -= 250
+        }
+        print("Y offset when appeared: \(self.view.frame.origin.y)")
+        
+    }
+    
+    @objc func keyboardDidDisappear(notification: NSNotification) {
+        if self.isKeyboardShowing {
+            self.isKeyboardShowing = false
+            
+            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                let keyboardHeight = keyboardFrame.cgRectValue.height
+
+                self.view.frame.origin.y += keyboardHeight
+            }
+            else {
+                self.view.frame.origin.y += 250
+            }
+            print("Y offset when disappeared: \(self.view.frame.origin.y)")
+            
+        }
     }
 }
 

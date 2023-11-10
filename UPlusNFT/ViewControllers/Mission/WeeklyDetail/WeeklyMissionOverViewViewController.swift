@@ -52,16 +52,8 @@ final class WeeklyMissionOverViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "여정 미션"
-        
-    }
-    
-    // MARK: - Init
-    init(vm: WeeklyMissionOverViewViewModel) {
-        self.vm = vm
-        super.init(nibName: nil, bundle: nil)
-        
         self.view.backgroundColor = .white
-    
+        
         self.setUI()
         self.setLayout()
         self.setDelegate()
@@ -71,6 +63,19 @@ final class WeeklyMissionOverViewViewController: UIViewController {
         self.header.configure(with: vm)
         self.header.bind(with: vm)
         self.footer.configure(with: vm)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.navigationController?.navigationItem.hidesBackButton = true
+    }
+
+    // MARK: - Init
+    init(vm: WeeklyMissionOverViewViewModel) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -127,13 +132,17 @@ extension WeeklyMissionOverViewViewController {
     }
     
     private func setLayout() {
-        self.tableView.frame = self.view.bounds
         
         NSLayoutConstraint.activate([
             self.backgroundImage.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.backgroundImage.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.backgroundImage.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.backgroundImage.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            self.backgroundImage.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.tableView.topAnchor.constraint(equalTo: self.backgroundImage.topAnchor),
+            self.tableView.leadingAnchor.constraint(equalTo: self.backgroundImage.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.backgroundImage.trailingAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor),
         ])
     }
     

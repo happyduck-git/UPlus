@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UNUserNotificationCenter.current().delegate = self
         
-        let backButtonImage = UIImage(named: ImageAssets.arrowHeadLeft)?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 10)
-        barButtonAppearance.setBackButtonBackgroundImage(backButtonImage, for: .normal, barMetrics: .default)
+//        let backButtonImage = UIImage(named: ImageAssets.arrowHeadLeft)?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 10)
+//        barButtonAppearance.setBackButtonBackgroundImage(backButtonImage, for: .normal, barMetrics: .default)
         
         FirebaseApp.configure()
         return true

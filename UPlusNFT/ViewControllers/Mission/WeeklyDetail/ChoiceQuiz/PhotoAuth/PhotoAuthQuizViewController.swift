@@ -327,7 +327,8 @@ extension PhotoAuthQuizViewController: PHPickerViewControllerDelegate {
             }
         }
         
-        group.notify(queue: .main) {
+        group.notify(queue: .main) { [weak self] in
+            guard let `self` = self else { return }
             self.vm.selectedImage = pickedImage
         }
 

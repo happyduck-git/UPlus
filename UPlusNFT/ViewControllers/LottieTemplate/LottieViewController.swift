@@ -75,7 +75,7 @@ class LottieViewController: UIViewController, View {
     
     private let horizontalLine1: UIView = {
         let view = UIView()
-        view.backgroundColor = AftermintColor.moonoGrey
+        view.backgroundColor = UPlusColor.gray05
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -84,7 +84,7 @@ class LottieViewController: UIViewController, View {
         
         let label = UILabel()
         label.textAlignment = .center
-        label.font = BellyGomFont.header05
+        label.font = .systemFont(ofSize: UPlusFont.caption1)
         label.numberOfLines = 0
         label.text = LottieAsset.description.rawValue
         label.textColor = .white
@@ -94,7 +94,7 @@ class LottieViewController: UIViewController, View {
 
     private let horizontalLine2: UIView = {
         let view = UIView()
-        view.backgroundColor = AftermintColor.moonoGrey
+        view.backgroundColor = UPlusColor.gray05
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -129,7 +129,7 @@ class LottieViewController: UIViewController, View {
         collection.showsHorizontalScrollIndicator = false
         collection.register(LottieTemplateCell.self, forCellWithReuseIdentifier: LottieTemplateCell.identifier)
         collection.translatesAutoresizingMaskIntoConstraints = false
-        collection.backgroundColor = AftermintColor.backgroundNavy
+        collection.backgroundColor = UPlusColor.blue05
         return collection
     }()
 
@@ -149,24 +149,19 @@ class LottieViewController: UIViewController, View {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = AftermintColor.backgroundNavy
+        view.backgroundColor = UPlusColor.blue05
         
         templateCollectionView.delegate = self
         templateCollectionView.dataSource = self
 
         setUI()
         setLayout()
-        setBarButtonItem()
+       
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     // MARK: - Set UI & Layout

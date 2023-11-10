@@ -31,7 +31,7 @@ final class LottieTemplateCell: UICollectionViewCell, View {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = BellyGomFont.header04
+        label.font = .systemFont(ofSize: UPlusFont.body1)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -39,8 +39,8 @@ final class LottieTemplateCell: UICollectionViewCell, View {
     
     private let subTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = BellyGomFont.tag
-        label.textColor = AftermintColor.titleGrey
+        label.font = .systemFont(ofSize: UPlusFont.body2)
+        label.textColor = UPlusColor.gray08
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -50,10 +50,16 @@ final class LottieTemplateCell: UICollectionViewCell, View {
         
         setUI()
         setLayout()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setGradientColor()
     }
     
     // MARK: - Set UI & Layout
@@ -66,8 +72,7 @@ final class LottieTemplateCell: UICollectionViewCell, View {
         self.contentView.clipsToBounds = true
         self.contentView.layer.cornerRadius = 20.0
         self.contentView.layer.borderWidth = 1.0
-        self.contentView.layer.borderColor = AftermintColor.borderNavy.cgColor
-        self.contentView.backgroundColor = AftermintColor.secondaryBackgroundNavy
+        self.contentView.layer.borderColor = UPlusColor.deepBlue.cgColor
 
     }
     
@@ -97,8 +102,8 @@ final class LottieTemplateCell: UICollectionViewCell, View {
     }
     
     func setGradientColor() {
-        let startColor: UIColor = AftermintColor.moonoBlue
-        let endColor: UIColor = AftermintColor.titleBlue
+        let startColor: UIColor = UPlusColor.gradient09deep
+        let endColor: UIColor = UPlusColor.gradient09light
         self.backgroundGradient.makeGradient(with: [startColor.cgColor, endColor.cgColor])
         self.backgroundGradient.frame.size = contentView.frame.size
         self.contentView.layer.insertSublayer(self.backgroundGradient, at:0)
@@ -109,7 +114,7 @@ final class LottieTemplateCell: UICollectionViewCell, View {
     func removeGradientLayer() {
         backgroundGradient.removeFromSuperlayer()
         
-        self.subTitleLabel.textColor = AftermintColor.titleGrey
+        self.subTitleLabel.textColor = UPlusColor.gray08
     }
     
     // MARK: - Bind reactor

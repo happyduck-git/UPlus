@@ -49,7 +49,7 @@ final class GameViewController: UIViewController {
     // MARK: - UI Elements
     private let userImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = AftermintColor.backgroundNavy.withAlphaComponent(PopGameConstants.alpha)
+        imageView.backgroundColor = UPlusColor.deepBlue.withAlphaComponent(PopGameConstants.alpha)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -67,8 +67,8 @@ final class GameViewController: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.text = " "
-        label.font = BellyGomFont.header08
-        label.backgroundColor = AftermintColor.backgroundNavy.withAlphaComponent(PopGameConstants.alpha)
+        label.font = .systemFont(ofSize: UPlusFont.h5)
+        label.backgroundColor = UPlusColor.deepBlue.withAlphaComponent(PopGameConstants.alpha)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -78,8 +78,8 @@ final class GameViewController: UIViewController {
         label.text = self.nickNameLabelText
         label.textColor = .white
         label.text = " "
-        label.backgroundColor = AftermintColor.backgroundNavy.withAlphaComponent(PopGameConstants.alpha)
-        label.font = BellyGomFont.header04
+        label.backgroundColor = UPlusColor.deepBlue.withAlphaComponent(PopGameConstants.alpha)
+        label.font = .systemFont(ofSize: UPlusFont.h5)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -87,10 +87,10 @@ final class GameViewController: UIViewController {
     private let popRankStack: VerticalDoubleStackView = {
         let stack = VerticalDoubleStackView()
         stack.topLabelText = "Pop Rank"
-        stack.topLabelFont = BellyGomFont.header05
-        stack.topLabelTextColor = AftermintColor.bellyGreen
-        stack.bottomLabelFont = BellyGomFont.header09
-        stack.bottomLabelBackgroundColor = AftermintColor.backgroundNavy.withAlphaComponent(PopGameConstants.alpha)
+        stack.topLabelFont = .systemFont(ofSize: UPlusFont.h5)
+        stack.topLabelTextColor = UPlusColor.greenMint
+        stack.bottomLabelFont = .systemFont(ofSize: UPlusFont.body1)
+        stack.bottomLabelBackgroundColor = UPlusColor.deepBlue.withAlphaComponent(PopGameConstants.alpha)
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -98,10 +98,10 @@ final class GameViewController: UIViewController {
     private let popScoreStack: VerticalDoubleStackView = {
         let stack = VerticalDoubleStackView()
         stack.topLabelText = "Pop Score"
-        stack.topLabelFont = BellyGomFont.header05
-        stack.topLabelTextColor = AftermintColor.bellyGreen
-        stack.bottomLabelFont = BellyGomFont.header09
-        stack.bottomLabelBackgroundColor = AftermintColor.backgroundNavy.withAlphaComponent(PopGameConstants.alpha)
+        stack.topLabelFont = .systemFont(ofSize: UPlusFont.h5)
+        stack.topLabelTextColor = UPlusColor.greenMint
+        stack.bottomLabelFont = .systemFont(ofSize: UPlusFont.body1)
+        stack.bottomLabelBackgroundColor = UPlusColor.deepBlue.withAlphaComponent(PopGameConstants.alpha)
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -109,10 +109,10 @@ final class GameViewController: UIViewController {
     private let nftsStack: VerticalDoubleStackView = {
         let stack = VerticalDoubleStackView()
         stack.topLabelText = "NFTs"
-        stack.topLabelFont = BellyGomFont.header05
-        stack.topLabelTextColor = AftermintColor.bellyGreen
-        stack.bottomLabelFont = BellyGomFont.header05
-        stack.bottomLabelBackgroundColor = AftermintColor.backgroundNavy.withAlphaComponent(PopGameConstants.alpha)
+        stack.topLabelFont = .systemFont(ofSize: UPlusFont.caption1)
+        stack.topLabelTextColor = UPlusColor.greenMint
+        stack.bottomLabelFont = .systemFont(ofSize: UPlusFont.caption1)
+        stack.bottomLabelBackgroundColor = UPlusColor.deepBlue.withAlphaComponent(PopGameConstants.alpha)
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -120,10 +120,10 @@ final class GameViewController: UIViewController {
     private let actionCountStack: VerticalDoubleStackView = {
         let stack = VerticalDoubleStackView()
         stack.topLabelText = "Action Count"
-        stack.topLabelFont = BellyGomFont.header05
-        stack.topLabelTextColor = AftermintColor.bellyGreen
-        stack.bottomLabelFont = BellyGomFont.header05
-        stack.bottomLabelBackgroundColor = AftermintColor.backgroundNavy.withAlphaComponent(PopGameConstants.alpha)
+        stack.topLabelFont = .systemFont(ofSize: UPlusFont.caption1)
+        stack.topLabelTextColor = UPlusColor.greenMint
+        stack.bottomLabelFont = .systemFont(ofSize: UPlusFont.caption1)
+        stack.bottomLabelBackgroundColor = UPlusColor.deepBlue.withAlphaComponent(PopGameConstants.alpha)
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -133,14 +133,14 @@ final class GameViewController: UIViewController {
         let label = UILabel()
         label.text = "\(self.initialTouchScore)"
         label.textColor = .white
-        label.font = BellyGomFont.header03
+        label.font = .systemFont(ofSize: UPlusFont.h2)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     private lazy var gameSKView: SKView = {
         let view = SKView()
-        view.backgroundColor = AftermintColor.secondaryBackgroundNavy
+        view.backgroundColor = UPlusColor.deepBlue
         view.showsFPS = false
         view.showsNodeCount = false
         view.ignoresSiblingOrder = true
@@ -152,7 +152,7 @@ final class GameViewController: UIViewController {
             frame: .zero,
             bottomSheetVM: bottomSheetVM
         )
-        bottomSheet.bottomSheetColor = AftermintColor.backgroundNavy
+        bottomSheet.bottomSheetColor = UPlusColor.deepBlue
         bottomSheet.barViewColor = .darkGray
         bottomSheet.translatesAutoresizingMaskIntoConstraints = false
         return bottomSheet
@@ -236,7 +236,7 @@ final class GameViewController: UIViewController {
     }
     
     private func setUI() {
-        view.backgroundColor = AftermintColor.backgroundLightBlue
+        view.backgroundColor = UPlusColor.blue05
         view.addSubview(gameSKView)
         view.addSubview(userImageView)
         view.addSubview(userInfoStackView)

@@ -63,7 +63,7 @@ extension NewNFTNoticeBottomSheetViewController {
     
     private func configure() {
         let tokenId: Int64 = Int64(self.vm.tokenId) ?? 0
-        var nftName: String = NftLevel.name(tokenId: tokenId)
+        let nftName: String = NftLevel.name(tokenId: tokenId)
         self.levelLabel.text = nftName
         self.missionCompleteLabel.text = MyPageConstants.missionCompleteMsg
         self.topImageView.image = UIImage(named: NftLevel.image(tokenId: tokenId))

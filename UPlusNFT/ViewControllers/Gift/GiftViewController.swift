@@ -164,6 +164,7 @@ extension GiftViewController {
     private func showAlert() {
         let action = UIAlertAction(title: "확인", style: .cancel)
         let alert = UIAlertController(title: "선물 전송에 실패하였습니다.", message: "선물 전송에 실패하였습니다. 다시 시도해 주세요.", preferredStyle: .alert)
+        alert.addAction(action)
         DispatchQueue.main.async {
             self.present(alert, animated: true)
         }

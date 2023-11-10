@@ -114,9 +114,7 @@ extension CommentSharingMissionViewController {
     }
     
     private func bind() {
-        guard let mission = self.vm.mission as? CommentCountMission
-        else { return }
-        
+
         func bindViewToViewModel() {
             
             self.answerTextField.textPublisher

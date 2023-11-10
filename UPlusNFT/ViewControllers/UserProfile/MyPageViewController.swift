@@ -164,12 +164,13 @@ final class MyPageViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        let backBtnImage = UIImage(systemName: SFSymbol.arrowLeft)?.withTintColor(.black, renderingMode: .alwaysOriginal)
+
+        let backBtnImage = UIImage(systemName: ImageAssets.arrowHeadLeft)?.withTintColor(.black, renderingMode: .alwaysOriginal)
         
         navigationController?.navigationBar.backIndicatorImage = backBtnImage
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = backBtnImage
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
     }
     
     @objc func buttonDidTap(_ sender: UIButton) {
@@ -1201,6 +1202,8 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if self.screenToShow == 0 {
             switch indexPath.section {
             case 1:
+                self.addChildViewController(self.loadingVC)
+             
                 let participationStatus = self.vm.mission.routineParticipationStatus
                 
                 // NOTE: pending status에 대한 temporary action
@@ -1215,7 +1218,6 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     return
                 }
                 
-                self.addChildViewController(self.loadingVC)
                 let vm = RoutineMissionDetailViewViewModel(missionType: .dailyExpGoodWorker)
                 let vc = RoutineMissionDetailViewController2(vm: vm)
                 vc.delegate = self

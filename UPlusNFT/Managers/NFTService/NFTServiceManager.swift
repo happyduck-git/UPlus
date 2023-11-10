@@ -62,8 +62,6 @@ extension NFTServiceManager {
                           nftType: UPlusNftDetailType,
                           level: Int = 0) async throws -> NFTResponse {
         
-        UPlusLogger.logger.debug("Request single nft: \(nftType.rawValue) -- function called!")
-        
         var type = nftType.rawValue
         
         if nftType.rawValue.hasSuffix("%d") {
@@ -78,7 +76,6 @@ extension NFTServiceManager {
                 "type": type
             ]
         )
-        UPlusLogger.logger.debug("Request single nft: \(nftType.rawValue) -- buildUrlRequest called")
         
         let result = try await NetworkServiceManager.execute(expecting: NFTResponse.self,
                                                              request: urlRequest)

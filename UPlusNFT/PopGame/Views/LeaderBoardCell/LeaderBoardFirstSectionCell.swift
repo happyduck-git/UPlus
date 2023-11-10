@@ -23,7 +23,7 @@ final class LeaderBoardFirstSectionCell: UITableViewCell {
     
     private let nftInfoStackView: VerticalDoubleStackView = {
         let stack = VerticalDoubleStackView()
-        stack.bottomLabelFont = BellyGomFont.header06
+        stack.bottomLabelFont = .systemFont(ofSize: UPlusFont.caption1)
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -31,7 +31,7 @@ final class LeaderBoardFirstSectionCell: UITableViewCell {
     private let nftNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = BellyGomFont.header03
+        label.font = .systemFont(ofSize: UPlusFont.h5)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -40,7 +40,7 @@ final class LeaderBoardFirstSectionCell: UITableViewCell {
     let popScoreLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = BellyGomFont.header03
+        label.font = .systemFont(ofSize: UPlusFont.caption1)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

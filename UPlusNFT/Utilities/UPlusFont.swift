@@ -23,7 +23,7 @@ struct UPlusFont {
     static let body2: CGFloat = 14
     
     static let caption1: CGFloat = 12
-
+    static let caption2: CGFloat = 1
 }
 
 extension UPlusFont {

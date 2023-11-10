@@ -45,6 +45,7 @@ final class WeeklyMissionOverViewTableViewHeader: UIView {
     
     private let episodeSubtitleLabel: UILabel = {
         let label = UILabel()
+        label.accessibilityIdentifier = "episodeSubtitleLabel"
         label.textAlignment = .center
         label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
         label.textColor = UPlusColor.gray03
@@ -97,7 +98,7 @@ extension WeeklyMissionOverViewTableViewHeader {
         vm.numberOfCompeletion
             .receive(on: DispatchQueue.main)
             .sink { [weak self] (week, count) in
-                var image: String = "\(week)-\(count)"
+                let image: String = "\(week)-\(count)"
                 self?.nftImageView.image = UIImage(named: image)
             }
             .store(in: &bindings)

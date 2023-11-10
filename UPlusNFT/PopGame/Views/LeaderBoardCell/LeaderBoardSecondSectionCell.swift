@@ -20,8 +20,8 @@ final class LeaderBoardSecondSectionCell: UITableViewCell {
     
     private let rankLabel: UILabel = {
         let label = UILabel()
-        label.font = BellyGomFont.header03
-        label.textColor = AftermintColor.rankGrey
+        label.font = .systemFont(ofSize: UPlusFont.caption1)
+        label.textColor = UPlusColor.gray08
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isHidden = true
         return label
@@ -39,8 +39,8 @@ final class LeaderBoardSecondSectionCell: UITableViewCell {
     
     private let nftInfoStackView: VerticalDoubleStackView = {
         let stack = VerticalDoubleStackView()
-        stack.topLabelFont = BellyGomFont.header05
-        stack.bottomLabelFont = BellyGomFont.header06
+        stack.topLabelFont = .systemFont(ofSize: UPlusFont.caption1)
+        stack.bottomLabelFont = .systemFont(ofSize: UPlusFont.caption2)
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -48,7 +48,7 @@ final class LeaderBoardSecondSectionCell: UITableViewCell {
     let popScoreLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = BellyGomFont.header04
+        label.font = .systemFont(ofSize: UPlusFont.body2)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -72,7 +72,7 @@ final class LeaderBoardSecondSectionCell: UITableViewCell {
     
     // MARK: - Private
     private func setUI() {
-        self.backgroundColor = AftermintColor.backgroundNavy
+        self.backgroundColor = UPlusColor.deepBlue
         
         contentView.addSubview(rankImageView)
         contentView.addSubview(rankLabel)

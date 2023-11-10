@@ -412,7 +412,6 @@
 		36F749752AA18A2500BFDC0A /* LottieTemplateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F749742AA18A2500BFDC0A /* LottieTemplateCell.swift */; };
 		36F749772AA18A6A00BFDC0A /* AftermintColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F749762AA18A6A00BFDC0A /* AftermintColor.swift */; };
 		36F749792AA18A8500BFDC0A /* LLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F749782AA18A8500BFDC0A /* LLog.swift */; };
-		36F7497B2AA18AB600BFDC0A /* BellyGomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F7497A2AA18AB600BFDC0A /* BellyGomFont.swift */; };
 		36F7497D2AA18B1100BFDC0A /* LottieConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F7497C2AA18B1100BFDC0A /* LottieConstants.swift */; };
 		930D96A22A416AC30007801A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A12A416AC30007801A /* AppDelegate.swift */; };
 		930D96A42A416AC30007801A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930D96A32A416AC30007801A /* SceneDelegate.swift */; };
@@ -1011,7 +1010,6 @@
 		36F749742AA18A2500BFDC0A /* LottieTemplateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieTemplateCell.swift; sourceTree = "<group>"; };
 		36F749762AA18A6A00BFDC0A /* AftermintColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AftermintColor.swift; sourceTree = "<group>"; };
 		36F749782AA18A8500BFDC0A /* LLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLog.swift; sourceTree = "<group>"; };
-		36F7497A2AA18AB600BFDC0A /* BellyGomFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BellyGomFont.swift; sourceTree = "<group>"; };
 		36F7497C2AA18B1100BFDC0A /* LottieConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieConstants.swift; sourceTree = "<group>"; };
 		930D969E2A416AC30007801A /* UPlusNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UPlusNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		930D96A12A416AC30007801A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -2656,7 +2654,6 @@
 			isa = PBXGroup;
 			children = (
 				36F7497C2AA18B1100BFDC0A /* LottieConstants.swift */,
-				36F7497A2AA18AB600BFDC0A /* BellyGomFont.swift */,
 				36F749782AA18A8500BFDC0A /* LLog.swift */,
 				36F749762AA18A6A00BFDC0A /* AftermintColor.swift */,
 				36F749742AA18A2500BFDC0A /* LottieTemplateCell.swift */,
@@ -4093,7 +4090,6 @@
 				2402694C2A84675300850E65 /* ChoiceQuizMoreViewController.swift in Sources */,
 				932F6A232AA55C980012052D /* LeaderBoardSecondSectionCellViewModel.swift in Sources */,
 				93DA58642A8EF6BD00525BEC /* GiftSendView.swift in Sources */,
-				36F7497B2AA18AB600BFDC0A /* BellyGomFont.swift in Sources */,
 				36F748832AA1783500BFDC0A /* AnimationPublic.swift in Sources */,
 				93DA58482A8CA1C500525BEC /* RoutineParticipationViewViewModel.swift in Sources */,
 				930D96D82A43E5870007801A /* PostViewController.swift in Sources */,

@@ -168,9 +168,7 @@ extension RoutineSelectBottomSheetViewController {
             self.selectButton.tapPublisher
                 .receive(on: DispatchQueue.global())
                 .sink { [weak self] _ in
-                    guard let `self` = self,
-                          let selectedMission = self.vm.bottomView.selectedMission
-                    else { return }
+                    guard let `self` = self else { return }
                     
                     Task {
 //                        await self.vm.saveSelectedMission(selectedMission)

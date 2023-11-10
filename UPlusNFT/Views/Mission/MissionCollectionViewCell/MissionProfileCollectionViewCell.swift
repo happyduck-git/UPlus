@@ -105,18 +105,7 @@ final class MissionProfileCollectionViewCell: UICollectionViewCell {
 extension MissionProfileCollectionViewCell {
     func configure(with vm: UserProfileViewViewModel) {
         self.vm = vm
-        
-        Task {
-            do {
-                let url = URL(string: vm.profileImage)
-                
-                self.levelLabel.text = "Lv." + String(describing: vm.level)
-              
-            }
-            catch {
-                print("Error fetching profileImage -- \(error.localizedDescription)")
-            }
-        }
+        self.levelLabel.text = "Lv." + String(describing: vm.level)
     }
 }
 
