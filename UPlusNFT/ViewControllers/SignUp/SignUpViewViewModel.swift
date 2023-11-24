@@ -9,29 +9,39 @@ import Foundation
 import Combine
 import RegexBuilder
 import FirebaseAuth
+import FirebaseFirestore
 import OSLog
 
-class SignUpViewViewModel {
+final class SignUpViewViewModel {
     
     let logger = Logger()
     
-    @Published var email = ""
+    //MARK: - Dependency
+    private let firestoreManager = FirestoreManager.shared
+    private let firebaseAuthManager = FirebaseAuthManager.shared
+    
+    private let nftServiceManager = NFTServiceManager.shared
+    
+    // MARK: - DataSource
+    var fullEmail = ""
+    @Published var email = "" {
+        didSet {
+            fullEmail = self.email + SignUpConstants.emailSuffix
+        }
+    }
     @Published var password = ""
     @Published var passwordCheck = ""
-    @Published var nickname = ""
-    @Published var errorDescription = ""
+    @Published var isPersonalInfoChecked: Bool = false
     
-    var isAuthenticated = PassthroughSubject<Bool, Never>()
     var isUserCreated = PassthroughSubject<Bool, Never>()
     var isEmailSent = PassthroughSubject<Bool, Never>()
     
-    private(set) lazy var isEmailValid = $email.map {
-        $0.hasSuffix(SignUpConstants.emailSuffix)
-    }.eraseToAnyPublisher()
+    var errorDescription = ""
+    var isValidUser: Bool = false
+    var isVip: Bool = false
     
     private(set) lazy var isPasswordValid = $password.map {
-        let regex = SignUpConstants.emailRegex
-        if let range = $0.range(of: regex, options: .regularExpression) {
+        if $0.count >= 6 {
             return true
         } else {
             return false
@@ -40,67 +50,55 @@ class SignUpViewViewModel {
     
     private(set) lazy var isPasswordSame = Publishers.CombineLatest($password, $passwordCheck)
         .map {
-            $0 == $1
+            return $0 == $1 && !$0.isEmpty && !$1.isEmpty
         }.eraseToAnyPublisher()
-
-    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest4(isEmailValid, isPasswordValid, isPasswordSame, $nickname)
+    
+    private(set) lazy var isAllInfoChecked = Publishers.CombineLatest3(isPasswordValid, isPasswordSame, $isPersonalInfoChecked)
         .map {
-            return $0 && $1 && $2 && !$3.isEmpty
+            return $0 && $1 && $2
         }.eraseToAnyPublisher()
     
-    // MARK: - Init
-    init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(emailAuthenticated), name: NSNotification.Name.signIn, object: nil)
-    }
+}
+
+// MARK: - Internal
+extension SignUpViewViewModel {
     
-    @objc private func emailAuthenticated() {
-        self.isAuthenticated.send(true)
-    }
-    
-    // MARK: - Internal
-    
-    func sendEmailValification() {
-        let actionCodeSettings = ActionCodeSettings()
-        actionCodeSettings.url = URL(string: SignUpConstants.deeplinkDomain)
-        actionCodeSettings.handleCodeInApp = true
-        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return }
-        actionCodeSettings.setIOSBundleID(bundleIdentifier)
+    // MARK: - Create User
+    func createNewUser() async {
         
-        Task {
-            do {
-                try await Auth.auth()
-                    .sendSignInLink(
-                        toEmail: email,
-                        actionCodeSettings: actionCodeSettings
-                    )
-                print("Successfully sent email sign in link to \(email).")
-                self.isEmailSent.send(true)
-            }
-            catch {
-                print("Error sending sign in link: \(error.localizedDescription).")
-                self.isEmailSent.send(false)
+        do {
+            // 1. Find out if it is accountable.
+            let (isAccountable, isVip) = try await firestoreManager.isAccountable(email: self.fullEmail)
+            
+            if isAccountable {
+                
+                // 2. Create User Account
+                self.isValidUser = isAccountable
+                let createdAccount = try await firebaseAuthManager.createAccount(email: self.fullEmail,
+                                                                                 password: self.password)
+                
+                // 3. Save userUId and creationTime to Firestore
+                let uid = createdAccount.user.uid
+                let creationDate = createdAccount.user.metadata.creationDate ?? Date()
+                try await firestoreManager.saveUserInfo(email: self.fullEmail, uid: uid, creationTime: Timestamp(date: creationDate))
+                
+                if isVip {
+                    self.isVip = isVip
+                }
+                
+                // 4. Save user info to UserDefaults
+                try await UPlusUser.saveCurrentUser(email: self.fullEmail)
+                
+                self.logger.info("User created.")
+                isUserCreated.send(true)
+                
+            } else {
+                self.errorDescription = "등록이 불가능한 이메일입니다."
+                isUserCreated.send(false)
             }
         }
-    }
-    
-    func createNewUser() {
-        Task {
-            do {
-                try await Auth.auth()
-                    .createUser(
-                        withEmail: self.email,
-                        password: self.password
-                    )
-                self.logger.info("User created.")
-                
-                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                changeRequest?.displayName = self.nickname
-                try await changeRequest?.commitChanges()
-                self.logger.info("Changed nickname.")
-                
-                isUserCreated.send(true)
-            }
-            catch (let error) {
+        catch (let error) {
+            if error is AuthErrorCode {
                 let err = error as? AuthErrorCode
                 switch err {
                 case .none:
@@ -109,17 +107,38 @@ class SignUpViewViewModel {
                     self.logger.error("Error creating new user \(wrapped.localizedDescription)")
                     switch wrapped.code {
                     case .emailAlreadyInUse:
-                        self.errorDescription = "이미 등록된 이메일입니다."
+                        self.errorDescription = "이미 가입된 이메일입니다."
                     default:
-                        self.errorDescription = "\(wrapped.code)"
+                        self.errorDescription = String(describing: wrapped.code)
                     }
                     self.isUserCreated.send(false)
                 }
-                return
+            } else {
+                print("Error saving user info -- \(error)")
             }
+            
+            return
         }
+        
     }
     
 }
 
-
+extension SignUpViewViewModel {
+    func requestToCreateNewUserNft() {
+        Task {
+            do {
+                let user = try UPlusUser.getCurrentUser()
+                let result = try await self.nftServiceManager.requestSingleNft(
+                    userIndex: user.userIndex,
+                    nftType: .avatar,
+                    level: 1
+                )
+                print("🫡 Result of requesting nft: \(result)")
+            }
+            catch {
+                print("Error requesting new user nft -- \(error)")
+            }
+        }
+    }
+}

@@ -11,9 +11,18 @@ import FirebaseCore
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        UNUserNotificationCenter.current().delegate = self
+        
+        if let option = launchOptions {
+            let info = option[UIApplication.LaunchOptionsKey.remoteNotification]
+            if (info != nil) {
+                print("Entered from notification!!!!")
+            }
+        }
         
         FirebaseApp.configure()
         return true
@@ -36,3 +45,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension AppDelegate: UNUserNotificationCenterDelegate {
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                 willPresent notification: UNNotification,
+                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.list, .banner, .badge, .sound])
+     }
+
+     func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                 didReceive response: UNNotificationResponse,
+                                 withCompletionHandler completionHandler: @escaping () -> Void) {
+
+         // deep link처리 시 아래 url값 가지고 처리
+         let userInfo = response.notification.request.content.userInfo
+         if let id = userInfo["targetView"] as? String {
+             // TODO: Specify a certain vc
+             let vm = RoutineMissionDetailViewViewModel(missionType: .dailyExpGoodWorker)
+             let vc = RoutineMissionDetailViewController(vm: vm)
+             let navVC = UINavigationController(rootViewController: vc)
+             
+             self.window = UIWindow(frame: UIScreen.main.bounds)
+             self.window?.rootViewController = navVC
+             self.window?.makeKeyAndVisible()
+         }
+         
+         completionHandler()
+     }
+    
+}

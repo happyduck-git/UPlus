@@ -20,7 +20,7 @@ final class BackToLoginViewController: UIViewController {
     
     private lazy var backToLoginButton: UIButton = {
         let button = UIButton()
-        button.setTitle(ResetPasswordConstants.backToLoginButton, for: .normal)
+        button.setTitle(ResetPasswordConstants.login, for: .normal)
         button.addTarget(self, action: #selector(backToLoginDidTap), for: .touchUpInside)
         button.backgroundColor = .systemGray
         button.translatesAutoresizingMaskIntoConstraints = false

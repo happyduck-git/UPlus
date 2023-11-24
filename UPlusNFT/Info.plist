@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>slack</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -14,7 +18,13 @@
 				<string>net.platfarm.UPlusNFT</string>
 			</array>
 		</dict>
+		<dict/>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -32,5 +42,15 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UPLUS_NFT_ACCESS_CODE</key>
+	<string>$(UPLUS_NFT_ACCESS_CODE)</string>
+	<key>UPLUS_NFT_CONTRACT_ADDRESS_VALUE</key>
+	<string>$(UPLUS_NFT_CONTRACT_ADDRESS_VALUE)</string>
+	<key>X_KEY_ID_VALUE</key>
+	<string>$(X_KEY_ID_VALUE)</string>
+	<key>X_KEY_SECRET_VALUE</key>
+	<string>$(X_KEY_SECRET_VALUE)</string>
+	<key>X_NODE_ID_VALUE</key>
+	<string>$(X_NODE_ID_VALUE)</string>
 </dict>
 </plist>

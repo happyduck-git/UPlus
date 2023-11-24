@@ -8,36 +8,59 @@
 import UIKit
 import Combine
 
+protocol SignUpViewControllerDelegate: AnyObject {
+    func signupDidComplete()
+}
+
 final class SignUpViewController: UIViewController {
     
-    private var viewModel: SignUpViewViewModel
+    //MARK: - Dependency
+    private var signupVM: SignUpViewViewModel
+    
+    //MARK: - Combine
     private var bindings = Set<AnyCancellable>()
+    
+    //MARK: - Delegate
+    weak var delegate: SignUpViewControllerDelegate?
     
     // MARK: - UI Elements
     private let emailTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = SignUpConstants.emailLabel
-        label.font = .systemFont(ofSize: 17, weight: .bold)
+
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        let attributedString = NSMutableAttributedString(string: SignUpConstants.emailLabel, attributes: [
+            .foregroundColor: UIColor.black,
+            .font: font
+        ])
+        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
+            .foregroundColor: UPlusColor.mint04,
+            .font: font
+        ])
+        
+        attributedString.append(star)
+        label.attributedText = attributedString
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var emailAuthButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(SignUpConstants.authenticate, for: .normal)
-        button.backgroundColor = .systemGray2
-        button.isUserInteractionEnabled = false
-        button.addTarget(self, action: #selector(authButtonDidTap), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private let placeHolderView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private let placeHolderLabel: UILabel = {
+        let label = UILabel()
+        label.text = LoginConstants.uplusEmailSuffix
+        label.textColor = UPlusColor.gray07
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let emailTextField: UITextField = {
         let txtField = UITextField()
-//        txtField.text = "rkrudtls@gmail.com"
-        txtField.textColor = .label
+        txtField.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
+        txtField.textColor = .black
         txtField.borderStyle = .roundedRect
-        txtField.placeholder = " @gmail.com"
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
@@ -45,118 +68,195 @@ final class SignUpViewController: UIViewController {
     private let emailValidationText: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .thin)
-        label.textColor = .systemRed
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    private let passwordTitleLabel: UILabel = {
+
+    private let pwLabel: UILabel = {
         let label = UILabel()
-        label.text = SignUpConstants.passwordLabel
-        label.font = .systemFont(ofSize: 17, weight: .bold)
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordLabel, attributes: [
+            .foregroundColor: UIColor.black,
+            .font: font
+        ])
+        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
+            .foregroundColor: UPlusColor.mint04,
+            .font: font
+        ])
+        
+        attributedString.append(star)
+        label.attributedText = attributedString
+
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let passwordRuleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "8자리 이상 영대소문자와 숫자를 포함해야 합니다."
-        label.textColor = .systemGray
-        label.font = .systemFont(ofSize: 11, weight: .thin)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let passwordTextField: UITextField = {
+    private let pwTextField: UITextField = {
         let txtField = UITextField()
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
-        txtField.isUserInteractionEnabled = false
         txtField.isSecureTextEntry = true
         txtField.textContentType = .newPassword
-//        txtField.text = "Pass1234"
-        txtField.backgroundColor = .systemGray3
+//        txtField.text = "Pass1234" // DEBUG
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
     
-    private let passwordValidationText: UILabel = {
+    private let pwValidationStack: UIStackView = {
+        let stack = UIStackView()
+        stack.isHidden = true
+        stack.axis = .horizontal
+        stack.spacing = 5.0
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let pwValidationImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAssets.infoRed)
+        return imageView
+    }()
+    
+    private let pwValidationText: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .thin)
-        label.textColor = .systemRed
+        label.text = SignUpConstants.passwordValidation
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        label.textColor = UPlusColor.orange01
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let passwordCheckTitleLabel: UILabel = {
+    private let pwCheckLabel: UILabel = {
         let label = UILabel()
-        label.text = SignUpConstants.passwordCheckLabel
-        label.font = .systemFont(ofSize: 17, weight: .bold)
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body1, weight: .regular)
+        let attributedString = NSMutableAttributedString(string: SignUpConstants.passwordCheckLabel, attributes: [
+            .foregroundColor: UIColor.black,
+            .font: font
+        ])
+        let star = NSAttributedString(string: SignUpConstants.star, attributes: [
+            .foregroundColor: UPlusColor.mint04,
+            .font: font
+        ])
+        
+        attributedString.append(star)
+        label.attributedText = attributedString
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let passwordCheckTextField: UITextField = {
+    private let pwCheckTextField: UITextField = {
         let txtField = UITextField()
         txtField.textColor = .black
         txtField.borderStyle = .roundedRect
-        txtField.isUserInteractionEnabled = false
         txtField.textContentType = .newPassword
         txtField.isSecureTextEntry = true
-        txtField.backgroundColor = .systemGray3
-        txtField.translatesAutoresizingMaskIntoConstraints = false
-        return txtField
-    }()
-    
-    private let passwordCheckValidationText: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .thin)
-        label.textColor = .systemRed
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let nicknameTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = SignUpConstants.nicknameLabel
-        label.font = .systemFont(ofSize: 17, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let nicknameTextField: UITextField = {
-        let txtField = UITextField()
-        txtField.textColor = .black
-        txtField.borderStyle = .roundedRect
         txtField.isUserInteractionEnabled = false
         txtField.backgroundColor = .systemGray3
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
+    }()
+    
+    private let pwCheckValidationStack: UIStackView = {
+        let stack = UIStackView()
+        stack.isHidden = true
+        stack.axis = .horizontal
+        stack.spacing = 5.0
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let pwCheckValidationImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: ImageAssets.infoRed)
+        return imageView
+    }()
+    
+    private let pwCheckValidationText: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: UPlusFont.body2, weight: .regular)
+        return label
+    }()
+    
+    private let personalInfoStack: UIStackView = {
+       let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 10.0
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    private let checkButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let acceptInfoLabel: UILabel = {
+        let label = UILabel()
+        
+        let font: UIFont = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
+        let attributedString = NSMutableAttributedString(string: SignUpConstants.personalInfo, attributes: [
+            .foregroundColor: UPlusColor.gray06,
+            .font: font
+        ])
+        let suffix = NSAttributedString(string: SignUpConstants.required, attributes: [
+            .foregroundColor: UPlusColor.mint04,
+            .font: font
+        ])
+        
+        attributedString.append(suffix)
+        label.attributedText = attributedString
+        
+        return label
+    }()
+    
+    private let showAllButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(SignUpConstants.showAll, for: .normal)
+        button.setTitleColor(UPlusColor.gray06, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body2, weight: .bold)
+        button.setUnderline(1.0)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private lazy var registerButton: UIButton = {
         let button = UIButton()
         button.setTitle(SignUpConstants.register, for: .normal)
-        button.addTarget(self, action: #selector(registerButtonDidTapped), for: .touchUpInside)
-        button.backgroundColor = .systemGray2
+        button.titleLabel?.font = .systemFont(ofSize: UPlusFont.body1, weight: .bold)
+        button.layer.cornerRadius = 3
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "회원가입"
-        view.backgroundColor = .secondarySystemBackground
-        setUI()
-        setLayout()
+        self.title = SignUpConstants.signUp
+        self.view.backgroundColor = .white
         
-        bind()
+        self.setUI()
+        self.setLayout()
+        self.setNavigationItem()
         
+        self.bind()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationItem.hidesBackButton = true
     }
     
     // MARK: - Init
     init(vm: SignUpViewViewModel) {
-        self.viewModel = vm
+        self.signupVM = vm
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -166,212 +266,297 @@ final class SignUpViewController: UIViewController {
     
     // MARK: - Private
     private func setUI() {
-        view.addSubviews(
-            emailTitleLabel,
-            emailAuthButton,
-            emailTextField,
-            emailValidationText,
-            passwordTitleLabel,
-            passwordRuleLabel,
-            passwordTextField,
-            passwordValidationText,
-            passwordCheckTitleLabel,
-            passwordCheckTextField,
-            passwordCheckValidationText,
-            nicknameTitleLabel,
-            nicknameTextField,
-            registerButton
+        self.view.addSubviews(
+            self.emailTitleLabel,
+            self.emailTextField,
+            self.emailValidationText,
+
+            self.pwLabel,
+            self.pwTextField,
+            self.pwValidationStack,
+            
+            self.pwCheckLabel,
+            self.pwCheckTextField,
+            self.pwCheckValidationStack,
+            
+            self.personalInfoStack,
+            self.showAllButton,
+            self.registerButton
         )
+        
+        self.personalInfoStack.addArrangedSubviews(self.checkButton,
+                                                   self.acceptInfoLabel)
+        
+        self.pwValidationStack.addArrangedSubviews(self.pwValidationImage,
+                                                   self.pwValidationText)
+        
+        self.pwCheckValidationStack.addArrangedSubviews(self.pwCheckValidationImage,
+                                                        self.pwCheckValidationText)
+        
+        
+        
+        // Adding a PlaceHolderView
+        placeHolderView.addSubview(placeHolderLabel)
+        self.emailTextField.rightView = placeHolderView
+        self.emailTextField.rightViewMode = .always
     }
      
     private func setLayout() {
         NSLayoutConstraint.activate([
-            emailTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 5),
+            emailTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 3),
             emailTitleLabel.leadingAnchor.constraint(lessThanOrEqualToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 3),
-            emailAuthButton.centerYAnchor.constraint(equalTo: emailTitleLabel.centerYAnchor),
-            emailAuthButton.leadingAnchor.constraint(equalToSystemSpacingAfter: emailTitleLabel.trailingAnchor, multiplier: 2),
-            emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailAuthButton.bottomAnchor, multiplier: 1),
+            
+            emailTextField.topAnchor.constraint(equalToSystemSpacingBelow: emailTitleLabel.bottomAnchor, multiplier: 1),
+            emailTextField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
             emailTextField.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
             view.trailingAnchor.constraint(equalToSystemSpacingAfter: emailTextField.trailingAnchor, multiplier: 3),
             
             emailValidationText.topAnchor.constraint(equalToSystemSpacingBelow: emailTextField.bottomAnchor, multiplier: 1),
             emailValidationText.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
             
-            passwordTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: emailValidationText.bottomAnchor, multiplier: 2),
-            passwordTitleLabel.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
+            placeHolderLabel.topAnchor.constraint(equalToSystemSpacingBelow: placeHolderView.topAnchor, multiplier: 1),
+            placeHolderLabel.leadingAnchor.constraint(equalTo: placeHolderView.leadingAnchor),
+            placeHolderView.trailingAnchor.constraint(equalToSystemSpacingAfter: placeHolderLabel.trailingAnchor, multiplier: 1),
+            placeHolderView.bottomAnchor.constraint(equalToSystemSpacingBelow: placeHolderLabel.bottomAnchor, multiplier: 1),
             
-            passwordRuleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: passwordTitleLabel.trailingAnchor, multiplier: 1),
-            passwordRuleLabel.bottomAnchor.constraint(equalTo: passwordTitleLabel.bottomAnchor),
+            pwLabel.topAnchor.constraint(equalToSystemSpacingBelow: emailValidationText.bottomAnchor, multiplier: 2),
+            pwLabel.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
             
-            passwordTextField.topAnchor.constraint(equalToSystemSpacingBelow: passwordTitleLabel.bottomAnchor, multiplier: 1),
-            passwordTextField.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
-            passwordTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            pwTextField.topAnchor.constraint(equalToSystemSpacingBelow: pwLabel.bottomAnchor, multiplier: 1),
+            pwTextField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
+            pwTextField.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
+            pwTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
             
-            passwordValidationText.topAnchor.constraint(equalToSystemSpacingBelow: passwordTextField.bottomAnchor, multiplier: 1),
-            passwordValidationText.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
+            pwValidationStack.topAnchor.constraint(equalToSystemSpacingBelow: pwTextField.bottomAnchor, multiplier: 1),
+            pwValidationStack.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
             
-            passwordCheckTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: passwordValidationText.bottomAnchor, multiplier: 2),
-            passwordCheckTitleLabel.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
-            passwordCheckTextField.topAnchor.constraint(equalToSystemSpacingBelow: passwordCheckTitleLabel.bottomAnchor, multiplier: 1),
-            passwordCheckTextField.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
-            passwordCheckTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            pwCheckLabel.topAnchor.constraint(equalToSystemSpacingBelow: pwValidationStack.bottomAnchor, multiplier: 2),
+            pwCheckLabel.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
             
-            passwordCheckValidationText.topAnchor.constraint(equalToSystemSpacingBelow: passwordCheckTextField.bottomAnchor, multiplier: 1),
-            passwordCheckValidationText.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
+            pwCheckTextField.topAnchor.constraint(equalToSystemSpacingBelow: pwCheckLabel.bottomAnchor, multiplier: 1),
+            pwCheckTextField.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
+            pwCheckTextField.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
+            pwCheckTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
             
-            nicknameTitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: passwordCheckValidationText.bottomAnchor, multiplier: 1),
-            nicknameTitleLabel.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
-            nicknameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nicknameTitleLabel.bottomAnchor, multiplier: 1),
-            nicknameTextField.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
-            nicknameTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            pwCheckValidationStack.topAnchor.constraint(equalToSystemSpacingBelow: pwCheckTextField.bottomAnchor, multiplier: 1),
+            pwCheckValidationStack.leadingAnchor.constraint(equalTo: emailTitleLabel.leadingAnchor),
+
+            self.personalInfoStack.topAnchor.constraint(equalToSystemSpacingBelow: self.pwCheckValidationStack.bottomAnchor, multiplier: 6),
+            self.personalInfoStack.leadingAnchor.constraint(equalTo: pwTextField.leadingAnchor),
             
-            registerButton.topAnchor.constraint(equalToSystemSpacingBelow: nicknameTextField.bottomAnchor, multiplier: 3),
-            registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            self.showAllButton.topAnchor.constraint(equalTo: self.personalInfoStack.topAnchor),
+            self.showAllButton.leadingAnchor.constraint(equalToSystemSpacingAfter: self.personalInfoStack.trailingAnchor, multiplier: 2),
+            self.showAllButton.trailingAnchor.constraint(equalTo: self.pwTextField.trailingAnchor),
+            self.showAllButton.bottomAnchor.constraint(equalTo: self.personalInfoStack.bottomAnchor),
+            
+            registerButton.topAnchor.constraint(equalToSystemSpacingBelow: personalInfoStack.bottomAnchor, multiplier: 5),
+            registerButton.heightAnchor.constraint(equalToConstant: LoginConstants.textFieldHeight),
+            registerButton.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
+            registerButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor)
+            
         ])
     }
+    
+    private func setNavigationItem() {
+        self.navigationItem.hidesBackButton = true
+        
+        let cancelButton = UIBarButtonItem(image: UIImage(named: ImageAssets.xMarkBlack)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal),
+                                          style: .plain,
+                                          target: self,
+                                           action: #selector(cancelButtonDidTap))
+        
+        navigationItem.setRightBarButton(cancelButton, animated: true)
+    }
+
     
     private func bind() {
         func bindViewToViewModel() {
             self.emailTextField.textPublisher
                 .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
                 .removeDuplicates()
-                .assign(to: \.email, on: viewModel)
+                .assign(to: \.email, on: self.signupVM)
                 .store(in: &bindings)
             
-            self.passwordTextField.textPublisher
+            self.pwTextField.textPublisher
                 .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
                 .removeDuplicates()
-                .assign(to: \.password, on: viewModel)
+                .assign(to: \.password, on: self.signupVM)
                 .store(in: &bindings)
             
-            self.passwordCheckTextField.textPublisher
+            self.pwCheckTextField.textPublisher
                 .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
                 .removeDuplicates()
-                .assign(to: \.passwordCheck, on: viewModel)
+                .assign(to: \.passwordCheck, on: self.signupVM)
+                .store(in: &bindings)
+
+            self.checkButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    self.signupVM.isPersonalInfoChecked.toggle()
+                }
                 .store(in: &bindings)
             
-            self.nicknameTextField.textPublisher
-                .debounce(for: SignUpConstants.textFieldDebounce, scheduler: RunLoop.current)
-                .removeDuplicates()
-                .assign(to: \.nickname, on: viewModel)
+            self.showAllButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    // TODO: 전문보기 탭 시 action 설정 필요
+                    
+                }
+                .store(in: &bindings)
+            
+            self.registerButton.tapPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    guard let `self` = self else { return }
+                    
+                    self.registerButtonDidTap()
+                }
                 .store(in: &bindings)
         }
         
         func bindViewModelToView() {
             
-            viewModel.isEmailSent
+            self.signupVM.$email
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] isSent in
+                .sink { [weak self] in
                     guard let `self` = self else { return }
-                   
-                    let alert: String = isSent ? "이메일이 전송되었습니다." : "이메일 전송에 실패하였습니다."
-                    let color: UIColor = isSent ? .systemGreen : .systemRed
-                    
-                    self.emailValidationText.textColor = color
-                    self.emailValidationText.text = alert
-                }
-                .store(in: &bindings)
-            
-            viewModel.isAuthenticated
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] value in
-                    guard let `self` = self else { return }
-                    if value {
+                    if $0.isEmpty {
                         self.emailValidationText.text = ""
-                        self.emailAuthButton.setTitle(SignUpConstants.authCompleted, for: .normal)
-                        self.emailAuthButton.backgroundColor = .systemGray4
-                        self.emailAuthButton.isUserInteractionEnabled = false
-                        self.emailTextField.isUserInteractionEnabled = false
-                        self.passwordTextField.backgroundColor = .white
-                        self.passwordTextField.isUserInteractionEnabled = true
-                        self.nicknameTextField.backgroundColor = .white
-                        self.nicknameTextField.isUserInteractionEnabled = true
-                        self.passwordCheckTextField.backgroundColor = .white
-                        self.passwordCheckTextField.isUserInteractionEnabled = true
                     }
                 }
                 .store(in: &bindings)
 
-            viewModel.isEmailValid
+            self.signupVM.isPasswordValid
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] valid in
                     guard let `self` = self else { return }
-                    let emailText = self.emailTextField.text ?? ""
-                   
-                    if valid {
-                        self.emailAuthButton.backgroundColor = .systemTeal
-                        self.emailValidationText.text = ""
-                        self.emailAuthButton.isUserInteractionEnabled = true
-                    } else if emailText.isEmpty {
-                        self.emailValidationText.text = ""
-                        self.emailAuthButton.backgroundColor = .systemGray2
-                        self.emailAuthButton.isUserInteractionEnabled = false
-                    } else {
-                        self.emailValidationText.text = "올바른 형식의 이메일이 아닙니다."
-                        self.emailAuthButton.backgroundColor = .systemGray2
-                        self.emailAuthButton.isUserInteractionEnabled = false
-                    }
-                }
-                .store(in: &bindings)
-            
-            viewModel.isPasswordValid
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] valid in
-                    guard let `self` = self else { return }
-                    let passwordText = self.passwordTextField.text ?? ""
+                    let passwordText = self.pwTextField.text ?? ""
+                    
+                    var isHidden = false
+                    var isInteractive = false
+                    var bgColor: UIColor?
                     
                     if valid {
-                        self.passwordValidationText.text = ""
+                        isHidden = true
+                        isInteractive = true
+                        bgColor = .white
                     } else if passwordText.isEmpty {
-                        self.passwordValidationText.text = ""
+                        isHidden = true
+                        isInteractive = false
+                        bgColor = .systemGray3
                     } else {
-                        self.passwordValidationText.text = "올바른 형식의 비밀번호가 아닙니다."
+                        isHidden = false
+                        isInteractive = false
+                        bgColor = .systemGray3
                     }
+                    
+                    self.pwValidationStack.isHidden = isHidden
+                    self.pwCheckTextField.isUserInteractionEnabled = isInteractive
+                    self.pwCheckTextField.backgroundColor = bgColor
                 }
                 .store(in: &bindings)
             
-            viewModel.isPasswordSame
+            self.signupVM.isPasswordSame
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] valid in
                     guard let `self` = self else { return }
-                    let passwordText = self.passwordCheckTextField.text ?? ""
+                    let passwordText = self.pwCheckTextField.text ?? ""
+                    
+                    var text = ""
+                    var textColor: UIColor?
+                    var image: UIImage?
                     
                     if valid {
-                        self.passwordCheckValidationText.text = ""
+                        self.pwCheckValidationStack.isHidden = false
+                        text = SignUpConstants.passwordMatch
+                        textColor = UPlusColor.blue03
+                        image = UIImage(named: ImageAssets.infoBlue)
+                        
                     } else if passwordText.isEmpty {
-                        self.passwordCheckValidationText.text = ""
-                    } else {
-                        self.passwordCheckValidationText.text = "비밀번호가 일치하지 않습니다."
-                    }
-                }
-                .store(in: &bindings)
-            
-            viewModel.isAllInfoChecked
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] valid in
-                    guard let `self` = self else { return }
-                    if valid {
-                        self.registerButton.backgroundColor = .systemBlue
-                    } else {
-                        self.registerButton.backgroundColor = .systemGray2
-                    }
-                }
-                .store(in: &bindings)
-            
-            viewModel.isUserCreated
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] valid in
-                    guard let `self` = self else { return }
-                    if valid {
-                       /*
-                        navigationController?.popViewController(animated: true)
-                        */
-                        let vc = BackToLoginViewController(desc: SignUpConstants.sinUpSuccessLabel)
-                        navigationController?.pushViewController(vc, animated: true)
+                        self.pwCheckValidationStack.isHidden = true
                         
                     } else {
-                        self.emailValidationText.text = self.viewModel.errorDescription
+                        self.pwCheckValidationStack.isHidden = false
+                        text = SignUpConstants.passwordNotMatch
+                        textColor = UPlusColor.orange01
+                        image = UIImage(named: ImageAssets.infoRed)
                     }
+                    
+                    self.pwCheckValidationText.text = text
+                    self.pwCheckValidationText.textColor = textColor
+                    self.pwCheckValidationImage.image = image
+                    
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.isAllInfoChecked
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] valid in
+                    guard let `self` = self else { return }
+                    
+                    var interaction: Bool = false
+                    var bgColor: UIColor?
+                    var textColor: UIColor?
+                    
+                    if valid {
+                        interaction = true
+                        bgColor = UPlusColor.mint03
+                        textColor = .black
+                        
+                    } else {
+                        interaction = false
+                        bgColor = UPlusColor.gray03
+                        textColor = .white
+                        
+                    }
+                    
+                    self.registerButton.isUserInteractionEnabled = interaction
+                    self.registerButton.backgroundColor = bgColor
+                    self.registerButton.setTitleColor(textColor, for: .normal)
+                    
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.isUserCreated
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] valid in
+                    guard let `self` = self else { return }
+                    if valid {
+                       print("User created called.")
+                        // Request a single NFT to NFT Service.
+                        self.signupVM.requestToCreateNewUserNft()
+                        
+                        let vm = SignUpCompleteViewViewModel()
+                        let vc = SignUpCompleteViewController(vm: vm)
+                        
+                        vc.delegate = self
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    
+                    } else {
+                        self.emailValidationText.textColor = .systemRed
+                        self.emailValidationText.text = self.signupVM.errorDescription
+                    }
+                }
+                .store(in: &bindings)
+            
+            self.signupVM.$isPersonalInfoChecked
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isChecked in
+                    guard let `self` = self else { return }
+                    
+                    var image: UIImage?
+                    if isChecked {
+                        image = UIImage(named: ImageAssets.checkBoxTicked)
+                    } else {
+                        image = UIImage(named: ImageAssets.checkBoxEmpty)
+                    }
+                    
+                    self.checkButton.setImage(image, for: .normal)
+                    
                 }
                 .store(in: &bindings)
         }
@@ -380,11 +565,27 @@ final class SignUpViewController: UIViewController {
         bindViewModelToView()
     }
     
-    @objc private func authButtonDidTap() {
-        viewModel.sendEmailValification()
+}
+
+//MARK: - Private
+extension SignUpViewController {
+
+    @objc private func registerButtonDidTap() {
+        Task {
+            await self.signupVM.createNewUser()
+            if !self.signupVM.isValidUser {
+                self.emailValidationText.text = self.signupVM.errorDescription
+            }
+        }
     }
     
-    @objc private func registerButtonDidTapped() {
-        viewModel.createNewUser()
+    @objc private func cancelButtonDidTap() {
+        self.navigationController?.popViewController(animated: true)
+    }
+}
+
+extension SignUpViewController: SignUpCompleteViewControllerDelegate {
+    func welcomeButtonDidTap() {
+        self.delegate?.signupDidComplete()
     }
 }
